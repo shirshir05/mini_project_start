@@ -1,5 +1,6 @@
 import Busnies_Servic.Business_Layer.BudgetManagement.BudgetRegulationsTest;
 import Busnies_Servic.Business_Layer.UserManagement.*;
+import Busnies_Servic.Service_Layer.DataManagementTest;
 import Busnies_Servic.Service_Layer.MainTestClass;
 import Busnies_Servic.Service_Layer.SearchLoggerTest;
 import org.junit.runner.JUnitCore;
@@ -23,6 +24,8 @@ public class mainTest {
         JUnitCore.runClasses(TeamOwnerTest.class);
         JUnitCore.runClasses(UnionRepresentativeTest.class);
         JUnitCore.runClasses(SearchLoggerTest.class);
+        JUnitCore.runClasses(DataManagementTest.class);
+
     }
 
     private static void register(){

@@ -15,7 +15,7 @@ public abstract class Subscription {
     protected HashSet<String> searchHistory;
 
 
-    protected HashSet<String> alerts = new HashSet<>();
+    protected HashSet<String> alerts;
 
     public Subscription(String argUserName, String argPassword,String email){
         userName=argUserName;
@@ -23,6 +23,7 @@ public abstract class Subscription {
         permissions = new Permissions();
         this.email = email;
         searchHistory =new HashSet<>();
+        alerts = new HashSet<>();
     }
 
 

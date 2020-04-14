@@ -306,9 +306,9 @@ public class PlayerTest {
         public void updateTest() {
             Player player = new Player(userName,password,email);
             assertEquals(player.alerts.size(),0);
-            player.update(new Game("s",LocalDate.of(1995,18,8),new Team("1","r"),new Team("2","r")),"shir");
+            player.update(new Game("s",LocalDate.of(1995,8,18),new Team("1","r"),new Team("2","r")),"shir");
             assertEquals(player.alerts.size(),1);
-            player.update(new Game("s",LocalDate.of(1995,18,8),new Team("1","r"),new Team("2","r")),"The ");
+            player.update(new Game("s",LocalDate.of(1995,8,18),new Team("1","r"),new Team("2","r")),"The ");
             assertEquals(player.alerts.size(),2);
         }
     }//update

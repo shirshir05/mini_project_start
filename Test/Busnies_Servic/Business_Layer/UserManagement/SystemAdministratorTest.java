@@ -103,9 +103,9 @@ public class SystemAdministratorTest {
         public void updateTest() {
             SystemAdministrator systemAdministrator = new SystemAdministrator(userName,password,email);
             assertEquals(systemAdministrator.alerts.size(),0);
-            systemAdministrator.update(new Game("s", LocalDate.of(1995,18,8),new Team("1","r"),new Team("2","r")),"shir");
+            systemAdministrator.update(new Game("s", LocalDate.of(1995,8,8),new Team("1","r"),new Team("2","r")),"shir");
             assertEquals(systemAdministrator.alerts.size(),1);
-            systemAdministrator.update(new Game("s",LocalDate.of(1995,18,8),new Team("1","r"),new Team("2","r")),"The ");
+            systemAdministrator.update(new Game("s",LocalDate.of(1995,8,8),new Team("1","r"),new Team("2","r")),"The ");
             assertEquals(systemAdministrator.alerts.size(),2);
         }
     }//update

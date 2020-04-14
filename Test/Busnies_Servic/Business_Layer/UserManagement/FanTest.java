@@ -176,9 +176,9 @@ public class FanTest {
         public void updateTest() {
             Fan fan = new Fan(userName,password,email);
             assertEquals(fan.alerts.size(),0);
-            fan.update(new Game("s", LocalDate.of(1995,18,8),new Team("1","r"),new Team("2","r")),"shir");
+            fan.update(new Game("s", LocalDate.of(1995,8,18),new Team("1","r"),new Team("2","r")),"shir");
             assertEquals(fan.alerts.size(),1);
-            fan.update(new Game("s",LocalDate.of(1995,18,8),new Team("1","r"),new Team("2","r")),"The ");
+            fan.update(new Game("s",LocalDate.of(1995,8,18),new Team("1","r"),new Team("2","r")),"The ");
             assertEquals(fan.alerts.size(),1);
 
 

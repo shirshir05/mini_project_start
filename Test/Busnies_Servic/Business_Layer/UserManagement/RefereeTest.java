@@ -236,9 +236,9 @@ public class RefereeTest {
         public void updateTest() {
             Referee referee = new Referee(userName,password,email);
             assertEquals(referee.alerts.size(),0);
-            referee.update(new Game("s",LocalDate.of(1995,18,8),new Team("1","r"),new Team("2","r")),"shir");
+            referee.update(new Game("s",LocalDate.of(1995,8,18),new Team("1","r"),new Team("2","r")),"shir");
             assertEquals(referee.alerts.size(),0);
-            referee.update(new Game("s", LocalDate.of(1995,18,8),new Team("1","r"),new Team("2","r")),"The ");
+            referee.update(new Game("s", LocalDate.of(1995,8,18),new Team("1","r"),new Team("2","r")),"The ");
             assertEquals(referee.alerts.size(),1);
         }
     }//update

@@ -88,9 +88,12 @@ public class AlertController {
         return complaints;
     }
 
+    /*
     public void addComplaint(String complaint_description){
         DataManagement.setComplaint(complaint_description);
     }
+
+     */
 
 
 
