@@ -23,8 +23,8 @@ public enum PermissionAction {
 
     /*union permissions*/
     define_league, define_season,appointment_referee, remove_referee,
-    setting_referee_in_league,Calculation_Policy, setting_games,
-    setting_games_Policy, uniun_financial,
+    setting_referee_in_league, calculation_policy, setting_games,
+    setting_games_policy, change_budget_regulations,
 
     /*referee permissions*/
     update_event
