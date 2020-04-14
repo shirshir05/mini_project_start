@@ -105,9 +105,9 @@ public class UnionRepresentativeTest {
         public void updateTest() {
             UnionRepresentative UnionRepresentative = new UnionRepresentative(userName,password,email);
             assertEquals(UnionRepresentative.alerts.size(),0);
-            UnionRepresentative.update(new Game("s", LocalDate.of(1995,18,8),new Team("1","r"),new Team("2","r")),"shir");
+            UnionRepresentative.update(new Game("s", LocalDate.of(1995,8,8),new Team("1","r"),new Team("2","r")),"shir");
             assertEquals(UnionRepresentative.alerts.size(),1);
-            UnionRepresentative.update(new Game("s",LocalDate.of(1995,18,8),new Team("1","r"),new Team("2","r")),"The ");
+            UnionRepresentative.update(new Game("s",LocalDate.of(1995,8,8),new Team("1","r"),new Team("2","r")),"The ");
             assertEquals(UnionRepresentative.alerts.size(),2);
         }
     }//update
