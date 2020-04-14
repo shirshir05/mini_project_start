@@ -1,67 +1,27 @@
 package Busnies_Servic.Service_Layer;
 
+import Busnies_Servic.Business_Layer.Game.Game;
+import Busnies_Servic.Business_Layer.Game.League;
+import Busnies_Servic.Business_Layer.TeamManagement.Team;
+import Busnies_Servic.Business_Layer.UserManagement.Coach;
+import Busnies_Servic.Business_Layer.UserManagement.Subscription;
+import Busnies_Servic.Business_Layer.UserManagement.SystemAdministrator;
+import Busnies_Servic.Business_Layer.UserManagement.UnionRepresentative;
+import Busnies_Servic.Enum.Role;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
 import static org.junit.Assert.*;
 
+@RunWith(Enclosed.class)
 public class DataManagementTest {
-
-
-    /**
-     * Test - DM1
-     */
-    @RunWith(Parameterized.class)
-    public static class DataManagement{
-        //parameter
-
-
-        @Parameterized.Parameters
-        public static Collection<Object[]> data() {
-            return Arrays.asList(new Object[][]{
-
-
-            });
-        }
-        public DataManagement() {
-            //parameter
-        }
-        @Test
-        public void DataManagementTest() {
-
-        }
-
-    }//DataManagement
-
-
-    /**
-     * Test - DM2
-     */
-    @RunWith(Parameterized.class)
-    public static class createLogicManagement{
-        //parameter
-
-
-        @Parameterized.Parameters
-        public static Collection<Object[]> data() {
-            return Arrays.asList(new Object[][]{
-
-
-            });
-        }
-        public createLogicManagement() {
-            //parameter
-        }
-        @Test
-        public void createLogicManagementTest() {
-
-        }
-
-    }//createLogicManagement
 
 
 
@@ -70,21 +30,29 @@ public class DataManagementTest {
      */
     @RunWith(Parameterized.class)
     public static class containSubscription{
-        //parameter
 
-
+        public String userName;
+        public String password;
+        public String email;
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
-
+                    {"shir","123456","shir0@post.bgu.ac.il"}
             });
         }
-        public containSubscription() {
-            //parameter
+
+        public  containSubscription(String userName, String password, String email){
+            this.userName = userName;
+            this.password = password;
+            this.email = email;
         }
+
         @Test
         public void containSubscriptionTest() {
+            Subscription sub = new Coach(userName,password,email);
+            DataManagement.setSubscription(sub);
+            assertNotNull(DataManagement.containSubscription("shir"));
+            assertNull(DataManagement.containSubscription("dana"));
 
         }
 
@@ -97,20 +65,29 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class isInEnum{
         //parameter
-
+        String ans;
+        String role;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
+                    {"Coach","true"},{"shir","false"},{null,"false"},{"","false"}
 
 
             });
         }
-        public isInEnum() {
-            //parameter
+        public isInEnum(String role, String ans ){
+            this.ans = ans;
+            this.role =role;
         }
         @Test
         public void isInEnumTest() {
+            if(ans.equals("true")){
+                assertTrue(DataManagement.isInEnum(role));
+            }else{
+                assertFalse(DataManagement.isInEnum(role));
+
+            }
 
         }
 
@@ -123,21 +100,35 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class returnEnum{
         //parameter
+        String name;
+        Role role;
 
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
+                    {null,null},
+                    {"Referee", Role.Referee},
+                    {"SystemAdministrator",Role.SystemAdministrator},
+                    {"TeamManager", Role.TeamManager},
+                    {"TeamOwner",Role.TeamOwner},
+                    {"UnionRepresentative",Role.UnionRepresentative},
+                    {"shir",null},
+                    {"Coach", Role.Coach},
+                    {"Fan",Role.Fan},
+                    {"Players", Role.Players},
+                    {"Guest",Role.Guest}
 
             });
         }
-        public returnEnum() {
+        public returnEnum( String name,Role role) {
             //parameter
+            this.name = name;
+            this.role = role;
         }
         @Test
         public void returnEnumTest() {
-
+           assertEquals(DataManagement.returnEnum(name),role);
         }
 
     }//returnEnum
@@ -150,24 +141,69 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class findTeam{
         //parameter
+        String name;
+        String filed;
 
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
+                    {"Barcelona", "Camp Nou"}
 
 
             });
         }
-        public findTeam() {
+        public findTeam(String name, String filed) {
             //parameter
+            this.name = name;
+            this.filed= filed;
         }
         @Test
         public void findTeamTest() {
+            Team team1 = new Team(name,filed);
+            Team team2 = new Team("Real Madrid", "Bernabeo");
+            DataManagement.addToListTeam(team1);
+            assertEquals(DataManagement.findTeam("Barcelona"),team1);
+            assertNull(DataManagement.findTeam("Real Madrid"));
 
         }
 
     }//findTeam
+
+    /**
+     * Test - DM6
+     */
+    @RunWith(Parameterized.class)
+    public static class addGame{
+        //parameter
+        String name;
+        String filed;
+
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {"Barcelona", "Camp Nou"}
+
+
+            });
+        }
+        public addGame(String name, String filed) {
+            //parameter
+            this.name = name;
+            this.filed= filed;
+        }
+        @Test
+        public void addGameTest() {
+            LocalDate date = LocalDate.of(1992, 11, 14);
+            Team team1 = new Team(name, filed);
+            Team team2 = new Team("Real Madrid", "Bernabeo");
+            Game game = new Game("Bernabeo11", date, team1, team2);
+            DataManagement.addGame(game);
+            assertEquals(DataManagement.getGame(2),game);
+        }
+
+    }//addGame
 
 
     /**
@@ -176,20 +212,30 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class getGame{
         //parameter
-
+        String name;
+        String filed;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
-
+                    {"Barcelona", "Camp Nou"}
             });
         }
-        public getGame() {
-            //parameter
+
+        public getGame(String name, String filed) {
+            this.name = name;
+            this.filed= filed;
         }
         @Test
         public void getGameTest() {
+            LocalDate date = LocalDate.of(1992, 11, 14);
+            Team team1 = new Team(name, filed);
+            Team team2 = new Team("Real Madrid", "Bernabeo");
+            Game game = new Game("Bernabeo", date, team1, team2);
+            DataManagement.addGame(game);
+            assertEquals(DataManagement.getGame(1),game);
+            assertNull(DataManagement.getGame(2));
+
 
         }
 
@@ -202,51 +248,30 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class findLeague{
         //parameter
+        String name;
 
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
-
+                    {"shir11"}
             });
         }
-        public findLeague() {
+        public findLeague(String name) {
+            this.name = name;
             //parameter
         }
         @Test
         public void findLeagueTest() {
+            League l = new League(name);
+            DataManagement.addToListLeague(new League("roi"));
+            DataManagement.addToListLeague(l);
+            assertEquals(DataManagement.findLeague("shir11"),l);
+            assertNull(DataManagement.findLeague("s"));
 
         }
 
     }//findLeague
-
-
-    /**
-     * Test - DM9
-     */
-    @RunWith(Parameterized.class)
-    public static class findSubscription{
-        //parameter
-
-
-        @Parameterized.Parameters
-        public static Collection<Object[]> data() {
-            return Arrays.asList(new Object[][]{
-
-
-            });
-        }
-        public findSubscription() {
-            //parameter
-        }
-        @Test
-        public void findSubscriptionTest() {
-
-        }
-
-    }//findSubscription
-
 
     /**
      * Test - DM10
@@ -254,20 +279,29 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class getUnionRepresentatives{
         //parameter
-
+        public String userName;
+        public String password;
+        public String email;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
+                    {"t1","123456","shir0@post.bgu.ac.il"}
 
             });
         }
-        public getUnionRepresentatives() {
+        public getUnionRepresentatives(String userName, String password, String email) {
             //parameter
+            this.userName = userName;
+            this.password = password;
+            this.email = email;
         }
         @Test
         public void getUnionRepresentativesTest() {
+            Subscription sub = new UnionRepresentative(userName,password,email);
+            DataManagement.setSubscription(sub);
+            DataManagement.setSubscription(new Coach("shir",password,email));
+            DataManagement.getUnionRepresentatives().contains(sub);
 
         }
 
@@ -280,20 +314,31 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class setSubscription{
         //parameter
+        public String userName;
+        public String password;
+        public String email;
 
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
+                    {"t11","123456","shir0@post.bgu.ac.il"}
 
 
             });
         }
-        public setSubscription() {
+        public setSubscription(String userName, String password, String email) {
             //parameter
+            this.userName = userName;
+            this.password = password;
+            this.email = email;
         }
         @Test
         public void setSubscriptionTest() {
+            Subscription sub = new UnionRepresentative(userName,password,email);
+            DataManagement.setSubscription(sub);
+            DataManagement.setSubscription(new Coach("shir",password,email));
+            assertEquals(DataManagement.containSubscription(userName),sub);
 
         }
 
@@ -307,21 +352,30 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class removeSubscription{
         //parameter
-
+        public String userName;
+        public String password;
+        public String email;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
-
+                    {"t111","123456","shir0@post.bgu.ac.il"}
             });
         }
-        public removeSubscription() {
+        public removeSubscription(String userName, String password, String email) {
             //parameter
+            this.userName = userName;
+            this.password = password;
+            this.email = email;
         }
         @Test
         public void removeSubscriptionTest() {
-
+            Subscription sub = new UnionRepresentative(userName,password,email);
+            DataManagement.setSubscription(sub);
+            DataManagement.setSubscription(new Coach("shir",password,email));
+            assertEquals(DataManagement.containSubscription(userName),sub);
+            DataManagement.removeSubscription(userName);
+            assertNull(DataManagement.containSubscription(userName));
         }
 
     }//removeSubscription
@@ -334,20 +388,28 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class setCurrent{
         //parameter
-
+        public String userName;
+        public String password;
+        public String email;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
+                    {"t1","123456","shir0@post.bgu.ac.il"}
 
             });
         }
-        public setCurrent() {
+        public setCurrent(String userName, String password, String email) {
             //parameter
+            this.userName = userName;
+            this.password = password;
+            this.email = email;
         }
         @Test
         public void setCurrentTest() {
+            Subscription sub = new UnionRepresentative(userName,password,email);
+            DataManagement.setCurrent(sub);
+            assertEquals(DataManagement.getCurrent(),sub);
 
         }
 
@@ -361,20 +423,29 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class getCurrent{
         //parameter
-
+        public String userName;
+        public String password;
+        public String email;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
+                    {"t1","123456","shir0@post.bgu.ac.il"}
 
             });
         }
-        public getCurrent() {
+        public getCurrent(String userName, String password, String email) {
             //parameter
+            this.userName = userName;
+            this.password = password;
+            this.email = email;
         }
         @Test
-        public void sgetCurrentTest() {
+        public void getCurrentTest() {
+            Subscription sub = new UnionRepresentative(userName,password,email);
+            assertNull(DataManagement.getCurrent());
+            DataManagement.setCurrent(sub);
+            assertEquals(DataManagement.getCurrent(),sub);
 
         }
 
@@ -389,20 +460,33 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class addToListTeam{
         //parameter
+        String name;
+        String filed;
 
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
+                    {"Barcelona", "Camp Nou"}
 
 
             });
         }
-        public addToListTeam() {
+        public addToListTeam(String name, String filed) {
             //parameter
+            this.name = name;
+            this.filed= filed;
         }
         @Test
         public void addToListTeamTest() {
+            Team team1 = new Team(name,filed);
+            SystemAdministrator sub = new SystemAdministrator("t1","123456","shir0@post.bgu.ac.il");
+            assertEquals(team1.countObservers(),0);
+            DataManagement.setSubscription(sub);
+            DataManagement.addToListTeam(team1);
+            assertEquals(DataManagement.findTeam(name),team1);
+            assertEquals(team1.countObservers(),1);
+
 
         }
 
@@ -415,22 +499,27 @@ public class DataManagementTest {
      */
     @RunWith(Parameterized.class)
     public static class getListTeam{
-        //parameter
-
+        String name;
+        String filed;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
+                    {"Barcelona", "Camp Nou"}
 
 
             });
         }
-        public getListTeam() {
+        public getListTeam(String name, String filed) {
             //parameter
+            this.name = name;
+            this.filed= filed;
         }
         @Test
         public void getListTeamTest() {
-
+            Team team1 = new Team(name,filed);
+            DataManagement.addToListTeam(team1);
+            assertTrue(DataManagement.getListTeam().contains(team1));
         }
 
     }//getListTeam
@@ -442,21 +531,24 @@ public class DataManagementTest {
      */
     @RunWith(Parameterized.class)
     public static class addToListLeague{
-        //parameter
+        String name;
 
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
-
+                    {"shir"}
             });
         }
-        public addToListLeague() {
+        public addToListLeague(String name) {
+            this.name = name;
             //parameter
         }
         @Test
         public void addToListLeagueTest() {
+            League l = new League(name);
+            DataManagement.addToListLeague(l);
+            DataManagement.getListLeague().contains(l);
 
         }
 
@@ -468,21 +560,24 @@ public class DataManagementTest {
      */
     @RunWith(Parameterized.class)
     public static class getListLeague{
-        //parameter
+        String name;
 
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
-
+                    {"shir"}
             });
         }
-        public getListLeague() {
+        public getListLeague(String name) {
+            this.name = name;
             //parameter
         }
         @Test
         public void getListLeagueTest() {
+            League l = new League(name);
+            DataManagement.addToListLeague(l);
+            DataManagement.getListLeague().contains(l);
 
         }
 
@@ -496,51 +591,32 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class getSystemAdministratorsList{
         //parameter
-
+        public String userName;
+        public String password;
+        public String email;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
+                    {"t1","123456","shir0@post.bgu.ac.il"}
 
             });
         }
-        public getSystemAdministratorsList() {
+        public getSystemAdministratorsList(String userName, String password, String email) {
             //parameter
+            this.userName = userName;
+            this.password = password;
+            this.email = email;
         }
         @Test
         public void getSystemAdministratorsListTest() {
+            Subscription sub = new SystemAdministrator(userName,password,email);
+            DataManagement.setSubscription(sub);
+            DataManagement.getSystemAdministratorsList().contains(sub);
 
         }
 
     }//getSystemAdministratorsList
-
-
-    /**
-     * Test - DM20
-     */
-    @RunWith(Parameterized.class)
-    public static class setComplaint{
-        //parameter
-
-
-        @Parameterized.Parameters
-        public static Collection<Object[]> data() {
-            return Arrays.asList(new Object[][]{
-
-
-            });
-        }
-        public setComplaint() {
-            //parameter
-        }
-        @Test
-        public void setComplaintTest() {
-
-        }
-
-    }//setComplaint
-
 
 
     /**
@@ -549,21 +625,34 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class checkEmail{
         //parameter
+        String email;
+        String ans;
 
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
-
+                    {null,"false"},
+                    {"","false"},
+                    {"s","false"},
+                    {"shir0post.bgu.ac.il","false"},
+                    {"shir0@post.bgu.ac.il","true"}
             });
         }
-        public checkEmail() {
+        public checkEmail(String email, String ans) {
             //parameter
+            this.email = email;
+            this.ans= ans;
         }
+
         @Test
         public void checkEmailTest() {
+            if(ans.equals("false")){
+                assertFalse(DataManagement.checkEmail(email));
+            }else{
+                assertTrue(DataManagement.checkEmail(email));
 
+            }
         }
 
     }//checkEmail
@@ -576,21 +665,37 @@ public class DataManagementTest {
     @RunWith(Parameterized.class)
     public static class InputTest{
         //parameter
+        String user;
+        String password;
+        String ans;
 
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
+                    {"","","The input is empty."},
+                    {"s","","The input is empty."},
+                    {null,"","The input is empty."},
+                    {"s",null,"The input is empty."},
+                    {"s","1","The password must contain at least 5 digits."},
+                    {"shir","12345","Please select another username because this username exists in the system."},
+                    {"1","12345",null},
+
+
 
 
             });
         }
-        public InputTest() {
+        public InputTest(String user,String password,String ans) {
             //parameter
+            this.user = user;
+            this.password = password;
+            this.ans = ans;
         }
         @Test
         public void InputTestTest() {
-
+            DataManagement.setSubscription(new Coach("shir","123456","shir0post.bgu.ac.il"));
+            assertEquals(DataManagement.InputTest(user,password),ans);
         }
 
 

@@ -5,6 +5,8 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 @RunWith(Enclosed.class)
 public class SearchLoggerTest {
@@ -25,6 +27,15 @@ public class SearchLoggerTest {
             assertEquals(sl.showSearchHistory(),"");
             assertEquals(sl.findData("SHIR"),"fan: SHIR\n");
             assertEquals(sl.showSearchHistory(),"SHIR\n");
+
+            sl.dataPath = null;
+            try{
+                sl.findData("SHIR");
+            }catch (Exception e){
+                System.out.println("s");
+
+
+            }
         }
 
 

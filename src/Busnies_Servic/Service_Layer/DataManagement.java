@@ -53,14 +53,6 @@ public final class DataManagement {
     }
 
     /**
-     * add Game
-     * @param g
-     */
-    public static void addGame(Game g){
-        list_game.add(g);
-    }
-
-    /**
      * singleton initialize the parameters
      */
     private void createLogicManagement(){
@@ -70,7 +62,6 @@ public final class DataManagement {
         taxSys = new stateTaxSystem();
         boolean checkSystem2 = taxSys.initConnection();
     }
-
 
     /**
      * A function is to check if there is a subscription in the system by username.
@@ -86,21 +77,21 @@ public final class DataManagement {
         return null;
     }
 
-    private static boolean isInEnum(String value) {
+    protected static boolean isInEnum(String value) {
         return Arrays.stream(Role.values()).anyMatch(e -> e.name().equals(value));
     }
 
 
     /**
      * The function accepts a string with the role name and returns Enum.
-     * @param arg_role
+     * @param argRole
      * @return Role or null if the tole not found
      */
-    protected static Role returnEnum(String arg_role){
-        Role enum_role =  Role.valueOf(arg_role);
-        if (!isInEnum(arg_role)) {
+    protected static Role returnEnum(String argRole){
+        if (!isInEnum(argRole)) {
             return null;
         }
+        Role enum_role =  Role.valueOf(argRole);
         switch (enum_role) {
             case Coach:
                 return Role.Coach;
@@ -125,7 +116,6 @@ public final class DataManagement {
         }
     }
 
-
     /**
      * @param arg_user_to_register
      * @return
@@ -136,6 +126,14 @@ public final class DataManagement {
                 return t;
         }
         return null;
+    }
+
+    /**
+     * add Game
+     * @param g
+     */
+    public static void addGame(Game g){
+        list_game.add(g);
     }
 
     /**
@@ -233,7 +231,7 @@ public final class DataManagement {
         }
         return list;
     }
-
+/*
     public static void setComplaint(String complaint){
         Complaint new_complaint = new Complaint(complaint);
         HashSet<SystemAdministrator> list = getSystemAdministratorsList();
@@ -244,17 +242,18 @@ public final class DataManagement {
         list_Complaints.add(new_complaint);
     }
 
+ */
+
     /**
      * This function check if email is legal
      * @param email
      * @return
      */
-    public static boolean checkEmail(String email){
+    protected static boolean checkEmail(String email){
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
                 "A-Z]{2,7}$";
-
         Pattern pat = Pattern.compile(emailRegex);
         if (email == null)
             return false;
@@ -284,5 +283,4 @@ public final class DataManagement {
         }
         return null;
     }
-
 }

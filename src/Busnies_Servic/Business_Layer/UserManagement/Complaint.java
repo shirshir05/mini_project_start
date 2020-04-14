@@ -38,12 +38,14 @@ public class Complaint extends Observable {
                 "Has been answered:\n " +
                 "\""+ans+"\"");
     }
-
+/*
     public void notify_all(){
         setChanged();
         notifyObservers(description);
 
     }
+
+ */
 
 
 

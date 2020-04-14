@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class SearchLogger {
-    private String dataPath ="./lib/spellingDict.txt";
+    protected String dataPath ="./lib/spellingDict.txt";
 
     /**
      * Search data according word
@@ -25,7 +25,6 @@ public class SearchLogger {
             while((line=br.readLine())!=null)
             {
                 if (line.contains(keyWord)){
-                    //sb.append(line.substring(line.indexOf(':')+1));
                     sb.append(line);
                     sb.append("\n");
                 }
@@ -34,7 +33,7 @@ public class SearchLogger {
             return sb.toString();
 
         }
-        catch(IOException e)
+        catch(Exception e)
         {
             e.printStackTrace();
         }
