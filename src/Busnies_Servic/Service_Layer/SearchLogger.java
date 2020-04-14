@@ -15,6 +15,7 @@ public class SearchLogger {
      */
     public String findData(String keyWord){
         DataManagement.getCurrent().addSearch(keyWord);
+        //TODO - use spell correction instead of reading the dictionary file
         try
         {
             File file=new File(dataPath);

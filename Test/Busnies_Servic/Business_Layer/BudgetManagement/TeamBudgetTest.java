@@ -26,7 +26,7 @@ public class TeamBudgetTest {
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {"teamName",5000,2000,-100,false},{"teamName",5000,2000,-1000,false},{"teamName",5000,2000,3000,true}
+                    {"teamName",5000,2000,-100,false},{"teamName",5000,2000,-100000,false},{"teamName",5000,2000,3000,true}
                     ,{"teamName",5000,0,0,true},{"teamName",5000,2000,5000,true}
 
             });
@@ -61,6 +61,8 @@ public class TeamBudgetTest {
 
             BudgetRegulations.setMaxOtherExpense(max);
             assertEquals(TB.addExpense(expanse,Expense.Other).isActionSuccessful(),correct);
+
+            assertEquals(TB.addExpense(expanse,Expense.RefereeSalary).isActionSuccessful(),false);
         }
 
         @Test

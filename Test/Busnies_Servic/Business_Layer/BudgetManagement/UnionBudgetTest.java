@@ -26,8 +26,8 @@ public class UnionBudgetTest {
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {5000,2000,-100,false},{5000,2000,-1000,false},{5000,2000,3000,true}
-                    ,{5000,0,0,true},{5000,2000,5000,true}
+                    {5000,2000,-100,false},{5000,2000,-1000,false}, {5000,2000,100,false},
+                    {5000,2000,3000,true},{5000,0,0,true},{5000,2000,5000,true}
 
             });
         }
@@ -50,6 +50,8 @@ public class UnionBudgetTest {
             BudgetRegulations.setMaxUnionMemberSalary(max);
             BudgetRegulations.setMinUnionMemberSalary(min);
             assertEquals(TB.addExpense(expanse,Expense.UnionMemberSalary).isActionSuccessful(),correct);
+
+            assertEquals(TB.addExpense(expanse,Expense.PlayerSalary).isActionSuccessful(),false);
 
         }
 

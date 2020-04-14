@@ -6,6 +6,7 @@ import Busnies_Servic.Business_Layer.UserManagement.Player;
 import Busnies_Servic.Business_Layer.UserManagement.Referee;
 import Busnies_Servic.Enum.EventType;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -15,6 +16,7 @@ import java.util.Collection;
 
 import static org.junit.Assert.*;
 
+@RunWith(Enclosed.class)
 public class GameSettingsControllerTest {
 
 
