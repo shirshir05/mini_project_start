@@ -70,10 +70,10 @@ public class Permissions {
         list_Permissions.add(PermissionAction.appointment_referee);
         list_Permissions.add(PermissionAction.remove_referee);
         list_Permissions.add(PermissionAction.setting_referee_in_league);
-        list_Permissions.add(PermissionAction.Calculation_Policy);
+        list_Permissions.add(PermissionAction.calculation_policy);
         list_Permissions.add(PermissionAction.setting_games);
-        list_Permissions.add(PermissionAction.setting_games_Policy);
-        list_Permissions.add(PermissionAction.uniun_financial);
+        list_Permissions.add(PermissionAction.setting_games_policy);
+        list_Permissions.add(PermissionAction.change_budget_regulations);
     }
 
     public void add_default_referee_permission(){

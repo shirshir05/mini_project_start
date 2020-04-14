@@ -69,10 +69,10 @@ public class UnionRepresentativeTest {
             assertTrue(UnionRepresentative.getPermissions().check_permissions(PermissionAction.appointment_referee));
             assertTrue(UnionRepresentative.getPermissions().check_permissions(PermissionAction.remove_referee));
             assertTrue(UnionRepresentative.getPermissions().check_permissions(PermissionAction.setting_referee_in_league));
-            assertTrue(UnionRepresentative.getPermissions().check_permissions(PermissionAction.Calculation_Policy));
+            assertTrue(UnionRepresentative.getPermissions().check_permissions(PermissionAction.calculation_policy));
             assertTrue(UnionRepresentative.getPermissions().check_permissions(PermissionAction.setting_games));
-            assertTrue(UnionRepresentative.getPermissions().check_permissions(PermissionAction.setting_games_Policy));
-            assertTrue(UnionRepresentative.getPermissions().check_permissions(PermissionAction.uniun_financial));
+            assertTrue(UnionRepresentative.getPermissions().check_permissions(PermissionAction.setting_games_policy));
+            assertTrue(UnionRepresentative.getPermissions().check_permissions(PermissionAction.change_budget_regulations));
         }
     }//UnionRepresentative1
 

@@ -6,34 +6,44 @@ package Busnies_Servic.Business_Layer.BudgetManagement;
  */
 public class BudgetRegulations {
 
+    private static final int DEFAULT_MAX_SALARY = 10000;
+    private static final int MIN_SALARY = 5000;
+    private static final int DEFAULT_MAX_EXPENSE = 1000;
+
     //region Team related members
 
-    private static double maxPlayerSalary;
-    private static double minPlayerSalary;
+    private static double maxPlayerSalary = DEFAULT_MAX_SALARY;
+    private static double minPlayerSalary = MIN_SALARY;
 
-    private static double maxCoachSalary;
-    private static double minCoachSalary;
+    private static double maxCoachSalary = DEFAULT_MAX_SALARY;
+    private static double minCoachSalary = MIN_SALARY;
 
-    private static double maxMaintenanceExpense;
+    private static double maxMaintenanceExpense = DEFAULT_MAX_EXPENSE;
 
-    private static double maxAdvertisementExpense;
+    private static double maxAdvertisementExpense = DEFAULT_MAX_EXPENSE;
 
-    private static double maxUniformExpense;
+    private static double maxUniformExpense = DEFAULT_MAX_EXPENSE;
 
-    private static double maxOtherExpense;
+    private static double maxOtherExpense = DEFAULT_MAX_EXPENSE;
 
     //endregion
 
     //region Union related members
 
-    private static double maxRefereeSalary;
-    private static double minRefereeSalary;
+    private static double maxRefereeSalary = DEFAULT_MAX_SALARY;
+    private static double minRefereeSalary = MIN_SALARY;
 
-    private static double maxUnionMemberSalary;
-    private static double minUnionMemberSalary;
+    private static double maxUnionMemberSalary = DEFAULT_MAX_SALARY;
+    private static double minUnionMemberSalary = MIN_SALARY;
 
     //endregion
 
+    /**
+     * returns the lowest salary than can be given to a any employee -> minimum wage
+     */
+    public static int getMinPossibleSalary(){
+        return MIN_SALARY;
+    }
 
     //region Team budget verification
     public static boolean checkPlayerSalary(double playerSalary){
@@ -110,6 +120,42 @@ public class BudgetRegulations {
 
     //endregion
 
+    //region Getters for team members
+
+    public static double getMaxPlayerSalary() {
+        return maxPlayerSalary;
+    }
+
+    public static double getMinPlayerSalary() {
+        return minPlayerSalary;
+    }
+
+    public static double getMaxCoachSalary() {
+        return maxCoachSalary;
+    }
+
+    public static double getMinCoachSalary() {
+        return minCoachSalary;
+    }
+
+    public static double getMaxMaintenanceExpense() {
+        return maxMaintenanceExpense;
+    }
+
+    public static double getMaxAdvertisementExpense() {
+        return maxAdvertisementExpense;
+    }
+
+    public static double getMaxUniformExpense() {
+        return maxUniformExpense;
+    }
+
+    public static double getMaxOtherExpense() {
+        return maxOtherExpense;
+    }
+
+    //endregion
+
     //region Setters for union members -> requires permissions
 
     public static void setMaxRefereeSalary(double maxRefereeSalary) {
@@ -129,4 +175,25 @@ public class BudgetRegulations {
     }
 
     //endregion ->
+
+    //region Getters for union members
+
+    public static double getMaxRefereeSalary() {
+        return maxRefereeSalary;
+    }
+
+    public static double getMinRefereeSalary() {
+        return minRefereeSalary;
+    }
+
+    public static double getMaxUnionMemberSalary() {
+        return maxUnionMemberSalary;
+    }
+
+    public static double getMinUnionMemberSalary() {
+        return minUnionMemberSalary;
+    }
+
+
+    //endregion
 }
