@@ -12,63 +12,98 @@ import java.util.HashSet;
 public class BudgetController {
 
     //TODO check permissions!
-    //TODO - check negative numbers and max<min
 
     private static UnionBudget unionBudget = new UnionBudget();
 
-    //**********************************************endregion************************************************************//
+
     //region Change regulations
     public static void setMaxPlayerSalary(double maxPlayerSalary) {
-        BudgetRegulations.setMaxPlayerSalary(maxPlayerSalary);
+        if (verifyMaxSalary(maxPlayerSalary, BudgetRegulations.getMinPlayerSalary())){
+            BudgetRegulations.setMaxPlayerSalary(maxPlayerSalary);
+        }
     }
 
     public static void setMinPlayerSalary(double minPlayerSalary) {
-        BudgetRegulations.setMinPlayerSalary(minPlayerSalary);
+        if (verifyMinSalary(minPlayerSalary, BudgetRegulations.getMaxPlayerSalary())) {
+            BudgetRegulations.setMinPlayerSalary(minPlayerSalary);
+        }
     }
 
     public static void setMaxCoachSalary(double maxCoachSalary) {
-        BudgetRegulations.setMaxCoachSalary(maxCoachSalary);
+        if (verifyMaxSalary(maxCoachSalary, BudgetRegulations.getMinCoachSalary())){
+            BudgetRegulations.setMaxCoachSalary(maxCoachSalary);
+        }
     }
 
     public static void setMinCoachSalary(double minCoachSalary) {
-        BudgetRegulations.setMinCoachSalary(minCoachSalary);
+        if (verifyMinSalary(minCoachSalary, BudgetRegulations.getMaxCoachSalary())) {
+            BudgetRegulations.setMinCoachSalary(minCoachSalary);
+        }
     }
 
     public static void setMaxMaintenanceExpense(double maxMaintenanceExpense) {
-        BudgetRegulations.setMaxMaintenanceExpense(maxMaintenanceExpense);
+        if (verifyMaxExpense(maxMaintenanceExpense)) {
+            BudgetRegulations.setMaxMaintenanceExpense(maxMaintenanceExpense);
+        }
     }
 
     public static void setMaxAdvertisementExpense(double maxAdvertisementExpense) {
-        BudgetRegulations.setMaxAdvertisementExpense(maxAdvertisementExpense);
+        if (verifyMaxExpense(maxAdvertisementExpense)) {
+            BudgetRegulations.setMaxAdvertisementExpense(maxAdvertisementExpense);
+        }
     }
 
     public static void setMaxUniformExpense(double maxUniformExpense) {
-        BudgetRegulations.setMaxUniformExpense(maxUniformExpense);
+        if (verifyMaxExpense(maxUniformExpense)) {
+            BudgetRegulations.setMaxUniformExpense(maxUniformExpense);
+        }
     }
 
     public static void setMaxOtherExpense(double maxOtherExpense) {
-        BudgetRegulations.setMaxOtherExpense(maxOtherExpense);
+        if (verifyMaxExpense(maxOtherExpense)) {
+            BudgetRegulations.setMaxOtherExpense(maxOtherExpense);
+        }
     }
 
     public static void setMaxRefereeSalary(double maxRefereeSalary) {
-        BudgetRegulations.setMaxRefereeSalary(maxRefereeSalary);
+        if (verifyMaxSalary(maxRefereeSalary, BudgetRegulations.getMinRefereeSalary())) {
+            BudgetRegulations.setMaxRefereeSalary(maxRefereeSalary);
+        }
     }
 
     public static void setMinRefereeSalary(double minRefereeSalary) {
-        BudgetRegulations.setMinRefereeSalary(minRefereeSalary);
+        if (verifyMinSalary(minRefereeSalary, BudgetRegulations.getMaxRefereeSalary())) {
+            BudgetRegulations.setMinRefereeSalary(minRefereeSalary);
+        }
     }
 
     public static void setMaxUnionMemberSalary(double maxUnionMemberSalary) {
-        BudgetRegulations.setMaxUnionMemberSalary(maxUnionMemberSalary);
+        if (verifyMaxSalary(maxUnionMemberSalary, BudgetRegulations.getMinUnionMemberSalary())) {
+            BudgetRegulations.setMaxUnionMemberSalary(maxUnionMemberSalary);
+        }
     }
 
     public static void setMinUnionMemberSalary(double minUnionMemberSalary) {
-        BudgetRegulations.setMinUnionMemberSalary(minUnionMemberSalary);
+        if (verifyMinSalary(minUnionMemberSalary, BudgetRegulations.getMaxUnionMemberSalary())) {
+            BudgetRegulations.setMinUnionMemberSalary(minUnionMemberSalary);
+        }
     }
 
+    private static boolean verifyMaxSalary(double maxSalary, double existingMin) {
+        return maxSalary > 0 && maxSalary >= existingMin;
+    }
 
+    private static boolean verifyMinSalary(double minSalary, double existingMax) {
+        return BudgetRegulations.getMinPossibleSalary() <= minSalary && minSalary <= existingMax;
+    }
 
-//**********************************************region Team budget************************************************************//
+    private static boolean verifyMaxExpense(double expense){
+        return expense >= 0;
+    }
+
+    //endregion
+
+    // region Team budget
     public static void startNewQuarter(){
         HashSet<Team> teams = DataManagement.getListTeam();
         for (Team t:teams){
@@ -77,6 +112,8 @@ public class BudgetController {
     }
 
     public static ActionStatus addExpenseToTeam(String teamName, double expense, Expense description){
+        if (expense < 0)
+            return new ActionStatus(false, "An expense has to be a positive number");
         Team team = DataManagement.findTeam(teamName);
         if(team == null)
             return new ActionStatus(false, "Team not found");
@@ -84,6 +121,8 @@ public class BudgetController {
     }
 
     public static ActionStatus addIncomeToTeam(String teamName, double income, Income description){
+        if (income < 0)
+            return new ActionStatus(false, "An income has to be a positive number");
         Team team = DataManagement.findTeam(teamName);
         if(team == null)
             return new ActionStatus(false, "Team not found");
@@ -102,14 +141,18 @@ public class BudgetController {
     //region Union budget
 
     public static ActionStatus addExpenseToUnion(double expense, Expense description){
+        if(expense < 0)
+            return new ActionStatus(false, "An expense has to be a positive number");
         return unionBudget.addExpense(expense,description);
     }
 
     public static ActionStatus addIncomeToUnion(double income, Income description){
+        if(income < 0)
+            return new ActionStatus(false, "An income has to be a positive number");
         return unionBudget.addIncome(income,description);
     }
 
-    public static double getUnionBalance(String teamName){
+    public static double getUnionBalance(){
         return unionBudget.getCurrentAmount();
     }
 
