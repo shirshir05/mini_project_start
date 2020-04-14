@@ -2,8 +2,8 @@ package Busnies_Servic.Service_Layer;
 
 import Busnies_Servic.Business_Layer.Game.Game;
 import Busnies_Servic.Business_Layer.UserManagement.Referee;
-import Busnies_Servic.EventType;
-import Busnies_Servic.PermissionAction;
+import Busnies_Servic.Enum.EventType;
+import Busnies_Servic.Enum.PermissionAction;
 import DB_Layer.logger;
 
 import java.time.LocalDate;

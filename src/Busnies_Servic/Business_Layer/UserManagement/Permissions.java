@@ -1,6 +1,6 @@
 package Busnies_Servic.Business_Layer.UserManagement;
 
-import Busnies_Servic.PermissionAction;
+import Busnies_Servic.Enum.PermissionAction;
 
 import java.util.HashSet;
 

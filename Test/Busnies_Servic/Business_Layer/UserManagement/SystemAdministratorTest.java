@@ -2,7 +2,7 @@ package Busnies_Servic.Business_Layer.UserManagement;
 
 import Busnies_Servic.Business_Layer.Game.Game;
 import Busnies_Servic.Business_Layer.TeamManagement.Team;
-import Busnies_Servic.PermissionAction;
+import Busnies_Servic.Enum.PermissionAction;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -13,7 +13,6 @@ import java.security.MessageDigest;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 
 import static org.junit.Assert.*;
 

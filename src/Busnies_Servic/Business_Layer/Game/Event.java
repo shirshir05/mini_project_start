@@ -1,9 +1,9 @@
 package Busnies_Servic.Business_Layer.Game;
 
-import Busnies_Servic.ActionStatus;
+import Busnies_Servic.Enum.ActionStatus;
 import Busnies_Servic.Business_Layer.TeamManagement.Team;
 import Busnies_Servic.Business_Layer.UserManagement.Player;
-import Busnies_Servic.EventType;
+import Busnies_Servic.Enum.EventType;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;

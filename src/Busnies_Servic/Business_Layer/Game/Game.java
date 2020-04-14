@@ -2,20 +2,16 @@ package Busnies_Servic.Business_Layer.Game;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Observable;
 
-import Busnies_Servic.PermissionAction;
-import Busnies_Servic.ActionStatus;
 import Busnies_Servic.Business_Layer.TeamManagement.Team;
 import Busnies_Servic.Business_Layer.UserManagement.Player;
 import Busnies_Servic.Business_Layer.UserManagement.Referee;
-import Busnies_Servic.EventType;
+import Busnies_Servic.Enum.EventType;
 import DB_Layer.logger;
 import javafx.util.Pair;
 
-import java.util.Date;
 
 public class Game extends Observable{
     static int game_id=0;

@@ -1,26 +1,16 @@
 package Busnies_Servic.Business_Layer.Game;
-import Busnies_Servic.Business_Layer.TeamManagement.TeamTest;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
+
 import static org.junit.Assert.*;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Observable;
 
 import Busnies_Servic.Business_Layer.TeamManagement.Team;
 import Busnies_Servic.Business_Layer.UserManagement.Player;
 import Busnies_Servic.Business_Layer.UserManagement.Referee;
-import Busnies_Servic.EventType;
-import javafx.util.Pair;
+import Busnies_Servic.Enum.EventType;
 
-import java.util.Date;
 public class GameTest {
 
     private Game game;

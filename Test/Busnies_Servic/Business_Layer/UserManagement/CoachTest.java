@@ -1,7 +1,7 @@
 package Busnies_Servic.Business_Layer.UserManagement;
 
 import Busnies_Servic.Business_Layer.Trace.CoachPersonalPage;
-import Busnies_Servic.PermissionAction;
+import Busnies_Servic.Enum.PermissionAction;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;

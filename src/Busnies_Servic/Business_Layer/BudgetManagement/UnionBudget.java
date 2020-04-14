@@ -1,6 +1,6 @@
 package Busnies_Servic.Business_Layer.BudgetManagement;
 
-import Busnies_Servic.ActionStatus;
+import Busnies_Servic.Enum.ActionStatus;
 
 /**
  * Describes a budget of the union.

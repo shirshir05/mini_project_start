@@ -8,7 +8,7 @@ import Busnies_Servic.Business_Layer.UserManagement.Complaint;
 import Busnies_Servic.Business_Layer.UserManagement.Subscription;
 import Busnies_Servic.Business_Layer.UserManagement.SystemAdministrator;
 import Busnies_Servic.Business_Layer.UserManagement.UnionRepresentative;
-import Busnies_Servic.Role;
+import Busnies_Servic.Enum.Role;
 import DB_Layer.logger;
 import DB_Layer.stateTaxSystem;
 import DB_Layer.unionFinanceSystem;

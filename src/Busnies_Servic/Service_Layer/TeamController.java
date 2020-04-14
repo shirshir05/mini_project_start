@@ -1,9 +1,9 @@
 package Busnies_Servic.Service_Layer;
 
-import Busnies_Servic.ActionStatus;
+import Busnies_Servic.Enum.ActionStatus;
 import Busnies_Servic.Business_Layer.TeamManagement.Team;
 import Busnies_Servic.Business_Layer.UserManagement.*;
-import Busnies_Servic.PermissionAction;
+import Busnies_Servic.Enum.PermissionAction;
 import DB_Layer.logger;
 import Presentation_Layer.Spelling;
 
