@@ -15,8 +15,116 @@ import java.util.Collection;
 
 import static org.junit.Assert.*;
 
-public class GameControllerTest {
+public class GameSettingsControllerTest {
 
+
+
+       /**
+     * Test - SC1
+     */
+    @RunWith(Parameterized.class)
+    public static class defineLeague{
+        //parameter
+
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+
+
+            });
+        }
+        public defineLeague() {
+            //parameter
+        }
+        @Test
+        public void defineLeagueTest() {
+
+        }
+
+
+    }//defineLeague
+
+
+    /**
+     * Test - SC2
+     */
+    @RunWith(Parameterized.class)
+    public static class defineSeasonToLeague{
+        //parameter
+
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+
+
+            });
+        }
+        public defineSeasonToLeague() {
+            //parameter
+        }
+        @Test
+        public void defineSeasonToLeagueTest() {
+
+        }
+
+
+    }//defineSeasonToLeague
+
+
+
+    /**
+     * Test - SC3
+     */
+    @RunWith(Parameterized.class)
+    public static class addOrDeleteRefereeToSystem{
+        //parameter
+
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+
+
+            });
+        }
+        public addOrDeleteRefereeToSystem() {
+            //parameter
+        }
+        @Test
+        public void addOrDeleteRefereeToSystemTest() {
+
+        }
+
+
+    }//addOrDeleteRefereeToSystem
+
+    /**
+     * Test - SC4
+     */
+    @RunWith(Parameterized.class)
+    public static class defineRefereeInLeague{
+        //parameter
+
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+
+
+            });
+        }
+        public defineRefereeInLeague() {
+            //parameter
+        }
+        @Test
+        public void defineRefereeInLeagueTest() {
+
+        }
+
+
+    }//defineRefereeInLeague
 
 
     /**
@@ -78,7 +186,7 @@ public class GameControllerTest {
         }
         @Test
         public void refereeCreateNewEventTest() {
-            GameController gm = new GameController();
+            GameSettingsController gm = new GameSettingsController();
             LogAndExitController lg = new LogAndExitController();
             Team t = new Team("shir1","s");
             Game g = new Game("f", LocalDate.of(1995,8,18),t,new Team("shir2","f"));
