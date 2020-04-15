@@ -285,4 +285,28 @@ public final class DataManagement {
         }
         return null;
     }
+
+    public static HashSet<Complaint> getAllComplaints() {
+        return list_Complaints;
+    }
+
+    public static HashSet<Complaint> getUnansweredComplaints() {
+        HashSet<Complaint> unanswered = new HashSet<>();
+        for (Complaint c : list_Complaints){
+            if (!c.isAnswered()){
+                unanswered.add(c);
+            }
+        }
+        return unanswered;
+    }
+
+    /**
+     * for the use of complaint controller - adds a compliant after verifying the permissions
+     * @param complaint the complaint to add
+     */
+    protected static void addComplaint(Complaint complaint) {
+        if(complaint!=null){
+            list_Complaints.add(complaint);
+        }
+    }
 }

@@ -9,13 +9,10 @@ import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Enum.PermissionAction;
 import DB_Layer.logger;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Observable;
 
 public class AlertController {
-
-    private static ArrayList<Complaint> complaints;
-
 
     /**
      *  This function register the fan to alerts of a game he choose.
@@ -57,9 +54,6 @@ public class AlertController {
         return ans;
     }
 
-    // TODO permissions?
-
-
     /**
      * This method adds a complaint by a user.
      * @param fan the fan who created the complaint
@@ -70,11 +64,9 @@ public class AlertController {
             AC = new ActionStatus(false, "Complaint cannot be empty");
         }
         else {
-            if (complaints == null)
-                complaints = new ArrayList<>();
             Complaint c = new Complaint(complaintDescription);
             fan.addComplaint(c);
-            complaints.add(c);
+            DataManagement.addComplaint(c);
             AC = new ActionStatus(true, "Complaint added successfully");
         }
         logger.log("Add Complaint of user : "+ fan.getName() +" "+AC.getDescription());
@@ -83,16 +75,39 @@ public class AlertController {
 
     /**
      * for the use of the system manager, to read all the complaints in the system
-     * @return a list of all the complaints
+     * @return a hash set of all the complaints
      */
-    public static ArrayList<Complaint> getComplaints() {
+    public static HashSet<Complaint> getAllComplaints() {
         if(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints))
-            return complaints;
+            return DataManagement.getAllComplaints();
         return null;
     }
 
+    /**
+     * for the use of the system manager, to read only the unanswered complaints in the system
+     */
+    public static HashSet<Complaint> getUnansweredComplaints() {
+        if(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints))
+            return DataManagement.getUnansweredComplaints();
+        return null;
+    }
 
-    public void addComplaint(String complaint_description){
-        //DataManagement.setComplaint(complaint_description);
+    public static ActionStatus answerCompliant(Complaint complaint, String answer){
+        if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints)) {
+            return new ActionStatus(false, "You do not have the required permissions to answer complaints");
+        }
+        if(complaint.isAnswered()){
+            return new ActionStatus(false, "Complaint has been answered already");
+        }
+        if(answer == null || answer.isEmpty()){
+            return new ActionStatus(false, "An answer to a complaint cannot be empty or null");
+        }
+        //remove the complaint without the answer
+        DataManagement.getAllComplaints().remove(complaint);
+        //answer the complaint
+        complaint.answerComplaint(answer);
+        //add it back to the list of complaints
+        DataManagement.addComplaint(complaint);
+        return new ActionStatus(true, "Complaint has been answered successfully");
     }
 }
