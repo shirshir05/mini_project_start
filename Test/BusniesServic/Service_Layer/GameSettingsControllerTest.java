@@ -130,7 +130,7 @@ public class GameSettingsControllerTest {
 
 
     /**
-     * Test - GC xxxxx
+     * Test - GC -XXXXXX
      */
     @RunWith(Parameterized.class)
     public static class createGame{
@@ -175,7 +175,7 @@ public class GameSettingsControllerTest {
                     {0,"0","0",EventType.red_ticket,"The game id does not exist."},
                     {1,"0","0",EventType.red_ticket,"The team id does not exist."},
                     {1,"shir1","0",EventType.red_ticket,"The player does not exist in the team."},
-                    {5,"shir1","shir",EventType.red_ticket,"Event successfully updated."},
+                    {5,"shir1","shir",EventType.red_ticket,"Event successfully updated."}
 
             });
         }
