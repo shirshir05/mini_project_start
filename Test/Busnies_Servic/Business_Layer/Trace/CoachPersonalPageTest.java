@@ -1,5 +1,6 @@
 package Busnies_Servic.Business_Layer.Trace;
 
+import BusniesServic.Business_Layer.Trace.CoachPersonalPage;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -41,7 +42,7 @@ public class CoachPersonalPageTest {
         }
 
         @Test
-        public void DateOfBirthTest() {
+        public void DateOfBirthTest1() {
             coachPersonalPage.setDateOfBirth(dateOfBirth);
             assertEquals(coachPersonalPage.getDateOfBirth(),correct);
         }
@@ -73,7 +74,7 @@ public class CoachPersonalPageTest {
         }
 
         @Test
-        public void CountryOfBirthTest() {
+        public void CountryOfBirthTest1() {
             coachPersonalPage.setCountryOfBirth(country);
             assertEquals(coachPersonalPage.getCountryOfBirth(),correct);
         }
@@ -105,7 +106,7 @@ public class CoachPersonalPageTest {
         }
 
         @Test
-        public void YearsOfExperienceTest() {
+        public void YearsOfExperienceTest1() {
             coachPersonalPage.setYearOfExperience(years);
             assertTrue(coachPersonalPage.getYearOfExperience()==correct);
         }
@@ -137,7 +138,7 @@ public class CoachPersonalPageTest {
         }
 
         @Test
-        public void YearsOfExperienceTest() {
+        public void NumOfTitlesTest1() {
             coachPersonalPage.setNumOfTitles(titles);
             assertTrue(coachPersonalPage.getNumOfTitles()==correct);
         }
