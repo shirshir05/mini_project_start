@@ -1,3 +1,5 @@
+import Presentation_Layer.Spelling;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -11,6 +13,9 @@ public class Main {
          String str = lc.Registration("mainAdmin", "p@$$w0rd", "SystemAdministrator","email");
          System.out.println(str + "\n" );
          **/
+
+        //Spelling.updateDictionary("wo hard to speok");
+        System.out.println("the correct: "+Spelling.getCorrectWord("hella bon") +"!");
 
     }
 }
