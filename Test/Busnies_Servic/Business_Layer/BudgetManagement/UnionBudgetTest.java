@@ -45,7 +45,7 @@ public class UnionBudgetTest {
         public void UnionExpenseTest1() {
             BudgetRegulations.setMaxRefereeSalary(max);
             BudgetRegulations.setMinRefereeSalary(min);
-            assertEquals(TB.addExpense(expanse,Expense.RefereeSalary).isActionSuccessful(),correct);
+            assertEquals(TB.addExpense(expanse, Expense.RefereeSalary).isActionSuccessful(),correct);
 
             BudgetRegulations.setMaxUnionMemberSalary(max);
             BudgetRegulations.setMinUnionMemberSalary(min);
@@ -58,7 +58,7 @@ public class UnionBudgetTest {
         @Test
         public void UnionIncomeTest1() {
             if(expanse>=0){
-                assertTrue(TB.addIncome(expanse,Income.Gambling).isActionSuccessful());
+                assertTrue(TB.addIncome(expanse, Income.Gambling).isActionSuccessful());
                 assertTrue(TB.addIncome(expanse,Income.Donation).isActionSuccessful());
                 assertTrue(TB.addIncome(expanse,Income.GameTickets).isActionSuccessful());
                 assertTrue(TB.addIncome(expanse,Income.Merchandise).isActionSuccessful());

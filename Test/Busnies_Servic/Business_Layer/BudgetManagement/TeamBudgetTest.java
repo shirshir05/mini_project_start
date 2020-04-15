@@ -44,7 +44,7 @@ public class TeamBudgetTest {
         public void TeamExpenseTest1() {
             BudgetRegulations.setMaxPlayerSalary(max);
             BudgetRegulations.setMinPlayerSalary(min);
-            assertEquals(TB.addExpense(expanse,Expense.PlayerSalary).isActionSuccessful(),correct);
+            assertEquals(TB.addExpense(expanse, Expense.PlayerSalary).isActionSuccessful(),correct);
 
             BudgetRegulations.setMaxCoachSalary(max);
             BudgetRegulations.setMinCoachSalary(min);
@@ -68,7 +68,7 @@ public class TeamBudgetTest {
         @Test
         public void TeamIncomeTest1() {
             if(expanse>0){
-                assertTrue(TB.addIncome(expanse,Income.Gambling).isActionSuccessful());
+                assertTrue(TB.addIncome(expanse, Income.Gambling).isActionSuccessful());
                 assertTrue(TB.addIncome(expanse,Income.Donation).isActionSuccessful());
                 assertTrue(TB.addIncome(expanse,Income.GameTickets).isActionSuccessful());
                 assertTrue(TB.addIncome(expanse,Income.Merchandise).isActionSuccessful());

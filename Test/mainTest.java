@@ -1,6 +1,4 @@
-import Busnies_Servic.Business_Layer.BudgetManagement.BudgetRegulationsTest;
 import Busnies_Servic.Business_Layer.UserManagement.*;
-import Busnies_Servic.Service_Layer.MainTestClass;
 import Busnies_Servic.Service_Layer.SearchLoggerTest;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
