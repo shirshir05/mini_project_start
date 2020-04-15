@@ -92,7 +92,6 @@ public class AlertController {
     public void addComplaint(String complaint_description){
         DataManagement.setComplaint(complaint_description);
     }
-
      */
 
 
