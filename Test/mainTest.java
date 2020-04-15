@@ -1,5 +1,6 @@
-import Busnies_Servic.Business_Layer.UserManagement.*;
-import Busnies_Servic.Service_Layer.SearchLoggerTest;
+import BusniesServic.Business_Layer.UserManagement.*;
+import BusniesServic.Service_Layer.SearchLoggerTest;
+import BusniesServic.Service_Layer.DataManagementTest;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -21,6 +22,8 @@ public class mainTest {
         JUnitCore.runClasses(TeamOwnerTest.class);
         JUnitCore.runClasses(UnionRepresentativeTest.class);
         JUnitCore.runClasses(SearchLoggerTest.class);
+        JUnitCore.runClasses(DataManagementTest.class);
+
     }
 
     private static void register(){
