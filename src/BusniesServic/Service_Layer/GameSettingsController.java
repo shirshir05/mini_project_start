@@ -144,7 +144,7 @@ public class GameSettingsController {
                 game.updateNewEvent(team_name,player_name,event);
                 explanation =  "Event successfully updated.";
             }else{
-                explanation =  "You are not a judge of the current game";
+                explanation =  "You are not a judge of the current game.";
             }
         }else{
             explanation =  "You may not take this action.";

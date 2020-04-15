@@ -71,7 +71,7 @@ public class LogAndExitController{
             AC = new ActionStatus(false, "Another subscription is connected to the system.");
         }
         else if (Current_check != null){
-            if (!Current_check.getPassword().equals(arg_password) ){
+            if (!Current_check.getPassword().equals(Subscription.getHash(arg_password)) ){
                 AC = new ActionStatus(false,  "The password does not match the username.");
             }
             else {
@@ -96,12 +96,15 @@ public class LogAndExitController{
     public ActionStatus Exit(String arg_user_name, String arg_password){
         ActionStatus AC = null;
         if(DataManagement.getCurrent() != null){
-            if(DataManagement.getCurrent().getUserName().equals(arg_user_name) && DataManagement.getCurrent().getPassword().equals(arg_password)){
+            if(DataManagement.getCurrent().getUserName().equals(arg_user_name) && DataManagement.getCurrent().getPassword().equals(Subscription.getHash(arg_password))){
                 DataManagement.setCurrent(null);
                 AC = new ActionStatus(true,  "Successfully disconnected from the system.");
             }
+            else{
+                AC = new ActionStatus(false, "One of the details you entered is incorrect.");
+            }
         }
-        else if(AC ==null){
+        else{
             AC = new ActionStatus(false, "One of the details you entered is incorrect.");
         }
         logger.log("Exit attempt of user : "+ arg_user_name+" "+ AC.getDescription());

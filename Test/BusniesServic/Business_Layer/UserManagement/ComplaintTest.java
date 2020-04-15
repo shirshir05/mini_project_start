@@ -71,12 +71,15 @@ public class ComplaintTest {
         @Test
         public void answerComplaintTest() {
             Complaint complaint = new Complaint(des);
+            Fan fan = new Fan("shir","123456","shir0@post.bgu.ac.il");
+            complaint.addObserver(fan);
             assertEquals(complaint.getDescription(),(des));
             assertEquals(complaint.getAnswer(),"Complaint has not been answered");
             assertFalse(complaint.isAnswered());
             complaint.answerComplaint("ans");
             assertTrue(complaint.isAnswered());
             assertEquals(complaint.getAnswer(),"ans");
+            assertEquals(fan.alerts.size(),1);
         }
     }//answerComplaint
 

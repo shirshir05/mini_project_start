@@ -190,7 +190,7 @@ public class RefereeTest {
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {"R1","123456","shir0@post.bgu.ac.il","You are participates in the next games: 3, 4"}
+                    {"R1","123456","shir0@post.bgu.ac.il","You are participates in the next games: 3"}
             });
         }
         public gamesListToString(String userName, String password, String email,String ans) {
@@ -199,10 +199,9 @@ public class RefereeTest {
             this.email = email;
             this.ans = ans;
         }
-
+        @Test
         public void gamesListToStringTest() {
             Referee referee = new Referee(userName,password,email);
-            referee.addGame(new Game("f",null, null, null));
             referee.addGame(new Game("f",null, null, null));
             assertEquals(referee.gamesListToString(),this.ans);
         }

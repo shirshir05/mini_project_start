@@ -154,6 +154,45 @@ public class GameSettingsControllerTest {
 
 
     }//createGame
+    /**
+     * Test - GC2
+     */
+    @RunWith(Parameterized.class)
+    public static class refereeWatchGames{
+        //parameter
+        String name;
+
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {null}
+
+
+            });
+        }
+        public refereeWatchGames(String name) {
+            this.name=name;
+            //parameter
+        }
+        @Test
+        public void refereeWatchGamesTest() {
+            GameSettingsController gm = new GameSettingsController();
+            LogAndExitController lg = new LogAndExitController();
+            lg.Registration("s","12345", "Coach","shir0@post.bgu.ac.il");
+            lg.Login("s","12345");
+            assertEquals(gm.refereeWatchGames(),"You are not a referee!");
+            lg.Exit("s","12345");
+            lg.Registration("ss","12345", "Referee","shir0@post.bgu.ac.il");
+            lg.Login("ss","12345");
+            assertEquals(gm.refereeWatchGames(),"You are participates in the next games");
+
+
+
+        }
+
+
+    }//refereeWatchGames
 
 
     /**
@@ -175,7 +214,9 @@ public class GameSettingsControllerTest {
                     {0,"0","0",EventType.red_ticket,"The game id does not exist."},
                     {1,"0","0",EventType.red_ticket,"The team id does not exist."},
                     {1,"shir1","0",EventType.red_ticket,"The player does not exist in the team."},
-                    {5,"shir1","shir",EventType.red_ticket,"Event successfully updated."}
+                    {5,"shir1","shir",EventType.red_ticket,"Event successfully updated."},
+                    {5,"shir1","din",EventType.red_ticket,"You may not take this action."},
+                    {5,"shir1","dan",EventType.red_ticket,"You are not a judge of the current game."}
 
             });
         }
@@ -199,10 +240,22 @@ public class GameSettingsControllerTest {
                 g.setLinesman1Referee(new Referee("REF","123456","shir0@post.bgu.ac.il"));
                 g.setLinesman2Referee(new Referee("REF","123456","shir0@post.bgu.ac.il"));
             }
+            if(player_name.equals("din") ){
+                lg.Registration("1","123456", "Coach","shir0@post.bgu.ac.il");
+                lg.Login("1","123456");
+            }
+            if(player_name.equals("dan")){
+                lg.Registration("dd","123456", "Referee","shir0@post.bgu.ac.il");
+                lg.Login("dd","123456");
+
+            }
             DataManagement.addToListTeam(t);
             DataManagement.addGame(g);
             DataManagement.findTeam("shir1").addOrRemovePlayer(new Player("mor","123456","shir0@post.bgu.ac.il"),1);
+            DataManagement.findTeam("shir1").addOrRemovePlayer(new Player("din","123456","shir0@post.bgu.ac.il"),1);
             DataManagement.findTeam("shir1").addOrRemovePlayer(new Player("shir","123456","shir0@post.bgu.ac.il"),1);
+            DataManagement.findTeam("shir1").addOrRemovePlayer(new Player("dan","123456","shir0@post.bgu.ac.il"),1);
+
             assertEquals(gm.refereeCreateNewEvent(game_id,team_name,player_name,event),ans);
 
 
@@ -211,31 +264,6 @@ public class GameSettingsControllerTest {
 
     }//refereeCreateNewEvent
 
-    /**
-     * Test - GC2
-     */
-    @RunWith(Parameterized.class)
-    public static class refereeWatchGames{
-        //parameter
-
-
-        @Parameterized.Parameters
-        public static Collection<Object[]> data() {
-            return Arrays.asList(new Object[][]{
-
-
-            });
-        }
-        public refereeWatchGames() {
-            //parameter
-        }
-        @Test
-        public void refereeWatchGamesTest() {
-
-        }
-
-
-    }//refereeWatchGames
 
 
 }
