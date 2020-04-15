@@ -1,5 +1,6 @@
 package BusniesServic.Business_Layer.UserManagement;
 
+import BusniesServic.Service_Layer.DataManagement;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -132,24 +133,16 @@ public class SubscriptionTest {
             this.email = email;
         }
 
-        private String getHash(String password){
-            String sha1 = "";
-            try {
-                MessageDigest digest = MessageDigest.getInstance("SHA-1");
-                digest.reset();
-                digest.update(password.getBytes("utf8"));
-                sha1 = String.format("%040x", new BigInteger(1, digest.digest()));
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-            return sha1;
-        }
-
         @Test
         public void setPasswordTest() {
             Subscription sub = new Coach(userName,password,email);
             sub.setPassword("123456");
-            assertEquals(sub.getPassword(),getHash("123456"));
+            assertEquals(sub.getPassword(), Subscription.getHash("123456"));
+            try{
+                Subscription.getHash(null);
+            }catch (Exception e){
+
+            }
         }
     }//setPassword
 
@@ -249,4 +242,75 @@ public class SubscriptionTest {
     }//addSearch
 
 
+    /**
+     * Test - Sub8
+     */
+    @RunWith(Parameterized.class)
+    public static class getPermissions{
+
+        public String userName;
+        public String password;
+        public String email;
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {"Coach1","123456","shir0@post.bgu.ac.il"}
+
+            });
+        }
+        public getPermissions(String userName, String password, String email) {
+            this.userName = userName;
+            this.password = password;
+            this.email = email;
+        }
+
+        @Test
+        public void getPermissionsTest() {
+            Subscription sub = new Coach(userName,password,email);
+            Permissions p = new Permissions();
+            p.add_default_player_or_coach_permission();
+            assertEquals(sub.permissions, sub.getPermissions());
+            assertEquals(sub.getSearch().size(),0);
+            sub.addSearch("shir");
+            assertEquals(sub.getSearch().size(),1);
+
+        }
+    }//getPermissions
+
+    /**
+     * Test - Sub9
+     */
+    @RunWith(Parameterized.class)
+    public static class equals{
+
+        public String userName;
+        public String password;
+        public String email;
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {"Coach1","123456","shir0@post.bgu.ac.il"}
+
+            });
+        }
+        public equals(String userName, String password, String email) {
+            this.userName = userName;
+            this.password = password;
+            this.email = email;
+        }
+
+        @Test
+        public void equalsTest() {
+            Subscription sub = new Coach(userName,password,email);
+           assertTrue(sub.equals(sub));
+           assertFalse(sub.equals(null));
+           assertFalse(sub.equals("shir"));
+            assertFalse(sub.equals(new Coach("din",password,email)));
+
+
+
+        }
+    }//equals
 }

@@ -188,7 +188,9 @@ public final class DataManagement {
 
     public static void setCurrent(Subscription sub){
         current = sub;
-        logger.log("DataManagement :new current set, name: " + current.getUserName());
+        if(sub!= null){
+            logger.log("DataManagement :new current set, name: " + current.getUserName());
+        }
     }
 
     public static Subscription getCurrent(){

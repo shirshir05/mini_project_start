@@ -94,7 +94,7 @@ public abstract class Subscription {
     /**
      * This function returns the hash of the password
      */
-    private String getHash(String password){
+    public static String getHash(String password){
         String sha1 = "";
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-1");

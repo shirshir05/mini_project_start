@@ -233,7 +233,7 @@ public class DataManagementTest {
             Game game = new Game("Bernabeo", date, team1, team2);
             DataManagement.addGame(game);
             assertEquals(DataManagement.getGame(1),game);
-            assertNull(DataManagement.getGame(2));
+            assertNull(DataManagement.getGame(5));
 
 
         }
