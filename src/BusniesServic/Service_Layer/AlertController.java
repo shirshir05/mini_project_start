@@ -6,6 +6,7 @@ import BusniesServic.Business_Layer.UserManagement.Complaint;
 import BusniesServic.Business_Layer.UserManagement.Fan;
 import BusniesServic.Business_Layer.UserManagement.Player;
 import BusniesServic.Enum.ActionStatus;
+import BusniesServic.Enum.PermissionAction;
 import DB_Layer.logger;
 
 import java.util.ArrayList;
@@ -85,17 +86,13 @@ public class AlertController {
      * @return a list of all the complaints
      */
     public static ArrayList<Complaint> getComplaints() {
-        return complaints;
+        if(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints))
+            return complaints;
+        return null;
     }
 
-    /*
+
     public void addComplaint(String complaint_description){
-        DataManagement.setComplaint(complaint_description);
+        //DataManagement.setComplaint(complaint_description);
     }
-     */
-
-
-
-
-
 }
