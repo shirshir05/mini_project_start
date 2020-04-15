@@ -120,7 +120,7 @@ public final class DataManagement {
      * @param arg_user_to_register
      * @return
      */
-    protected static Team findTeam(String arg_user_to_register) {
+    public static Team findTeam(String arg_user_to_register) {
         for (Team t : list_team){
             if (t.getName().equals(arg_user_to_register))
                 return t;
