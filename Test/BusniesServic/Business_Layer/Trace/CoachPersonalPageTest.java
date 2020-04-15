@@ -1,6 +1,6 @@
-package Busnies_Servic.Business_Layer.Trace;
+package BusniesServic.Business_Layer.Trace;
 
-import BusniesServic.Business_Layer.Trace.CoachPersonalPage;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
