@@ -6,6 +6,7 @@ import Busnies_Servic.Business_Layer.UserManagement.Complaint;
 import Busnies_Servic.Business_Layer.UserManagement.Fan;
 import Busnies_Servic.Business_Layer.UserManagement.Player;
 import Busnies_Servic.Enum.ActionStatus;
+import Busnies_Servic.Enum.PermissionAction;
 import DB_Layer.logger;
 
 import java.util.ArrayList;
@@ -58,7 +59,6 @@ public class AlertController {
 
     // TODO permissions?
 
-
     /**
      * This method adds a complaint by a user.
      * @param fan the fan who created the complaint
@@ -85,7 +85,9 @@ public class AlertController {
      * @return a list of all the complaints
      */
     public static ArrayList<Complaint> getComplaints() {
-        return complaints;
+        if (DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints))
+            return complaints;
+        return null;
     }
 
     /*
