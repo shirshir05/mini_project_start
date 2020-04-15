@@ -6,8 +6,8 @@ public class CoachPersonalPage extends PersonalPage {
 
     private Date dateOfBirth;
     private String countryOfBirth;
-    private String yearOfExperience;
-    private String numOfTitles;
+    private double yearOfExperience;
+    private int numOfTitles;
 
 
     /**
@@ -41,30 +41,22 @@ public class CoachPersonalPage extends PersonalPage {
         }
     }
 
-    public String getYearOfExperience() {
+    public void setYearOfExperience(double yearOfExperience) {
+        if(yearOfExperience >= 0)
+            this.yearOfExperience = yearOfExperience;
+    }
+
+    public double getYearOfExperience() {
         return yearOfExperience;
     }
 
-
-    public void setYearOfExperience(String yearOfExperience) {
-
-        if(yearOfExperience != null && yearOfExperience.length() != 0){
-
-            this.yearOfExperience = yearOfExperience;
-        }
-    }
-
-
-    public String getNumOfTitles() {
-        return numOfTitles;
-    }
-
-    public void setNumOfTitles(String numOfTitles) {
-
-        if(numOfTitles != null && numOfTitles.length() != 0){
-
+    public void setNumOfTitles(int numOfTitles) {
+        if(numOfTitles >= 0)
             this.numOfTitles = numOfTitles;
-        }
+    }
+
+    public int getNumOfTitles() {
+        return numOfTitles;
     }
 
     //**********************************************to string ************************************************************//
