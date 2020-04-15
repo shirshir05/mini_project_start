@@ -32,7 +32,7 @@ public class BudgetControllerTest {
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {0,1000,true},{-5,300000,false},{-1000,10,false},{0,0,false}
+                    {0,1000,true},{-5,-300,false},{-1000,0,false},{0,0,false}
 
 
             });
@@ -47,7 +47,14 @@ public class BudgetControllerTest {
         @Test
         public void BudgetControllerTest1() {
             DataManagement.setCurrent(subU);
-            assertTrue(BudgetController.setMaxAdvertisementExpense(max).isActionSuccessful());
+            assertEquals(BudgetController.setMinPlayerSalary(min).isActionSuccessful(),correct);
+            assertEquals(BudgetController.setMaxPlayerSalary(max).isActionSuccessful(),correct);
+            assertEquals(BudgetController.setMinCoachSalary(min).isActionSuccessful(),correct);
+            assertEquals(BudgetController.setMaxCoachSalary(max).isActionSuccessful(),correct);
+
+            assertTrue(BudgetController.setMaxMaintenanceExpense(max).isActionSuccessful());
+
+
 
         }
 
