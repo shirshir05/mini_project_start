@@ -1,5 +1,7 @@
 package BusniesServic.Service_Layer;
 
+import Presentation_Layer.Spelling;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -14,7 +16,7 @@ public class SearchLogger {
      */
     public String findData(String keyWord){
         DataManagement.getCurrent().addSearch(keyWord);
-        //TODO - use spell correction instead of reading the dictionary file
+        String keyword2 = Spelling.getCorrectWord(keyWord);
         try
         {
             File file=new File(dataPath);
@@ -24,14 +26,13 @@ public class SearchLogger {
             String line;
             while((line=br.readLine())!=null)
             {
-                if (line.contains(keyWord)){
+                if (line.contains(keyWord) || line.contains(keyword2)){
                     sb.append(line);
                     sb.append("\n");
                 }
             }
             fr.close();
             return sb.toString();
-
         }
         catch(Exception e)
         {
