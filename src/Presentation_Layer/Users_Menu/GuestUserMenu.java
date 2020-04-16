@@ -8,7 +8,7 @@ import Presentation_Layer.UserInterface;
 
 public class GuestUserMenu implements UserMenu {
 
-    String guestMenu = "choose action: \n1:action \n2:action \n3:action";
+    private String guestMenu = "choose action: \n1:action \n2:action \n3:action";
 
     @Override
     public ActionStatus presentUserMenu() {
