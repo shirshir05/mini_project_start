@@ -53,4 +53,28 @@ public class Event {
         return eventType +" for player:"+player.getUserName()+" from team:"+ team.getName();
     }
 
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setEventType(EventType eventType) {
+        if(eventType != null)
+            this.eventType = eventType;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 }
