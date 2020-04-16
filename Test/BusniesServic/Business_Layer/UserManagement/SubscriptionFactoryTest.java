@@ -36,7 +36,7 @@ public class SubscriptionFactoryTest {
                     {"coach1","123456", Role.Coach,"shir0@post.bgu.ac.il",new Coach("coach1","123456","shir0@post.bgu.ac.il")},
                     {"fan","123456", Role.Fan,"shir0@post.bgu.ac.il",new Fan("fan","123456","shir0@post.bgu.ac.il")},
                     {"guest","123456", Role.Guest,"shir0@post.bgu.ac.il",new Guest("guest","123456","shir0@post.bgu.ac.il")},
-                    {"players","123456", Role.Players,"shir0@post.bgu.ac.il",new Player("players","123456","shir0@post.bgu.ac.il")},
+                    {"players","123456", Role.Player,"shir0@post.bgu.ac.il",new Player("players","123456","shir0@post.bgu.ac.il")},
                     {"referee","123456", Role.Referee,"shir0@post.bgu.ac.il",new Referee("referee","123456","shir0@post.bgu.ac.il")},
                     {"systemadministrator","123456", Role.SystemAdministrator,"shir0@post.bgu.ac.il",new SystemAdministrator("systemadministrator","123456","shir0@post.bgu.ac.il")},
                     {"teammanager","123456", Role.TeamManager,"shir0@post.bgu.ac.il",new TeamManager("teammanager","123456","shir0@post.bgu.ac.il")},
