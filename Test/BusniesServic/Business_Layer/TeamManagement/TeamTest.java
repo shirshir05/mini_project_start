@@ -3,6 +3,7 @@ import BusniesServic.Business_Layer.BudgetManagement.TeamBudget;
 import BusniesServic.Business_Layer.Trace.TeamPersonalPage;
 import BusniesServic.Business_Layer.UserManagement.*;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -14,6 +15,8 @@ import java.util.Iterator;
 import static BusniesServic.Business_Layer.BudgetManagement.Expense.PlayerSalary;
 import static BusniesServic.Business_Layer.BudgetManagement.Income.Gambling;
 import static org.junit.Assert.*;
+
+@RunWith(Enclosed.class)
 
 public class TeamTest {
 

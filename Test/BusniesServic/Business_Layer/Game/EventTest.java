@@ -3,6 +3,9 @@ import BusniesServic.Business_Layer.TeamManagement.Team;
 import BusniesServic.Business_Layer.UserManagement.Player;
 import BusniesServic.Enum.EventType;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
+
 import static org.junit.Assert.*;
 
 public class EventTest {
@@ -111,7 +114,7 @@ public class EventTest {
 
         event.setTeam(null);
 
-        assertEquals(team2, event.getTeam());
+        assertNotEquals(team2, event.getTeam());
     }
 
     /**
@@ -136,7 +139,7 @@ public class EventTest {
 
         event.setPlayer(null);
 
-        assertEquals(player1, event.getPlayer());
+        assertNotEquals(player1, event.getPlayer());
     }
 
     /**
