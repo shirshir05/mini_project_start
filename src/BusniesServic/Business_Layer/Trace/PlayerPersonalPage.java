@@ -10,7 +10,7 @@ public class PlayerPersonalPage extends PersonalPage{
     private double height; //in cm
     private double weight; //in kg
     private String position;
-    private String jerseyNumber;
+    private int jerseyNumber;
     private FootballPlayerStatistic statistic;
 
     public PlayerPersonalPage(String name){
@@ -41,7 +41,7 @@ public class PlayerPersonalPage extends PersonalPage{
         return position;
     }
 
-    public String getJerseyNumber() {
+    public int getJerseyNumber() {
         return jerseyNumber;
     }
 
@@ -102,9 +102,9 @@ public class PlayerPersonalPage extends PersonalPage{
         }
     }
 
-    public void setJerseyNumber(String jerseyNumber) {
+    public void setJerseyNumber(int jerseyNumber) {
 
-        if(jerseyNumber != null && jerseyNumber.length() != 0){
+        if(jerseyNumber >= 0){
 
             this.jerseyNumber = jerseyNumber;
         }
