@@ -37,7 +37,6 @@ public class TeamController {
         else if(DataManagement.findTeam(arg_name) != null){
 
                 AC= new ActionStatus(false,"The Team already exists in the system.");
-
         }
         else{
             Team new_team = new Team(arg_name, arg_field);
@@ -232,7 +231,7 @@ public class TeamController {
      * @param user_name
      * @return
      */
-    private String CheckInputEditTeam(String name_team, String user_name) {
+    public String CheckInputEditTeam(String name_team, String user_name) {
         if ((DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Edit_team)) == false)) {
             return "You are not allowed to perform actions on the group.";
         }
@@ -279,7 +278,7 @@ public class TeamController {
         else if (!(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Close_team))) {
             AC = new ActionStatus(false,  "You are not allowed to close a team.");
 
-     
+
         }
 
         else if (!(DataManagement.getCurrent() instanceof SystemAdministrator)) {
@@ -288,7 +287,7 @@ public class TeamController {
                 AC = new ActionStatus(false,  "You are not authorized to perform this action.");
                 return new ActionStatus(false,  "You are not authorized to perform this action.");
             }
-        } 
+        }
         else if (!(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Close_team_perpetually) != false)) {
                 AC = new ActionStatus(false,  "You are not allowed to close a team.");
         }

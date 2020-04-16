@@ -1,5 +1,4 @@
 package BusniesServic.Business_Layer.Game;
-
 import java.util.HashSet;
 
 public class League {
