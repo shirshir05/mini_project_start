@@ -115,7 +115,7 @@ public class DataManagementTest {
                     {"shir",null},
                     {"Coach", Role.Coach},
                     {"Fan",Role.Fan},
-                    {"Players", Role.Players},
+                    {"Players", Role.Player},
                     {"Guest",Role.Guest}
 
             });
