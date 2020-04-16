@@ -27,21 +27,30 @@ public class TeamControllerTest {
     @RunWith(Parameterized.class)
     public static class RequestCreateTeam{
         String teamName;
+        String fieldName;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {"Raz"},{""},{null}
+                    {"Raz","Blumfield"},{"",""},{null,null}
             });
         }
-        public RequestCreateTeam(String name) {
+        public RequestCreateTeam(String name, String field) {
+
             teamName=name;
+            fieldName=field;
         }
         @Test
         public void RequestCreateTeamTest() {
-            assertTrue(n.RequestCreateTeam(this.teamName));
+            UnionRepresentative u = new UnionRepresentative("ffe","fefe","fef");
+            DataManagement.setSubscription(u);
+            TeamOwner t = new TeamOwner("ad","ad","ad");
+            DataManagement.setCurrent(t);
+            assertTrue(n.RequestCreateTeam(this.teamName,this.fieldName));
+            Player p = new Player("ad","ad","ad");
+            DataManagement.setCurrent(p);
+            assertFalse(n.RequestCreateTeam(this.teamName,this.fieldName));
         }
-
 
     }//RequestCreateTeam
     /**
@@ -78,10 +87,96 @@ public class TeamControllerTest {
             UnionRepresentative newRep = new UnionRepresentative(name+"x",name+"x","re@gmail.com");
             DataManagement.setSubscription(newRep);
             assertEquals(n.CreateTeam(name+"xyz",field+"xyz").getDescription(),"The Team Owner was successfully added to the team.");
+            assertEquals(n.CreateTeam(null,null).getDescription(),"One of the parameters is null");
         }
 
 
     }//CreateTeam
+
+    /**
+     ** Test - TC3
+     */
+    @RunWith(Parameterized.class)
+    public static class DeleteCreateTeamRequest{
+        public String name;
+        public String field;
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {"Raz"},{""},{null}
+            });
+        }
+        public DeleteCreateTeamRequest(String teamName) {
+            this.name=teamName;
+        }
+        @Test
+        public void DeleteCreateTeamRequestTest() {
+            TeamOwner owner = new TeamOwner("c","d","d");
+            UnionRepresentative u1 = new UnionRepresentative("a","a","a");
+            UnionRepresentative u2 = new UnionRepresentative("b","b","b");
+            UnionRepresentative u3 = new UnionRepresentative("e","e","e");
+            DataManagement.setSubscription(u1);
+            DataManagement.setSubscription(u2);
+            DataManagement.setSubscription(u3);
+            assertTrue(u1.getAlerts().size()==0 && u2.getAlerts().size()==0 && u3.getAlerts().size()==0);
+            DataManagement.setCurrent(owner);
+            n.RequestCreateTeam(name,"Blumfield");
+            if (name==null){
+                assertTrue(u1.getAlerts().size() == 0 && u2.getAlerts().size() == 0 && u3.getAlerts().size() == 0);
+            }
+            else {
+                assertTrue(u1.getAlerts().size() == 1 && u2.getAlerts().size() == 1 && u3.getAlerts().size() == 1);
+            }
+            n.DeleteCreateTeamRequest(name);
+            assertTrue(u1.getAlerts().size()==0 && u2.getAlerts().size()==0 && u3.getAlerts().size()==0);
+        }
+
+
+    }//DeleteCreateTeamRequest
+
+    /**
+     ** Test - TC3
+     */
+    @RunWith(Parameterized.class)
+    public static class ApproveCreateTeamAlert{
+        public String name;
+        public String repName;
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {"Raz","U1"},{"",""},{null,null}
+            });
+        }
+        public ApproveCreateTeamAlert(String teamName) {
+            this.name=teamName;
+        }
+        @Test
+        public void ApproveCreateTeamAlertTest() {
+            TeamOwner owner = new TeamOwner("c","d","d");
+            UnionRepresentative u1 = new UnionRepresentative("a","a","a");
+            UnionRepresentative u2 = new UnionRepresentative("b","b","b");
+            UnionRepresentative u3 = new UnionRepresentative("e","e","e");
+            DataManagement.setSubscription(u1);
+            DataManagement.setSubscription(u2);
+            DataManagement.setSubscription(u3);
+            assertTrue(u1.getAlerts().size()==0 && u2.getAlerts().size()==0 && u3.getAlerts().size()==0);
+            DataManagement.setCurrent(owner);
+            n.RequestCreateTeam(name,"Blumfield");
+            if (name==null){
+                assertTrue(u1.getAlerts().size() == 0 && u2.getAlerts().size() == 0 && u3.getAlerts().size() == 0);
+            }
+            else {
+                assertTrue(u1.getAlerts().size() == 1 && u2.getAlerts().size() == 1 && u3.getAlerts().size() == 1);
+            }
+            n.DeleteCreateTeamRequest(name);
+            assertTrue(u1.getAlerts().size()==0 && u2.getAlerts().size()==0 && u3.getAlerts().size()==0);
+        }
+
+
+    }//DeleteCreateTeamRequest
+
 
     /**
      ** Test - TC3

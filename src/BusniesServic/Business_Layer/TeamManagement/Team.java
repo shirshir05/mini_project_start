@@ -67,7 +67,7 @@ public class Team extends Observable {
     }
 
     public String setPersonalPage(TeamPersonalPage personalPage) {
-        if(status == -1 || status == 0){
+        if(status == -1 || status == 0 || status==2){
             return "The team is inactive so no activity can be performed on it";
         }
         PersonalPage = personalPage;
@@ -118,7 +118,7 @@ public class Team extends Observable {
      * @return
      */
     public Object setAsset(String asset) {
-        if(status == -1 || status == 0){
+        if(status == -1 || status == 0 || status==2){
             return "The team is inactive so no activity can be performed on it";
         }
         list_assets.add(asset);
@@ -142,7 +142,7 @@ public class Team extends Observable {
      * @return
      */
     public ActionStatus addOrRemovePlayer(Player player, int add_or_remove ){
-        if(status == -1 || status == 0){
+        if(status == -1 || status == 0 || status==2){
             return new ActionStatus(false,"The team is inactive so no activity can be performed on it");
         }
         //remove the players
@@ -172,7 +172,7 @@ public class Team extends Observable {
      * @return
      */
     public ActionStatus AddOrRemoveCoach(Coach coach_add, int add_or_remove ){
-        if(status == -1 || status == 0){
+        if(status == -1 || status == 0 || status==2){
             return new ActionStatus(false,  "The team is inactive so no activity can be performed on it");
         }
         //remove the Coach
@@ -200,7 +200,7 @@ public class Team extends Observable {
      * @return
      */
     public ActionStatus EditTeamOwner(TeamOwner TeamOwner, int add_or_remove){
-        if(status == -1 || status == 0){
+        if(status == -1 || status == 0 || status==2){
             return new ActionStatus(false, "The team is inactive so no activity can be performed on it");
         }
         //remove the TeamOwner
@@ -229,7 +229,7 @@ public class Team extends Observable {
      * @return
      */
     public ActionStatus EditTeamManager(TeamManager teamManager, int add_or_remove){
-        if(status == -1 || status == 0){
+        if(status == -1 || status == 0 || status==2){
             return new ActionStatus(false,  "The team is inactive so no activity can be performed on it");
         }
         //remove the teamManager
@@ -255,7 +255,7 @@ public class Team extends Observable {
     //**********************************************change status************************************************************//
 
     /**
-     *cahnge status of team, 0 - close, 1 - open ; -1 - permanently close
+     *cahnge status of team, 0 - close, 1 - open ; -1 - permanently close; 2 - waiting for approval
      * @param status
      * @return
      */
@@ -269,6 +269,7 @@ public class Team extends Observable {
         if (status==0){notify="The group "+this.Name+" is closed";}
         else if(status==1){notify="The group "+this.Name+" is open";}
         else if(status==-1){notify="The group "+this.Name+" is permanently closed";}
+        else if(status==2){notify="The group "+this.Name+" is waiting for union approval";}
         setChanged();
         notifyObservers(notify);
 
