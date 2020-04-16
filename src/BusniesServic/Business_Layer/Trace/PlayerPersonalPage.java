@@ -27,10 +27,6 @@ public class PlayerPersonalPage extends PersonalPage{
         return dateOfBirth;
     }
 
-    public String getConutryOfBirth() {
-        return countryOfBirth;
-    }
-
     public String getCityOfBirth() {
         return cityOfBirth;
     }
@@ -71,7 +67,7 @@ public class PlayerPersonalPage extends PersonalPage{
         }
     }
 
-    public void setConutryOfBirth(String conutryOfBirth) {
+    public void setCounqtryOfBirth(String conutryOfBirth) {
 
         if(conutryOfBirth != null && conutryOfBirth.length() != 0){
 
