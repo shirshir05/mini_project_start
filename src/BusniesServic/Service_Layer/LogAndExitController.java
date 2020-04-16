@@ -35,17 +35,18 @@ public class LogAndExitController{
     public ActionStatus Registration(String arg_user_name, String arg_password, String arg_role, String email){
         //TODO need remove from file ? check?
         ActionStatus AC = null;
-        String check_input = DataManagement.InputTest(arg_user_name,arg_password);
         Role role_enum = DataManagement.returnEnum(arg_role);
+        if(role_enum == null){
+            AC = new ActionStatus(false, "The role does not exist in the system.");
+        }
+        String check_input = DataManagement.InputTest(arg_user_name,arg_password);
         if(!DataManagement.checkEmail(email)){
             AC =  new ActionStatus(false,  "Invalid email, please enter a valid email.");
         }
         else if( check_input!= null){
             AC = new ActionStatus(false, check_input);
         }
-        else if(role_enum == null){
-            AC = new ActionStatus(false, "The role does not exist in the system.");
-        }
+
         else {
             Subscription newSub = factory.Create(arg_user_name, arg_password, role_enum, email);
             DataManagement.setSubscription(newSub);
