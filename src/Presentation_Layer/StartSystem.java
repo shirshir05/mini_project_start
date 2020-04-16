@@ -26,7 +26,7 @@ public class StartSystem {
             File f = new File("lib/spellingDict.txt");
             if (f.exists()) {
                 f.delete();
-                f.mkdir();
+                f.createNewFile();
             }
         }catch (Exception e){
             System.err.println("ERROR: function cleanSystem while creating new spellingDict File");

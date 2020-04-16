@@ -12,7 +12,7 @@ public class DisplayManager {
         StartSystem sys = new StartSystem();
         UserCLI cli = sys.getCli();
 
-        int input = cli.presentAndGetInt("choose options \n1: reset to factory\n2: init from DB");
+        int input = cli.presentAndGetInt("choose options \n1: reset to factory\n2: init from DB\n3: nothing");
         if(input == 1){
             sys.ResetToFactory();
         }
@@ -27,10 +27,7 @@ public class DisplayManager {
             if(sub instanceof Fan){
                 //create new fan menu and show its menu
             }
-            else if(sub instanceof Player){
-                //create new player menu and show its menu
-            }
-            else if(sub instanceof Coach || sub instanceof TeamManager || sub instanceof TeamOwner){
+            else if(sub instanceof Player || sub instanceof Coach || sub instanceof TeamManager || sub instanceof TeamOwner){
                 //create new ..... menu and show its menu
             }
             else if(sub instanceof SystemAdministrator){
