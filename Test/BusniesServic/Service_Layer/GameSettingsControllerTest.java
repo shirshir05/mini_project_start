@@ -19,8 +19,7 @@ import static org.junit.Assert.*;
 @RunWith(Enclosed.class)
 public class GameSettingsControllerTest {
 
-
-
+    
        /**
      * Test - SC1
      */
