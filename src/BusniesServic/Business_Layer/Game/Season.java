@@ -8,7 +8,7 @@ public class Season {
     protected String season;
     protected HashSet<Referee> list_referee;
     protected HashSet<Game> list_game;
-    //Score Table
+    protected ScoreTable scoreTable;
     /**
      * season constructor
      * @param year is the season's year
@@ -17,7 +17,6 @@ public class Season {
         list_referee = new HashSet<>();
         list_game = new HashSet<>();
         season = year;
-
     }
 
     /**
@@ -97,5 +96,13 @@ public class Season {
 
             this.season = season;
         }
+    }
+
+    public ScoreTable getScoreTable() {
+        return scoreTable;
+    }
+
+    public void setScoreTable(ScoreTable scoreTable) {
+        this.scoreTable = scoreTable;
     }
 }

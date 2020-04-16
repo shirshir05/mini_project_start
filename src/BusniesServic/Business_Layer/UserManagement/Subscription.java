@@ -118,7 +118,6 @@ public abstract class Subscription {
     }
 
     public HashSet<String> getAlerts(){
-        String ans = "";
         return this.alerts;
     }
 

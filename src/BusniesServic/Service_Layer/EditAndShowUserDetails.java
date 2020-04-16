@@ -7,6 +7,8 @@ import BusniesServic.Business_Layer.UserManagement.Coach;
 import BusniesServic.Business_Layer.UserManagement.Player;
 import BusniesServic.Business_Layer.UserManagement.Referee;
 import BusniesServic.Business_Layer.UserManagement.Subscription;
+import BusniesServic.Enum.PermissionAction;
+import DB_Layer.logger;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -200,6 +202,7 @@ public class EditAndShowUserDetails {
 
             return new ActionStatus(false, "You don't have permissions to edit this player personal page");
         }
+        /*
         player.getPersonalPage().setDateOfBirth((Date) values[0]);
         player.getPersonalPage().setConutryOfBirth((String) values[1]);
         player.getPersonalPage().setCityOfBirth((String) values[2]);
@@ -209,7 +212,9 @@ public class EditAndShowUserDetails {
         player.getPersonalPage().setJerseyNumber((String) values[6]);
         player.getPersonalPage().setSeasonYear((String) values[7]);
         player.getPersonalPage().setName((String) values[8]);
+        */
         return new ActionStatus(true, "The personal page of player was successfully update!");
+
     }
 
     public ActionStatus editCoachPersonalPage(String user_name ,Object[] values) {
@@ -276,6 +281,42 @@ public class EditAndShowUserDetails {
 
         return new ActionStatus(true, "The Team personal page was successfully update!");
     }
+
+    /**
+     *A coach or player can add a user to their personal page management
+     * @param nameUser
+     * @return
+     */
+    public ActionStatus addPermission(String nameUser) {
+        ActionStatus AC;
+        if(nameUser == null){
+            AC = new ActionStatus(false,"Username is null.");
+        }
+        else if (DataManagement.getCurrent().permissions.check_permissions(PermissionAction.personal_page)) {
+            if(DataManagement.containSubscription(nameUser) == null){
+                AC = new ActionStatus(false,"No such user exists in the system.");
+            }else{
+                Subscription add = DataManagement.containSubscription(nameUser);
+                if(DataManagement.getCurrent() instanceof Coach  ){
+                    Coach coach = (Coach) DataManagement.getCurrent();
+                    coach.getPersonalPage().addPageOwner(nameUser);
+                    AC = new ActionStatus(true,"Permissions successfully added.");
+                }else if(DataManagement.getCurrent() instanceof Player){
+                    Player player = (Player) DataManagement.getCurrent();
+                    player.getPersonalPage().addPageOwner(nameUser);
+                    AC = new ActionStatus(true,"Permissions successfully added.");
+                }
+                else {
+                    AC = new ActionStatus(false, "You do not have a personal page.");
+                }
+            }
+        }else{
+            AC = new ActionStatus(false,"You do not have a personal page.");
+        }
+        logger.log("add Permission to personal page of: "+ DataManagement.getCurrent().getUserName()+" to "+nameUser+" "+ AC.getDescription());
+        return AC;
+    }
+
 
 
 }

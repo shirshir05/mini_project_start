@@ -53,7 +53,6 @@ public class TeamController {
         return flag;
     }
 
-
     public void DeleteCreateTeamRequest(String teamName){
         if (teamName!=null) {
             ArrayList<UnionRepresentative> union = DataManagement.getUnionRepresentatives();

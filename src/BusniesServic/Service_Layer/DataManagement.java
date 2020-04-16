@@ -79,6 +79,7 @@ public final class DataManagement {
         list_game = new HashSet<>();
         list_league = new HashSet<>();
         list_Complaints = new HashSet<>();
+        current = null;
     }
 
     /**
@@ -117,8 +118,8 @@ public final class DataManagement {
                 return Role.Fan;
             case Guest:
                 return Role.Guest;
-            case Players:
-                return Role.Players;
+            case Player:
+                return Role.Player;
             case Referee:
                 return Role.Referee;
             case SystemAdministrator:
@@ -135,12 +136,12 @@ public final class DataManagement {
     }
 
     /**
-     * @param arg_user_to_register
+     * @param teamName
      * @return
      */
-    public static Team findTeam(String arg_user_to_register) {
+    public static Team findTeam(String teamName) {
         for (Team t : list_team){
-            if (arg_user_to_register==null || (t.getName().equals(arg_user_to_register)))
+            if (teamName==null || (t.getName().equals(teamName)))
                 return t;
         }
         return null;
@@ -159,7 +160,7 @@ public final class DataManagement {
      * @param game_id
      * @return
      */
-    protected static Game getGame(int game_id){
+    public static Game getGame(int game_id){
         for ( Game g: list_game ){
             if (g.getGameId()==game_id)
                 return g;
@@ -172,7 +173,7 @@ public final class DataManagement {
      * @param leaugeName
      * @return
      */
-    protected static League findLeague(String leaugeName) {
+    public static League findLeague(String leaugeName) {
         for (League l : list_league) {
             if (l.getName().equals(leaugeName)) {
                 return l;
@@ -182,7 +183,7 @@ public final class DataManagement {
     }
 
 
-    protected static ArrayList<UnionRepresentative> getUnionRepresentatives(){
+    public static ArrayList<UnionRepresentative> getUnionRepresentatives(){
         ArrayList<UnionRepresentative> unionReps = new ArrayList<>();
         for(Subscription s: Subscription){
             if(s instanceof UnionRepresentative)
@@ -218,7 +219,7 @@ public final class DataManagement {
     public static void addToListTeam(Team team){
         list_team.add(team);
         HashSet<SystemAdministrator> list = getSystemAdministratorsList();
-        for (SystemAdministrator s : list){
+        for (SystemAdministrator s : list) {
             team.addObserver(s);
         }
         logger.log("DataManagement :new team was added, team name: " + team.getName());
@@ -269,7 +270,7 @@ public final class DataManagement {
      * @param email
      * @return
      */
-    protected static boolean checkEmail(String email){
+    public static boolean checkEmail(String email){
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
@@ -322,7 +323,7 @@ public final class DataManagement {
      * for the use of complaint controller - adds a compliant after verifying the permissions
      * @param complaint the complaint to add
      */
-    protected static void addComplaint(Complaint complaint) {
+    public static void addComplaint(Complaint complaint) {
         if(complaint!=null){
             list_Complaints.add(complaint);
         }

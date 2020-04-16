@@ -15,7 +15,7 @@ import java.util.Observable;
 /**
  * A class which represents a team
  */
-public class Team extends Observable {
+public class Team extends Observable implements Comparable {
 
     private String Name;
     private HashSet<Player> list_Player;
@@ -27,7 +27,7 @@ public class Team extends Observable {
     private int status; // 0 - off 1 - on -1 - always close
     private HashMap<Integer, Pair<String,Integer>> financial;//Integer  = quarterly
     private TeamBudget budget;
-
+    private TeamScore teamScore;
 
     /**
      * constructor
@@ -78,6 +78,15 @@ public class Team extends Observable {
         return list_assets;
     }
 
+    public TeamScore getTeamScore() {
+        return teamScore;
+    }
+
+    public void setTeamScore(TeamScore teamScore) {
+        if(teamScore != null){
+            this.teamScore = teamScore;
+        }
+    }
 
     //**********************************************Team subscriptions*****************************************************//
 
@@ -322,5 +331,18 @@ public class Team extends Observable {
             return true;
         }
         return false;
+    }
+
+    //**********************************************Compare************************************************************//
+
+    @Override
+    public int compareTo(Object o) {
+
+        Team team = (Team) o;
+        if (this.getTeamScore().getPoints() >= team.getTeamScore().getPoints()) {
+
+            return -1;
+        }
+        return 1;
     }
 }
