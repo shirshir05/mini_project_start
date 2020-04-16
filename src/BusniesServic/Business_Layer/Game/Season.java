@@ -17,7 +17,6 @@ public class Season {
         list_referee = new HashSet<>();
         list_game = new HashSet<>();
         season = year;
-
     }
 
     /**
