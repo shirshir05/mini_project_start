@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Observable;
 
-import BusniesServic.Business_Layer.BudgetManagement.PointsPolicy;
 import BusniesServic.Business_Layer.TeamManagement.Team;
 import BusniesServic.Business_Layer.UserManagement.Player;
 import BusniesServic.Business_Layer.UserManagement.Referee;
@@ -28,7 +27,6 @@ public class Game extends Observable{
     LocalDateTime endTime;
     Pair<Integer,Integer> score; // Integer[0] = host , Integer[1] = guest
     HashSet<Event> eventList;
-    PointsPolicy pointsPolicy;
 
     public Game(String f, LocalDate d, Team h, Team g){
 
@@ -46,12 +44,17 @@ public class Game extends Observable{
         endTime = startTime.plusMinutes(140);
     }
 
-    public void endGame(ScoreTable scoreTable){
-
+    public void endGame(ScoreTable scoreTable, int hostGoals, int guestGoals){
+        setScore(hostGoals, guestGoals);
         updateTeamsInfo();
-        scoreTable.updateScoreTable();
+        host.getTeamScore().updatePoints(scoreTable.getPointsPolicy());
+        guest.getTeamScore().updatePoints(scoreTable.getPointsPolicy());
+        scoreTable.updateScoreTable(); //option to use observer
     }
 
+    /**
+     *
+     */
     private void updateTeamsInfo(){
 
         host.getTeamScore().incrementNumberOfGames();
@@ -75,10 +78,6 @@ public class Game extends Observable{
             guest.getTeamScore().incrementDrwans();
             host.getTeamScore().incrementDrwans();
         }
-
-        host.getTeamScore().updatePoints(pointsPolicy);
-        guest.getTeamScore().updatePoints(pointsPolicy);
-
     }
 
     public void updateEndTime(long additionalTimeInMinutes){
@@ -252,5 +251,7 @@ public class Game extends Observable{
         return endTime;
     }
 
-
+    private void setScore(int host, int guest) {
+        this.score = new Pair<>(host, guest);
+    }
 }

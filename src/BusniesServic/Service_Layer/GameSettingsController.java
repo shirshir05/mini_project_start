@@ -2,6 +2,7 @@ package BusniesServic.Service_Layer;
 
 import BusniesServic.Business_Layer.Game.Game;
 import BusniesServic.Business_Layer.Game.League;
+import BusniesServic.Business_Layer.Game.ScoreTable;
 import BusniesServic.Business_Layer.Game.Season;
 import BusniesServic.Business_Layer.UserManagement.Referee;
 import BusniesServic.Business_Layer.UserManagement.Subscription;
@@ -45,7 +46,6 @@ public class GameSettingsController {
                 ans = true;
                 Spelling.updateDictionary("season: " + league_name);
             }
-
         }
         logger.log("Settings controller: defineSeasonToLeague, league name: "+ league_name+" ,year: "+year +" ,successful: "+ ans);
         return ans;
@@ -163,6 +163,49 @@ public class GameSettingsController {
             return current.gamesListToString();
         }
         return "You are not a referee!";
+    }
+
+    /**
+     *
+     */
+    public String displayScoreTable(String league, String seasonYear){
+
+        League leagueObject = DataManagement.findLeague(league);
+        if(leagueObject == null){
+            return "The system doesn't exist league with the name: " + league;
+        }
+
+        Season seasonObject = leagueObject.getSeason(seasonYear);
+        if(seasonObject == null){
+            return "The League doesn't exist season in the year of: " + seasonYear;
+        }
+
+        if(seasonObject.getScoreTable() == null){
+            return "The score table doesn't exist yet";
+        }
+        return seasonObject.getScoreTable().toString();
+    }
+
+    public String endGame(int gameId, int hostGoals, int guestGoals, String seasonYear, String league) {
+        League leagueObject = DataManagement.findLeague(league);
+        if(leagueObject == null){
+            return "The system doesn't exist league with the name: " + league;
+        }
+
+        Season seasonObject = leagueObject.getSeason(seasonYear);
+        if(seasonObject == null){
+            return "The League doesn't exist season in the year of: " + seasonYear;
+        }
+
+        Game game = DataManagement.getGame(gameId);
+        if(game == null){
+            return "The game doesn't exist";
+        }
+        if(seasonObject.getScoreTable() == null){
+            return "The score table doesn't exist yet";
+        }
+        game.endGame(seasonObject.getScoreTable(), hostGoals, guestGoals);
+        return "successfully end game";
     }
 
 }
