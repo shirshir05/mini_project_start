@@ -3,25 +3,45 @@ package Presentation_Layer;
 import java.util.Scanner;
 
 public class UserCLI implements UserInterface {
+
     @Override
-    public String presentAndGetInput(String presentToUser) {
-        String ans = null;
+    public String presentAndGetString(String presentToUser) {
+
+        //print:
+        System.out.println(presentToUser);
+        //get string
         Scanner in = new Scanner(System.in);
+        String ans = in.nextLine();
 
-        ans = in.nextLine();
-        System.out.println("You entered string "+ans);
-
-        int a = in.nextInt();
-        System.out.println("You entered integer "+a);
-
-        float b = in.nextFloat();
-        System.out.println("You entered float "+b);
-
-        return null;
+        return ans;
     }
 
     @Override
-    public void presentOnly(String presentToUser1, String presentToUser2) {
+    public int presentAndGetInt(String presentToUser) {
+        //print:
+        System.out.println(presentToUser);
+        //get int
+        Scanner in = new Scanner(System.in);
+        int ans = in.nextInt();
 
+        return ans;
+    }
+
+    @Override
+    public double presentAndGetDouble(String presentToUser) {
+
+        //print:
+        System.out.println(presentToUser);
+        //get double
+        Scanner in = new Scanner(System.in);
+        double ans = in.nextDouble();
+
+        return ans;
+    }
+
+    @Override
+    public void presentOnly(String presentToUser) {
+        //print:
+        System.out.println(presentToUser);
     }
 }

@@ -156,8 +156,9 @@ public class BudgetController {
     //endregion
 
     // region Team budget
+
     public static ActionStatus startNewQuarter(){
-        if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.change_budget_regulations))
+        if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Team_financial))
             return new ActionStatus(false, NOT_ALLOWED_TO_PERFORM_ACTIONS_ON_BUDGET);
         HashSet<Team> teams = DataManagement.getListTeam();
         for (Team t:teams){
@@ -165,9 +166,9 @@ public class BudgetController {
         }
         return new ActionStatus(true, UPDATE_SUCCESSFUL);
     }
-
+    //TODO - check if current is the manager or owner of the team in those 3 func's
     public static ActionStatus addExpenseToTeam(String teamName, double expense, Expense description){
-        if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.change_budget_regulations))
+        if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Team_financial))
             return new ActionStatus(false, NOT_ALLOWED_TO_PERFORM_ACTIONS_ON_BUDGET);
         if (expense < 0)
             return new ActionStatus(false, "An expense has to be a positive number");
@@ -178,7 +179,7 @@ public class BudgetController {
     }
 
     public static ActionStatus addIncomeToTeam(String teamName, double income, Income description){
-        if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.change_budget_regulations))
+        if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Team_financial))
             return new ActionStatus(false, NOT_ALLOWED_TO_PERFORM_ACTIONS_ON_BUDGET);
         if (income < 0)
             return new ActionStatus(false, "An income has to be a positive number");
@@ -189,7 +190,7 @@ public class BudgetController {
     }
 
     public static double getTeamBalanceForQuarter(String teamName){
-        if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.change_budget_regulations))
+        if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Team_financial))
             return -1;
         Team team = DataManagement.findTeam(teamName);
         if(team != null)
