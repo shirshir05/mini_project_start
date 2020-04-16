@@ -3,7 +3,7 @@ import Presentation_Layer.Spelling;
 public class Main {
 
     public static void main(String[] args) {
-        //System.out.println("shir");
+        System.out.println("shir");
 
         //initialize the system:
         /**
