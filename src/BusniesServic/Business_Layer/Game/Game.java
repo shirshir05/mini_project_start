@@ -29,7 +29,6 @@ public class Game extends Observable{
     HashSet<Event> eventList;
 
     public Game(String f, LocalDate d, Team h, Team g){
-
         game_id++;
         id = game_id;
         this.field=f;
