@@ -79,8 +79,6 @@ public class TeamControllerTest {
             DataManagement.setSubscription(newRep);
             assertEquals(n.CreateTeam(name+"xyz",field+"xyz").getDescription(),"The Team Owner was successfully added to the team.");
         }
-
-
     }//CreateTeam
 
     /**
