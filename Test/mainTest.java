@@ -1,6 +1,15 @@
+import BusniesServic.Business_Layer.BudgetManagement.BudgetRegulationsTest;
+import BusniesServic.Business_Layer.BudgetManagement.TeamBudgetTest;
+import BusniesServic.Business_Layer.BudgetManagement.UnionBudgetTest;
+import BusniesServic.Business_Layer.Game.EventTest;
+import BusniesServic.Business_Layer.Game.GameTest;
+import BusniesServic.Business_Layer.Game.LeagueTest;
+import BusniesServic.Business_Layer.Game.SeasonTest;
+import BusniesServic.Business_Layer.TeamManagement.TeamTest;
+import BusniesServic.Business_Layer.Trace.CoachPersonalPageTest;
 import BusniesServic.Business_Layer.UserManagement.*;
-import BusniesServic.Service_Layer.SearchLoggerTest;
-import BusniesServic.Service_Layer.DataManagementTest;
+import BusniesServic.Service_Layer.*;
+import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -9,39 +18,59 @@ import org.junit.runner.notification.Failure;
 public class mainTest {
 
     public static void main(String[] args){
-        JUnitCore.runClasses(CoachTest.class);
-        JUnitCore.runClasses(ComplaintTest.class);
-        JUnitCore.runClasses(FanTest.class);
-        JUnitCore.runClasses(GuestTest.class);
-        JUnitCore.runClasses(PlayerTest.class);
-        JUnitCore.runClasses(RefereeTest.class);
-        JUnitCore.runClasses(SubscriptionFactoryTest.class);
-        JUnitCore.runClasses(SubscriptionTest.class);
-        JUnitCore.runClasses(SystemAdministratorTest.class);
-        JUnitCore.runClasses(TeamManagerTest.class);
-        JUnitCore.runClasses(TeamOwnerTest.class);
-        JUnitCore.runClasses(UnionRepresentativeTest.class);
-        JUnitCore.runClasses(SearchLoggerTest.class);
-        JUnitCore.runClasses(DataManagementTest.class);
+
+        //BudgetManagement
+        test(BudgetRegulationsTest.class);
+        test(TeamBudgetTest.class);
+        test(UnionBudgetTest.class);
+
+        //Game
+        test(EventTest.class);
+        test(GameTest.class);
+        test(LeagueTest.class);
+        test(SeasonTest.class);
+
+        //Team Management
+        test(TeamTest.class);
+
+        //Trace
+        test(CoachPersonalPageTest.class);
+
+        //User Management
+        test(CoachTest.class);
+        test(ComplaintTest.class);
+        test(FanTest.class);
+        test(GuestTest.class);
+        test(PlayerTest.class);
+        test(RefereeTest.class);
+        test(SubscriptionFactoryTest.class);
+        test(SubscriptionTest.class);
+        test(SystemAdministratorTest.class);
+        test(TeamManagerTest.class);
+        test(TeamOwnerTest.class);
+        test(UnionRepresentativeTest.class);
+
+        //Service Layer
+        test(BudgetControllerTest.class);
+        test(DataManagementTest.class);
+        test(EditAndShowUserDetailsTest.class);
+        test(GameSettingsControllerTest.class);
+        test(LogAndExitControllerTest.class);
+        //test(MainTestClass.class);
+        test(SearchLoggerTest.class);
+        test(TeamControllerTest.class);
 
     }
 
-    private static void register(){
-        System.out.println("----------------------TEST FOR LOGANDEXITCONTROLER----------------------------");
-        Result result = JUnitCore.runClasses(CoachTest.class);
+    private static void test(Class toTest){
+        DataManagement.cleanAllData();
+        System.out.println("----------------------"+toTest.getName()+"----------------------------");
+        Result result = JUnitCore.runClasses(toTest);
         for(Failure fail : result.getFailures()){
             System.out.println(fail.toString());
         }
-        System.out.println("The number of test = " + result.getRunCount());
-       System.out.println("The number of test fail = " + result.getFailureCount());
+        System.out.println("Number of tests = " + result.getRunCount());
+        System.out.println("Number of test failed = " + result.getFailureCount());
     }
-    private static void SystemAdministratorTest(){
-        System.out.println("----------------------TEST FOR SYSTEMADMINSTRATOR----------------------------");
-        Result result = JUnitCore.runClasses(SystemAdministratorTest.class);
-        for(Failure fail : result.getFailures()){
-            System.out.println(fail.toString());
-        }
-        System.out.println("The number of test = " + result.getRunCount());
-        System.out.println("The number of test fail = " + result.getFailureCount());
-    }
+
 }

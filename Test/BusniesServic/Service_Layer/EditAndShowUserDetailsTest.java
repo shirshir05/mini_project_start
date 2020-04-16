@@ -8,8 +8,21 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.junit.Assert.*;
+
 @RunWith(Enclosed.class)
 public class EditAndShowUserDetailsTest {
+
+    static boolean moreThanOneTime = false;
+
+    private static void setSubscriptions(){
+        if(moreThanOneTime)
+            return;
+        LogAndExitController lg = new LogAndExitController();
+        lg.Registration("Michal","12345","Fan","michal@gmail.com");
+        lg.Registration("Raz","12345","Fan","raz@gmail.com");
+        lg.Registration("Ortal","12345","Fan","ortal@gmail.com");
+    }
 
 
     /**
@@ -17,22 +30,30 @@ public class EditAndShowUserDetailsTest {
      */
     @RunWith(Parameterized.class)
     public static class watchPersonalDetils{
-        //parameter
+        String userName;
+        boolean result;
+        static EditAndShowUserDetails controller = new EditAndShowUserDetails();
 
-
+        /**
+         * 0. user doesn't exist
+         * 1. user exists, no the correct current
+         * 2. correct current
+         */
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
-
+                    {"Shir",false}, {"Raz",false}, {"Ortal",true}
             });
         }
-        public watchPersonalDetils() {
-            //parameter
+        public watchPersonalDetils(String userName, boolean result) {
+            this.userName = userName;
+            this.result = result;
         }
+
         @Test
         public void watchPersonalDetilsTest() {
-
+            setSubscriptions();
+            assertEquals(controller.watchPersonalDetils(userName).isActionSuccessful(),result);
         }
 
     }//watchPersonalDetils

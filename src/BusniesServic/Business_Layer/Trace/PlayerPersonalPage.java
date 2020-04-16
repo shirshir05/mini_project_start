@@ -7,13 +7,11 @@ public class PlayerPersonalPage extends PersonalPage{
     private Date dateOfBirth;
     private String countryOfBirth;
     private String cityOfBirth;
-    private String height; //in cm
-    private String weight; //in kg
+    private double height; //in cm
+    private double weight; //in kg
     private String position;
-    private String jerseyNumber;
+    private int jerseyNumber;
     private FootballPlayerStatistic statistic;
-    private String seasonYear;
-
 
     public PlayerPersonalPage(String name){
         super(name);
@@ -27,19 +25,15 @@ public class PlayerPersonalPage extends PersonalPage{
         return dateOfBirth;
     }
 
-    public String getConutryOfBirth() {
-        return countryOfBirth;
-    }
-
     public String getCityOfBirth() {
         return cityOfBirth;
     }
 
-    public String getHeight() {
+    public double getHeight() {
         return height;
     }
 
-    public String getWeight() {
+    public double getWeight() {
         return weight;
     }
 
@@ -47,16 +41,12 @@ public class PlayerPersonalPage extends PersonalPage{
         return position;
     }
 
-    public String getJerseyNumber() {
+    public int getJerseyNumber() {
         return jerseyNumber;
     }
 
     public FootballPlayerStatistic getStatistic() {
         return statistic;
-    }
-
-    public String getSeasonYear() {
-        return seasonYear;
     }
 
     public String getCountryOfBirth() {
@@ -71,7 +61,7 @@ public class PlayerPersonalPage extends PersonalPage{
         }
     }
 
-    public void setConutryOfBirth(String conutryOfBirth) {
+    public void setCountryOfBirth(String conutryOfBirth) {
 
         if(conutryOfBirth != null && conutryOfBirth.length() != 0){
 
@@ -87,17 +77,17 @@ public class PlayerPersonalPage extends PersonalPage{
         }
     }
 
-    public void setHeight(String height) {
+    public void setHeight(double height) {
 
-        if(height != null && height.length() != 0){
+        if(height >= 0){
 
             this.height = height;
         }
     }
 
-    public void setWeight(String weight) {
+    public void setWeight(double weight) {
 
-        if(weight != null && weight.length() != 0){
+        if(weight >= 0){
 
             this.weight = weight;
         }
@@ -112,9 +102,9 @@ public class PlayerPersonalPage extends PersonalPage{
         }
     }
 
-    public void setJerseyNumber(String jerseyNumber) {
+    public void setJerseyNumber(int jerseyNumber) {
 
-        if(jerseyNumber != null && jerseyNumber.length() != 0){
+        if(jerseyNumber >= 0){
 
             this.jerseyNumber = jerseyNumber;
         }
@@ -125,14 +115,6 @@ public class PlayerPersonalPage extends PersonalPage{
         if(statistic != null){
 
             this.statistic = statistic;
-        }
-    }
-
-    public void setSeasonYear(String seasonYear) {
-
-        if(seasonYear != null && seasonYear.length() != 0){
-
-            this.seasonYear = seasonYear;
         }
     }
 
@@ -149,7 +131,6 @@ public class PlayerPersonalPage extends PersonalPage{
                 "weight:" + weight + "\n" +
                 "position:" + position + "\n" +
                 "jerseyNumber:" + jerseyNumber + "\n" +
-                "seasonYear:" + seasonYear + "\n" +
                 "statistic: " + "\n" +
                 statistic.toString();
     }
