@@ -1,5 +1,6 @@
 package Presentation_Layer;
 
+import BusniesServic.Business_Layer.BudgetManagement.BudgetRegulations;
 import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Service_Layer.*;
 import DB_Layer.myFirstDB;
@@ -17,9 +18,14 @@ public class StartSystem {
     public static TeamController Tc = new TeamController();
     public static UserCLI cli = new UserCLI();
 
-    public static void ResetToFactory(){
+    public static void cleanSystem(){
         //clean old data in system
         DataManagement.cleanAllData();
+        BudgetRegulations.resetRegulationsToDefault();
+    }
+
+    public static void ResetToFactory(){
+        cleanSystem();
 
         //create general Guest user
         ActionStatus str1 = LEc.Registration("Guest", "123456", "Guest","Guestmail@mail.com");
