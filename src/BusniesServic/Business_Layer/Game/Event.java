@@ -19,8 +19,9 @@ public class Event {
 
     /**
      * event constructor
+     * time==null => set the current time
      */
-    public Event(Team arg_team, EventType arg_event_type, Player arg_player){
+    public Event(Team arg_team, EventType arg_event_type, Player arg_player,  LocalDateTime time){
         team=arg_team;
         eventType =arg_event_type;
         if (arg_team.getPlayer(arg_player.getUserName())!=null){
@@ -31,16 +32,28 @@ public class Event {
             //todo - change to ActionStatus, cant print from business layer
             System.out.println("The player is not a part of the team!");
         }
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        eventTime = LocalDateTime.now();
+        if (time==null) {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            eventTime = LocalDateTime.now();
+        }
+        else{
+            eventTime=time;
+        }
     }
 
-    public ActionStatus editEvent(LocalDateTime endOfGameTime){
-        //TODO - can we add pointer to the game in the event to check the time?
+    public ActionStatus editEvent(LocalDateTime endOfGameTime, Team arg_team, EventType arg_event_type, Player arg_player, LocalDateTime time){
         ActionStatus ac = null;
         if(ChronoUnit.MINUTES.between(endOfGameTime,LocalDateTime.now())<=300){
-            //TODO - add edit options
-
+            this.team=arg_team;
+            this.eventType=arg_event_type;
+            this.player=player;
+            if (time==null){
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                eventTime = LocalDateTime.now();
+            }
+            else{
+                eventTime=time;
+            }
             ac = new ActionStatus(true,"the change was made");
         }
         else{
@@ -50,7 +63,7 @@ public class Event {
     }
 
     public String eventToString(){
-        return eventType +" for player:"+player.getUserName()+" from team:"+ team.getName();
+        return eventType +" for player:"+player.getUserName()+" from team:"+ team.getName()+ " time:"+ eventTime.toString();
     }
 
     public EventType getEventType() {
@@ -76,5 +89,9 @@ public class Event {
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    public LocalDateTime getEventTime() {
+        return eventTime;
     }
 }

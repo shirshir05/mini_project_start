@@ -117,7 +117,7 @@ public class Game extends Observable{
                 ac = new ActionStatus(false,"This player is not part of the team!");
             }
             else {
-                new_event = new Event(host, event, p);
+                new_event = new Event(host, event, p, null);
                 eventList.add(new_event);
             }
         }
