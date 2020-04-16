@@ -186,12 +186,7 @@ public class GameSettingsControllerTest {
             lg.Registration("ss","12345", "Referee","shir0@post.bgu.ac.il");
             lg.Login("ss","12345");
             assertEquals(gm.refereeWatchGames(),"You are participates in the next games");
-
-
-
         }
-
-
     }//refereeWatchGames
 
 
