@@ -1,5 +1,6 @@
 package BusniesServic.Service_Layer;
 
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -18,25 +19,27 @@ public class EditAndShowUserDetailsTest {
     private static void setSubscriptions(){
         if(moreThanOneTime)
             return;
+        DataManagement.cleanAllData();
         LogAndExitController lg = new LogAndExitController();
         lg.Registration("Michal","12345","Fan","michal@gmail.com");
         lg.Registration("Raz","12345","Fan","raz@gmail.com");
         lg.Registration("Ortal","12345","Fan","ortal@gmail.com");
     }
 
+    //region watchPersonalDetails
 
     /**
      * Test - ESD1
      */
     @RunWith(Parameterized.class)
-    public static class watchPersonalDetils{
+    public static class watchPersonalDetails{
         String userName;
         boolean result;
         static EditAndShowUserDetails controller = new EditAndShowUserDetails();
 
         /**
          * 0. user doesn't exist
-         * 1. user exists, no the correct current
+         * 1. user exists, not the correct current
          * 2. correct current
          */
         @Parameterized.Parameters
@@ -45,119 +48,160 @@ public class EditAndShowUserDetailsTest {
                     {"Shir",false}, {"Raz",false}, {"Ortal",true}
             });
         }
-        public watchPersonalDetils(String userName, boolean result) {
+
+        public watchPersonalDetails(String userName, boolean result) {
             this.userName = userName;
             this.result = result;
         }
 
         @Test
-        public void watchPersonalDetilsTest() {
+        public void watchPersonalDetailsTest() {
             setSubscriptions();
-            assertEquals(controller.watchPersonalDetils(userName).isActionSuccessful(),result);
+            assertEquals(controller.watchPersonalDetails(userName).isActionSuccessful(),result);
         }
 
-    }//watchPersonalDetils
+    }
 
+    //endregion
+
+    //region editSubscriptionName
 
     /**
      * Test - ESD2
      */
     @RunWith(Parameterized.class)
-    public static class editSubscriptionName{
-        //parameter
+    public static class editSubscriptionNameAndUserName{
+        String name;
+        String newName;
+        boolean result;
+        EditAndShowUserDetails controller;
 
-
+        /**
+         * 0. user doesn't exist
+         * 1. user exists, not the correct current
+         * 2. correct current, empty change
+         * 3. correct current, null change
+         * 4. correct current, correct change
+         */
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
-
+                    {"Shir","",false}, {"Raz","",false},{"Ortal","",false},{"Ortal",null,false} ,{"Ortal","OrtalP",true}
             });
         }
-        public editSubscriptionName() {
-            //parameter
+
+        public editSubscriptionNameAndUserName(String name, String newName, boolean result) {
+            this.name = name;
+            this.newName = newName;
+            this.result = result;
+            controller = new EditAndShowUserDetails();
         }
+
         @Test
         public void editSubscriptionNameTest() {
-
+            setSubscriptions();
+            assertEquals(controller.editSubscriptionName(name,newName).isActionSuccessful(),result);
         }
 
-    }//editSubscriptionName
+        @Test
+        public void editSubscriptionUserNameTest() {
+            setSubscriptions();
+            assertEquals(controller.editSubscriptionUserName(name,newName).isActionSuccessful(),result);
+            moreThanOneTime = false;
+        }
+
+    }
+
+    //endregion
+
+    //region Email
 
     /**
      * Test - ESD3
      */
     @RunWith(Parameterized.class)
     public static class editSubscriptionEmail{
-        //parameter
+        String userName;
+        String email;
+        boolean result;
+        EditAndShowUserDetails controller;
 
-
+        /**
+         * 0. user doesn't exist
+         * 1. user exists, not the correct current
+         * 2. correct current, empty change
+         * 3. correct current, null change
+         * 4. correct current, correct change
+         */
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
-
+                    {"Shir","",false}, {"Raz","",false},{"Ortal","",false},{"Ortal",null,false} ,{"Ortal","ortal@gmail.com",true}
             });
         }
-        public editSubscriptionEmail() {
-            //parameter
+
+        public editSubscriptionEmail(String userName, String email, boolean result) {
+            this.userName = userName;
+            this.email = email;
+            this.result = result;
+            controller = new EditAndShowUserDetails();
         }
+
         @Test
         public void editSubscriptionEmailTest() {
-
+            setSubscriptions();
+            assertEquals(controller.editSubscriptionEmail(userName,email).isActionSuccessful(),result);
         }
 
-    }//editSubscriptionEmail
+    }
 
-    /**
-     * Test - ESD4
-     */
-    @RunWith(Parameterized.class)
-    public static class editSubscriptionUserName{
-        //parameter
+    //endregion
 
-
-        @Parameterized.Parameters
-        public static Collection<Object[]> data() {
-            return Arrays.asList(new Object[][]{
-
-
-            });
-        }
-        public editSubscriptionUserName() {
-            //parameter
-        }
-        @Test
-        public void editSubscriptionUserNameTest() {
-
-        }
-
-    }//editSubscriptionUserName
+    //region Password
 
     /**
      * Test - ESD5
      */
     @RunWith(Parameterized.class)
     public static class editSubscriptionPassword{
-        //parameter
+        String userName;
+        String currPassword;
+        String newPassword;
+        boolean result;
+        EditAndShowUserDetails controller;
 
-
+        /**
+         * 0. user doesn't exist
+         * 1. user exists, not the correct current
+         * 2. correct current, empty change
+         * 3. correct current, null change
+         * 4. correct current, incorrect password
+         * 5. correct current, correct change
+         */
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
-
+                    {"Shir","12345","12345",false}, {"Raz","12345","12345",false},{"Ortal","12345","",false}, {"Ortal","12345", null ,false} ,{"Ortal","10345","12345",false},{"Ortal","12345","12345",true}
             });
         }
-        public editSubscriptionPassword() {
-            //parameter
+
+        public editSubscriptionPassword(String userName,String currPassword, String newPassword, boolean result) {
+            this.userName = userName;
+            this.currPassword = currPassword;
+            this.newPassword = newPassword;
+            this.result = result;
+            controller = new EditAndShowUserDetails();
         }
+
         @Test
         public void editSubscriptionPasswordTest() {
-
+            setSubscriptions();
+            assertEquals(controller.editSubscriptionPassword(userName,currPassword,newPassword).isActionSuccessful(),result);
         }
 
     }//editSubscriptionPassword
+
+    //endregion
 
 
     /**
