@@ -523,6 +523,8 @@ public class TeamTest {
             assertEquals(team.getStatus(),0);
             team.changeStatus(1);
             assertEquals(team.getStatus(),1);
+            team.changeStatus(2);
+            assertEquals(team.getStatus(),2);
         }
 
     }//getStatus

@@ -39,6 +39,8 @@ public class TeamControllerTest {
         }
         @Test
         public void RequestCreateTeamTest() {
+            UnionRepresentative u = new UnionRepresentative("ffe","fefe","fef");
+            DataManagement.setSubscription(u);
             assertTrue(n.RequestCreateTeam(this.teamName));
         }
 

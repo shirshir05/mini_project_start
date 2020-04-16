@@ -8,6 +8,8 @@ import DB_Layer.logger;
 import Presentation_Layer.Spelling;
 
 import java.util.ArrayList;
+import java.util.Currency;
+import java.util.HashSet;
 import java.util.Observable;
 
 public class TeamController {
@@ -19,7 +21,13 @@ public class TeamController {
      * @return
      */
     public boolean RequestCreateTeam(String arg_name){
-        return true;
+        boolean flag=false;
+        ArrayList<UnionRepresentative> union = DataManagement.getUnionRepresentatives();
+        for (UnionRepresentative rep : union){
+            rep.addAlert("teamOwner"+ DataManagement.getCurrent() +" Team "+ arg_name);
+            flag=true;
+        }
+        return flag;
     }
 
     /**
