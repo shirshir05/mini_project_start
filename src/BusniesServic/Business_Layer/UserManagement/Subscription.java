@@ -109,13 +109,19 @@ public abstract class Subscription {
     /**
      * This function returns the subscription alerts
      */
-    public String getAlerts(){
+    public String returnAlerts(){
         String ans = "";
         for (String alert : alerts){
             ans = ans + alert +"\n";
         }
         return ans;
     }
+
+    public HashSet<String> getAlerts(){
+        String ans = "";
+        return this.alerts;
+    }
+
 
 
     //**********************************************equals ************************************************************//

@@ -308,4 +308,17 @@ public final class DataManagement {
             list_Complaints.add(complaint);
         }
     }
+
+    public static Subscription getSubscription(String userName){
+        if (userName!=null) {
+            for (Subscription s : Subscription) {
+                if (s.getUserName().equals(userName)) {
+                    return s;
+                }
+            }
+        }
+        return null;
+    }
+
+
 }

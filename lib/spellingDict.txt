@@ -52,3 +52,28 @@ coach: matan
 coach: matan
 fan: SHIR
 
+team: Razxyz
+team: nullxyz
+team: Raz2xyz
+team: Raz3xyz
+team: xyz
+team: Razxyz
+team: nullxyz
+team: Raz2xyz
+team: Raz3xyz
+team: xyz
+team: Razxyz
+team: nullxyz
+team: Raz2xyz
+team: Raz3xyz
+team: xyz
+team: Raz
+team: 
+team: Raz
+team: 
+team: Raz
+team: 
+team: Raz
+team: 
+team: Raz
+team: 

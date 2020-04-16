@@ -20,15 +20,54 @@ public class TeamController {
      * @param arg_name
      * @return
      */
-    public boolean RequestCreateTeam(String arg_name){
+    public boolean RequestCreateTeam(String arg_name, String arg_field){
         boolean flag=false;
-        ArrayList<UnionRepresentative> union = DataManagement.getUnionRepresentatives();
-        for (UnionRepresentative rep : union){
-            rep.addAlert("teamOwner"+ DataManagement.getCurrent() +" Team "+ arg_name);
-            flag=true;
+        if (DataManagement.getCurrent() instanceof TeamOwner && arg_name!=null) {
+            ArrayList<UnionRepresentative> union = DataManagement.getUnionRepresentatives();
+            for (UnionRepresentative rep : union) {
+                rep.addAlert("teamOwner:" + DataManagement.getCurrent() + "| Team;" + arg_name);
+                flag = true;
+            }
+        }
+        if (flag==true){
+            this.CreateTeam(arg_name,arg_field);
         }
         return flag;
     }
+
+    public boolean ApproveCreateTeamAlert(String theAlert,String repName){
+        UnionRepresentative rep = (UnionRepresentative)DataManagement.getSubscription(repName);
+        boolean flag = false;
+        if (rep!=null) {
+            for (String alert : rep.getAlerts()) {
+                if (alert.equals(theAlert)) {
+                    Team t = DataManagement.findTeam(theAlert.substring(theAlert.indexOf(';')));
+                    t.changeStatus(1);
+                    flag = true;
+                }
+            }
+        }
+        if (flag){
+            DeleteCreateTeamRequest(theAlert);
+        }
+        return flag;
+    }
+
+
+    public void DeleteCreateTeamRequest(String teamName){
+        if (teamName!=null) {
+            ArrayList<UnionRepresentative> union = DataManagement.getUnionRepresentatives();
+            for (UnionRepresentative u : union) {
+                for (String alert : u.getAlerts()) {
+                    if (alert.contains(teamName)) {
+                        u.getAlerts().remove(alert);
+                    }
+                }
+            }
+        }
+
+    }
+
 
     /**
      * Once the association representative is approved, a Team is created in the system.
@@ -63,6 +102,7 @@ public class TeamController {
             }
             AC = new_team.EditTeamOwner((TeamOwner) DataManagement.getCurrent(),1);
             Spelling.updateDictionary("team: " + arg_name);
+            new_team.changeStatus(2);
         }
         logger.log("Create Team: "+arg_name+"-"+AC.getDescription());
         return AC;
