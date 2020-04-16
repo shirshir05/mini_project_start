@@ -212,9 +212,9 @@ public class EditAndShowUserDetails {
         player.getPersonalPage().setJerseyNumber((String) values[6]);
         player.getPersonalPage().setSeasonYear((String) values[7]);
         player.getPersonalPage().setName((String) values[8]);
-
-         */
+        */
         return new ActionStatus(true, "The personal page of player was successfully update!");
+
     }
 
     public ActionStatus editCoachPersonalPage(String user_name ,Object[] values) {

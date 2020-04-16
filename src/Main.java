@@ -17,5 +17,8 @@ public class Main {
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         int year  = localDate.getYear();
         System.out.println(year);
+        StartSystem sys = new StartSystem();
+        //sys.startFromDB();
+        sys.ResetToFactory();
     }
 }

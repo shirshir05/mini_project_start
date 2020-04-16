@@ -91,6 +91,7 @@ public class StartSystem {
         ans += db.loadGameInfo().getDescription() +"\n";
         ans += db.loadLeagueInfo().getDescription();
         cli.presentOnly(ans);
+        DataManagement.setCurrent(null);
         cli.presentOnly(LEc.Login("Guest", "123456").getDescription());
         cli.presentOnly("hello Guest");
         //todo - send to correct user presentation to show user options menu;

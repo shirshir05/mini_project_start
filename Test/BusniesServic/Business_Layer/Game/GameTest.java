@@ -308,13 +308,13 @@ public class GameTest {
         assertEquals(false, game.updateNewEvent("team1.getName()", "messi", EventType.foul));
 
         //player doesn't exist
-        assertEquals(false, game.updateNewEvent(team1.getName(), "messi", EventType.foul));
-        assertEquals(false, game.updateNewEvent(team2.getName(), "messi", EventType.foul));
+        assertEquals(false, game.updateNewEvent(team1.getName(), "messi", EventType.foul).isActionSuccessful());
+        assertEquals(false, game.updateNewEvent(team2.getName(), "messi", EventType.foul).isActionSuccessful());
 
         team1.addOrRemovePlayer(new Player("messi", "123456", "31212fsf@gmail.com"), 1);
         team2.addOrRemovePlayer(new Player("Ronaldo", "123456", "31212fsf@gmail.com"), 1);
-        assertEquals(true, game.updateNewEvent(team1.getName(), "messi", EventType.foul));
-        assertEquals(true, game.updateNewEvent(team2.getName(), "Ronaldo", EventType.foul));
+        assertEquals(true, game.updateNewEvent(team1.getName(), "messi", EventType.foul).isActionSuccessful());
+        assertEquals(true, game.updateNewEvent(team2.getName(), "Ronaldo", EventType.foul).isActionSuccessful());
 
     }
 

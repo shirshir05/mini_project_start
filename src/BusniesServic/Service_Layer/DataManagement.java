@@ -79,6 +79,7 @@ public final class DataManagement {
         list_game = new HashSet<>();
         list_league = new HashSet<>();
         list_Complaints = new HashSet<>();
+        current = null;
     }
 
     /**
@@ -135,12 +136,12 @@ public final class DataManagement {
     }
 
     /**
-     * @param arg_user_to_register
+     * @param teamName
      * @return
      */
-    public static Team findTeam(String arg_user_to_register) {
+    public static Team findTeam(String teamName) {
         for (Team t : list_team){
-            if (arg_user_to_register==null || (t.getName().equals(arg_user_to_register)))
+            if (teamName==null || (t.getName().equals(teamName)))
                 return t;
         }
         return null;
