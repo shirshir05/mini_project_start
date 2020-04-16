@@ -23,4 +23,28 @@ public class ActionStatus {
     public String getDescription() {
         return description;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if(obj == null){
+            return false;
+        }
+
+        if (!(obj instanceof ActionStatus)) {
+            return false;
+        }
+
+        ActionStatus actionStatus = (ActionStatus) obj;
+
+        if(actionStatus.description.equals(description) && actionStatus.actionSuccessful == actionSuccessful){
+
+            return true;
+        }
+
+        return false;
+    }
 }
