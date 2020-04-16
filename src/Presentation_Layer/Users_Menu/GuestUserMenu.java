@@ -39,6 +39,7 @@ public class GuestUserMenu implements UserMenu {
                 while (!correct) {
                     String name = cli.presentAndGetString("insert User name");
                     String password = cli.presentAndGetString("insert password");
+                    DataManagement.setCurrent(null);
                     ActionStatus ac = LEC.Login(name, password);
                     cli.presentOnly(ac.getDescription());
                     if(ac.isActionSuccessful()){

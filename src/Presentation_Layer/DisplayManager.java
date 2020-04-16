@@ -4,6 +4,7 @@ import BusniesServic.Business_Layer.UserManagement.*;
 import BusniesServic.Business_Layer.UserManagement.Subscription;
 import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Service_Layer.DataManagement;
+import Presentation_Layer.Users_Menu.FanUserMenu;
 import Presentation_Layer.Users_Menu.GuestUserMenu;
 
 public class DisplayManager {
@@ -18,14 +19,17 @@ public class DisplayManager {
         }
         else if(input == 2){
             sys.startFromDB();
-        }
+        }else if(input==3){
 
+        }
         GuestUserMenu GM = new GuestUserMenu();
         ActionStatus ac = GM.presentUserMenu();
         Subscription sub = DataManagement.getCurrent();
+        FanUserMenu fanM = new FanUserMenu();
         if(sub!=null){
             if(sub instanceof Fan){
                 //create new fan menu and show its menu
+                fanM.presentUserMenu();
             }
             else if(sub instanceof Player){
                 //create new player menu and show its menu

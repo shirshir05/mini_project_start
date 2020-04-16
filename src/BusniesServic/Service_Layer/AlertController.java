@@ -17,9 +17,15 @@ public class AlertController {
     /**
      *  This function register the fan to alerts of a game he choose.
      */
-    public void fanRegisterToGameAlerts(int game_number){
+    public boolean fanRegisterToGameAlerts(int game_number){
         Observable chosen_game = DataManagement.getGame(game_number);
-        chosen_game.addObserver((Fan) DataManagement.getCurrent());
+        if(DataManagement.getGame(game_number) != null){
+            chosen_game.addObserver((Fan) DataManagement.getCurrent());
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
@@ -45,12 +51,10 @@ public class AlertController {
                 t.getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
                 ans = true;
             }
+        }if(!ans){
+            return ans;
         }
         logger.log("fan_register_to_page, page mane: "+arg_user_to_register+" ,user mane: "+ current_user.getUserName() +" successful: "+ans);
-        if (!ans) {
-            //TODO - remove print
-            System.out.println("Wrong page name");
-        }
         return ans;
     }
 
