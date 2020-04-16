@@ -39,19 +39,21 @@ public class LogAndExitController{
         if(role_enum == null){
             AC = new ActionStatus(false, "The role does not exist in the system.");
         }
-        String check_input = DataManagement.InputTest(arg_user_name,arg_password);
-        if(!DataManagement.checkEmail(email)){
-            AC =  new ActionStatus(false,  "Invalid email, please enter a valid email.");
-        }
-        else if( check_input!= null){
-            AC = new ActionStatus(false, check_input);
-        }
-
         else {
-            Subscription newSub = factory.Create(arg_user_name, arg_password, role_enum, email);
-            DataManagement.setSubscription(newSub);
-            DataManagement.setCurrent(newSub);
-            AC = new ActionStatus(true, "Subscription successfully added!");
+            String check_input = DataManagement.InputTest(arg_user_name,arg_password);
+            if(!DataManagement.checkEmail(email)){
+                AC =  new ActionStatus(false,  "Invalid email, please enter a valid email.");
+            }
+            else if( check_input!= null){
+                AC = new ActionStatus(false, check_input);
+            }
+
+            else {
+                Subscription newSub = factory.Create(arg_user_name, arg_password, role_enum, email);
+                DataManagement.setSubscription(newSub);
+                DataManagement.setCurrent(newSub);
+                AC = new ActionStatus(true, "Subscription successfully added!");
+            }
         }
         logger.log("new Registration attempt of user : "+ arg_user_name+" "+arg_role+" "+email + AC.getDescription());
         return AC;

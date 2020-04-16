@@ -203,14 +203,13 @@ public class EditAndShowUserDetails {
             return new ActionStatus(false, "You don't have permissions to edit this player personal page");
         }
         player.getPersonalPage().setDateOfBirth((Date) values[0]);
-        player.getPersonalPage().setConutryOfBirth((String) values[1]);
+        player.getPersonalPage().setCountryOfBirth((String) values[1]);
         player.getPersonalPage().setCityOfBirth((String) values[2]);
-        player.getPersonalPage().setHeight((String) values[3]);
-        player.getPersonalPage().setWeight((String) values[4]);
+        player.getPersonalPage().setHeight((double) values[3]);
+        player.getPersonalPage().setWeight((double) values[4]);
         player.getPersonalPage().setPosition((String) values[5]);
-        player.getPersonalPage().setJerseyNumber((String) values[6]);
-        player.getPersonalPage().setSeasonYear((String) values[7]);
-        player.getPersonalPage().setName((String) values[8]);
+        player.getPersonalPage().setJerseyNumber((int) values[6]);
+        player.getPersonalPage().setName((String) values[7]);
         return new ActionStatus(true, "The personal page of player was successfully update!");
     }
 
