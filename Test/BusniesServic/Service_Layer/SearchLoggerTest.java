@@ -9,8 +9,6 @@ import static org.junit.Assert.*;
 @RunWith(Enclosed.class)
 public class SearchLoggerTest {
 
-
-
     /**
      * Test - SL1
      */

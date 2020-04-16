@@ -218,7 +218,7 @@ public final class DataManagement {
     public static void addToListTeam(Team team){
         list_team.add(team);
         HashSet<SystemAdministrator> list = getSystemAdministratorsList();
-        for (SystemAdministrator s : list){
+        for (SystemAdministrator s : list) {
             team.addObserver(s);
         }
         logger.log("DataManagement :new team was added, team name: " + team.getName());
