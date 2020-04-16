@@ -67,7 +67,7 @@ public class PlayerPersonalPage extends PersonalPage{
         }
     }
 
-    public void setCounqtryOfBirth(String conutryOfBirth) {
+    public void setCountryOfBirth(String conutryOfBirth) {
 
         if(conutryOfBirth != null && conutryOfBirth.length() != 0){
 
