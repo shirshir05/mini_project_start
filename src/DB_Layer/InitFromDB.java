@@ -3,7 +3,7 @@ package DB_Layer;
 import BusniesServic.Enum.ActionStatus;
 
 
-public interface InitDB {
+public interface InitFromDB {
 
     public ActionStatus startDBConnection();
 
