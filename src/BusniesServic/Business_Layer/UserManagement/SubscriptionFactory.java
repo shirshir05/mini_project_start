@@ -28,7 +28,7 @@ public class SubscriptionFactory {
         else if (role == Role.Guest){
             return new Guest(userName,password, email);
         }
-        else if (role == Role.Players){
+        else if (role == Role.Player){
             Spelling.updateDictionary("player: " + userName);
             return new Player(userName,password, email);
         }

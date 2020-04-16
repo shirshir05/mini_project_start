@@ -6,6 +6,7 @@ import BusniesServic.Service_Layer.*;
 import DB_Layer.myFirstDB;
 
 import javax.naming.directory.SearchControls;
+import java.io.File;
 
 public class StartSystem {
 
@@ -22,6 +23,15 @@ public class StartSystem {
         //clean old data in system
         DataManagement.cleanAllData();
         BudgetRegulations.resetRegulationsToDefault();
+        try {
+            File f = new File("lib/spellingDict.txt");
+            if (f.exists()) {
+                f.delete();
+                f.mkdir();
+            }
+        }catch (Exception e){
+            System.err.println("ERROR: function cleanSystem while creating new spellingDict File");
+        }
     }
 
     public static void ResetToFactory(){
@@ -81,6 +91,7 @@ public class StartSystem {
         ans += db.loadGameInfo().getDescription() +"\n";
         ans += db.loadLeagueInfo().getDescription();
         cli.presentOnly(ans);
+        DataManagement.setCurrent(null);
         cli.presentOnly(LEc.Login("Guest", "123456").getDescription());
         cli.presentOnly("hello Guest");
         //todo - send to correct user presentation to show user options menu;

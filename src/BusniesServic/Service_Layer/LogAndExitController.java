@@ -2,16 +2,14 @@ package BusniesServic.Service_Layer;
 
 // all Subscription in system
 
+import BusniesServic.Business_Layer.UserManagement.*;
 import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Business_Layer.TeamManagement.Team;
-import BusniesServic.Business_Layer.UserManagement.Subscription;
-import BusniesServic.Business_Layer.UserManagement.SubscriptionFactory;
-import BusniesServic.Business_Layer.UserManagement.SystemAdministrator;
-import BusniesServic.Business_Layer.UserManagement.TeamOwner;
 import BusniesServic.Enum.PermissionAction;
 import BusniesServic.Enum.Role;
 import DB_Layer.logger;
 
+import java.security.PublicKey;
 import java.util.HashSet;
 
 // to function that remove all Subscription
@@ -181,6 +179,67 @@ public class LogAndExitController{
             }
         }
         return true;
+
+    }
+
+
+    /**
+     * Add user
+     * The team owner can be a player, coach and manager
+     * @param role
+     * @return
+     */
+    public ActionStatus addUser(String role,String password){
+        ActionStatus AC ;
+        if(!DataManagement.getCurrent().getPassword().equals(Subscription.getHash(password))){
+            AC = new ActionStatus(true, "The password does not match the password entered in the system.");
+        }
+        Role roleEnum = DataManagement.returnEnum(role);
+        if(roleEnum == null){
+            AC = new ActionStatus(false, "The role does not exist in the system.");
+        }
+        else{
+            Subscription sub = DataManagement.getCurrent();
+            if(sub instanceof Player ){
+                if(roleEnum.equals(Role.Coach) || roleEnum.equals(Role.TeamManager) || roleEnum.equals(Role.TeamOwner)){
+                    Registration(DataManagement.getCurrent().getUserName() + role,password,role,DataManagement.getCurrent().getEmail());
+                    AC = new ActionStatus(true, "You have signed up for the system with a role " + role  +"and username" + DataManagement.getCurrent().getUserName() + role);
+                }else{
+                    AC = new ActionStatus(false, "You are not authorized to perform the action.");
+                }
+
+            } else if(sub instanceof Coach ){
+                if(roleEnum.equals(Role.Player) || roleEnum.equals(Role.TeamManager) || roleEnum.equals(Role.TeamOwner)){
+                    Registration(DataManagement.getCurrent().getUserName() + role,password,role,DataManagement.getCurrent().getEmail());
+                    AC = new ActionStatus(true, "You have signed up for the system with a role " + role  +"and username" + DataManagement.getCurrent().getUserName() + role);
+
+                }else{
+                    AC = new ActionStatus(false, "You are not authorized to perform the action.");
+                }
+
+            } else if(sub instanceof TeamOwner) {
+                if(roleEnum.equals(Role.Player) || roleEnum.equals(Role.TeamManager) || roleEnum.equals(Role.Coach)){
+                    Registration(DataManagement.getCurrent().getUserName() + role,password,role,DataManagement.getCurrent().getEmail());
+                    AC = new ActionStatus(true, "You have signed up for the system with a role " + role  +"and username" + DataManagement.getCurrent().getUserName() + role);
+
+                }else{
+                    AC = new ActionStatus(false, "You are not authorized to perform the action.");
+                }
+
+            }else if( sub instanceof TeamManager){
+                if(roleEnum.equals(Role.Coach) || roleEnum.equals(Role.Player) || roleEnum.equals(Role.TeamOwner)){
+                    Registration(DataManagement.getCurrent().getUserName() + role,password,role,DataManagement.getCurrent().getEmail());
+                    AC = new ActionStatus(true, "You have signed up for the system with a role " + role  +"and username" + DataManagement.getCurrent().getUserName() + role);
+                }else{
+                    AC = new ActionStatus(false, "You are not authorized to perform the action.");
+                }
+            }else{
+                AC = new ActionStatus(false, "You are not authorized to perform the action.");
+            }
+
+        }
+        logger.log("Add Subscription attempt of user : "+DataManagement.getCurrent().getUserName() + role+" "+AC.getDescription());
+        return AC;
 
     }
 
