@@ -1,18 +1,19 @@
 package BusniesServic.Service_Layer;
 
-import BusniesServic.Business_Layer.Game.Game;
-import BusniesServic.Business_Layer.Game.League;
-import BusniesServic.Business_Layer.Game.ScoreTable;
-import BusniesServic.Business_Layer.Game.Season;
+import BusniesServic.Business_Layer.Game.*;
 import BusniesServic.Business_Layer.UserManagement.Referee;
 import BusniesServic.Business_Layer.UserManagement.Subscription;
 import BusniesServic.Business_Layer.UserManagement.UnionRepresentative;
+import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Enum.EventType;
 import BusniesServic.Enum.PermissionAction;
 import DB_Layer.logger;
 import Presentation_Layer.Spelling;
 
+import javax.xml.crypto.Data;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class GameSettingsController {
 
@@ -37,18 +38,61 @@ public class GameSettingsController {
      * @param year is the season
      * @return true if the season was updated
      */
-    public boolean defineSeasonToLeague(String league_name, String year){
+    public boolean defineSeasonToLeague(String league_name, String year,int win, int lose, int equal){
         boolean ans = false;
-        if (year!=null && league_name!=null && DataManagement.getCurrent() instanceof UnionRepresentative) {
+        if(win < 0 || lose < 0 || equal < 0){
+            return ans;
+        }
+        if (year!=null && league_name!=null && DataManagement.getCurrent() instanceof UnionRepresentative && DataManagement.findLeague(league_name)!=null) {
             int intFormatYear= Integer.parseInt(year);
             if (intFormatYear>1900 && intFormatYear<2021){
-                DataManagement.findLeague(league_name).addSeason(new Season(year));
+                Season addSeason =new Season(year);
+                DataManagement.findLeague(league_name).addSeason(addSeason);
+                PointsPolicy pointsPolicy = new PointsPolicy(win,lose,equal);
+                ScoreTable scoreTable = new ScoreTable(pointsPolicy);
+                addSeason.setScoreTable(scoreTable);
                 ans = true;
                 Spelling.updateDictionary("season: " + league_name);
             }
         }
         logger.log("Settings controller: defineSeasonToLeague, league name: "+ league_name+" ,year: "+year +" ,successful: "+ ans);
         return ans;
+    }
+
+    /**
+     * update point policy of Season
+     * @param league_name
+     * @param year
+     * @param win
+     * @param lose
+     * @param equal
+     * @return
+     */
+    public ActionStatus updatePointsPolicy(String league_name, String year,int win, int lose, int equal){
+        ActionStatus AC;
+        if(win < 0 || lose < 0 || equal < 0){
+            AC = new ActionStatus(false,"Policy details below 0 are therefore invalid.");
+        }else{
+          if (year!=null && league_name!=null && DataManagement.getCurrent() instanceof UnionRepresentative && DataManagement.findLeague(league_name)!=null) {
+              int intFormatYear= Integer.parseInt(year);
+              Date date = new Date();
+              LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+              int yearNow  = localDate.getYear();
+              if(yearNow >=intFormatYear ){
+                  AC = new ActionStatus(false,"The season has already begun You are not allowed to change policies.");
+              }
+              else if(DataManagement.findLeague(league_name).getSeason(year)!=null){
+                    DataManagement.findLeague(league_name).getSeason(year).setScoreTable(new ScoreTable(new PointsPolicy(win,lose,equal)));
+                  AC = new ActionStatus(true,"The policy has been changed successfully.");
+              }else{
+                  AC = new ActionStatus(false,"One of the fields is incorrect..");
+              }
+            }else{
+              AC = new ActionStatus(false,"One of the fields is incorrect..");
+            }
+        }
+        return AC;
+
     }
 
     /**
@@ -169,43 +213,48 @@ public class GameSettingsController {
      *
      */
     public String displayScoreTable(String league, String seasonYear){
-
         League leagueObject = DataManagement.findLeague(league);
         if(leagueObject == null){
             return "The system doesn't exist league with the name: " + league;
         }
-
         Season seasonObject = leagueObject.getSeason(seasonYear);
         if(seasonObject == null){
             return "The League doesn't exist season in the year of: " + seasonYear;
         }
-
         if(seasonObject.getScoreTable() == null){
             return "The score table doesn't exist yet";
         }
         return seasonObject.getScoreTable().toString();
     }
 
-    public String endGame(int gameId, int hostGoals, int guestGoals, String seasonYear, String league) {
-        League leagueObject = DataManagement.findLeague(league);
-        if(leagueObject == null){
-            return "The system doesn't exist league with the name: " + league;
+    /**
+     * @param gameId
+     * @param hostGoals
+     * @param guestGoals
+     * @param seasonYear
+     * @param league
+     * @return
+     */
+    public ActionStatus endGame(int gameId, int hostGoals, int guestGoals, String seasonYear, String league) {
+        ActionStatus AC;
+        if(DataManagement.getGame(gameId) == null){
+            AC = new ActionStatus(false,"The game does not exist in the system.");
         }
-
-        Season seasonObject = leagueObject.getSeason(seasonYear);
-        if(seasonObject == null){
-            return "The League doesn't exist season in the year of: " + seasonYear;
+        else if( DataManagement.findLeague(league) == null){
         }
-
-        Game game = DataManagement.getGame(gameId);
-        if(game == null){
-            return "The game doesn't exist";
+        if(DataManagement.findLeague(league).getSeason(seasonYear) == null){
+            AC = new ActionStatus(false,"The League doesn't exist season in the year Of " + seasonYear);
         }
-        if(seasonObject.getScoreTable() == null){
-            return "The score table doesn't exist yet";
+        if(!DataManagement.getGame(gameId).getHeadReferee().equals(DataManagement.getCurrent())){
+            AC = new ActionStatus(false,"You are not set as the main referee in the game and therefore you are not allowed to close a game.");
         }
-        game.endGame(seasonObject.getScoreTable(), hostGoals, guestGoals);
-        return "successfully end game";
+        if(DataManagement.findLeague(league).getSeason(seasonYear).getScoreTable() == null){
+            AC = new ActionStatus(false,"The score table doesn't exist yet.");
+        }else{
+            DataManagement.getGame(gameId).endGame(DataManagement.findLeague(league).getSeason(seasonYear).getScoreTable(), hostGoals, guestGoals);
+            AC = new ActionStatus(false,"successfully end game.");
+        }
+        return AC;
     }
 
 }
