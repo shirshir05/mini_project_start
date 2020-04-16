@@ -52,6 +52,8 @@ public class Team extends Observable {
         return Name;
     }
 
+    public void setBudget(TeamBudget t){this.budget=t;}
+
     public TeamBudget getBudget() {
         return budget;
     }
@@ -59,7 +61,6 @@ public class Team extends Observable {
     public int getStatus() {
         return status;
     }
-
 
     public TeamPersonalPage getPersonalPage() {
         return PersonalPage;
@@ -73,12 +74,12 @@ public class Team extends Observable {
         return null;
     }
 
-    public Object getTeamAssets(){
+    public HashSet<Object> getTeamAssets(){
         return list_assets;
     }
 
 
-    //**********************************************Edit asset************************************************************//
+    //**********************************************Team subscriptions*****************************************************//
 
 
 
@@ -156,7 +157,7 @@ public class Team extends Observable {
         else if(add_or_remove == 1){
             if(!list_Player.contains(player)){
                 list_Player.add(player);
-                return new ActionStatus(true, "The player was successfully added from the team.");
+                return new ActionStatus(true, "The player was successfully added to the team.");
             }
             return new ActionStatus(false,  "The player is already in the team.");
         }
@@ -186,7 +187,7 @@ public class Team extends Observable {
         else if(add_or_remove == 1){
             if(!list_Coach.contains(coach_add)){
                 list_Coach.add(coach_add);
-                return new ActionStatus(true, "he Coach was successfully added from the team.");
+                return new ActionStatus(true, "The Coach was successfully added to the team.");
             }
             return new ActionStatus(false, "The Coach is already in the team.");
         }
@@ -214,7 +215,7 @@ public class Team extends Observable {
         else if(add_or_remove == 1){
             if(!list_TeamOwner.contains(TeamOwner)){
                 list_TeamOwner.add(TeamOwner);
-                return new ActionStatus(true, "The Team Owner was successfully added from the team.");
+                return new ActionStatus(true, "The Team Owner was successfully added to the team.");
             }
             return new ActionStatus(false, "The Team Owner is already in the team.");
         }
@@ -243,7 +244,7 @@ public class Team extends Observable {
         else if(add_or_remove == 1){
             if(!list_TeamManager.contains(teamManager)){
                 list_TeamManager.add(teamManager);
-                return new ActionStatus(true,  "The Team Manager was successfully added from the team.");
+                return new ActionStatus(true,  "The Team Manager was successfully added to the team.");
             }
             return new ActionStatus(false,  "The Team Manager is already in the team.");
         }
@@ -262,7 +263,7 @@ public class Team extends Observable {
           String notify="";
 
         if(status == this.status){
-            return new ActionStatus(false,  "The group is already set" + this.status);
+            return new ActionStatus(false,  "The group is already set " + this.status);
         }
         this.status = status;
         if (status==0){notify="The group "+this.Name+" is closed";}

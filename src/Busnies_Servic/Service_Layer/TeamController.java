@@ -12,6 +12,8 @@ import java.util.Observable;
 
 public class TeamController {
 
+    public TeamController(){}
+
     /**
      * @param arg_name
      * @return
@@ -30,8 +32,10 @@ public class TeamController {
      */
     public ActionStatus CreateTeam(String arg_name, String arg_field) {
         ActionStatus AC = null;
-
-        if (!(DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Edit_team))) && !(DataManagement.getCurrent() instanceof TeamOwner)) {
+        if (arg_name==null || arg_field==null){
+            AC = new ActionStatus(false, "One of the parameters is null");
+        }
+        else if (!(DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Edit_team))) && !(DataManagement.getCurrent() instanceof TeamOwner)) {
             AC=  new ActionStatus(false,"You are not allowed to perform actions on the group.");
         }
         else if(DataManagement.findTeam(arg_name) != null){
@@ -53,7 +57,6 @@ public class TeamController {
             Spelling.updateDictionary("team: " + arg_name);
         }
         logger.log("Create Team: "+arg_name+"-"+AC.getDescription());
-
         return AC;
     }
 
@@ -232,26 +235,20 @@ public class TeamController {
      * @param user_name
      * @return
      */
-    private String CheckInputEditTeam(String name_team, String user_name) {
-        if ((DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Edit_team)) == false)) {
-            return "You are not allowed to perform actions on the group.";
-        }
-        Team team = DataManagement.findTeam(name_team);
-        if (team == null) {
-            return "The Team does not exist in the system.";
-        }
-        if (!team.checkIfObjectInTeam(DataManagement.getCurrent()) || (DataManagement.getCurrent() instanceof SystemAdministrator)) {
-            return "You are not allowed to perform actions in this group.";
-        }
-        Subscription subscription = DataManagement.containSubscription(user_name);
-        if (subscription == null) {
-            return "The username does not exist on the system.";
-        }
-        // no error
-        return null;
+    public String CheckInputEditTeam(String name_team, String user_name) {
+        String value=null;
+        if (name_team==null || user_name==null){
+            value= "One of the parameters is null";
+        } else if ((DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Edit_team)) == false)) {
+            value= "You are not allowed to perform actions on the group.";
+        } else if (DataManagement.findTeam(name_team) == null) {
+            value= "The Team does not exist in the system.";
+        } else if (!DataManagement.findTeam(name_team).checkIfObjectInTeam(DataManagement.getCurrent()) || (DataManagement.getCurrent() instanceof SystemAdministrator)) {
+            value= "You are not allowed to perform actions in this group.";
+        } else if (DataManagement.containSubscription(user_name) == null) {
+            value= "The username does not exist on the system.";
+        } return value;
     }
-
-
     /**
      * A function that allows the system administrator and the group owner to change the status of the group
      * 0 - close

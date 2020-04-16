@@ -26,7 +26,6 @@ public abstract class Subscription {
         alerts = new HashSet<>();
     }
 
-
     //**********************************************get & set ************************************************************//
 
     public String getEmail() {

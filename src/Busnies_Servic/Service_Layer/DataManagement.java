@@ -122,7 +122,7 @@ public final class DataManagement {
      */
     protected static Team findTeam(String arg_user_to_register) {
         for (Team t : list_team){
-            if (t.getName().equals(arg_user_to_register))
+            if (arg_user_to_register==null || (t.getName().equals(arg_user_to_register)))
                 return t;
         }
         return null;
