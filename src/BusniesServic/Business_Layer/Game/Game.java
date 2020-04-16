@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Observable;
 
+import BusniesServic.Business_Layer.BudgetManagement.PointsPolicy;
 import BusniesServic.Business_Layer.TeamManagement.Team;
 import BusniesServic.Business_Layer.UserManagement.Player;
 import BusniesServic.Business_Layer.UserManagement.Referee;
@@ -27,6 +28,7 @@ public class Game extends Observable{
     LocalDateTime endTime;
     Pair<Integer,Integer> score; // Integer[0] = host , Integer[1] = guest
     HashSet<Event> eventList;
+    PointsPolicy pointsPolicy;
 
     public Game(String f, LocalDate d, Team h, Team g){
 
@@ -42,6 +44,41 @@ public class Game extends Observable{
     public void setGameStartTime(){
         startTime = LocalDateTime.now();
         endTime = startTime.plusMinutes(140);
+    }
+
+    public void endGame(ScoreTable scoreTable){
+
+        updateTeamsInfo();
+        scoreTable.updateScoreTable();
+    }
+
+    private void updateTeamsInfo(){
+
+        host.getTeamScore().incrementNumberOfGames();
+        guest.getTeamScore().incrementNumberOfGames();
+        host.getTeamScore().incrementNumberOfGoalsScores(score.getKey());
+        guest.getTeamScore().incrementNumberOfGoalsScores(score.getValue());
+        host.getTeamScore().incrementNumberOfGoalsGet(score.getValue());
+        guest.getTeamScore().incrementNumberOfGoalsGet(score.getKey());
+
+        if(score.getKey() > score.getValue()){ //host wins
+            host.getTeamScore().incrementWin();
+            guest.getTeamScore().incrementLose();
+        }
+
+        else if(score.getKey() > score.getValue()) { //guest wins
+            guest.getTeamScore().incrementWin();
+            host.getTeamScore().incrementLose();
+        }
+
+        else{
+            guest.getTeamScore().incrementDrwans();
+            host.getTeamScore().incrementDrwans();
+        }
+
+        host.getTeamScore().updatePoints(pointsPolicy);
+        guest.getTeamScore().updatePoints(pointsPolicy);
+
     }
 
     public void updateEndTime(long additionalTimeInMinutes){
@@ -214,4 +251,6 @@ public class Game extends Observable{
     public LocalDateTime getEndTime() {
         return endTime;
     }
+
+
 }
