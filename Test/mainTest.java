@@ -7,6 +7,7 @@ import BusniesServic.Business_Layer.Game.LeagueTest;
 import BusniesServic.Business_Layer.Game.SeasonTest;
 import BusniesServic.Business_Layer.TeamManagement.TeamTest;
 import BusniesServic.Business_Layer.Trace.CoachPersonalPageTest;
+import BusniesServic.Business_Layer.Trace.PlayerPersonalPageTest;
 import BusniesServic.Business_Layer.UserManagement.*;
 import BusniesServic.Service_Layer.*;
 import org.junit.Test;
@@ -38,6 +39,7 @@ public class mainTest {
 
         //Trace
         test(CoachPersonalPageTest.class);
+        test(PlayerPersonalPageTest.class);
 
         //User Management
         test(CoachTest.class);
