@@ -105,12 +105,6 @@ public class BudgetControllerTest {
                 assertEquals(BudgetController.setMaxAdvertisementExpense(max).isActionSuccessful(), correct);
                 assertEquals(BudgetController.setMaxOtherExpense(max).isActionSuccessful(), correct);
             }
-            else{
-                assertTrue(BudgetController.setMaxMaintenanceExpense(max).isActionSuccessful());
-                assertTrue(BudgetController.setMaxUniformExpense(max).isActionSuccessful());
-                assertTrue(BudgetController.setMaxAdvertisementExpense(max).isActionSuccessful());
-                assertTrue(BudgetController.setMaxOtherExpense(max).isActionSuccessful());
-            }
         }
 
         @Test
