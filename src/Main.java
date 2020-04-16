@@ -13,7 +13,6 @@ public class Main {
         //StartSystem sys = new StartSystem();
         //sys.startFromDB();
         //sys.ResetToFactory();
-
         Date date = new Date();
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         int year  = localDate.getYear();
