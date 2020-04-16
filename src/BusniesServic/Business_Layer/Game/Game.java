@@ -78,7 +78,7 @@ public class Game extends Observable{
                 System.out.println("This player is not part of the team!");
                 return false;
             }
-            new_event=new Event(host,event,p);
+            new_event=new Event(host,event,p,null);
             eventList.add(new_event);
         }
         else if (guest.getName().equals(team_name)){
@@ -87,7 +87,7 @@ public class Game extends Observable{
                 System.out.println("This player is not part of the team!");
                 return false;
             }
-            new_event=new Event(guest,event,p);
+            new_event=new Event(guest,event,p,null);
             eventList.add(new_event);
         }
         else{

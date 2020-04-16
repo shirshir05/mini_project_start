@@ -41,8 +41,8 @@ public class TeamController {
         if (rep!=null) {
             for (String alert : rep.getAlerts()) {
                 if (alert.equals(theAlert)) {
-                    Team t = DataManagement.findTeam(theAlert.substring(theAlert.indexOf(';')));
-                    t.changeStatus(1);
+                    String teamName = theAlert.substring(theAlert.indexOf(';')+1);
+                    DataManagement.findTeam(teamName).changeStatus(1);
                     flag = true;
                 }
             }
@@ -92,8 +92,8 @@ public class TeamController {
         }
         else{
             Team new_team = new Team(arg_name, arg_field);
+            new_team.changeStatus(2);
             DataManagement.addToListTeam((new_team));
-
             //add the union representatives to the observers of the budget of the team:
             ArrayList<UnionRepresentative> unionReps = DataManagement.getUnionRepresentatives();
             Observable budget = new_team.getBudget();
@@ -102,7 +102,6 @@ public class TeamController {
             }
             AC = new_team.EditTeamOwner((TeamOwner) DataManagement.getCurrent(),1);
             Spelling.updateDictionary("team: " + arg_name);
-            new_team.changeStatus(2);
         }
         logger.log("Create Team: "+arg_name+"-"+AC.getDescription());
         return AC;
@@ -132,7 +131,6 @@ public class TeamController {
         }
         logger.log("Add Or Remove Player to Team: "+name_team+"-"+AC.getDescription());
         return AC;
-
     }
 
     /**

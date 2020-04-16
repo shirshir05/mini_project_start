@@ -1,17 +1,22 @@
 package BusniesServic.Service_Layer;
 
+import BusniesServic.Business_Layer.Game.Event;
 import BusniesServic.Business_Layer.Game.Game;
 import BusniesServic.Business_Layer.Game.League;
 import BusniesServic.Business_Layer.Game.Season;
+import BusniesServic.Business_Layer.TeamManagement.Team;
+import BusniesServic.Business_Layer.UserManagement.Player;
 import BusniesServic.Business_Layer.UserManagement.Referee;
 import BusniesServic.Business_Layer.UserManagement.Subscription;
 import BusniesServic.Business_Layer.UserManagement.UnionRepresentative;
+import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Enum.EventType;
 import BusniesServic.Enum.PermissionAction;
 import DB_Layer.logger;
 import Presentation_Layer.Spelling;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class GameSettingsController {
 
@@ -165,4 +170,58 @@ public class GameSettingsController {
         return "You are not a referee!";
     }
 
-}
+
+    public ActionStatus refereeEditGameEvent(int game_id, Team arg_team, EventType arg_event_type, Player arg_player, LocalDateTime eventTime){
+        ActionStatus AC = null;
+        Game game = DataManagement.getGame(game_id);
+        if (game.getHeadReferee().equals(DataManagement.getCurrent())){
+            for (Event currentEvent : game.getEventList()){
+                if (currentEvent.getEventTime().equals(eventTime)){
+                    if (arg_team!=null && game.getHost().equals(arg_team)){
+                        currentEvent.setTeam(arg_team);
+                        if (arg_player!=null && game.getHost().getPlayer(arg_player.getUserName()).equals(arg_player)){
+                            currentEvent.setPlayer(arg_player);
+                        }
+                        else{
+                            AC = new ActionStatus(false, "the player doesnt play in that team");
+                        }
+                    }
+                    else if (arg_team!=null && game.getGuest().equals(arg_team)){
+                        currentEvent.setTeam(arg_team);
+                        if (arg_player!=null && game.getGuest().getPlayer(arg_player.getUserName()).equals(arg_player)){
+                            currentEvent.setPlayer(arg_player);
+                        }
+                        else{
+                            AC = new ActionStatus(false, "the player doesnt play in that team");
+                        }
+                    }
+                    else{
+                        AC = new ActionStatus(false, "the team is not a part in the game");
+                    }
+                    currentEvent.setEventType(arg_event_type);
+                }
+                else{
+                    AC = new ActionStatus(false, "there was not event in this time");
+                }
+            }
+            if (AC!=null) {
+                AC = new ActionStatus(true, "The events were edited");
+            }
+        }
+        else{
+            AC = new ActionStatus(false,"you are not the head referee in the game.");
+        }
+        return AC;
+    }
+
+    public String printGameEvents(int game_id){
+        String eventList="";
+        Game g = DataManagement.getGame(game_id);
+        for (Event e : g.getEventList()){
+            eventList+=e.toString()+"/n";
+        }
+        return eventList;
+    }
+
+
+    }

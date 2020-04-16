@@ -21,7 +21,7 @@ public class EventTest {
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
-        event = new Event(team1, eventType, player);
+        event = new Event(team1, eventType, player,null);
 
         assertEquals(team1, event.getTeam());
         assertEquals(eventType, event.getEventType());
@@ -37,7 +37,7 @@ public class EventTest {
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
-        event = new Event(team1, eventType, player);
+        event = new Event(team1, eventType, player,null);
 
         assertEquals(player, event.getPlayer());
     }
@@ -51,7 +51,7 @@ public class EventTest {
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
-        event = new Event(team1, eventType, player);
+        event = new Event(team1, eventType, player,null);
 
         assertEquals(team1, event.getTeam());
     }
@@ -65,7 +65,7 @@ public class EventTest {
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
-        event = new Event(team1, eventType, player);
+        event = new Event(team1, eventType, player,null);
 
         assertEquals(eventType, event.getEventType());
     }
@@ -79,7 +79,7 @@ public class EventTest {
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
-        event = new Event(team1, eventType, player);
+        event = new Event(team1, eventType, player,null);
 
         assertEquals(eventType, event.getEventType());
 
@@ -102,7 +102,7 @@ public class EventTest {
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
-        event = new Event(team1, eventType, player);
+        event = new Event(team1, eventType, player,null);
 
         assertEquals(team1, event.getTeam());
 
@@ -126,7 +126,7 @@ public class EventTest {
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
-        event = new Event(team1, eventType, player);
+        event = new Event(team1, eventType, player,null);
 
         assertEquals(player, event.getPlayer());
 
@@ -152,7 +152,7 @@ public class EventTest {
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
-        event = new Event(team1, eventType, player);
+        event = new Event(team1, eventType, player,null);
 
         assertEquals(eventType +" for player:"+player.getUserName()+" from team:"+ team1.getName(), event.eventToString());
     }
