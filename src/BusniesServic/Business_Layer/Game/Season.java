@@ -1,7 +1,7 @@
 package BusniesServic.Business_Layer.Game;
-
 import BusniesServic.Business_Layer.UserManagement.Referee;
 
+import java.time.Year;
 import java.util.HashSet;
 
 public class Season {
@@ -18,11 +18,6 @@ public class Season {
         list_game = new HashSet<>();
         season = year;
 
-//        if (year != null) {
-//            int intFormatYear = Integer.parseInt(year);
-//            if (intFormatYear > 1900 && intFormatYear < 2021)
-//                this.season = year;
-//        }
     }
 
     /**
@@ -71,7 +66,7 @@ public class Season {
      * This function is adding a game to the League
      * @param g is the game
      */
-        public void addGame(Game g){
+    public void addGame(Game g){
         if(g != null){
 
             list_game.add(g);

@@ -111,7 +111,7 @@ public class SeasonTest {
     }
 
     /**
-     * Test - S2
+     * Test - S7
      */
     @Test
     public void testGetGame() {
@@ -127,7 +127,7 @@ public class SeasonTest {
     }
 
     /**
-     * Test - S6
+     * Test - S8
      */
     @Test
     public void testSetYear() {
@@ -148,5 +148,19 @@ public class SeasonTest {
         season.setYear("");
         assertEquals(year2, season.getYear());
 
+    }
+
+    /**
+     * Test - S9
+     */
+    @Test
+    public void testGetReferee() {
+
+        String year = "2000";
+        season = new Season(year);
+        Referee referee = new Referee("a","123456", "sdsad@gmail.com");
+
+        season.addReferee(referee);
+        assertEquals(referee, season.getReferee("a"));
     }
 }
