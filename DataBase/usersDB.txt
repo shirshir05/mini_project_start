@@ -1,4 +1,4 @@
-Fan,testUser,123456,a@g.com
+Fan,fUser,123456,a@g.com
 Coach,cUser,123456,c@g.com
 Player,pUser,123456,p@g.com
 TeamOwner,teamOwnerOne,123456,a@g.com

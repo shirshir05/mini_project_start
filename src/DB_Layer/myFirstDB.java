@@ -38,6 +38,7 @@ public class myFirstDB implements InitFromDB,saveToDB {
                 String[] splited = line.split(",");
                 ac = login.Registration(splited[1], splited[2], splited[0], splited[3]);
                 done = done && ac.isActionSuccessful();
+                line = in.readLine();
             }
             ac = new ActionStatus(done,"User insertion status");
         }catch (IOException e){
@@ -64,6 +65,7 @@ public class myFirstDB implements InitFromDB,saveToDB {
                 for(String s : player){
                     team.addOrRemovePlayer((Player) DataManagement.containSubscription(s),1);
                 }
+                line = in.readLine();
             }
             ac = new ActionStatus(true,"User uploaded successfully");
         }catch (IOException e){
@@ -74,33 +76,36 @@ public class myFirstDB implements InitFromDB,saveToDB {
 
     @Override
     public ActionStatus loadGameInfo() {
-        return null;
+        return new ActionStatus(false,"function loadGameInfo not implemented");
     }
 
     @Override
     public ActionStatus loadLeagueInfo() {
-        return null;
+        return new ActionStatus(false,"function loadLeagueInfo not implemented");
     }
 
 
     //SAVE TO NEW DATA-BASE
     @Override
     public ActionStatus SaveUsersInfo() {
-        return null;
+        return new ActionStatus(false,"function SaveUsersInfo not implemented");
+
     }
 
     @Override
     public ActionStatus SaveTeamInfo() {
-        return null;
+        return new ActionStatus(false,"function SaveTeamInfo not implemented");
+
     }
 
     @Override
     public ActionStatus SaveGameInfo() {
-        return null;
+        return new ActionStatus(false,"function SaveGameInfo not implemented");
+
     }
 
     @Override
     public ActionStatus SaveLeagueInfo() {
-        return null;
+        return new ActionStatus(false,"function SaveLeagueInfo not implemented");
     }
 }

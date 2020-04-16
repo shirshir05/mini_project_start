@@ -73,6 +73,14 @@ public final class DataManagement {
         return ac;
     }
 
+    public static void cleanAllData(){
+        Subscription = new HashSet<>();
+        list_team = new HashSet<>();
+        list_game = new HashSet<>();
+        list_league = new HashSet<>();
+        list_Complaints = new HashSet<>();
+    }
+
     /**
      * A function is to check if there is a subscription in the system by username.
      * @param arg_user_name
