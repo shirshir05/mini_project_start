@@ -24,6 +24,7 @@ public class PersonalPage extends Observable {
     }
 
 
+
     //**********************************************permission To Edit ************************************************************//
     public void addPermissionToEdit(String user){
         permissionToEdit.add(user);
