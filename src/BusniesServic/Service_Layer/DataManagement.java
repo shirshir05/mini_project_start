@@ -42,11 +42,10 @@ public final class DataManagement {
      * singleton constructor to initialize the parameters
      */
     private DataManagement() {
-        if (instance == null) {
+        if (instance != null) {
             //Prevent Reflection
             //throw new IllegalStateException("Cannot instantiate a new singleton instance of logic management");
             this.createLogicManagement();
-
         }
         this.createLogicManagement();
         logger.log("DataManagement :the system is initialized");
