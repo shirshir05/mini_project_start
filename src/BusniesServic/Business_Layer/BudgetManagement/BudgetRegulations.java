@@ -194,6 +194,20 @@ public class BudgetRegulations {
         return minUnionMemberSalary;
     }
 
+    public static void resetRegulationsToDefault(){
+        maxPlayerSalary = DEFAULT_MAX_SALARY;
+        minPlayerSalary = MIN_SALARY;
+        maxCoachSalary = DEFAULT_MAX_SALARY;
+        minCoachSalary = MIN_SALARY;
+        maxMaintenanceExpense = DEFAULT_MAX_EXPENSE;
+        maxAdvertisementExpense = DEFAULT_MAX_EXPENSE;
+        maxUniformExpense = DEFAULT_MAX_EXPENSE;
+        maxOtherExpense = DEFAULT_MAX_EXPENSE;
+        maxRefereeSalary = DEFAULT_MAX_SALARY;
+        minRefereeSalary = MIN_SALARY;
+        maxUnionMemberSalary = DEFAULT_MAX_SALARY;
+        minUnionMemberSalary = MIN_SALARY;
+    }
 
     //endregion
 }
