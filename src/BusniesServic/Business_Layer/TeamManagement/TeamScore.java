@@ -1,8 +1,5 @@
 package BusniesServic.Business_Layer.TeamManagement;
-import BusniesServic.Business_Layer.BudgetManagement.PointsPolicy;
-import BusniesServic.Business_Layer.Trace.FootballTeamStatistic;
-
-import java.util.Date;
+import BusniesServic.Business_Layer.Game.PointsPolicy;
 
 public class TeamScore {
 
@@ -113,15 +110,8 @@ public class TeamScore {
 
     @Override
     public String toString() {
-        return "TeamScore{" +
-                "teamName='" + teamName + '\'' +
-                ", numberOfGames=" + numberOfGames +
-                ", wins=" + wins +
-                ", drawn=" + drawn +
-                ", loses=" + loses +
-                ", goalsScores=" + goalsScores +
-                ", goalsGet=" + goalsGet +
-                ", points=" + points +
-                '}';
+        return  "Team - " + teamName + " | games - " + numberOfGames +  " | wins - " + wins +
+                " | drawns - " + drawn + " | loses - " + loses + " | goals scores - " + goalsScores +
+                " | goals get - "  + goalsGet + " | points - " + points  + " |";
     }
 }

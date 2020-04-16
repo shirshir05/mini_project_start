@@ -1,6 +1,5 @@
 package BusniesServic.Business_Layer.TeamManagement;
 
-import BusniesServic.Business_Layer.BudgetManagement.PointsPolicy;
 import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Business_Layer.BudgetManagement.Expense;
 import BusniesServic.Business_Layer.BudgetManagement.Income;
@@ -79,6 +78,15 @@ public class Team extends Observable implements Comparable {
         return list_assets;
     }
 
+    public TeamScore getTeamScore() {
+        return teamScore;
+    }
+
+    public void setTeamScore(TeamScore teamScore) {
+        if(teamScore != null){
+            this.teamScore = teamScore;
+        }
+    }
 
     //**********************************************Team subscriptions*****************************************************//
 
@@ -325,9 +333,7 @@ public class Team extends Observable implements Comparable {
         return false;
     }
 
-    public TeamScore getTeamScore() {
-        return teamScore;
-    }
+    //**********************************************Compare************************************************************//
 
     @Override
     public int compareTo(Object o) {
@@ -335,8 +341,8 @@ public class Team extends Observable implements Comparable {
         Team team = (Team) o;
         if (this.getTeamScore().getPoints() >= team.getTeamScore().getPoints()) {
 
-            return 1;
+            return -1;
         }
-        return -1;
+        return 1;
     }
 }
