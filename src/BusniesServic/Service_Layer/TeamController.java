@@ -8,17 +8,66 @@ import DB_Layer.logger;
 import Presentation_Layer.Spelling;
 
 import java.util.ArrayList;
+import java.util.Currency;
+import java.util.HashSet;
 import java.util.Observable;
 
 public class TeamController {
+
+    public TeamController(){}
 
     /**
      * @param arg_name
      * @return
      */
-    public boolean RequestCreateTeam(String arg_name){
-        return true;
+    public boolean RequestCreateTeam(String arg_name, String arg_field){
+        boolean flag=false;
+        if (DataManagement.getCurrent() instanceof TeamOwner && arg_name!=null) {
+            ArrayList<UnionRepresentative> union = DataManagement.getUnionRepresentatives();
+            for (UnionRepresentative rep : union) {
+                rep.addAlert("teamOwner:" + DataManagement.getCurrent() + "| Team;" + arg_name);
+                flag = true;
+            }
+        }
+        if (flag==true){
+            this.CreateTeam(arg_name,arg_field);
+        }
+        return flag;
     }
+
+    public boolean ApproveCreateTeamAlert(String theAlert,String repName){
+        UnionRepresentative rep = (UnionRepresentative)DataManagement.getSubscription(repName);
+        boolean flag = false;
+        if (rep!=null) {
+            for (String alert : rep.getAlerts()) {
+                if (alert.equals(theAlert)) {
+                    Team t = DataManagement.findTeam(theAlert.substring(theAlert.indexOf(';')));
+                    t.changeStatus(1);
+                    flag = true;
+                }
+            }
+        }
+        if (flag){
+            DeleteCreateTeamRequest(theAlert);
+        }
+        return flag;
+    }
+
+
+    public void DeleteCreateTeamRequest(String teamName){
+        if (teamName!=null) {
+            ArrayList<UnionRepresentative> union = DataManagement.getUnionRepresentatives();
+            for (UnionRepresentative u : union) {
+                for (String alert : u.getAlerts()) {
+                    if (alert.contains(teamName)) {
+                        u.getAlerts().remove(alert);
+                    }
+                }
+            }
+        }
+
+    }
+
 
     /**
      * Once the association representative is approved, a Team is created in the system.
@@ -30,13 +79,16 @@ public class TeamController {
      */
     public ActionStatus CreateTeam(String arg_name, String arg_field) {
         ActionStatus AC = null;
-
-        if (!(DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Edit_team))) && !(DataManagement.getCurrent() instanceof TeamOwner)) {
+        if (arg_name==null || arg_field==null){
+            AC = new ActionStatus(false, "One of the parameters is null");
+        }
+        else if (!(DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Edit_team))) && !(DataManagement.getCurrent() instanceof TeamOwner)) {
             AC=  new ActionStatus(false,"You are not allowed to perform actions on the group.");
         }
         else if(DataManagement.findTeam(arg_name) != null){
 
                 AC= new ActionStatus(false,"The Team already exists in the system.");
+
         }
         else{
             Team new_team = new Team(arg_name, arg_field);
@@ -50,9 +102,9 @@ public class TeamController {
             }
             AC = new_team.EditTeamOwner((TeamOwner) DataManagement.getCurrent(),1);
             Spelling.updateDictionary("team: " + arg_name);
+            new_team.changeStatus(2);
         }
         logger.log("Create Team: "+arg_name+"-"+AC.getDescription());
-
         return AC;
     }
 
@@ -232,22 +284,18 @@ public class TeamController {
      * @return
      */
     public String CheckInputEditTeam(String name_team, String user_name) {
-        if ((DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Edit_team)) == false)) {
-            return "You are not allowed to perform actions on the group.";
-        }
-        Team team = DataManagement.findTeam(name_team);
-        if (team == null) {
-            return "The Team does not exist in the system.";
-        }
-        if (!team.checkIfObjectInTeam(DataManagement.getCurrent()) || (DataManagement.getCurrent() instanceof SystemAdministrator)) {
-            return "You are not allowed to perform actions in this group.";
-        }
-        Subscription subscription = DataManagement.containSubscription(user_name);
-        if (subscription == null) {
-            return "The username does not exist on the system.";
-        }
-        // no error
-        return null;
+        String value=null;
+        if (name_team==null || user_name==null){
+            value= "One of the parameters is null";
+        } else if ((DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Edit_team)) == false)) {
+            value= "You are not allowed to perform actions on the group.";
+        } else if (DataManagement.findTeam(name_team) == null) {
+            value= "The Team does not exist in the system.";
+        } else if (!DataManagement.findTeam(name_team).checkIfObjectInTeam(DataManagement.getCurrent()) || (DataManagement.getCurrent() instanceof SystemAdministrator)) {
+            value= "You are not allowed to perform actions in this group.";
+        } else if (DataManagement.containSubscription(user_name) == null) {
+            value= "The username does not exist on the system.";
+        } return value;
     }
 
 
@@ -307,4 +355,4 @@ public class TeamController {
 
 
 
-    }
+}

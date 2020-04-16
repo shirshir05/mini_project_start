@@ -8,6 +8,7 @@ import BusniesServic.Business_Layer.UserManagement.Complaint;
 import BusniesServic.Business_Layer.UserManagement.Subscription;
 import BusniesServic.Business_Layer.UserManagement.SystemAdministrator;
 import BusniesServic.Business_Layer.UserManagement.UnionRepresentative;
+import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Enum.Role;
 import DB_Layer.logger;
 import DB_Layer.stateTaxSystem;
@@ -35,20 +36,19 @@ public final class DataManagement {
     // Saves the current subscription that is currently being registered to the system
     private static Subscription current;
 
-    private stateTaxSystem taxSys;
-    private unionFinanceSystem financeSys;
+    private static stateTaxSystem taxSys;
+    private static unionFinanceSystem financeSys;
 
     /**
      * singleton constructor to initialize the parameters
      */
     private DataManagement() {
-        if (instance != null) {
+        if (instance == null) {
             //Prevent Reflection
             //throw new IllegalStateException("Cannot instantiate a new singleton instance of logic management");
             this.createLogicManagement();
+            logger.log("DataManagement :the system is initialized");
         }
-        this.createLogicManagement();
-        logger.log("DataManagement :the system is initialized");
     }
 
     /**
@@ -60,6 +60,25 @@ public final class DataManagement {
         boolean checkSystem1 = financeSys.initConnection();
         taxSys = new stateTaxSystem();
         boolean checkSystem2 = taxSys.initConnection();
+    }
+
+    public static ActionStatus getExternalConnStatus(String system){
+        ActionStatus ac = null;
+        switch (system) {
+            case "finance":
+                ac = new ActionStatus(financeSys.checkConnection(),"finance system status");
+            case "tax":
+                ac = new ActionStatus(taxSys.checkConnection(),"tax system status");
+        }
+        return ac;
+    }
+
+    public static void cleanAllData(){
+        Subscription = new HashSet<>();
+        list_team = new HashSet<>();
+        list_game = new HashSet<>();
+        list_league = new HashSet<>();
+        list_Complaints = new HashSet<>();
     }
 
     /**
@@ -86,7 +105,7 @@ public final class DataManagement {
      * @param argRole
      * @return Role or null if the tole not found
      */
-    protected static Role returnEnum(String argRole){
+    public static Role returnEnum(String argRole){
         if (!isInEnum(argRole)) {
             return null;
         }
@@ -308,4 +327,17 @@ public final class DataManagement {
             list_Complaints.add(complaint);
         }
     }
+
+    public static Subscription getSubscription(String userName){
+        if (userName!=null) {
+            for (Subscription s : Subscription) {
+                if (s.getUserName().equals(userName)) {
+                    return s;
+                }
+            }
+        }
+        return null;
+    }
+
+
 }
