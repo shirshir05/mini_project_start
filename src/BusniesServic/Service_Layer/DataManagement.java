@@ -141,7 +141,7 @@ public final class DataManagement {
      */
     public static Team findTeam(String teamName) {
         for (Team t : list_team){
-            if (teamName==null || (t.getName().equals(teamName)))
+            if (t.getName().equals(teamName))
                 return t;
         }
         return null;
