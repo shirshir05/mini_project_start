@@ -17,6 +17,9 @@ import org.junit.runner.notification.Failure;
 
 public class mainTest {
 
+    static int testCounter = 0;
+    static int failedTests = 0;
+
     public static void main(String[] args){
 
         //BudgetManagement
@@ -60,6 +63,9 @@ public class mainTest {
         test(SearchLoggerTest.class);
         test(TeamControllerTest.class);
 
+        System.out.println("Total number of tests: "+testCounter);
+        System.out.println("Total number of failed tests: "+failedTests);
+
     }
 
     private static void test(Class toTest){
@@ -70,7 +76,9 @@ public class mainTest {
             System.out.println(fail.toString());
         }
         System.out.println("Number of tests = " + result.getRunCount());
+        testCounter = testCounter + result.getRunCount();
         System.out.println("Number of test failed = " + result.getFailureCount());
+        failedTests = failedTests + result.getFailureCount();
     }
 
 }
