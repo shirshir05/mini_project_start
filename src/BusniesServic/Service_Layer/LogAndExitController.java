@@ -23,7 +23,6 @@ import java.util.HashSet;
 public class LogAndExitController{
 
     protected static SubscriptionFactory factory = new SubscriptionFactory();
-    private Subscription current;
 
     /**
      * The purpose of this function is to register the user to the system.
@@ -64,25 +63,23 @@ public class LogAndExitController{
      * @param arg_password
      * @return comment print to user
      */
-    public ActionStatus Login(String arg_user_name, String arg_password){
+    public ActionStatus Login(String arg_user_name, String arg_password) {
         ActionStatus AC = null;
-        Subscription Current_check = DataManagement.containSubscription(arg_user_name);
-        if(current != null){
+        Subscription toLogin = DataManagement.containSubscription(arg_user_name);
+        if (DataManagement.getCurrent() != null) {
             AC = new ActionStatus(false, "Another subscription is connected to the system.");
         }
-        else if (Current_check != null){
-            if (!Current_check.getPassword().equals(Subscription.getHash(arg_password)) ){
-                AC = new ActionStatus(false,  "The password does not match the username.");
-            }
-            else {
-                current = Current_check;
-                AC = new ActionStatus(true, "Login successful.");
-            }
+        else if (toLogin == null) {
+            AC = new ActionStatus(false, "The user " + arg_user_name + " does not exist in the system.");
         }
-        else if(AC ==null) {
-            AC = new ActionStatus(false, "There is no user with such a name.");
+        else if (!toLogin.getPassword().equals(Subscription.getHash(arg_password))) {
+            AC = new ActionStatus(false, "The password is incorrect.");
         }
-        logger.log("Login attempt of user : "+ arg_user_name+" "+ AC.getDescription());
+        else {
+            DataManagement.setCurrent(toLogin);
+            AC = new ActionStatus(true, "Login successful.");
+        }
+        logger.log("Login attempt of user : " + arg_user_name + " " + AC.getDescription());
         return AC;
     }
 
@@ -118,13 +115,13 @@ public class LogAndExitController{
      */
     public ActionStatus RemoveSubscription(String userName){
         ActionStatus AC = null;
-        if(ConstraintsCorrectness(userName) == false){
+        if(!ConstraintsCorrectness(userName)){
             AC =  new ActionStatus(false,  "The system constraints do not allow this subscription to be deleted.");
         }
         else if(DataManagement.containSubscription(userName) == null){
             AC =  new ActionStatus(false,  "There is no subscription with this username in the system.");
         }
-        else if(!(current.getPermissions().check_permissions((PermissionAction.Removing_Subscriptions)))){
+        else if(!(DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Removing_Subscriptions)))){
             AC =  new ActionStatus(false,  "You are not authorized to perform this action.");
         }
         else {
