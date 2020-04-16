@@ -13,12 +13,13 @@ import java.util.Date;
 
 public class EditAndShowUserDetails {
 
+
     public ActionStatus watchPersonalDetils(String user_name) {
         Subscription subscription = DataManagement.containSubscription(user_name);
         if(subscription == null){
             return new ActionStatus(false, "there is no subscription in the system by this username.");
         }
-        if(subscription != DataManagement.getCurrent()){
+        if(!subscription.getUserName().equals(DataManagement.getCurrent().getUserName())){
             return new ActionStatus(false, "Another subscription is connected to the system.");
         }
         subscription.toString();
@@ -30,7 +31,7 @@ public class EditAndShowUserDetails {
         if(subscription == null){
             return new ActionStatus(false, "there is no subscription in the system by this username.");
         }
-        if(subscription != DataManagement.getCurrent()){
+        if(!subscription.getUserName().equals(DataManagement.getCurrent().getUserName())){
             return new ActionStatus(false, "Another subscription is connected to the system.");
         }
         if(newValue == null || newValue.length() == 0){
@@ -45,7 +46,7 @@ public class EditAndShowUserDetails {
         if(subscription == null){
             return new ActionStatus(false, "there is no subscription in the system by this username.");
         }
-        if(subscription != DataManagement.getCurrent()){
+        if(!subscription.getUserName().equals(DataManagement.getCurrent().getUserName())){
             return new ActionStatus(false, "Another subscription is connected to the system.");
         }
         if(!DataManagement.checkEmail(newValue)){
@@ -57,7 +58,10 @@ public class EditAndShowUserDetails {
 
     public ActionStatus editSubscriptionUserName(String user_name, String newUserName, String currentPassword) {
         Subscription subscription = DataManagement.containSubscription(user_name);
-        if(subscription != DataManagement.getCurrent()){
+        if(subscription == null){
+            return new ActionStatus(false, "there is no subscription in the system by this username.");
+        }
+        if(!subscription.getUserName().equals(DataManagement.getCurrent().getUserName())){
             return new ActionStatus(false, "Another subscription is connected to the system.");
         }
         if(DataManagement.InputTest(newUserName, currentPassword) != null) {
@@ -69,7 +73,10 @@ public class EditAndShowUserDetails {
 
     public ActionStatus editSubscriptionPassword(String user_name, String currentUserName, String newPassword) {
         Subscription subscription = DataManagement.containSubscription(user_name);
-        if(subscription != DataManagement.getCurrent()){
+        if(subscription == null){
+            return new ActionStatus(false, "there is no subscription in the system by this username.");
+        }
+        if(!subscription.getUserName().equals(DataManagement.getCurrent().getUserName())){
             return new ActionStatus(false, "Another subscription is connected to the system.");
         }
         if(DataManagement.InputTest(currentUserName, newPassword) != null) {
@@ -84,11 +91,11 @@ public class EditAndShowUserDetails {
         if(subscription == null){
             return new ActionStatus(false, "there is no subscription in the system by this username.");
         }
+        if(!subscription.getUserName().equals(DataManagement.getCurrent().getUserName())){
+            return new ActionStatus(false, "Another subscription is connected to the system.");
+        }
         if (!(subscription instanceof Coach)) {
             return new ActionStatus(false, "The username is not defined as a coach on the system.");
-        }
-        if(subscription != DataManagement.getCurrent()){
-            return new ActionStatus(false, "Another subscription is connected to the system.");
         }
         if(newValue == null || newValue.length() == 0){
             return new ActionStatus(false, "The new qualification is not legal");
@@ -103,11 +110,11 @@ public class EditAndShowUserDetails {
         if(subscription == null){
             return new ActionStatus(false, "there is no subscription in the system by this username.");
         }
+        if(!subscription.getUserName().equals(DataManagement.getCurrent().getUserName())){
+            return new ActionStatus(false, "Another subscription is connected to the system.");
+        }
         if (!(subscription instanceof Coach)) {
             return new ActionStatus(false, "The username is not defined as a coach on the system.");
-        }
-        if(subscription != DataManagement.getCurrent()){
-            return new ActionStatus(false, "Another subscription is connected to the system.");
         }
         if(newValue == null || newValue.length() == 0){
             return new ActionStatus(false, "The new role is not legal");
@@ -122,11 +129,11 @@ public class EditAndShowUserDetails {
         if(subscription == null){
             return new ActionStatus(false, "there is no subscription in the system by this username.");
         }
+        if(!subscription.getUserName().equals(DataManagement.getCurrent().getUserName())){
+            return new ActionStatus(false, "Another subscription is connected to the system.");
+        }
         if (!(subscription instanceof Referee)) {
             return new ActionStatus(false, "The username is not defined as a Referee on the system.");
-        }
-        if(subscription != DataManagement.getCurrent()){
-            return new ActionStatus(false, "Another subscription is connected to the system.");
         }
         if(newValue == null || newValue.length() == 0){
             return new ActionStatus(false, "The new qualification is not legal");
@@ -141,11 +148,11 @@ public class EditAndShowUserDetails {
         if(subscription == null){
             return new ActionStatus(false, "there is no subscription in the system by this username.");
         }
+        if(!subscription.getUserName().equals(DataManagement.getCurrent().getUserName())){
+            return new ActionStatus(false, "Another subscription is connected to the system.");
+        }
         if (!(subscription instanceof Player)) {
             return new ActionStatus(false, "The username is not defined as a player on the system.");
-        }
-        if(subscription != DataManagement.getCurrent()){
-            return new ActionStatus(false, "Another subscription is connected to the system.");
         }
         if(newValue == null || newValue.length() == 0){
             return new ActionStatus(false, "The new position is not legal");
@@ -160,11 +167,11 @@ public class EditAndShowUserDetails {
         if(subscription == null){
             return new ActionStatus(false, "there is no subscription in the system by this username.");
         }
+        if(!subscription.getUserName().equals(DataManagement.getCurrent().getUserName())){
+            return new ActionStatus(false, "Another subscription is connected to the system.");
+        }
         if (!(subscription instanceof Player)) {
             return new ActionStatus(false, "The username is not defined as a player on the system.");
-        }
-        if(subscription != DataManagement.getCurrent()){
-            return new ActionStatus(false, "Another subscription is connected to the system.");
         }
         //need to check more on legal date (year, day ...)
         //consider change Date object
