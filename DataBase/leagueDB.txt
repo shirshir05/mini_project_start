@@ -1,3 +1,3 @@
 League,adultLeague,
 Season,2019,refOne,refTwo,refThree,1;2;3
-Season,2020,refOne,refTwo,refThree,
+Season,2020,refOne,refTwo,refThree

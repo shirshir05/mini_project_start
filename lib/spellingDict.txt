@@ -1,6 +1,0 @@
-fan: SHIR
-referee: REF
-coach: 1
-referee: dd
-coach: s
-referee: ss

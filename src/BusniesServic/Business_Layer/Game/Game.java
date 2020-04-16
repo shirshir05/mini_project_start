@@ -69,7 +69,7 @@ public class Game extends Observable{
             guest.getTeamScore().incrementLose();
         }
 
-        else if(score.getKey() > score.getValue()) { //guest wins
+        else if(score.getKey() < score.getValue()) { //guest wins
             guest.getTeamScore().incrementWin();
             host.getTeamScore().incrementLose();
         }

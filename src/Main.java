@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
 
         StartSystem sys = new StartSystem();
-        sys.startFromDB();
-        //sys.ResetToFactory();
+        //sys.startFromDB();
+        sys.ResetToFactory();
     }
 }
