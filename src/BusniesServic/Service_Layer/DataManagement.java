@@ -159,7 +159,7 @@ public final class DataManagement {
      * @param game_id
      * @return
      */
-    protected static Game getGame(int game_id){
+    public static Game getGame(int game_id){
         for ( Game g: list_game ){
             if (g.getGameId()==game_id)
                 return g;
@@ -172,7 +172,7 @@ public final class DataManagement {
      * @param leaugeName
      * @return
      */
-    protected static League findLeague(String leaugeName) {
+    public static League findLeague(String leaugeName) {
         for (League l : list_league) {
             if (l.getName().equals(leaugeName)) {
                 return l;
@@ -182,7 +182,7 @@ public final class DataManagement {
     }
 
 
-    protected static ArrayList<UnionRepresentative> getUnionRepresentatives(){
+    public static ArrayList<UnionRepresentative> getUnionRepresentatives(){
         ArrayList<UnionRepresentative> unionReps = new ArrayList<>();
         for(Subscription s: Subscription){
             if(s instanceof UnionRepresentative)
@@ -269,7 +269,7 @@ public final class DataManagement {
      * @param email
      * @return
      */
-    protected static boolean checkEmail(String email){
+    public static boolean checkEmail(String email){
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
                 "[a-zA-Z0-9_+&*-]+)*@" +
                 "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
@@ -322,7 +322,7 @@ public final class DataManagement {
      * for the use of complaint controller - adds a compliant after verifying the permissions
      * @param complaint the complaint to add
      */
-    protected static void addComplaint(Complaint complaint) {
+    public static void addComplaint(Complaint complaint) {
         if(complaint!=null){
             list_Complaints.add(complaint);
         }

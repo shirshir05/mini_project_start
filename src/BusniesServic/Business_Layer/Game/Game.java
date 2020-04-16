@@ -9,6 +9,7 @@ import BusniesServic.Business_Layer.BudgetManagement.PointsPolicy;
 import BusniesServic.Business_Layer.TeamManagement.Team;
 import BusniesServic.Business_Layer.UserManagement.Player;
 import BusniesServic.Business_Layer.UserManagement.Referee;
+import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Enum.EventType;
 import DB_Layer.logger;
 import javafx.util.Pair;
@@ -105,36 +106,32 @@ public class Game extends Observable{
      * This function let the user add an event to the game
      * @return true - if the event was update, false otherwise.
      */
-    public boolean updateNewEvent(String team_name, String player_name, EventType event){
-        //***WRITE TO LOGGER***//
-        Event new_event=null;
-        if (host.getName().equals(team_name)){
+    public ActionStatus updateNewEvent(String team_name, String player_name, EventType event){
+        ActionStatus ac = null;
+        Event new_event = null;
+        if (host.getName().equals(team_name) || guest.getName().equals(team_name)){
             Player p = host.getPlayer(player_name);
             if(p == null){
-                System.out.println("This player is not part of the team!");
-                return false;
+                p = guest.getPlayer(player_name);
             }
-            new_event=new Event(host,event,p);
-            eventList.add(new_event);
-        }
-        else if (guest.getName().equals(team_name)){
-            Player p = guest.getPlayer(player_name);
             if(p == null){
-                System.out.println("This player is not part of the team!");
-                return false;
+                ac = new ActionStatus(false,"This player is not part of the team!");
             }
-            new_event=new Event(guest,event,p);
-            eventList.add(new_event);
+            else {
+                new_event = new Event(host, event, p);
+                eventList.add(new_event);
+            }
         }
         else{
-            //todo - change to ActionStatus, cant print from business layer
-            System.out.println("This team is not a part of the game!");
-            return false;
+            ac = new ActionStatus(false,"This team is not a part of the game!");
         }
-        setChanged();
-        notifyObservers(new_event.eventToString());
-        logger.log("Game: update_new_event, team: "+ team_name +" ,player "+player_name +" ,event " + event);
-        return true;
+        if(ac==null) {
+            setChanged();
+            notifyObservers(new_event.eventToString());
+            ac = new ActionStatus(true,"event added successfully");
+        }
+        logger.log("Game: update_new_event, team: " + team_name + " ,player " + player_name + " ,event " + event+ " " + ac.getDescription());
+        return ac;
     }
 
     /**
@@ -225,16 +222,13 @@ public class Game extends Observable{
     }
 
     public void setHost(Team host) {
-
         if(host != null && !this.guest.equals(host)){
             this.host = host;
         }
     }
 
     public void setGuest(Team guest) {
-
         if(guest != null && !this.host.equals(guest)){
-
             this.guest = guest;
         }
     }
