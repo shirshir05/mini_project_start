@@ -44,7 +44,7 @@ public class SubscriptionTest {
             Subscription sub = new Coach(userName,password,email);
             assertNotNull(sub.searchHistory);
             sub.addAlert("shir");
-            assertEquals(sub.getAlerts(),"shir\n");
+            assertEquals(sub.getAlerts().toString(),"[shir]");
         }
     }//getAlerts
 
