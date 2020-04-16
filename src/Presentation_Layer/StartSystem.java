@@ -5,7 +5,6 @@ import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Service_Layer.*;
 import DB_Layer.myFirstDB;
 
-import javax.naming.directory.SearchControls;
 import java.io.File;
 
 public class StartSystem {
@@ -15,7 +14,7 @@ public class StartSystem {
     public static EditAndShowUserDetails ESUDc = new EditAndShowUserDetails();
     public static GameSettingsController GSc = new GameSettingsController();
     public static LogAndExitController LEc = new LogAndExitController();
-    public static SearchControls Sc = new SearchControls();
+    public static SearchLogger Sc = new SearchLogger();
     public static TeamController Tc = new TeamController();
     public static UserCLI cli = new UserCLI();
 
@@ -68,14 +67,15 @@ public class StartSystem {
                     //admin menu;
                     LEc.Login(name, password);
                     chosen = true;
+                    break;
                 case 1:
                     //guest menu;
                     LEc.Login("Guest", "123456");
                     chosen = true;
+                    break;
                 default:
-                    if(!chosen) {
-                        cli.presentOnly("invalid choice.");
-                    }
+                    cli.presentOnly("invalid choice.");
+                    break;
             }
         }
         cli.presentOnly("thank you and goodbye");
@@ -118,7 +118,7 @@ public class StartSystem {
         return LEc;
     }
 
-    public static SearchControls getSc() {
+    public static SearchLogger getSc() {
         return Sc;
     }
 
