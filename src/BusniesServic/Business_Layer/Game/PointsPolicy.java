@@ -1,4 +1,4 @@
-package BusniesServic.Business_Layer.BudgetManagement;
+package BusniesServic.Business_Layer.Game;
 
 public class PointsPolicy {
 

@@ -117,8 +117,8 @@ public final class DataManagement {
                 return Role.Fan;
             case Guest:
                 return Role.Guest;
-            case Players:
-                return Role.Players;
+            case Player:
+                return Role.Player;
             case Referee:
                 return Role.Referee;
             case SystemAdministrator:
