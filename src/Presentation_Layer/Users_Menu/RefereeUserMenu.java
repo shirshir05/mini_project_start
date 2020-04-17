@@ -53,4 +53,60 @@ public class RefereeUserMenu implements UserMenu {
         return new ActionStatus(true,"log out and wait for next user");
 
     }
+
+    public ActionStatus presentUserMenu(String[] args) {
+        String output = "";
+        output += refereeMenu + " " + args[0] +"\n";
+        int input =  Integer.parseInt(args[0]);
+        if(input == 1) {
+            //edit personal info
+            output += "choose action: \n1:Edit name \n2:Edit email : " + args[1] + "\n";
+            int edit = Integer.parseInt(args[1]);
+            if(edit ==1 ){
+                output += "Write name:" + args[2];
+                String name = args[2];
+                return StartSystem.getESUDc().editSubscriptionName(DataManagement.getCurrent().getUserName(),name);
+            }else if(edit==2){
+                output += "Write emil:" + args[2];
+                String name =  args[2];
+                return StartSystem.getESUDc().editSubscriptionEmail(DataManagement.getCurrent().getUserName(),name);
+            }else{
+                return new ActionStatus(false,output +"The digit is invalid.");
+            }
+        }
+        else if(input == 2) {
+            //see my games - see all the games I am referee in them.
+            output += "Write game id:" + args[1] + "\n";
+            int gameId =  Integer.parseInt(args[1]);
+            output += "Write name team:" + args[2] + "\n";
+            String nameTeam = args[2];
+            output += "Write player name that take part in event:" + args[3] + "\n";
+            String playerName =  args[3];
+            output += "Write eventType:" + args[3] + "\n";
+            String eventType =  args[4];
+            output += StartSystem.getGSc().refereeCreateNewEvent(gameId,nameTeam,playerName,null);
+            return new ActionStatus(true,output);
+        }
+        else if(input == 3) {
+            //add event in game and get game report
+
+        }
+        else if(input == 4) {
+            //Exit
+            output += "insert User name: " + args[1] +"\n";
+            String username =   args[1];
+            output += "insert password: " + args[2] +"\n";
+            String password =  args[2];
+            ActionStatus ac = StartSystem.LEc.Exit(username,password);
+            return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
+
+        }
+        else{
+            return new ActionStatus(false,output+"invalid choice");
+        }
+
+        return new ActionStatus(false,output+ "log out and wait for next user");
+
+    }
+
 }

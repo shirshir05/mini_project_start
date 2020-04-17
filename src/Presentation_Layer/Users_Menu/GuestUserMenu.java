@@ -59,4 +59,41 @@ public class GuestUserMenu implements UserMenu {
         }
         return new ActionStatus(true,"log out and wait for next user");
     }
+
+
+    public ActionStatus presentUserMenu(String[] args) {
+        String output = "";
+        output += guestMenu + " " + args[0] +"\n";
+        int input =  Integer.parseInt(args[0]);
+        if(input==1) {
+            output += "insert User name" + args[1] +"\n";
+            String name = args[1];
+            output += "insert password" + args[2] +"\n";
+            String password = args[2];
+            output += "insert email" + args[3] +"\n";
+            String email = args[3];
+            output += "insert your Role" + args[4] +"\n";
+            String role = args[4];
+            ActionStatus ac = StartSystem.LEc.Registration(name, password, role, email);
+            output += (ac.getDescription()) + "\n";
+            return new ActionStatus(ac.isActionSuccessful(),output);
+        }
+        else if(input==2) {
+            output += "insert User name " + args[1] + "\ninsert password" + args[2] + "\n";
+            String name = args[1];
+            String password = args[2];
+            DataManagement.setCurrent(null);
+            ActionStatus ac = StartSystem.LEc.Login(name, password);
+            return new ActionStatus(ac.isActionSuccessful(), output + ac.getDescription());
+        }
+        else if(input ==3 ) {
+            StartSystem.LEc.Exit("Guset", "123456");
+            return new ActionStatus(true,output + " Exit");
+        }
+        else{
+            output += "invalid choice\n";
+            return new ActionStatus(false,output);
+        }
+    }
+
 }

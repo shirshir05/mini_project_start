@@ -80,4 +80,79 @@ public class FanUserMenu implements UserMenu  {
         }
         return new ActionStatus(true,"log out and wait for next user");
     }
+
+    public ActionStatus presentUserMenu(String[] args) {
+
+        String output = "";
+        output += fanMenu + " " + args[0] +"\n";
+        int input =  Integer.parseInt(args[0]);
+        if(input==1) {
+            output += "insert User name: " + args[1] +"\n";
+            String username =   args[1];
+            output += "insert password: " + args[2] +"\n";
+            String password =  args[2];
+            ActionStatus ac = StartSystem.LEc.Exit(username,password);
+            return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
+        }
+        else if(input==2) {
+            if (input == 2) {
+                output += "insert username of the person you want to follow: " + args[1] +"\n";
+                String username =args[1];
+                if(StartSystem.getAc().fanRegisterToPage(username)){
+                    output+="The transaction completed successfully";
+                    return new ActionStatus(true,output);
+                }else{
+                    output += "The field you entered was incorrect.";
+                    return new ActionStatus(false,output);
+                }
+            }
+        }
+        else if(input ==3 ) {
+            output += "Enter a game id: " + args[1] +"\n";
+            int game =  Integer.parseInt(args[1]);
+            if(StartSystem.getAc().fanRegisterToGameAlerts(game)){
+                return new ActionStatus(true,output + "The transaction completed successfully.");
+            }else{
+                return new ActionStatus(false,output+"The number you entered was incorrect.");
+            }
+        }
+        else if(input ==4 ) {
+            String complaint =  args[1] +"\n";
+            return StartSystem.getAc().addComplaint(complaint,(Fan) DataManagement.getCurrent());
+        }
+        else if(input ==5 ) {
+            return new ActionStatus(true ,output + StartSystem.getSc().showSearchHistory());
+        }else if(input ==6 ) {
+            output += "choose action: \n1:Edit name \n2:Edit email" + args[1] + "\n";
+            int edit =  Integer.parseInt(args[1]);
+            if(edit ==1 ){
+                output += "Write name:" + args[2] +"\n";
+                String name =  args[2];
+                return new ActionStatus(true ,output + StartSystem.getESUDc().editSubscriptionName(DataManagement.getCurrent().getUserName(),name).getDescription());
+            }else if(edit==2){
+                output += "Write emil:" + args[2] +"\n";
+                String name =  args[2];
+                return new ActionStatus(true ,output + StartSystem.getESUDc().editSubscriptionEmail(DataManagement.getCurrent().getUserName(),name).getDescription());
+            }else{
+                return new ActionStatus(false ,output + "The digit is invalid.");
+            }
+        }
+        else if(input==7) {
+            output += "Write Search word: " + args[1] + "\n";
+            String word = args[1];
+            return new ActionStatus(true, output + StartSystem.getSc().findData(word));
+        }
+        else if(input ==8){
+            output += "insert User name: " + args[1] +"\n";
+            String username =   args[1];
+            output += "insert password: " + args[2] +"\n";
+            String password =  args[2];
+            ActionStatus ac = StartSystem.LEc.Exit(username,password);
+            return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
+        }
+        else{
+            return new ActionStatus(false,output + "invalid choice");
+        }
+        return new ActionStatus(false,output);
+    }
 }
