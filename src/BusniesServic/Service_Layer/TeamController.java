@@ -176,9 +176,6 @@ public class TeamController {
         else if (!(DataManagement.containSubscription(TeamOwner) instanceof BusniesServic.Business_Layer.UserManagement.TeamOwner)) {
             AC =  new ActionStatus(false, "The username is not defined as a Team Owner on the system.");
         }
-        else if (DataManagement.findTeam(name_team) == null) {
-            AC =  new ActionStatus(false, "The Team does not exist in the system.");
-        }
         // add teamOwner to team
         else if (add_or_remove == 1) {
             Subscription teamOwner = DataManagement.containSubscription(TeamOwner);
@@ -197,16 +194,8 @@ public class TeamController {
             Subscription teamOwner = DataManagement.containSubscription(TeamOwner);
             Team team = DataManagement.findTeam(name_team);
             Subscription appointed = ((BusniesServic.Business_Layer.UserManagement.TeamOwner) teamOwner).getAppointedByTeamOwner();
-            if (DataManagement.containSubscription(appointed.getUserName()) != null) {
-                // The person responsible for appointing the team is still in the system
-                if (appointed != DataManagement.getCurrent()) {
-                    AC = new ActionStatus(false, "You do not appoint the team owner and therefore cannot remove them from the team");
-                }
-            }else{
-                ((BusniesServic.Business_Layer.UserManagement.TeamOwner) teamOwner).setAppointedByTeamOwner(null);
-                AC = team.EditTeamOwner((BusniesServic.Business_Layer.UserManagement.TeamOwner) teamOwner, add_or_remove);
-            }
-
+            ((BusniesServic.Business_Layer.UserManagement.TeamOwner) teamOwner).setAppointedByTeamOwner(null);
+            AC = team.EditTeamOwner((BusniesServic.Business_Layer.UserManagement.TeamOwner) teamOwner, add_or_remove);
         }
 
         logger.log("Add Or Remove Team Owner to Team: "+name_team+"-"+AC.getDescription());
@@ -229,15 +218,8 @@ public class TeamController {
         if (ans != null) {
             AC =  new ActionStatus(false, ans);
         }
-        else if(!(DataManagement.containSubscription(TeamManager) instanceof TeamManager)){
-            AC =  new ActionStatus(false, "The username is not defined as a Team Manager on the system.");
-        }
-        else if(DataManagement.findTeam(name_team) == null){
-            AC =  new ActionStatus(false, "The Team does not exist in the system.");
-        }
-
         // add teamOwner to team
-        if (add_or_remove == 1) {
+        else if (add_or_remove == 1) {
             Subscription teamManager =DataManagement.containSubscription(TeamManager);
             Team team =DataManagement.findTeam(name_team);
             Subscription appointed = ((TeamManager) teamManager).getAppointedByTeamOwner();
@@ -256,17 +238,8 @@ public class TeamController {
             Subscription teamManager =DataManagement.containSubscription(TeamManager);
             Team team =DataManagement.findTeam(name_team);
             Subscription appointed = ((TeamManager) teamManager).getAppointedByTeamOwner();
-            if (DataManagement.containSubscription(appointed.getUserName()) != null) {
-                // The person responsible for appointing the team is still in the system
-                if (appointed != DataManagement.getCurrent()) {
-                    AC = new ActionStatus(false, "You do not appoint the team owner and therefore cannot remove them from the team");
-                }
-
-            }else{
-                ((TeamManager) teamManager).setAppointedByTeamOwner(null);
-                AC = team.EditTeamManager((TeamManager) teamManager, add_or_remove);
-            }
-
+            ((TeamManager) teamManager).setAppointedByTeamOwner(null);
+            AC = team.EditTeamManager((TeamManager) teamManager, add_or_remove);
         }
         logger.log("Add Or Remove Team Manager to Team: "+name_team+"-"+AC.getDescription());
         return AC;
@@ -288,7 +261,7 @@ public class TeamController {
             value= "You are not allowed to perform actions on the group.";
         } else if (DataManagement.findTeam(name_team) == null) {
             value= "The Team does not exist in the system.";
-        } else if (!DataManagement.findTeam(name_team).checkIfObjectInTeam(DataManagement.getCurrent()) || (DataManagement.getCurrent() instanceof SystemAdministrator)) {
+        } else if (!DataManagement.findTeam(name_team).checkIfObjectInTeam(DataManagement.getCurrent()) && !(DataManagement.getCurrent() instanceof SystemAdministrator)) {
             value= "You are not allowed to perform actions in this group.";
         } else if (DataManagement.containSubscription(user_name) == null) {
             value= "The username does not exist on the system.";
@@ -308,46 +281,63 @@ public class TeamController {
      */
     public ActionStatus ChangeStatusTeam(String name_team, int status) {
         ActionStatus AC = null;
-        if (status != 0 && status != 1 && status != -1) {
+        if (status != 0 && status != 1 && status != -1 && status != 2) {
             AC =  new ActionStatus(false,  "The action is invalid.");
         }
         else if( CheckInputEditTeam(name_team, DataManagement.getCurrent().getUserName()) != null){
             AC = new ActionStatus(false,  CheckInputEditTeam(name_team, DataManagement.getCurrent().getUserName()));
         }
-        else if(DataManagement.findTeam(name_team) == null){
-            AC = new ActionStatus(false,  "The Team does not exist in the system.");
-        }
         else if (DataManagement.findTeam(name_team).getStatus() == -1) {
             AC = new ActionStatus(false,  "The team is permanently closed.");
         }
-        else if (!(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Close_team))) {
-            AC = new ActionStatus(false,  "You are not allowed to close a team.");
-
-
-        }
-
-        else if (!(DataManagement.getCurrent() instanceof SystemAdministrator)) {
-            //Only an administrator can permanently close the team
-            if (status == -1) {
-                AC = new ActionStatus(false,  "You are not authorized to perform this action.");
-                return new ActionStatus(false,  "You are not authorized to perform this action.");
+        else if (status==0){
+            if (!(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Close_team))) {
+                AC = new ActionStatus(false, "You are not allowed to close a team.");
+            }
+            else {
+                AC = DataManagement.findTeam(name_team).changeStatus(status);
             }
         }
-        else if (!(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Close_team_perpetually) != false)) {
-                AC = new ActionStatus(false,  "You are not allowed to close a team.");
+        else if(status==-1) {
+            if (!(DataManagement.getCurrent() instanceof SystemAdministrator)) {
+                AC = new ActionStatus(false, "You are not authorized to perform this action.");
+            } else {
+                    AC = DataManagement.findTeam(name_team).changeStatus(status);
+            }
         }
-        else{
+        else {
             AC = DataManagement.findTeam(name_team).changeStatus(status);
         }
-
         logger.log("Change Status to Team: "+name_team+"-"+AC.getDescription());
         return AC;
-
     }
 
     public ActionStatus AddOrRemoveTeamsAssets(String name_team, String TeamAsset, int add_or_remove) {
-        //TODO -
-        return null;
+        ActionStatus AC = null;
+        Team t = DataManagement.findTeam(name_team);
+        if (t!=null && TeamAsset!=null && (add_or_remove==1 || add_or_remove==0) && DataManagement.getCurrent() instanceof TeamOwner){
+            if (add_or_remove==1) {
+                t.setAsset(TeamAsset);
+                AC = new ActionStatus(true, "The asset was added to the team");
+            }
+            else if (add_or_remove==0){
+                if (!t.getTeamAssets().contains(TeamAsset)){
+                    AC = new ActionStatus(false, "The team doesnt contains this asset");
+                }
+                else{
+                    t.removeTeamAssets(TeamAsset);
+                    AC = new ActionStatus(true, "The asset was deleted from the team");
+                }
+            }
+        }
+        else{
+            if (t==null){AC = new ActionStatus(false, "There is no such team in the system");}
+            else if (TeamAsset==null){AC = new ActionStatus(false, "This asset is null");}
+            else if (add_or_remove!=1 && add_or_remove!=0){AC = new ActionStatus(false, "Choose 1 or 0 only");}
+            else if (!(DataManagement.getCurrent() instanceof TeamOwner)){AC = new ActionStatus(false, "You are not a team owner");}
+        }
+        return AC;
+
     }
 
 

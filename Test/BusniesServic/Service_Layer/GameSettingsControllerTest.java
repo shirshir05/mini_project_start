@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
 public class GameSettingsControllerTest {
 
 
-
        /**
      * Test - SC1
      */

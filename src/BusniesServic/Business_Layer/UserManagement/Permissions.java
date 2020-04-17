@@ -57,6 +57,7 @@ public class Permissions {
 
 
     public void add_default_admin_permission(){
+        list_Permissions.add(PermissionAction.Edit_team);
         list_Permissions.add(PermissionAction.Close_team_perpetually);
         list_Permissions.add(PermissionAction.Removing_Subscriptions);
         list_Permissions.add(PermissionAction.Respond_to_complaints);
