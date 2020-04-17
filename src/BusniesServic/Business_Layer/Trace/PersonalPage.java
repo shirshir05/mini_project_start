@@ -21,6 +21,7 @@ public class PersonalPage extends Observable {
         name=subject_name;
         permissionToEdit = new HashSet<>();
         pageData = new HashMap<>();
+        addPageOwner(subject_name);
     }
 
 
@@ -39,7 +40,7 @@ public class PersonalPage extends Observable {
         return permissionToEdit.contains(user);
     }
 
-    public boolean removePerrmissionToEdit(String user){
+    public boolean removePermissionToEdit(String user){
         boolean ans = false;
         if(!user.equals(pageOwner)) {
             permissionToEdit.remove(user);
@@ -50,26 +51,26 @@ public class PersonalPage extends Observable {
 
     //**********************************************get & set ************************************************************//
 
-    public boolean addToPageData(String dataHedline , Object data){
+    public boolean addToPageData(String dataHeadline , Object data){
         boolean ans = false;
-        if(!pageData.containsKey(dataHedline)){
-            pageData.put(dataHedline,data);
+        if(!pageData.containsKey(dataHeadline)){
+            pageData.put(dataHeadline,data);
             ans = true;
         }
         return ans;
     }
 
-    public Object getPageData(String dataHedline){
-        if(pageData.containsKey(dataHedline)){
-            return pageData.get(dataHedline);
+    public Object getPageData(String dataHeadline){
+        if(pageData.containsKey(dataHeadline)){
+            return pageData.get(dataHeadline);
         }
         return null;
     }
 
-    public Object editPageData(String dataHedline,Object newData){
+    public Object editPageData(String dataHeadline,Object newData){
         boolean ans = false;
-        if(pageData.containsKey(dataHedline)){
-            pageData.replace(dataHedline,newData);
+        if(pageData.containsKey(dataHeadline)){
+            pageData.replace(dataHeadline,newData);
             ans = true;
         }
         return ans;

@@ -1,6 +1,7 @@
 package BusniesServic.Service_Layer;
 
 import BusniesServic.Business_Layer.Trace.PersonalPage;
+import BusniesServic.Business_Layer.Trace.PersonalPage;
 import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Business_Layer.Game.ScoreTable;
 import BusniesServic.Business_Layer.TeamManagement.Team;
@@ -153,14 +154,14 @@ public class EditAndShowUserDetails {
         return new ActionStatus(true, "The Position of player was successfully changed!");
     }
 
-    public ActionStatus editPlayerBirthDate(String user_name, LocalDate newValue) {
+/*    public ActionStatus editPlayerBirthDate(String user_name, LocalDate newValue) {
         Subscription subscription = DataManagement.containSubscription(user_name);
         ActionStatus ac = getActionStatus(subscription);
         if (ac != null) return ac;
         if (!(subscription instanceof Player)) {
             return new ActionStatus(false, "The username is not defined as a player on the system.");
         }
-        //need to check more on legal date (year, day ...)
+        //TODO need to check more on legal date (year, day ...)
         //consider change Date object
         if(newValue == null){
             return new ActionStatus(false, "The new birthday is not legal");
@@ -168,7 +169,7 @@ public class EditAndShowUserDetails {
         Player player = (Player)subscription;
         player.setBirthday(newValue);
         return new ActionStatus(true, "The birthday of player was successfully changed!");
-    }
+    }*/
 
     public ActionStatus editPlayerPersonalPage(String user_name, Object[] values) {
         Subscription subscription = DataManagement.containSubscription(user_name);
@@ -187,7 +188,7 @@ public class EditAndShowUserDetails {
             return new ActionStatus(false, "You don't have permissions to edit this player's personal page");
         }
 
-        if(values.length != 8)
+        if(values == null || values.length != 8)
             return new ActionStatus(false,"Illegal parameters");
 
         if(values[0] instanceof Date)
@@ -238,7 +239,7 @@ public class EditAndShowUserDetails {
             return new ActionStatus(false, "You do not have permissions to edit this coach personal page");
         }
 
-        if(values.length != 4)
+        if(values == null || values.length != 5)
             return new ActionStatus(false,"Illegal parameters");
 
         if(values[0] instanceof Date)
@@ -247,11 +248,11 @@ public class EditAndShowUserDetails {
         if(verifyString(1, values))
             coach.getPersonalPage().setCountryOfBirth((String)values[1]);
 
-        if(verifyStringToDouble(3, values))
+        if(verifyStringToDouble(2, values))
             coach.getPersonalPage().setYearOfExperience(Double.parseDouble((String) values[2]));
 
         if(verifyStringToInteger(3,values))
-            coach.getPersonalPage().setNumOfTitles(Integer.parseInt((String) values[4]));
+            coach.getPersonalPage().setNumOfTitles(Integer.parseInt((String) values[3]));
 
         if(verifyString(4, values))
             coach.getPersonalPage().setName((String) values[4]);
@@ -275,7 +276,7 @@ public class EditAndShowUserDetails {
             return new ActionStatus(false, "You don't have permissions to edit this team's personal page");
         }
 
-        if(values.length != 5)
+        if(values == null || values.length != 5)
             return new ActionStatus(false,"Illegal parameters");
 
         if(values[0] instanceof Date)
@@ -294,6 +295,36 @@ public class EditAndShowUserDetails {
             teamObject.getPersonalPage().setName((String) values[4]);
 
         return new ActionStatus(true, "The team personal page was successfully updated!");
+    }
+
+    /**
+     * A coach or player can add a user to their personal page management
+     */
+    public ActionStatus addPermissions(String addPermissionsToThisUser) {
+        ActionStatus AC;
+        if(addPermissionsToThisUser == null || DataManagement.containSubscription(addPermissionsToThisUser) == null){
+            AC = new ActionStatus(false,"Invalid username.");
+        }
+        else if (DataManagement.getCurrent().permissions.check_permissions(PermissionAction.personal_page)) {
+
+            if (DataManagement.getCurrent() instanceof Coach) {
+                Coach coach = (Coach) DataManagement.getCurrent();
+                coach.getPersonalPage().addPermissionToEdit(addPermissionsToThisUser);
+                AC = new ActionStatus(true, "Permissions successfully added.");
+            } else if (DataManagement.getCurrent() instanceof Player) {
+                Player player = (Player) DataManagement.getCurrent();
+                player.getPersonalPage().addPermissionToEdit(addPermissionsToThisUser);
+                AC = new ActionStatus(true, "Permissions successfully added.");
+            } else {
+                AC = new ActionStatus(false, "You do not have a personal page.");
+            }
+
+        }
+        else{
+            AC = new ActionStatus(false,"You are not allowed to edit this personal page");
+        }
+        logger.log("added permissions to personal page of: "+ DataManagement.getCurrent().getUserName()+" to "+addPermissionsToThisUser+" "+ AC.getDescription());
+        return AC;
     }
 
     //region Private methods
@@ -344,37 +375,6 @@ public class EditAndShowUserDetails {
     }
 
     //endregion
-
-    /**
-     * A coach or player can add a user to their personal page management
-     */
-    public ActionStatus addPermissions(String addPermissionsToThisPage) {
-        ActionStatus AC;
-        if(addPermissionsToThisPage == null || DataManagement.containSubscription(addPermissionsToThisPage) == null){
-            AC = new ActionStatus(false,"Invalid username.");
-        }
-        else if (DataManagement.getCurrent().permissions.check_permissions(PermissionAction.personal_page)) {
-
-            if (DataManagement.getCurrent() instanceof Coach) {
-                Coach coach = (Coach) DataManagement.getCurrent();
-                coach.getPersonalPage().addPageOwner(addPermissionsToThisPage);
-                AC = new ActionStatus(true, "Permissions successfully added.");
-            } else if (DataManagement.getCurrent() instanceof Player) {
-                Player player = (Player) DataManagement.getCurrent();
-                player.getPersonalPage().addPageOwner(addPermissionsToThisPage);
-                AC = new ActionStatus(true, "Permissions successfully added.");
-            } else {
-                AC = new ActionStatus(false, "You do not have a personal page.");
-            }
-
-        }
-        else{
-            AC = new ActionStatus(false,"You do not have a personal page.");
-        }
-        logger.log("added permissions to personal page of: "+ DataManagement.getCurrent().getUserName()+" to "+addPermissionsToThisPage+" "+ AC.getDescription());
-        return AC;
-    }
-
 
 
 }
