@@ -802,4 +802,81 @@ public class TeamTest {
 
         } //equalsTeam
     }
+
+
+    /**
+     * Test - T21
+     */
+    @RunWith(Parameterized.class)
+    public static class setTeamScore {
+        //parameter
+        public String name;
+        public String field;
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {"Raz","Blumfield"},
+                    {"","Blumfield"}, {null,"Blumfield"},
+                    {"Raz",""}, {"Raz",null},
+                    {"",""},{null,null}
+            });
+        }
+
+        public setTeamScore(String teamName, String mainField) {
+            this.name=teamName;
+            this.field=mainField;
+        }
+
+        @Test
+        public void setTeamScoreTest() {
+            Team team = new Team(this.name,this.field);
+            TeamScore score = new TeamScore(this.name);
+            team.setTeamScore(score);
+            assertEquals(team.getTeamScore(),score);
+        }
+    } //setTeamScore
+
+    /**
+     * Test - T22
+     */
+    @RunWith(Parameterized.class)
+    public static class compareTo {
+        //parameter
+        public String name1;
+        public String field1;
+        public String name2;
+        public String field2;
+
+
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {"Raz","Blumfield","Shir","Teddi"},
+            });
+        }
+
+        public compareTo(String teamName, String mainField, String t2, String f2) {
+            this.name1=teamName;
+            this.field1=mainField;
+            this.name2=t2;
+            this.field2=f2;
+        }
+
+        @Test
+        public void compareToTest() {
+            Team team = new Team(this.name1,this.field1);
+            TeamScore score = new TeamScore(this.name1);
+            Team team2 = new Team(this.name2,this.field2);
+            TeamScore score2 = new TeamScore(this.name2);
+            score.setPoints(3);
+            score2.setPoints(2);
+            team.setTeamScore(score);
+            team2.setTeamScore(score2);
+            assertEquals(team.compareTo(team2),-1);
+            assertEquals(team2.compareTo(team),1);
+        }
+    } //setTeamScore
+
+
 }
