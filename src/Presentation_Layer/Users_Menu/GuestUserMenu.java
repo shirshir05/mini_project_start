@@ -50,6 +50,7 @@ public class GuestUserMenu implements UserMenu {
             }
             else if(input ==3 ) {
                 LEC.Exit("Guset", "123456");
+                ExitOrChangeUser = true;
                 break;
             }
             else{
