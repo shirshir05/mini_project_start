@@ -153,8 +153,7 @@ public class EventTest {
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
         event = new Event(team1, eventType, player,null);
-
-        assertEquals(eventType +" for player:"+player.getUserName()+" from team:"+ team1.getName(), event.eventToString());
+        assertEquals(eventType +" for player:"+player.getUserName()+" from team:"+ team1.getName() + " time:" + event.getEventTime(), event.eventToString());
     }
 
 //    /**
