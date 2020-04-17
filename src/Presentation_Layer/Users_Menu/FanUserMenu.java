@@ -7,6 +7,9 @@ import BusniesServic.Service_Layer.LogAndExitController;
 import Presentation_Layer.StartSystem;
 import Presentation_Layer.UserCLI;
 
+import java.io.Console;
+import java.util.Scanner;
+
 public class FanUserMenu implements UserMenu  {
 
     private String fanMenu = "choose action: \n1:Logout \n2:Registration for tracking personal pages \n3:Games alert notification" +
@@ -25,13 +28,13 @@ public class FanUserMenu implements UserMenu  {
         while(!ExitOrChangeUser){
             int input =  cli.presentAndGetInt(fanMenu);
             if(input==1) {
-                String username =  cli.presentAndGetString("Please enter a username");
-                String password =  cli.presentAndGetString("Please enter a password");
+                String username =  cli.presentAndGetString("Please enter a username:");
+                String password =  cli.presentAndGetString("Please enter a password:");
                 cli.presentOnly(system.getLEc().Exit(username,password).getDescription());
             }
             else if(input==2) {
                 if (input == 2) {
-                    String username =  cli.presentAndGetString("Please enter a username of the person you want to follow.");
+                    String username =  cli.presentAndGetString("Please enter a username of the person you want to follow:");
                     if(system.getAc().fanRegisterToPage(username)){
                         cli.presentOnly("The transaction completed successfully.");
                     }else{
@@ -40,7 +43,7 @@ public class FanUserMenu implements UserMenu  {
                 }
             }
             else if(input ==3 ) {
-                int game =  cli.presentAndGetInt("Enter a game number.");
+                int game =  cli.presentAndGetInt("Enter a game id:");
                 if(system.getAc().fanRegisterToGameAlerts(game)){
                     cli.presentOnly("The transaction completed successfully.");
                 }else{
@@ -48,7 +51,7 @@ public class FanUserMenu implements UserMenu  {
                 }
             }
             else if(input ==4 ) {
-                String complaint =  cli.presentAndGetString("Write the complaint.");
+                String complaint =  cli.presentAndGetString("Write the complaint:");
                 cli.presentOnly(system.getAc().addComplaint(complaint,(Fan) DataManagement.getCurrent()).getDescription());
             }
             else if(input ==5 ) {
@@ -56,17 +59,17 @@ public class FanUserMenu implements UserMenu  {
             }else if(input ==6 ) {
                 int edit =  cli.presentAndGetInt( "choose action: \n1:Edit name \n2:Edit email");
                 if(edit ==1 ){
-                    String name =  cli.presentAndGetString("Write name.");
+                    String name =  cli.presentAndGetString("Write name:");
                     cli.presentOnly(system.getESUDc().editSubscriptionName(DataManagement.getCurrent().getUserName(),name).getDescription());
                 }else if(edit==2){
-                    String name =  cli.presentAndGetString("Write emil.");
+                    String name =  cli.presentAndGetString("Write emil:");
                     cli.presentOnly(system.getESUDc().editSubscriptionEmail(DataManagement.getCurrent().getUserName(),name).getDescription());
                 }else{
                     cli.presentOnly("The digit is invalid.");
                 }
             }
             else if(input==7){
-                String word =  cli.presentAndGetString("Write Search word.");
+                String word =  cli.presentAndGetString("Write Search word:");
                 cli.presentOnly(system.getSc().findData(word));
             }else if(input==8){
                 LEC.Exit("Guset","123456");
