@@ -2,10 +2,7 @@ package BusniesServic.Service_Layer;
 
 import BusniesServic.Business_Layer.Game.*;
 import BusniesServic.Business_Layer.TeamManagement.Team;
-import BusniesServic.Business_Layer.UserManagement.Player;
-import BusniesServic.Business_Layer.UserManagement.Referee;
-import BusniesServic.Business_Layer.UserManagement.Subscription;
-import BusniesServic.Business_Layer.UserManagement.UnionRepresentative;
+import BusniesServic.Business_Layer.UserManagement.*;
 import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Enum.EventType;
 import BusniesServic.Enum.PermissionAction;
@@ -155,11 +152,34 @@ public class GameSettingsController {
     }
 
 
-    public boolean createGame(LocalDate date, String filed, String host, String guest){
-        //MUST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //TODO must create game with Linesman1Referee, Linesman1Referee,HeadReferee
-
-        return true;
+    public ActionStatus createGame(LocalDate date, String field, String host, String guest,
+                              String headReferee, String line1Referee, String line2Referee){
+        ActionStatus AC = null;
+        if (! (DataManagement.getCurrent() instanceof SystemAdministrator)){
+            AC = new ActionStatus(false, "You are not a system administrator");
+        }
+        else if(date==null || field==null || host==null || guest==null || headReferee==null || line1Referee==null || line2Referee==null){
+            AC = new ActionStatus(false, "one of the parameters is null");
+        }
+        else if(DataManagement.findTeam(host)==null){
+            AC = new ActionStatus(false, "The host team doesnt exist in the system");
+        }
+        else if(DataManagement.findTeam(guest)==null){
+            AC = new ActionStatus(false, "The guest team doesnt exist in the system");
+        }
+        else if(!(DataManagement.getSubscription(headReferee) instanceof Referee) || !(DataManagement.getSubscription(line1Referee) instanceof Referee)
+        || !(DataManagement.getSubscription(line2Referee) instanceof Referee)){
+            AC = new ActionStatus(false, "One of the referees is not defined in the system");
+        }
+        else{
+            Game g = new Game(field, date, DataManagement.findTeam(host),DataManagement.findTeam(guest));
+            g.setLinesman1Referee((Referee)DataManagement.getSubscription(line1Referee));
+            g.setLinesman2Referee((Referee)DataManagement.getSubscription(line2Referee));
+            g.setHeadReferee((Referee)DataManagement.getSubscription(headReferee));
+            DataManagement.addGame(g);
+            AC = new ActionStatus(true, "The game was created successfully");
+        }
+        return AC;
     }
 
 
