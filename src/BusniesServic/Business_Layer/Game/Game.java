@@ -15,7 +15,7 @@ import javafx.util.Pair;
 
 
 public class Game extends Observable{
-    static int game_id=0;
+    public static int game_id=0;
     int id;
     String field;
     LocalDate date;
@@ -108,21 +108,25 @@ public class Game extends Observable{
     public ActionStatus updateNewEvent(String team_name, String player_name, EventType event){
         ActionStatus ac = null;
         Event new_event = null;
-        if (host.getName().equals(team_name) || guest.getName().equals(team_name)){
-            Player p = host.getPlayer(player_name);
-            if(p == null){
-                p = guest.getPlayer(player_name);
-            }
-            if(p == null){
-                ac = new ActionStatus(false,"This player is not part of the team!");
-            }
-            else {
-                new_event = new Event(host, event, p, null);
+        Player p = null;
+        if (host.getName().equals(team_name)) {
+           p = host.getPlayer(player_name);
+           if(p != null){
+               new_event = new Event(host, event, p, null);
+               eventList.add(new_event);
+           }else{
+               ac = new ActionStatus(false,"Parameter wrong!");
+           }
+         }else if(guest.getName().equals(team_name)) {
+           p= guest.getPlayer(player_name);
+            if(p != null) {
+                new_event = new Event(guest, event, p, null);
                 eventList.add(new_event);
+            }else{
+                ac = new ActionStatus(false,"Parameter wrong!");
             }
-        }
-        else{
-            ac = new ActionStatus(false,"This team is not a part of the game!");
+         } else{
+            ac = new ActionStatus(false,"Parameter wrong!");
         }
         if(ac==null) {
             setChanged();

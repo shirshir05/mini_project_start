@@ -48,8 +48,8 @@ public class GameTest {
         game = new Game("Bernabeo", date, team1, team2);
 
         Game game2 = new Game("Bernabeo", date, team1, team2);
-        //assertEquals(1, game.getGameId());
-      //  assertEquals(2, game2.getGameId());
+        assertEquals(6, game.getGameId());
+        assertEquals(7, game2.getGameId());
     }
 
     /**
@@ -63,7 +63,7 @@ public class GameTest {
         Team team2 = new Team("Real Madrid", "Bernabeo");
         game = new Game("Bernabeo", date, team1, team2);
 
-       // assertEquals(null, game.getHeadReferee());
+        assertEquals(null, game.getHeadReferee());
 
         Referee referee = new Referee("", "", "matanshus@gmail.com");
         game.setHeadReferee(referee);
@@ -305,7 +305,7 @@ public class GameTest {
         game = new Game("Bernabeo", date, team1, team2);
 
         //team name doesn't exist
-        assertEquals(false, game.updateNewEvent("team1.getName()", "messi", EventType.foul));
+        assertEquals(false, game.updateNewEvent("team1.getName()", "messi", EventType.foul).isActionSuccessful());
 
         //player doesn't exist
         assertEquals(false, game.updateNewEvent(team1.getName(), "messi", EventType.foul).isActionSuccessful());

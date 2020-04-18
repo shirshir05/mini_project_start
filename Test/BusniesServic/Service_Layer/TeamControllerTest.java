@@ -13,8 +13,7 @@ import javax.xml.crypto.Data;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static BusniesServic.Enum.PermissionAction.Edit_team;
-import static BusniesServic.Enum.PermissionAction.Team_financial;
+import static BusniesServic.Enum.PermissionAction.*;
 import static org.junit.Assert.*;
 
 @RunWith(Enclosed.class)
@@ -132,8 +131,6 @@ public class TeamControllerTest {
             assertTrue(u1.getAlerts().size()==0 && u2.getAlerts().size()==0 && u3.getAlerts().size()==0);
             DataManagement.cleanAllData();
         }
-
-
     }//DeleteCreateTeamRequest
 
     /**
@@ -197,6 +194,11 @@ public class TeamControllerTest {
         }
         @Test
         public void AddOrRemovePlayerTest() {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Player player = new Player(name,password,email);
             TeamOwner owner = new TeamOwner("zdab", "zfcs", "zdfe");
             DataManagement.setCurrent(player);
@@ -240,6 +242,11 @@ public class TeamControllerTest {
         }
         @Test
         public void AddOrRemoveCoachTest() {
+            try {
+                Thread.sleep(1222);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Coach player = new Coach(name,password,email);
             TeamOwner owner = new TeamOwner("zdab", "zfcs", "zdfe");
             DataManagement.setCurrent(player);
@@ -295,9 +302,18 @@ public class TeamControllerTest {
             DataManagement.addToListTeam(team);
             DataManagement.setSubscription(owner);
             assertEquals(n.AddOrRemoveTeamOwner(teamName,name,1).getDescription(),"The Team Owner was successfully added to the team.");
+            assertEquals(n.AddOrRemoveTeamOwner(teamName+"x",name,1).getDescription(),"The Team does not exist in the system.");
             DataManagement.setSubscription(play);
             assertEquals(n.AddOrRemoveTeamOwner(teamName,"bgdd",1).getDescription(),"The username is not defined as a Team Owner on the system.");
+            assertEquals(n.AddOrRemoveTeamOwner(teamName,name,1).getDescription(),"You are already set as a team owner.");
+            // DELETE
+            TeamOwner owner2 = new TeamOwner("owner2", "zfcs", "zdfe");
+            DataManagement.setSubscription(owner2);
+            n.AddOrRemoveTeamOwner(teamName,"owner2",1);
+            assertEquals(n.AddOrRemoveTeamOwner(teamName,"owner2",0).getDescription(),"The Team Owner was successfully removed from the team.");
             DataManagement.cleanAllData();
+            //
+
         }
 
     }//AddOrRemoveTeamOwner
@@ -307,21 +323,52 @@ public class TeamControllerTest {
     @RunWith(Parameterized.class)
     public static class AddOrRemoveTeamManager{
         //parameter
+        public String teamName;
+        public String name;
+        public String password;
+        public String email;
 
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
+                    {"Maccabi","P1","123456","a@post.bgu.ac.il"},
 
 
             });
         }
-        public AddOrRemoveTeamManager() {
-            //parameter
+        public AddOrRemoveTeamManager(String tname, String pname, String ppass, String pmail) {
+            this.teamName=tname;
+            this.name=pname;
+            this.password=ppass;
+            this.email=pmail;
         }
         @Test
         public void AddOrRemoveTeamManagerTest() {
-
+            TeamManager manager = new TeamManager(name,password,email);
+            DataManagement.setSubscription(manager);
+            TeamOwner owner = new TeamOwner(name+"x",password="x",email+"x");
+            DataManagement.setSubscription(owner);
+            DataManagement.setCurrent(owner);
+            assertEquals(n.AddOrRemoveTeamManager(teamName,name,1).getDescription(),"You are not allowed to perform actions on the group.");
+            owner.getPermissions().add_permissions(Edit_team);
+            Team t = new Team(teamName,"fr");
+            t.EditTeamOwner(owner,1);
+            DataManagement.addToListTeam(t);
+            assertEquals(n.AddOrRemoveTeamManager(teamName,name,1).getDescription(),"The Team Manager was successfully added to the team.");
+            assertEquals(n.AddOrRemoveTeamManager(teamName,name,1).getDescription(),"You are already set as a team Manager.");
+            assertEquals(n.AddOrRemoveTeamManager(teamName,name,0).getDescription(),"The Team Manager was successfully removed from the team.");
+            assertEquals(n.AddOrRemoveTeamManager(teamName,name,1).getDescription(),"The Team Manager was successfully added to the team.");
+            // new owner as curent
+            DataManagement.removeSubscription(owner.getUserName());
+            t.EditTeamOwner(owner,0);
+            TeamOwner owner2 = new TeamOwner(name+"x"+"2",password="x",email+"x");
+            DataManagement.setSubscription(owner2);
+            DataManagement.setCurrent(owner2);
+            owner2.getPermissions().add_permissions(Edit_team);
+            t.EditTeamOwner(owner2,1);
+            assertEquals(n.AddOrRemoveTeamManager(teamName,name,0).getDescription(),"The Team Manager was successfully removed from the team.");
+            DataManagement.cleanAllData();
         }
 
     }//AddOrRemoveTeamManager
@@ -374,6 +421,7 @@ public class TeamControllerTest {
                 assertEquals(n.CheckInputEditTeam(teamname, "zab"), null);
                 // fourth if - the team does not exist
                 assertEquals(n.CheckInputEditTeam("aac","Cdds"),"The Team does not exist in the system.");
+                DataManagement.cleanAllData();
             }
         }
 
@@ -384,25 +432,87 @@ public class TeamControllerTest {
      */
     @RunWith(Parameterized.class)
     public static class ChangeStatusTeam{
-        //parameter
+        String teamName;
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {"Raz"}
+            });
+        }
+        public ChangeStatusTeam(String name) {
+            teamName=name;
+        }
+        @Test
+        public void ChangeStatusTeamTest() {
+            assertEquals(n.ChangeStatusTeam(teamName,4).getDescription(),"The action is invalid.");
+            TeamOwner owner = new TeamOwner("owner","cd","cd");
+            owner.getPermissions().add_permissions(Edit_team);
+            DataManagement.setSubscription(owner);
+            DataManagement.setCurrent(owner);
+            assertEquals(n.ChangeStatusTeam(teamName+"x",0).getDescription(),"The Team does not exist in the system.");
+            Team team = new Team(teamName,"de");
+            team.EditTeamOwner(owner,1);
+            team.changeStatus(-1);
+            DataManagement.addToListTeam(team);
+            assertEquals(n.ChangeStatusTeam(teamName,2).getDescription(),"The team is permanently closed.");
+            team.changeStatus(1);
+            assertEquals(n.ChangeStatusTeam(teamName,0).getDescription(),"You are not allowed to close a team.");
+            assertEquals(n.ChangeStatusTeam(teamName,-1).getDescription(),"You are not authorized to perform this action.");
+            owner.getPermissions().add_permissions(Close_team);
+            assertEquals(n.ChangeStatusTeam(teamName,0).getDescription(),"The status of the group has changed successfully.");
+            assertEquals(n.ChangeStatusTeam(teamName,2).getDescription(),"The status of the group has changed successfully.");
+            SystemAdministrator sys = new SystemAdministrator("sys","de","de");
+            DataManagement.setSubscription(sys);
+            DataManagement.setCurrent(sys);
+            team.changeStatus(1);
+            assertEquals(n.ChangeStatusTeam(teamName,-1).getDescription(),"The status of the group has changed successfully.");
+            DataManagement.cleanAllData();
+        }
 
+    }//ChangeStatusTeam
+
+    /**
+     *Test - TC8
+     */
+    @RunWith(Parameterized.class)
+    public static class AddOrRemoveTeamsAssets{
+        String teamName;
+        String teamAasset;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-
-
+                    {"Raz","field3"}
             });
         }
-        public ChangeStatusTeam() {
-            //parameter
+        public AddOrRemoveTeamsAssets(String name, String asset) {
+            teamName=name;
+            teamAasset=asset;
         }
         @Test
-        public void ChangeStatusTeamTest() {
-
+        public void AddOrRemoveTeamsAssetsTest() {
+            TeamOwner owner = new TeamOwner("owner","cd","cd");
+            owner.getPermissions().add_permissions(Edit_team);
+            DataManagement.setSubscription(owner);
+            DataManagement.setCurrent(owner);
+            Team team = new Team(teamName,"de");
+            team.EditTeamOwner(owner,1);
+            DataManagement.addToListTeam(team);
+            assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset,1).getDescription(),"The asset was added to the team");
+            assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset,0).getDescription(),"The asset was deleted from the team");
+            assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset+"x",0).getDescription(),"The team doesnt contains this asset");
+            assertEquals(n.AddOrRemoveTeamsAssets(teamName+"y",teamAasset+"x",0).getDescription(),"There is no such team in the system");
+            assertEquals(n.AddOrRemoveTeamsAssets(teamName,null,0).getDescription(),"This asset is null");
+            assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset,3).getDescription(),"Choose 1 or 0 only");
+            Player p = new Player("123","123","123");
+            DataManagement.setSubscription(p);
+            DataManagement.setCurrent(p);
+            assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset,0).getDescription(),"You are not a team owner");
+            DataManagement.cleanAllData();
         }
 
-    }//ChangeStatusTeam
+    }//AddOrRemoveTeamsAssets
+
 
 
 

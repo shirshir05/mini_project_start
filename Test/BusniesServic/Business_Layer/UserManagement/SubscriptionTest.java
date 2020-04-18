@@ -138,11 +138,7 @@ public class SubscriptionTest {
             Subscription sub = new Coach(userName,password,email);
             sub.setPassword("123456");
             assertEquals(sub.getPassword(), Subscription.getHash("123456"));
-            try{
-                Subscription.getHash(null);
-            }catch (Exception e){
 
-            }
         }
     }//setPassword
 
