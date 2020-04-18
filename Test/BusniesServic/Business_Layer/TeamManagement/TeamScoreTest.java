@@ -12,7 +12,6 @@ import java.util.Collection;
 
 import static org.junit.Assert.*;
 @RunWith(Enclosed.class)
-
 public class TeamScoreTest {
 
     private TeamScore teamScore;
