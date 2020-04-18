@@ -8,9 +8,7 @@ import BusniesServic.Business_Layer.TeamManagement.Team;
 import BusniesServic.Enum.PermissionAction;
 import BusniesServic.Enum.Role;
 import DB_Layer.logger;
-import javafx.scene.chart.XYChart;
 
-import java.security.PublicKey;
 import java.util.HashSet;
 
 // to function that remove all Subscription

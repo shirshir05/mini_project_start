@@ -622,7 +622,7 @@ public class EditAndShowUserDetailsTest {
     //region editTeamPersonalPage
 
     /**
-     * Test - ??
+     * Test - esd12
      */
     @RunWith(Parameterized.class)
     public static class editTeamPersonalPage{
@@ -676,7 +676,7 @@ public class EditAndShowUserDetailsTest {
     //region Get personal page - coach and player
 
     /**
-     * Test - ??
+     * Test - ESD13
      */
     @RunWith(Parameterized.class)
     public static class getPersonalPage{
@@ -717,7 +717,7 @@ public class EditAndShowUserDetailsTest {
     //region Get personal page - team
 
     /**
-     * Test - ??
+     * Test - ESD14
      */
     @RunWith(Parameterized.class)
     public static class getPersonalPageForTeam{

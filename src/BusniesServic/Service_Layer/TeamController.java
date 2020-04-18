@@ -7,10 +7,8 @@ import BusniesServic.Enum.PermissionAction;
 import DB_Layer.logger;
 import Presentation_Layer.Spelling;
 
-import javax.xml.crypto.Data;
+
 import java.util.ArrayList;
-import java.util.Currency;
-import java.util.HashSet;
 import java.util.Observable;
 
 public class TeamController {
@@ -230,7 +228,7 @@ public class TeamController {
             }
         }
 
-        logger.log("Add Or Remove Team Owner to Team: "+name_team+"-"+AC.getDescription());
+        //logger.log("Add Or Remove Team Owner to Team: "+name_team+"-"+AC.getDescription());
         return AC;
     }
 

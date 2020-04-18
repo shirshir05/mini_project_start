@@ -19,7 +19,7 @@ public class PlayerPersonalPageTest {
     //region Date
 
     /**
-     * Test -PP1
+     * Test -PPP1
      */
     @RunWith(Parameterized.class)
     public static class DateOfBirthTest {
@@ -59,7 +59,7 @@ public class PlayerPersonalPageTest {
     //region Country City and Position
 
     /**
-     * Test -PP2
+     * Test -PPP2
      */
 
     @RunWith(Parameterized.class)
@@ -107,7 +107,7 @@ public class PlayerPersonalPageTest {
     //region Height weight and jersey
 
     /**
-     * Test -PP3
+     * Test -PPP3
      */
 
     @RunWith(Parameterized.class)
@@ -155,7 +155,7 @@ public class PlayerPersonalPageTest {
     //region statistics
 
     /**
-     * Test -PP4
+     * Test -PPP4
      */
     @RunWith(Parameterized.class)
     public static class Statistics {
@@ -189,7 +189,7 @@ public class PlayerPersonalPageTest {
     //endregion
 
     /**
-     * Test -PP5
+     * Test -PPP5
      */
     @RunWith(Parameterized.class)
     public static class equalsTest {
