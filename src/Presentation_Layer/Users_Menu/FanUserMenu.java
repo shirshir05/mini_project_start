@@ -98,7 +98,7 @@ public class FanUserMenu implements UserMenu  {
             if (input == 2) {
                 output += "insert username of the person you want to follow: " + args[1] +"\n";
                 String username =args[1];
-                if(StartSystem.getAc().fanRegisterToPage(username)){
+                if(StartSystem.getAc().fanRegisterToPage(username).isActionSuccessful()){
                     output+="The transaction completed successfully";
                     return new ActionStatus(true,output);
                 }else{
@@ -110,7 +110,7 @@ public class FanUserMenu implements UserMenu  {
         else if(input ==3 ) {
             output += "Enter a game id: " + args[1] +"\n";
             int game =  Integer.parseInt(args[1]);
-            if(StartSystem.getAc().fanRegisterToGameAlerts(game)){
+            if(StartSystem.getAc().fanRegisterToGameAlerts(game).isActionSuccessful()){
                 return new ActionStatus(true,output + "The transaction completed successfully.");
             }else{
                 return new ActionStatus(false,output+"The number you entered was incorrect.");
@@ -118,7 +118,7 @@ public class FanUserMenu implements UserMenu  {
         }
         else if(input ==4 ) {
             String complaint =  args[1] +"\n";
-            return StartSystem.getAc().addComplaint(complaint,(Fan) DataManagement.getCurrent());
+            return StartSystem.getAc().addComplaint(complaint);
         }
         else if(input ==5 ) {
             return new ActionStatus(true ,output + StartSystem.getSc().showSearchHistory());
