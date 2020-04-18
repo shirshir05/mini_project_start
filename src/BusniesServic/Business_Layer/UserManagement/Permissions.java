@@ -75,6 +75,7 @@ public class Permissions {
         list_Permissions.add(PermissionAction.setting_games);
         list_Permissions.add(PermissionAction.setting_games_policy);
         list_Permissions.add(PermissionAction.change_budget_regulations);
+        list_Permissions.add(PermissionAction.add_team_to_season);
     }
 
     public void add_default_referee_permission(){
