@@ -254,7 +254,6 @@ public class TeamController {
             else{
                 ((TeamManager) teamManager).setAppointedByTeamOwner(DataManagement.getCurrent());
                 AC = team.EditTeamManager((TeamManager) teamManager, add_or_remove);
-
             }
 
         }

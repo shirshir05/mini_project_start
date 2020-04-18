@@ -64,7 +64,7 @@ public class RefereeUserMenu implements UserMenu {
         int input =  Integer.parseInt(args[0]);
         if(input == 1) {
             //edit personal info
-            output += "choose action: \n1:Edit name \n2:Edit email \nuser input - " + args[1] + "\n";
+            output += "choose action: \n1:Edit name \n2:Edit email \n3:Edit qualification\nuser input - " + args[1] + "\n";
             int edit = Integer.parseInt(args[1]);
             if(edit ==1 ){
                 output += "insert name:\nuser input- " + args[2] +"\n";
@@ -77,7 +77,12 @@ public class RefereeUserMenu implements UserMenu {
                 String name =  args[2];
                 ActionStatus ac = StartSystem.getESUDc().editSubscriptionEmail(DataManagement.getCurrent().getUserName(),name);
                 return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
-            }else{
+            }else if(edit ==3){
+                output += "insert qualification:\nuser input- " + args[2] +"\n";
+                ActionStatus ac = StartSystem.ESUDc.editRefereeQualification(DataManagement.getCurrent().getName(),args[2]);
+                return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
+            }
+            else{
                 return new ActionStatus(false,output +"Invalid input.");
             }
         }
