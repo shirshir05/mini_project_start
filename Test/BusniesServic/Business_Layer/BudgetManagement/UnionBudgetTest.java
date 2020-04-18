@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class UnionBudgetTest {
 
     /**
-     * Test - TB1
+     * Test - UB1
      */
     @RunWith(Parameterized.class)
     public static class UnionExpanseIncome {

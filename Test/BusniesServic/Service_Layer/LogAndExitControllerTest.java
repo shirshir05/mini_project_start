@@ -26,6 +26,10 @@ public class LogAndExitControllerTest {
     private ActionStatus actionStatus;
     private String email;
     private SubscriptionFactory factory;
+
+    /**
+     * LEC1
+     */
         @Test
             public void registrationTest() {
             controller = new LogAndExitController();
@@ -60,7 +64,10 @@ public class LogAndExitControllerTest {
             assertEquals(actionStatus, controller.Registration("dan", "12345", "Coach","shirpostbguacil"));
         }
 
-        @Test
+    /**
+     * LEC12
+     */
+    @Test
         public void loginTest() {
 
             this.name = "shir";
@@ -96,7 +103,10 @@ public class LogAndExitControllerTest {
             assertEquals(actionStatus, controller.Login(name, password));
         }
 
-        @Test
+    /**
+     * LEC3
+     */
+    @Test
         public void exitTest() {
             factory = new SubscriptionFactory();
             controller = new LogAndExitController();
@@ -130,7 +140,11 @@ public class LogAndExitControllerTest {
             assertEquals(actionStatus, controller.Exit(name, password));
         }
 
-        @Test
+    /**
+     * LEC4
+     */
+
+    @Test
     public void RemoveSubscriptionTest() {
 
             factory = new SubscriptionFactory();

@@ -21,7 +21,7 @@ public class GameSettingsControllerTest {
 
 
        /**
-     * Test - SC1
+     * Test - GSC1
      */
     @RunWith(Parameterized.class)
     public static class defineLeague{
@@ -48,7 +48,7 @@ public class GameSettingsControllerTest {
 
 
     /**
-     * Test - SC2
+     * Test - GSC2
      */
     @RunWith(Parameterized.class)
     public static class defineSeasonToLeague{
@@ -76,7 +76,7 @@ public class GameSettingsControllerTest {
 
 
     /**
-     * Test - SC3
+     * Test - GSC3
      */
     @RunWith(Parameterized.class)
     public static class addOrDeleteRefereeToSystem{
@@ -102,7 +102,7 @@ public class GameSettingsControllerTest {
     }//addOrDeleteRefereeToSystem
 
     /**
-     * Test - SC4
+     * Test - GSC4
      */
     @RunWith(Parameterized.class)
     public static class defineRefereeInLeague{
@@ -129,7 +129,7 @@ public class GameSettingsControllerTest {
 
 
     /**
-     * Test - GC -XXXXXX
+     * Test - GSC5
      */
     @RunWith(Parameterized.class)
     public static class createGame{
@@ -154,7 +154,7 @@ public class GameSettingsControllerTest {
 
     }//createGame
     /**
-     * Test - GC2
+     * Test - GSC6
      */
     @RunWith(Parameterized.class)
     public static class refereeWatchGames{
@@ -192,7 +192,7 @@ public class GameSettingsControllerTest {
 
 
     /**
-     * Test - GC1
+     * Test - GSC7
      */
     @RunWith(Parameterized.class)
     public static class refereeCreateNewEvent{
