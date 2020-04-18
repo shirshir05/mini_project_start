@@ -8,6 +8,7 @@ import BusniesServic.Business_Layer.BudgetManagement.UnionBudget;
 import BusniesServic.Business_Layer.TeamManagement.Team;
 import BusniesServic.Enum.PermissionAction;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class BudgetController {
@@ -166,7 +167,6 @@ public class BudgetController {
         }
         return new ActionStatus(true, UPDATE_SUCCESSFUL);
     }
-    //TODO - check if current is the manager or owner of the team in those 3 func's
     public static ActionStatus addExpenseToTeam(String teamName, double expense, Expense description){
         if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Team_financial))
             return new ActionStatus(false, NOT_ALLOWED_TO_PERFORM_ACTIONS_ON_BUDGET);
@@ -175,6 +175,9 @@ public class BudgetController {
         Team team = DataManagement.findTeam(teamName);
         if(team == null)
             return new ActionStatus(false, "Team not found");
+        if(!team.checkIfObjectInTeam(DataManagement.getCurrent())){
+            return new ActionStatus(false, "You do not belong to the team.");
+        }
         return team.addExpense(expense, description);
     }
 
@@ -186,6 +189,9 @@ public class BudgetController {
         Team team = DataManagement.findTeam(teamName);
         if(team == null)
             return new ActionStatus(false, "Team not found");
+        if(!team.checkIfObjectInTeam(DataManagement.getCurrent())){
+            return new ActionStatus(false, "You do not belong to the team.");
+        }
         return team.addIncome(income, description);
     }
 
@@ -193,8 +199,12 @@ public class BudgetController {
         if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Team_financial))
             return -1;
         Team team = DataManagement.findTeam(teamName);
-        if(team != null)
+        if(team != null){
+            if(!team.checkIfObjectInTeam(DataManagement.getCurrent())){
+                return -1;
+            }
             return team.getCurrentAmountInBudget();
+        }
         return -1;
     }
 
@@ -222,6 +232,24 @@ public class BudgetController {
         if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.change_budget_regulations))
             return -1;
         return unionBudget.getCurrentAmount();
+    }
+
+    public static Expense getExpenseFromString(String str){
+        if(! (Arrays.stream(Expense.values()).anyMatch(e -> e.name().equals(str)))){
+            return null;
+        }else{
+            Expense enumExpense =  Expense.valueOf(str);
+            return enumExpense;
+        }
+    }
+
+    public static Income getIncomeFromString(String str){
+        if(! (Arrays.stream(Income.values()).anyMatch(e -> e.name().equals(str)))){
+            return null;
+        }else{
+            Income enumIncome =  Income.valueOf(str);
+            return enumIncome;
+        }
     }
 
     //endregion

@@ -54,6 +54,17 @@ public class TeamUsersMenuTest {
                     //(6.6) change status
                     {"2","1","teamOne",null,null,false},//=>The group is already set 1
                     {"2","0","teamOne",null,null,true},//=>The status of the group has changed successfully.
+                    //(6.7)Team budget
+                    {"3","1",null,null,null,true},//=>Updated successfully
+                    //income
+                    {"3","2","teamOne","10000",null,true},//=>Income updated
+                    {"3","2","t","10000",null,false},//=>Team not found
+                    //expense
+                    {"3","3","teamOne","150000",null,false},//=>Salary is not within limits
+                    {"3","3","teamOne","6000",null,true},//=>Operation succeeded
+                    //getTeamBalanceForQuarter
+                    {"3","4","teamOne",null,null,true},//=>4000.0
+                    {"3","4","t",null,null,false},//=>The team not found
 
             });
         }
@@ -81,9 +92,6 @@ public class TeamUsersMenuTest {
 
             assertEquals(ac.isActionSuccessful(),ans);
             System.out.print(ac.isActionSuccessful() + " " +ac.getDescription());
-
-            DataManagement.cleanAllData();
-
 
         }
     }
