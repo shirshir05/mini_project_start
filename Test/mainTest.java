@@ -2,13 +2,12 @@ import BusniesServic.Business_Layer.BudgetManagement.BudgetRegulationsTest;
 import BusniesServic.Business_Layer.BudgetManagement.TeamBudgetTest;
 import BusniesServic.Business_Layer.BudgetManagement.UnionBudgetTest;
 import BusniesServic.Business_Layer.Game.*;
+import BusniesServic.Business_Layer.TeamManagement.TeamScore;
 import BusniesServic.Business_Layer.TeamManagement.TeamTest;
 import BusniesServic.Business_Layer.Trace.*;
 import BusniesServic.Business_Layer.UserManagement.*;
 import BusniesServic.Service_Layer.*;
 import Presentation_Layer.StartSystem;
-import com.sun.deploy.util.Waiter;
-import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -82,6 +81,12 @@ public class mainTest {
         test(PersonalPageTest.class);
         test(FootballPlayerStatisticTest.class);
         test(FootballTeamStatisticTest.class);
+        test(TeamScore.class);
+        test(PointsPolicy.class);
+        test(ScoreTable.class);
+
+
+
 
 
 
