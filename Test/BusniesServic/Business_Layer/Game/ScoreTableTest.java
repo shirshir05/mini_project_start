@@ -17,20 +17,23 @@ import static org.junit.Assert.*;
 @RunWith(Enclosed.class)
 public class ScoreTableTest {
 
+
     /**
      * Test - ST1
      */
     public static class ScoreTable1 {
         private ScoreTable scoreTable;
+        String ans;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {}
+                    {null}
             });
         }
 
-        public ScoreTable1() {
+        public ScoreTable1(String ans) {
+            this.ans =ans;
         }
 
         @Test

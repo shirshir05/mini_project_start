@@ -26,9 +26,6 @@ public class mainTest {
         Game.game_id = 0;
 
 
-        
-
-
         //BudgetManagement
         test(BudgetRegulationsTest.class);
         test(TeamBudgetTest.class);
