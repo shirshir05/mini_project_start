@@ -31,7 +31,18 @@ public class TeamUsersMenuTest {
                     //(6.1) update asset
                     //(6.1) update player
                     {"1","1","t","PlayerThree","1"},// =>The Team does not exist in the system.
-
+                    {"1","1","teamOne","PlayerThree","1"},//=>The player was successfully removed from the team.
+                    {"1","1","teamOne","teamCoachTwo","1"},//=>The username is not defined as a player on the system.
+                    //(6.1) update Coach
+                    {"1","2","teamOne","teamCoachTwo","1"},//=>The Coach was successfully added to the team.
+                    {"1","2","teamOne","teamCoachTwo","0"},//=>The Coach was successfully removed from the team.
+                    //(6.1) update filed
+                    {"1","3","teamOne","filed1","1"},//=>The asset was added to the team
+                    //(6.1) update team owner
+                    {"1","4","teamOne","teamCoachTwo","1"},//=>The username is not defined as a Team Owner on the system.
+                    {"1","4","teamOne","teamOwnerThree","1"},//=>You are already set as a team owner.
+                    //(6.1) update team manager
+                    {"1","5","teamOne","teamManagerTwo","1"},//=>You are already set as a team owner.
             });
         }
 
@@ -45,12 +56,12 @@ public class TeamUsersMenuTest {
 
         @Test
         public void TeamTest1() {
-            if(number.equals("1")){
+            if(number.equals("1") && arg1.equals("1")){
                 StartSystem sys = new StartSystem();
                 sys.startFromDB();
             }
-            DataManagement.setCurrent(DataManagement.containSubscription("ortal"));
-            DataManagement.setSubscription(DataManagement.containSubscription("ortal"));
+            DataManagement.setCurrent(DataManagement.containSubscription("teamOwnerOne"));
+            DataManagement.setSubscription(DataManagement.containSubscription("teamOwnerOne"));
 
             TeamUsersMenu FM = new TeamUsersMenu();
             ActionStatus ac =  FM.presentUserMenu(new String[]{number,arg1,arg2,arg3,arg4});

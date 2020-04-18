@@ -78,8 +78,6 @@ public class FanMenuTest {
 
             System.out.print(ac.isActionSuccessful() + " " +ac.getDescription());
 
-
-
         }
     }
 }

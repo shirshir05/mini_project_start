@@ -33,6 +33,42 @@ public class TeamUsersMenu implements UserMenu {
                 int addOrRemove  =  Integer.parseInt(args[4]);
                 ActionStatus ac = StartSystem.getTc().AddOrRemovePlayer(nameTeam,namePlayer,addOrRemove);
                 return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
+            }else if(edit == 2){
+                output += "insert name team: \nuser input- " + args[2] +"\n";
+                String nameTeam  =  args[2];
+                output += "insert user name coach: \nuser input- " + args[3] +"\n";
+                String nameCoach =  args[3];
+                output += "insert 1 to add or 0 to remove: \nuser input- " + args[4] +"\n";
+                int addOrRemove  =  Integer.parseInt(args[4]);
+                ActionStatus ac = StartSystem.getTc().AddOrRemoveCoach(nameTeam,nameCoach,addOrRemove);
+                return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
+            } else if(edit == 3){
+                output += "insert name team: \nuser input- " + args[2] +"\n";
+                String nameTeam  =  args[2];
+                output += "insert user name filed: \nuser input- " + args[3] +"\n";
+                String nameFiled =  args[3];
+                output += "insert 1 to add or 0 to remove: \nuser input- " + args[4] +"\n";
+                int addOrRemove  =  Integer.parseInt(args[4]);
+                ActionStatus ac = StartSystem.getTc().AddOrRemoveTeamsAssets(nameTeam,nameFiled,addOrRemove);
+                return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
+            }else if(edit == 4){
+                output += "insert name team: \nuser input- " + args[2] +"\n";
+                String nameTeam  =  args[2];
+                output += "insert user name team owner: \nuser input- " + args[3] +"\n";
+                String nameTeamOwner =  args[3];
+                output += "insert 1 to add or 0 to remove: \nuser input- " + args[4] +"\n";
+                int addOrRemove  =  Integer.parseInt(args[4]);
+                ActionStatus ac = StartSystem.getTc().AddOrRemoveTeamOwner(nameTeam,nameTeamOwner,addOrRemove);
+                return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
+            }else if(edit == 5){
+                output += "insert name team: \nuser input- " + args[2] +"\n";
+                String nameTeam  =  args[2];
+                output += "insert user name team owner: \nuser input- " + args[3] +"\n";
+                String nameTeamManager =  args[3];
+                output += "insert 1 to add or 0 to remove: \nuser input- " + args[4] +"\n";
+                int addOrRemove  =  Integer.parseInt(args[4]);
+                ActionStatus ac = StartSystem.getTc().AddOrRemoveTeamManager(nameTeam,nameTeamManager,addOrRemove);
+                return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
             }
 
         }
