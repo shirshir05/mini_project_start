@@ -84,19 +84,6 @@ public class Game extends Observable{
         endTime = endTime.plusMinutes(additionalTimeInMinutes);
     }
 
-    public boolean update_score(){
-
-        //update ScoreTable
-
-        return true;
-    }
-
-    public boolean create_event(){
-
-        // write to logger
-        return true;
-    }
-
     public int getGameId(){
         return id;
     }

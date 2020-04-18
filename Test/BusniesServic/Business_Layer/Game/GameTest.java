@@ -1,5 +1,6 @@
 package BusniesServic.Business_Layer.Game;
 import BusniesServic.Business_Layer.TeamManagement.Team;
+import BusniesServic.Business_Layer.TeamManagement.TeamScore;
 import BusniesServic.Business_Layer.UserManagement.Player;
 import BusniesServic.Business_Layer.UserManagement.Referee;
 import BusniesServic.Enum.EventType;
@@ -30,27 +31,97 @@ public class GameTest {
         assertEquals(date, game.getDate());
         assertEquals(team1, game.getHost());
         assertEquals(team2, game.getGuest());
+        //assertEquals(1, game.getGameId());
         assertEquals(null, game.getHeadReferee());
         assertEquals(null, game.getLinesman1Referee());
         assertEquals(null, game.getLinesman2Referee());
         assertEquals(null, game.getLinesman1Referee());
         assertEquals(null, game.getLinesman2Referee());
     }
+
     /**
-     * Test - G2
+     * Test - G3
      */
     @Test
-    public void testGetId() {
+    public void testEndGame() {
 
         LocalDate date = LocalDate.of(1992, 11, 14);
         Team team1 = new Team("Barcelona", "Camp Nou");
         Team team2 = new Team("Real Madrid", "Bernabeo");
+        team1.setTeamScore(new TeamScore(team1.getName()));
+        team2.setTeamScore(new TeamScore(team2.getName()));
+        ScoreTable scoreTable = new ScoreTable(new PointsPolicy(3,-1, 1));
+        scoreTable.addTeam(team2);
+        scoreTable.addTeam(team1);
         game = new Game("Bernabeo", date, team1, team2);
+        game.endGame(scoreTable, 4,2);
+        assertEquals(1,team1.getTeamScore().getNumberOfGames());
+        assertEquals(4,team1.getTeamScore().getGoalsScores());
+        assertEquals(2,team1.getTeamScore().getGoalsGet());
+        assertEquals(1,team1.getTeamScore().getWins());
+        assertEquals(0,team1.getTeamScore().getLoses());
+        assertEquals(0,team1.getTeamScore().getDrawn());
+        assertEquals(1,team2.getTeamScore().getNumberOfGames());
+        assertEquals(2,team2.getTeamScore().getGoalsScores());
+        assertEquals(4,team2.getTeamScore().getGoalsGet());
+        assertEquals(0,team2.getTeamScore().getWins());
+        assertEquals(1,team2.getTeamScore().getLoses());
+        assertEquals(0,team2.getTeamScore().getDrawn());
 
-        Game game2 = new Game("Bernabeo", date, team1, team2);
-        assertEquals(6, game.getGameId());
-        assertEquals(7, game2.getGameId());
+        assertEquals(team1.getTeamScore().getWins()*scoreTable.getPointsPolicy().getWin() +
+                team1.getTeamScore().getLoses()*scoreTable.getPointsPolicy().getLose() +
+                team1.getTeamScore().getDrawn()*scoreTable.getPointsPolicy().getDrawn(),team1.getTeamScore().getPoints());
+
+        assertEquals(team1, scoreTable.getTeams().get(0));
+        assertEquals(team2, scoreTable.getTeams().get(1));
+
+        game = new Game("Bernabeo", date, team2, team1);
+        game.endGame(scoreTable, 2,2);
+        assertEquals(2,team1.getTeamScore().getNumberOfGames());
+        assertEquals(6,team1.getTeamScore().getGoalsScores());
+        assertEquals(4,team1.getTeamScore().getGoalsGet());
+        assertEquals(1,team1.getTeamScore().getWins());
+        assertEquals(0,team1.getTeamScore().getLoses());
+        assertEquals(1,team1.getTeamScore().getDrawn());
+        assertEquals(2,team2.getTeamScore().getNumberOfGames());
+        assertEquals(4,team2.getTeamScore().getGoalsScores());
+        assertEquals(6,team2.getTeamScore().getGoalsGet());
+        assertEquals(0,team2.getTeamScore().getWins());
+        assertEquals(1,team2.getTeamScore().getLoses());
+        assertEquals(1,team2.getTeamScore().getDrawn());
+
+        game = new Game("Bernabeo", date, team2, team1);
+        game.endGame(scoreTable, 0,1);
+        assertEquals(3,team1.getTeamScore().getNumberOfGames());
+        assertEquals(7,team1.getTeamScore().getGoalsScores());
+        assertEquals(4,team1.getTeamScore().getGoalsGet());
+        assertEquals(2,team1.getTeamScore().getWins());
+        assertEquals(0,team1.getTeamScore().getLoses());
+        assertEquals(1,team1.getTeamScore().getDrawn());
+        assertEquals(3,team2.getTeamScore().getNumberOfGames());
+        assertEquals(4,team2.getTeamScore().getGoalsScores());
+        assertEquals(7,team2.getTeamScore().getGoalsGet());
+        assertEquals(0,team2.getTeamScore().getWins());
+        assertEquals(2,team2.getTeamScore().getLoses());
+        assertEquals(1,team2.getTeamScore().getDrawn());
+
+        assertEquals(team1.getTeamScore().getWins()*scoreTable.getPointsPolicy().getWin() +
+                team1.getTeamScore().getLoses()*scoreTable.getPointsPolicy().getLose() +
+                team1.getTeamScore().getDrawn()*scoreTable.getPointsPolicy().getDrawn(),team1.getTeamScore().getPoints());
+
+        assertEquals(team2.getTeamScore().getWins()*scoreTable.getPointsPolicy().getWin() +
+                team2.getTeamScore().getLoses()*scoreTable.getPointsPolicy().getLose() +
+                team2.getTeamScore().getDrawn()*scoreTable.getPointsPolicy().getDrawn(),team2.getTeamScore().getPoints());
     }
+
+//    public void endGame(ScoreTable scoreTable, int hostGoals, int guestGoals){
+//        setScore(hostGoals, guestGoals);
+//        updateTeamsInfo();
+//        host.getTeamScore().updatePoints(scoreTable.getPointsPolicy());
+//        guest.getTeamScore().updatePoints(scoreTable.getPointsPolicy());
+//        scoreTable.updateScoreTable(); //option to use observer
+//    }
+
 
     /**
      * Test - G3
@@ -443,4 +514,19 @@ public class GameTest {
         assertEquals(gameStart.plusMinutes(140), game.getEndTime());
     }
 
+    //    /**
+//     * Test - G2
+//     */
+//    @Test
+//    public void testGetId() {
+//
+//        LocalDate date = LocalDate.of(1992, 11, 14);
+//        Team team1 = new Team("Barcelona", "Camp Nou");
+//        Team team2 = new Team("Real Madrid", "Bernabeo");
+//        game = new Game("Bernabeo", date, team1, team2);
+//
+//        Game game2 = new Game("Bernabeo", date, team1, team2);
+//        assertEquals(6, game.getGameId());
+//        assertEquals(7, game2.getGameId());
+//    }
 }
