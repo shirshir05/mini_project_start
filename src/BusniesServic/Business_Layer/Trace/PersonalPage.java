@@ -67,7 +67,7 @@ public class PersonalPage extends Observable {
         return null;
     }
 
-    public Object editPageData(String dataHeadline,Object newData){
+    public boolean editPageData(String dataHeadline,Object newData){
         boolean ans = false;
         if(pageData.containsKey(dataHeadline)){
             pageData.replace(dataHeadline,newData);
