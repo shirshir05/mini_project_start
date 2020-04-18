@@ -7,9 +7,14 @@ import BusniesServic.Service_Layer.DataManagement;
 import Presentation_Layer.StartSystem;
 import Presentation_Layer.UserCLI;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 public class TeamUsersMenu implements UserMenu {
 
-    private String teamMenu = "choose action: \n1:(6.1,6.2,6.3,6.4,6.5) update asset \n2:(6.6) change status \n3:(6.7) Team budget\n\n";
+    private String teamMenu = "choose action: \n1:(6.1,6.2,6.3,6.4,6.5) update asset \n2:(6.6) change status \n3:(6.7) Team budget" +
+            "\n4: edit coach personal page\n\n";
 
     @Override
     public ActionStatus presentUserMenu() {
@@ -111,7 +116,12 @@ public class TeamUsersMenu implements UserMenu {
                 ActionStatus ac = StartSystem.getBc().addExpenseToTeam(nameTeam,expense,Expense.PlayerSalary);
                 return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
             }
-        } else {
+        } else if(input == 4){
+            output += "insert name team: \nuser input- " + args[1] +"\n";
+            String nameCoach  =  args[1];
+            ActionStatus ac = StartSystem.getESUDc().editCoachPersonalPage(nameCoach,(new Object[]{new Date(),args[3],args[4],args[5],args[6]}));
+            return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
+        }else {
             return new ActionStatus(false, output + "invalid choice\n");
         }
         return null;
