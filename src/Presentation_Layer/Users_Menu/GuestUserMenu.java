@@ -65,20 +65,20 @@ public class GuestUserMenu implements UserMenu {
         output += guestMenu + " " + args[0] +"\n";
         int input =  Integer.parseInt(args[0]);
         if(input==1) {
-            output += "insert User name" + args[1] +"\n";
+            output += "insert User name\nuser input- " + args[1] +"\n";
             String name = args[1];
-            output += "insert password" + args[2] +"\n";
+            output += "insert password\nuser input- " + args[2] +"\n";
             String password = args[2];
-            output += "insert email" + args[3] +"\n";
+            output += "insert email\nuser input- " + args[3] +"\n";
             String email = args[3];
-            output += "insert your Role" + args[4] +"\n";
+            output += "insert your Role\nuser input- " + args[4] +"\n";
             String role = args[4];
             ActionStatus ac = StartSystem.LEc.Registration(name, password, role, email);
             output += (ac.getDescription()) + "\n";
             return new ActionStatus(ac.isActionSuccessful(),output);
         }
         else if(input==2) {
-            output += "insert User name " + args[1] + "\ninsert password" + args[2] + "\n";
+            output += "insert User name:\nuser input-  " + args[1] + "\ninsert password: \nuser input- " + args[2] + "\n";
             String name = args[1];
             String password = args[2];
             DataManagement.setCurrent(null);

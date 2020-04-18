@@ -39,6 +39,18 @@ public class Complaint extends Observable {
                 "\""+ans+"\"");
     }
 
+    @Override
+    public String toString(){
+        String ans =  "Complaint Description:\n"+description+"\n";
+        if(isAnswered){
+            ans += "Complaint has been answered:\n" + answer + "\n";
+        }
+        else{
+            ans += "Complaint has not been answered" + "\n";
+        }
+        return ans;
+    }
+
 
 
 

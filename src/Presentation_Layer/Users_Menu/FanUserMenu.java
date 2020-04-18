@@ -89,7 +89,7 @@ public class FanUserMenu implements UserMenu  {
             return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
         }
         else{
-            return new ActionStatus(false,output + "invalid choice");
+            return new ActionStatus(false,output + "Invalid choice");
         }
         return new ActionStatus(false,output);
     }
