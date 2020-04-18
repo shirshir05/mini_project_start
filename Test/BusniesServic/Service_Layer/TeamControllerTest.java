@@ -21,7 +21,7 @@ public class TeamControllerTest {
     public static TeamController n = new TeamController();
 
     /**
-     * Test -TC1
+     * Test -TC0
      */
     @RunWith(Parameterized.class)
     public static class RequestCreateTeam{
@@ -54,7 +54,7 @@ public class TeamControllerTest {
 
     }//RequestCreateTeam
     /**
-     ** Test - TC2
+     ** Test - TC1
      */
     @RunWith(Parameterized.class)
     public static class CreateTeam{
@@ -93,7 +93,7 @@ public class TeamControllerTest {
     }//CreateTeam
 
     /**
-     ** Test - TC3
+     ** Test - TC2
      */
     @RunWith(Parameterized.class)
     public static class DeleteCreateTeamRequest{
@@ -171,7 +171,7 @@ public class TeamControllerTest {
 
 
     /**
-     ** Test - TC3
+     ** Test - TC3.5
      */
     @RunWith(Parameterized.class)
     public static class AddOrRemovePlayer{
@@ -473,7 +473,7 @@ public class TeamControllerTest {
     }//ChangeStatusTeam
 
     /**
-     *Test - TC8
+     *Test - TC9
      */
     @RunWith(Parameterized.class)
     public static class AddOrRemoveTeamsAssets{

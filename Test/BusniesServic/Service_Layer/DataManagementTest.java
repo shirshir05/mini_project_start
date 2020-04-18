@@ -12,7 +12,9 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.omg.DynamicAny.DynArray;
 
+import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,6 +52,7 @@ public class DataManagementTest {
         public void containSubscriptionTest() {
             Subscription sub = new Coach(userName,password,email);
             DataManagement.setSubscription(sub);
+            assertEquals(sub, DataManagement.getSubscription(sub.getUserName()));
             assertNotNull(DataManagement.containSubscription("shir"));
             assertNull(DataManagement.containSubscription("dana"));
 
