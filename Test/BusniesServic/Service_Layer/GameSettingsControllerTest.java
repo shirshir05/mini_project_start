@@ -182,11 +182,11 @@ public class GameSettingsControllerTest {
             LogAndExitController lg = new LogAndExitController();
             lg.Registration("s","12345", "Coach","shir0@post.bgu.ac.il");
             lg.Login("s","12345");
-            assertEquals(gm.refereeWatchGames(),"You are not a referee!");
+            assertEquals(gm.refereeWatchGames().getDescription(),"You are not a referee!");
             lg.Exit("s","12345");
             lg.Registration("ss","12345", "Referee","shir0@post.bgu.ac.il");
             lg.Login("ss","12345");
-            assertEquals(gm.refereeWatchGames(),"You are participates in the next games");
+            assertEquals(gm.refereeWatchGames().getDescription(),"You are participates in the next games");
         }
     }//refereeWatchGames
 
@@ -254,7 +254,7 @@ public class GameSettingsControllerTest {
             DataManagement.findTeam("shir1").addOrRemovePlayer(new Player("shir","123456","shir0@post.bgu.ac.il"),1);
             DataManagement.findTeam("shir1").addOrRemovePlayer(new Player("dan","123456","shir0@post.bgu.ac.il"),1);
 
-            assertEquals(gm.refereeCreateNewEvent(game_id,team_name,player_name,event),ans);
+            assertEquals(gm.refereeCreateNewEvent(game_id,team_name,player_name,event).getDescription(),ans);
 
 
         }
