@@ -88,6 +88,11 @@ public class Permissions {
         list_Permissions.add(action);
     }
 
+    public void copyPermissions(Permissions permissions){
+        for(PermissionAction pa : permissions.list_Permissions){
+            this.add_permissions(pa);
+        }
+    }
 
 
 }

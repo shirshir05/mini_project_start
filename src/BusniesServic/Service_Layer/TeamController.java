@@ -7,6 +7,7 @@ import BusniesServic.Enum.PermissionAction;
 import DB_Layer.logger;
 import Presentation_Layer.Spelling;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.HashSet;
@@ -22,10 +23,11 @@ public class TeamController {
      */
     public boolean RequestCreateTeam(String arg_name, String arg_field){
         boolean flag=false;
-        if (DataManagement.getCurrent() instanceof TeamOwner && arg_name!=null) {
+        Subscription currentUser = DataManagement.getCurrent();
+        if (arg_name != null && isATeamOwner(currentUser)) {
             ArrayList<UnionRepresentative> union = DataManagement.getUnionRepresentatives();
             for (UnionRepresentative rep : union) {
-                rep.addAlert("teamOwner:" + DataManagement.getCurrent() + "| Team;" + arg_name);
+                rep.addAlert("teamOwner:" + currentUser.getUserName() + "| Team;" + arg_name);
                 flag = true;
             }
         }
@@ -33,6 +35,11 @@ public class TeamController {
             this.CreateTeam(arg_name,arg_field);
         }
         return flag;
+    }
+
+    private boolean isATeamOwner(Subscription currentUser) {
+        return currentUser instanceof TeamOwner
+                || (currentUser instanceof UnifiedSubscription && ((UnifiedSubscription)currentUser).isATeamOwner());
     }
 
     public boolean ApproveCreateTeamAlert(String theAlert,String repName){
@@ -119,17 +126,26 @@ public class TeamController {
     public ActionStatus AddOrRemovePlayer(String name_team, String user_name, int add_or_remove) {
         ActionStatus AC = null;
         String ans = CheckInputEditTeam(name_team, user_name);
+        Subscription requestedPlayerToAdd = DataManagement.containSubscription(user_name);
+        Team team = DataManagement.findTeam(name_team);
         if (ans != null) {
             AC =  new ActionStatus(false,ans);
         }
-        else if(!(DataManagement.containSubscription(user_name) instanceof Player)) {
+        else if(!isAPlayer(requestedPlayerToAdd)) {
             AC = new ActionStatus(false, "The username is not defined as a player on the system.");
         }
-        else if(DataManagement.findTeam(name_team) != null){
-            AC =  DataManagement.findTeam(name_team).addOrRemovePlayer((Player) DataManagement.containSubscription(user_name), add_or_remove);
+        else if(team != null){
+            AC =  team.addOrRemovePlayer((Player) DataManagement.containSubscription(user_name), add_or_remove);
+        }
+        else {
+            AC = new ActionStatus(false, "Cannot find team");
         }
         logger.log("Add Or Remove Player to Team: "+name_team+"-"+AC.getDescription());
         return AC;
+    }
+
+    private boolean isAPlayer(Subscription requestedPlayerToAdd) {
+        return (requestedPlayerToAdd instanceof Player) || (requestedPlayerToAdd instanceof UnifiedSubscription && ((UnifiedSubscription)requestedPlayerToAdd).isAPlayer());
     }
 
     /**
@@ -143,18 +159,26 @@ public class TeamController {
     public ActionStatus AddOrRemoveCoach(String name_team, String coach_add, int add_or_remove) {
         ActionStatus AC = null;
         String ans = CheckInputEditTeam(name_team, coach_add);
+        Subscription requestedCoachToAdd = DataManagement.containSubscription(coach_add);
+        Team team = DataManagement.findTeam(name_team);
         if (ans != null) {
             AC = new ActionStatus(false,ans);
         }
-        else if(!( DataManagement.containSubscription(coach_add) instanceof Coach)){
+        else if(!isACoach(requestedCoachToAdd)){
             AC =  new ActionStatus(false, "The username is not defined as a Coach on the system.");
         }
-        else if(DataManagement.findTeam(name_team) != null){
-            AC = DataManagement.findTeam(name_team).AddOrRemoveCoach((Coach) DataManagement.containSubscription(coach_add), add_or_remove);
+        else if(team != null){
+            AC = team.AddOrRemoveCoach((Coach) DataManagement.containSubscription(coach_add), add_or_remove);
         }
-
+        else {
+            AC = new ActionStatus(false, "Cannot find team");
+        }
         logger.log("Add Or Remove Coach to Team: "+name_team+"-"+AC.getDescription());
         return AC;
+    }
+
+    private boolean isACoach(Subscription coach) {
+        return (coach instanceof Coach) || (coach instanceof UnifiedSubscription && ((UnifiedSubscription)coach).isACoach());
     }
 
 
@@ -170,10 +194,11 @@ public class TeamController {
     public ActionStatus AddOrRemoveTeamOwner(String name_team, String TeamOwner, int add_or_remove) {
         ActionStatus AC = null;
         String ans = CheckInputEditTeam(name_team, TeamOwner);
+        Subscription requestedTeamOwnerToAdd = DataManagement.containSubscription(TeamOwner);
         if (ans != null) {
             AC =  new ActionStatus(false, ans);
         }
-        else if (!(DataManagement.containSubscription(TeamOwner) instanceof BusniesServic.Business_Layer.UserManagement.TeamOwner)) {
+        else if (!isATeamOwner(requestedTeamOwnerToAdd)) {
             AC =  new ActionStatus(false, "The username is not defined as a Team Owner on the system.");
         }
         // add teamOwner to team
