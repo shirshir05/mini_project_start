@@ -228,8 +228,7 @@ public final class DataManagement {
     }
 
     public  static HashSet<Team>  getListTeam(){
-        return list_team;
-
+            return list_team;
     }
 
     public static void addToListLeague(League league){

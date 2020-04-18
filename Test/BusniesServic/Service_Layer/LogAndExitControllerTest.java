@@ -2,6 +2,8 @@ package BusniesServic.Service_Layer;
 
 import static org.junit.Assert.*;
 
+import BusniesServic.Business_Layer.TeamManagement.Team;
+import BusniesServic.Business_Layer.UserManagement.TeamOwner;
 import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Business_Layer.UserManagement.Subscription;
 import BusniesServic.Business_Layer.UserManagement.SubscriptionFactory;
@@ -135,32 +137,44 @@ public class LogAndExitControllerTest {
             controller = new LogAndExitController();
             this.name = "matan";
             this.password = "12345";
-            this.role = "Coach";
+            this.role = "TeamOwner";
+            email = "shir0@post.bgu.ac.il";
 
+            //check Successfully Registration
+            actionStatus = new ActionStatus(true, "Subscription successfully added!");
+            assertEquals(actionStatus, controller.Registration(name, password,role,email));
+
+            Team team2 = new Team("Real Madrid", "Bernabeo");
+            DataManagement.addToListTeam(team2);
+            team2.EditTeamOwner((TeamOwner) DataManagement.getSubscription(name),1);
+            actionStatus = new ActionStatus(false, "The system constraints do not allow this subscription to be deleted.");
+            assertEquals(actionStatus, controller.RemoveSubscription(name));
+            team2.EditTeamOwner((TeamOwner) DataManagement.getSubscription(name),0);
+
+            name = "omer";
+            actionStatus = new ActionStatus(false, "There is no subscription with this username in the system.");
+            assertEquals(actionStatus, controller.RemoveSubscription(name));
+            name = "matan";
+
+            actionStatus = new ActionStatus(false, "You are not authorized to perform this action.");
+            assertEquals(actionStatus, controller.RemoveSubscription(name));
+
+            this.role = "SystemAdministrator";
+            this.name = "ran";
+            this.password = "12345";
+            email = "shir0@post.bgu.ac.il";
+
+            //check Successfully Registration
+            actionStatus = new ActionStatus(true, "Subscription successfully added!");
+            assertEquals(actionStatus, controller.Registration(name, password,role,email));
+
+//            this.name = "matan";
+//            DataManagement.setCurrent(DataManagement.getSubscription("ran"));
+//            actionStatus = new ActionStatus(true, "the transaction completed successfully.");
+//            assertEquals(actionStatus, controller.RemoveSubscription(name));
         }
-        /*
-            public ActionStatus RemoveSubscription(String userName){
-        ActionStatus AC = null;
-        if(!ConstraintsCorrectness(userName)){
-            AC =  new ActionStatus(false, "The system constraints do not allow this subscription to be deleted.");
-        }
-        else if(DataManagement.containSubscription(userName) == null){
-            AC =  new ActionStatus(false, "There is no subscription with this username in the system.");
-        }
-        else if(!(DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Removing_Subscriptions)))){
-            AC =  new ActionStatus(false, "You are not authorized to perform this action.");
-        }
-        else {
-            if(DataManagement.getCurrent().getPermissions().equals(userName)){
-                DataManagement.setCurrent(null);
-            }
-            DataManagement.removeSubscription(userName);
-            AC = new ActionStatus(false, "the transaction completed successfully.");
-        }
-        logger.log("Remove Subscription attempt of user : "+userName+" "+AC.getDescription());
-        return AC;
-    }
-         */
+
+
     }
 
 

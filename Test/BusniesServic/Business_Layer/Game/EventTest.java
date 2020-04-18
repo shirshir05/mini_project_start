@@ -1,10 +1,16 @@
 package BusniesServic.Business_Layer.Game;
 import BusniesServic.Business_Layer.TeamManagement.Team;
 import BusniesServic.Business_Layer.UserManagement.Player;
+import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Enum.EventType;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 import static org.junit.Assert.*;
 
@@ -26,6 +32,15 @@ public class EventTest {
         assertEquals(team1, event.getTeam());
         assertEquals(eventType, event.getEventType());
         assertEquals(player, event.getPlayer());
+
+        team1.addOrRemovePlayer(player, 0);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        LocalDateTime eventTime = LocalDateTime.now();
+        event = new Event(team1, eventType, player,eventTime);
+
+        assertEquals(team1, event.getTeam());
+        assertEquals(eventType, event.getEventType());
+
     }
 
     /**
@@ -153,7 +168,10 @@ public class EventTest {
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
         event = new Event(team1, eventType, player,null);
-        assertEquals(eventType +" for player:"+player.getUserName()+" from team:"+ team1.getName() + " time:" + event.getEventTime(), event.eventToString());
+
+        assertEquals(eventType +" for player:"+player.getUserName()+" from team:"+ team1.getName() + " time:"+ event.getEventTime().toString(), event.eventToString());
+        //eventType +" for player:"+player.getUserName()+" from team:"+ team.getName()+ " time:"+ eventTime.toString()
+
     }
 
 //    /**
@@ -161,6 +179,8 @@ public class EventTest {
 //     */
 //    @Test
 //    public void testEditEvent() {
+//
+//        LocalDateTime endOfGameTime = LocalDateTime.of(2014, Month.JANUARY, 1, 10, 10, 30);
 //
 //        Player player = new Player("messi", "123456", "31212fsf@gmail.com");
 //        EventType eventType = EventType.goal;
@@ -170,13 +190,20 @@ public class EventTest {
 //
 //        assertEquals(eventType +" for player:"+player.getUserName()+" from team:"+ team1.getName(), event.eventToString());
 //    }
-
-//    public ActionStatus editEvent(LocalDateTime endOfGameTime){
-//        //TODO - can we add pointer to the game in the event to check the time?
+//
+//    public ActionStatus editEvent(LocalDateTime endOfGameTime, Team arg_team, EventType arg_event_type, Player arg_player, LocalDateTime time){
 //        ActionStatus ac = null;
 //        if(ChronoUnit.MINUTES.between(endOfGameTime,LocalDateTime.now())<=300){
-//            //TODO - add edit options
-//
+//            this.team=arg_team;
+//            this.eventType=arg_event_type;
+//            this.player=player;
+//            if (time==null){
+//                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+//                eventTime = LocalDateTime.now();
+//            }
+//            else{
+//                eventTime=time;
+//            }
 //            ac = new ActionStatus(true,"the change was made");
 //        }
 //        else{

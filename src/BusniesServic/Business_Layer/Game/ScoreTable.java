@@ -40,6 +40,10 @@ public class ScoreTable {
         this.pointsPolicy = pointsPolicy;
     }
 
+    public ArrayList<Team> getTeams() {
+        return teams;
+    }
+
     @Override
     public String toString() {
 

@@ -49,7 +49,9 @@ public class TeamScore {
     }
 
     public void setTeamName(String teamName) {
-        this.teamName = teamName;
+        if(teamName != null && teamName.length() != 0){
+            this.teamName = teamName;
+        }
     }
 
     public void setNumberOfGames(int numberOfGames) {
