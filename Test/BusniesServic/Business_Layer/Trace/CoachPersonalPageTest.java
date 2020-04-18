@@ -1,6 +1,8 @@
 package BusniesServic.Business_Layer.Trace;
 
 import static org.junit.Assert.*;
+
+import BusniesServic.Business_Layer.UserManagement.Coach;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -13,7 +15,9 @@ import static org.junit.Assert.*;
 @RunWith(Enclosed.class)
 public class CoachPersonalPageTest {
 
-    //region Date
+    /**
+     * Test -CP1
+     */
 
     @RunWith(Parameterized.class)
     public static class DateOfBirthTest {
@@ -52,6 +56,9 @@ public class CoachPersonalPageTest {
 
     //region Country
 
+    /**
+     * Test -CP2
+     */
     @RunWith(Parameterized.class)
     public static class CountryOfBirthTest {
 
@@ -83,6 +90,10 @@ public class CoachPersonalPageTest {
     //endregion
 
     //region Years of experience
+
+    /**
+     * Test -CP3
+     */
 
     @RunWith(Parameterized.class)
     public static class YearsOfExperienceTest {
@@ -116,6 +127,10 @@ public class CoachPersonalPageTest {
 
     //region Num of titles
 
+    /**
+     * Test -CP4
+     */
+
     @RunWith(Parameterized.class)
     public static class NumOfTitlesTest {
 
@@ -145,4 +160,35 @@ public class CoachPersonalPageTest {
     }
 
     //endregion
+
+    /**
+     * Test -CP5
+     */
+    @RunWith(Parameterized.class)
+    public static class equalsTest {
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {}
+            });
+        }
+
+        public equalsTest() {
+        }
+
+        @Test
+        public void equalsTest1() {
+            CoachPersonalPage page = new CoachPersonalPage("coach");
+            page.setCountryOfBirth("Israel");
+            Calendar calendar = Calendar.getInstance();
+            page.setDateOfBirth(calendar.getTime());
+            page.setYearOfExperience(3.0);
+            assertEquals(page.toString(),"The Coach: " + "coach" +"\n" +
+                    "date of Birth: " + calendar.getTime() + "\n" +
+                    "country of Birth: " + "Israel" + "\n"+
+                    "year of experience: " + 3.0 + "\n"+
+                    "num of titles: " + 0);
+        }
+    }
+
 }

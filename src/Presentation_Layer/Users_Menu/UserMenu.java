@@ -7,4 +7,7 @@ public interface UserMenu {
 
     public ActionStatus presentUserMenu();
 
+    public ActionStatus presentUserMenu(String[] args);
+
+
 }

@@ -130,6 +130,8 @@ public final class DataManagement {
                 return Role.TeamOwner;
             case UnionRepresentative:
                 return Role.UnionRepresentative;
+            case UnifiedSubscription:
+                return Role.UnifiedSubscription;
             default:
                 return null;
         }

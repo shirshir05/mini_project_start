@@ -3,8 +3,7 @@ import BusniesServic.Business_Layer.BudgetManagement.TeamBudgetTest;
 import BusniesServic.Business_Layer.BudgetManagement.UnionBudgetTest;
 import BusniesServic.Business_Layer.Game.*;
 import BusniesServic.Business_Layer.TeamManagement.TeamTest;
-import BusniesServic.Business_Layer.Trace.CoachPersonalPageTest;
-import BusniesServic.Business_Layer.Trace.PlayerPersonalPageTest;
+import BusniesServic.Business_Layer.Trace.*;
 import BusniesServic.Business_Layer.UserManagement.*;
 import BusniesServic.Service_Layer.*;
 import Presentation_Layer.StartSystem;
@@ -76,6 +75,17 @@ public class mainTest {
         StartSystem system = new StartSystem();
         system.cleanSystem();
         test(DataManagementTest.class);
+
+
+        test(AlertControllerTest.class);
+        test(TeamPersonalPageTest.class);
+        test(PersonalPageTest.class);
+        test(FootballPlayerStatisticTest.class);
+        test(FootballTeamStatisticTest.class);
+
+
+
+
 
         System.out.println("---------------------------------------------------------------");
 
