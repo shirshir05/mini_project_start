@@ -132,8 +132,6 @@ public class TeamControllerTest {
             assertTrue(u1.getAlerts().size()==0 && u2.getAlerts().size()==0 && u3.getAlerts().size()==0);
             DataManagement.cleanAllData();
         }
-
-
     }//DeleteCreateTeamRequest
 
     /**
@@ -197,6 +195,11 @@ public class TeamControllerTest {
         }
         @Test
         public void AddOrRemovePlayerTest() {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Player player = new Player(name,password,email);
             TeamOwner owner = new TeamOwner("zdab", "zfcs", "zdfe");
             DataManagement.setCurrent(player);
@@ -240,6 +243,11 @@ public class TeamControllerTest {
         }
         @Test
         public void AddOrRemoveCoachTest() {
+            try {
+                Thread.sleep(1222);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Coach player = new Coach(name,password,email);
             TeamOwner owner = new TeamOwner("zdab", "zfcs", "zdfe");
             DataManagement.setCurrent(player);

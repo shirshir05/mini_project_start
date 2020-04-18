@@ -15,7 +15,7 @@ import javafx.util.Pair;
 
 
 public class Game extends Observable{
-    static int game_id=0;
+    public static int game_id=0;
     int id;
     String field;
     LocalDate date;
@@ -120,7 +120,7 @@ public class Game extends Observable{
          }else if(guest.getName().equals(team_name)) {
            p= guest.getPlayer(player_name);
             if(p != null) {
-                new_event = new Event(host, event, p, null);
+                new_event = new Event(guest, event, p, null);
                 eventList.add(new_event);
             }else{
                 ac = new ActionStatus(false,"Parameter wrong!");

@@ -177,6 +177,8 @@ public class GameSettingsControllerTest {
         }
         @Test
         public void refereeWatchGamesTest() {
+            Game.game_id = 0;
+            DataManagement.cleanAllData();
             GameSettingsController gm = new GameSettingsController();
             LogAndExitController lg = new LogAndExitController();
             lg.Registration("s","12345", "Coach","shir0@post.bgu.ac.il");
@@ -209,9 +211,9 @@ public class GameSettingsControllerTest {
                     {0,"0","0",EventType.red_ticket,"The game id does not exist."},
                     {1,"0","0",EventType.red_ticket,"The team id does not exist."},
                     {1,"shir1","0",EventType.red_ticket,"The player does not exist in the team."},
-                    {5,"shir1","shir",EventType.red_ticket,"Event successfully updated."},
-                    {5,"shir1","din",EventType.red_ticket,"You may not take this action."},
-                    {5,"shir1","dan",EventType.red_ticket,"You are not a judge of the current game."}
+                    {1,"shir1","shir",EventType.red_ticket,"Event successfully updated."},
+                    {1,"shir1","din",EventType.red_ticket,"You may not take this action."},
+                    {1,"shir1","dan",EventType.red_ticket,"You are not a judge of the current game."}
 
             });
         }
@@ -224,6 +226,8 @@ public class GameSettingsControllerTest {
         }
         @Test
         public void refereeCreateNewEventTest() {
+            Game.game_id = 0;
+            DataManagement.cleanAllData();
             GameSettingsController gm = new GameSettingsController();
             LogAndExitController lg = new LogAndExitController();
             Team t = new Team("shir1","s");
