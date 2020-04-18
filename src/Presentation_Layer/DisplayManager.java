@@ -29,27 +29,27 @@ public class DisplayManager {
             if(sub instanceof Fan){
                 //create new fan menu and show its menu
                 FanUserMenu FM = new FanUserMenu();
-                FM.presentUserMenu();
+
             }
             else if(sub instanceof Player || sub instanceof Coach || sub instanceof TeamManager || sub instanceof TeamOwner){
                 //create new ..... menu and show its menu
-                TeamUsersMenu TM = new TeamUsersMenu();
-                TM.presentUserMenu();
+                //TeamUsersMenu TM = new TeamUsersMenu();
+                //TM.presentUserMenu();
             }
             else if(sub instanceof SystemAdministrator){
                 //create new .... menu and show its menu
-                SystemAdminUserMenu SM = new SystemAdminUserMenu();
-                SM.presentUserMenu();
+               // SystemAdminUserMenu SM = new SystemAdminUserMenu();
+                //SM.presentUserMenu();
             }
             else if(sub instanceof UnionRepresentative){
                 //create new .... menu and show its menu
-                UnionUserMenu UM = new UnionUserMenu();
-                UM.presentUserMenu();
+                //UnionUserMenu UM = new UnionUserMenu();
+                //UM.presentUserMenu();
             }
             else if(sub instanceof Referee){
                 //create new .... menu and show its menu
-                RefereeUserMenu RM = new RefereeUserMenu();
-                RM.presentUserMenu();
+               // RefereeUserMenu RM = new RefereeUserMenu();
+                //RM.presentUserMenu();
             }
         }
     }
