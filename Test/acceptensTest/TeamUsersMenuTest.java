@@ -82,6 +82,7 @@ public class TeamUsersMenuTest {
             assertEquals(ac.isActionSuccessful(),ans);
             System.out.print(ac.isActionSuccessful() + " " +ac.getDescription());
 
+            DataManagement.cleanAllData();
 
 
         }
