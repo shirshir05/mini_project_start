@@ -1,30 +1,27 @@
 package acceptensTest;
 
+import BusniesServic.Business_Layer.UserManagement.Fan;
 import BusniesServic.Business_Layer.UserManagement.Guest;
 import BusniesServic.Business_Layer.UserManagement.Subscription;
 import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Service_Layer.DataManagement;
-import Presentation_Layer.DisplayManager;
-import Presentation_Layer.Users_Menu.GuestUserMenu;
+import Presentation_Layer.Users_Menu.FanUserMenu;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assert.*;
-
 @RunWith(Enclosed.class)
-public class GuestMenuTest {
+public class FanMenuTest {
 
     /**
-     * Test - GM1
+     * Test - FM1
      */
     @RunWith(Parameterized.class)
-    public static class GustMenuTest {
+    public static class FanTest {
         //parameter
 
         @Parameterized.Parameters
@@ -34,26 +31,25 @@ public class GuestMenuTest {
             });
         }
 
-        public GustMenuTest(){
+        public FanTest(){
             //init parameters
         }
 
         @Test
-        public void GustMenu1() {
-            Subscription g = new Guest("Guest","123456","g@g.g");
-            DataManagement.setSubscription(g);
-            DataManagement.setCurrent(g);
+        public void FanMenu1() {
+            Fan fan = new Fan("shir","12345","shir0@post.bgu.ac.il");
+            DataManagement.setCurrent(fan);
+            DataManagement.setSubscription(fan);
 
-            GuestUserMenu GM = new GuestUserMenu();
+            FanUserMenu FM = new FanUserMenu();
             String[] args = new String[20];
             //add strings to args!!!!!!
 
 
-            ActionStatus ac = GM.presentUserMenu(args);
+            ActionStatus ac = FM.presentUserMenu(args);
             System.out.println(ac.isActionSuccessful() + " " +ac.getDescription());
 
 
         }
     }
-
 }

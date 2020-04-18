@@ -28,34 +28,34 @@ public class LogAndExitControllerTest {
             public void registrationTest() {
             controller = new LogAndExitController();
             actionStatus = new ActionStatus(true, "Subscription successfully added!");
-            assertEquals(actionStatus, controller.Registration("shir", "12345","Coach","shir0@post.bgu.ac.il"));
+            assertEquals(actionStatus, controller.Registration("dan", "12345","Coach","shir0@post.bgu.ac.il"));
 
             actionStatus = new ActionStatus(false, "Please select another username because this username exists in the system.");
-            assertEquals(actionStatus, controller.Registration("shir", "11111", "Coach","shir0@post.bgu.ac.il"));
+            assertEquals(actionStatus, controller.Registration("dan", "11111", "Coach","shir0@post.bgu.ac.il"));
 
             actionStatus = new ActionStatus(false, "The input is empty.");
-            assertEquals(actionStatus, controller.Registration("shir", null, "Coach","shir0@post.bgu.ac.il"));
+            assertEquals(actionStatus, controller.Registration("dan", null, "Coach","shir0@post.bgu.ac.il"));
 
             actionStatus = new ActionStatus(false, "The input is empty.");
             assertEquals(actionStatus, controller.Registration("", "nul2l", "Coach","shir0@post.bgu.ac.il"));
 
             actionStatus = new ActionStatus(false, "The input is empty.");
-            assertEquals(actionStatus, controller.Registration("shir", "", "Coach","shir0@post.bgu.ac.il"));
+            assertEquals(actionStatus, controller.Registration("dan", "", "Coach","shir0@post.bgu.ac.il"));
 
             actionStatus = new ActionStatus(false,"The password must contain at least 5 digits.");
-            assertEquals(actionStatus, controller.Registration("shir","1234", "Coach","shir0@post.bgu.ac.il"));
+            assertEquals(actionStatus, controller.Registration("dan","1234", "Coach","shir0@post.bgu.ac.il"));
 
             actionStatus = new ActionStatus( false,"The password must contain at least 5 digits.");
-            assertEquals(actionStatus, controller.Registration("shir", "1", "Coach","shir0@post.bgu.ac.il"));
+            assertEquals(actionStatus, controller.Registration("dan", "1", "Coach","shir0@post.bgu.ac.il"));
 
             actionStatus = new ActionStatus(false, "The password must contain at least 5 digits.");
-            assertEquals(actionStatus, controller.Registration("shir", "1rr", "Coach","shir0@post.bgu.ac.il"));
+            assertEquals(actionStatus, controller.Registration("dan", "1rr", "Coach","shir0@post.bgu.ac.il"));
 
             actionStatus = new ActionStatus( false,"The role does not exist in the system.");
-            assertEquals(actionStatus, controller.Registration("shir", "12345", "Teacher","shir0@post.bgu.ac.il"));
+            assertEquals(actionStatus, controller.Registration("dan", "12345", "Teacher","shir0@post.bgu.ac.il"));
 
             actionStatus = new ActionStatus(false, "Invalid email, please enter a valid email.");
-            assertEquals(actionStatus, controller.Registration("shir", "12345", "Coach","shirpostbguacil"));
+            assertEquals(actionStatus, controller.Registration("dan", "12345", "Coach","shirpostbguacil"));
         }
 
         @Test

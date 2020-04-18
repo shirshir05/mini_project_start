@@ -1,15 +1,14 @@
 import BusniesServic.Business_Layer.BudgetManagement.BudgetRegulationsTest;
 import BusniesServic.Business_Layer.BudgetManagement.TeamBudgetTest;
 import BusniesServic.Business_Layer.BudgetManagement.UnionBudgetTest;
-import BusniesServic.Business_Layer.Game.EventTest;
-import BusniesServic.Business_Layer.Game.GameTest;
-import BusniesServic.Business_Layer.Game.LeagueTest;
-import BusniesServic.Business_Layer.Game.SeasonTest;
+import BusniesServic.Business_Layer.Game.*;
 import BusniesServic.Business_Layer.TeamManagement.TeamTest;
 import BusniesServic.Business_Layer.Trace.CoachPersonalPageTest;
 import BusniesServic.Business_Layer.Trace.PlayerPersonalPageTest;
 import BusniesServic.Business_Layer.UserManagement.*;
 import BusniesServic.Service_Layer.*;
+import Presentation_Layer.StartSystem;
+import com.sun.deploy.util.Waiter;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -21,7 +20,13 @@ public class mainTest {
     static int testCounter = 0;
     static int failedTests = 0;
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws InterruptedException {
+        test(TeamOwnerTest.class);
+        Thread.sleep(1000);
+        Game.game_id = 0;
+
+
+
 
         //BudgetManagement
         test(BudgetRegulationsTest.class);
@@ -30,7 +35,11 @@ public class mainTest {
 
         //Game
         test(EventTest.class);
+        Game.game_id = 0;
+
         test(GameTest.class);
+        Game.game_id = 0;
+
         test(LeagueTest.class);
         test(SeasonTest.class);
 
@@ -52,18 +61,23 @@ public class mainTest {
         test(SubscriptionTest.class);
         test(SystemAdministratorTest.class);
         test(TeamManagerTest.class);
-        test(TeamOwnerTest.class);
+
         test(UnionRepresentativeTest.class);
 
         //Service Layer
         test(BudgetControllerTest.class);
-        test(DataManagementTest.class);
+
         test(EditAndShowUserDetailsTest.class);
         test(GameSettingsControllerTest.class);
         test(LogAndExitControllerTest.class);
         //test(MainTestClass.class);
         test(SearchLoggerTest.class);
         test(TeamControllerTest.class);
+        StartSystem system = new StartSystem();
+        system.cleanSystem();
+        test(DataManagementTest.class);
+
+        System.out.println("---------------------------------------------------------------");
 
         System.out.println("Total number of tests: "+testCounter);
         System.out.println("Total number of failed tests: "+failedTests);
@@ -72,6 +86,8 @@ public class mainTest {
 
     private static void test(Class toTest){
         DataManagement.cleanAllData();
+        StartSystem system = new StartSystem();
+        system.cleanSystem();
         System.out.println("----------------------"+toTest.getName()+"----------------------------");
         Result result = JUnitCore.runClasses(toTest);
         for(Failure fail : result.getFailures()){
