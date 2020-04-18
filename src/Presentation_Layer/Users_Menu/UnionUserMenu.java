@@ -127,6 +127,10 @@ public class UnionUserMenu implements UserMenu {
         else if(input == 5) {
             //manage games - game setting policy and start outomatic games setting;
             //TODO - Start ortal's new function
+            output += "insert season to assign games: \nuser input- " + args[1] +"\n";
+            String str =  args[1];
+            StartSystem.GSc.assignGamesInSeason(str);
+            return new ActionStatus(true,output);
         }
         else if(input == 6) {
             //finance - edit budget regulation and edit union finance

@@ -9,7 +9,7 @@ import Presentation_Layer.UserInterface;
 
 public class GuestUserMenu implements UserMenu {
 
-    private String guestMenu = "choose action: \n1:Register \n2:Login \n3:Search";
+    private String guestMenu = "choose action: \n1:Register \n2:Login \n3:Search \n4:Exit";
 
     public ActionStatus presentUserMenu() {
         boolean ExitOrChangeUser = false;
@@ -78,14 +78,21 @@ public class GuestUserMenu implements UserMenu {
             return new ActionStatus(ac.isActionSuccessful(),output);
         }
         else if(input==2) {
-            output += "insert User name:\nuser input-  " + args[1] + "\ninsert password: \nuser input- " + args[2] + "\n";
+            output += "insert User name:\nuser input-  " + args[1] + "\n";
             String name = args[1];
+            output += "insert password: \nuser input- " + args[2] + "\n";
             String password = args[2];
             DataManagement.setCurrent(null);
             ActionStatus ac = StartSystem.LEc.Login(name, password);
             return new ActionStatus(ac.isActionSuccessful(), output + ac.getDescription());
         }
-        else if(input ==3 ) {
+        else if(input == 3) {
+            output += "insert search word or category: \nuser input- " + args[1] + "\n";
+            String keyWord = args[1];
+            output += StartSystem.Sc.findData(keyWord);
+            return new ActionStatus(true,output);
+        }
+        else if(input == 4) {
             StartSystem.LEc.Exit("Guset", "123456");
             return new ActionStatus(true,output + " Exit");
         }
