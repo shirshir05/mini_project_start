@@ -62,7 +62,7 @@ public class EditAndShowUserDetails {
         ActionStatus ac = getActionStatus(subscription);
         if (ac != null) return ac;
         if(!DataManagement.checkEmail(newValue)){
-            return new ActionStatus(false, "The new Email is not legal");
+            return new ActionStatus(false, "The new email is not legal");
         }
         subscription.setEmail(newValue);
         return new ActionStatus(true, "The Email of the Subscription was successfully changed!");
