@@ -167,6 +167,12 @@ public class UnifiedSubscription extends Subscription implements Observer {
 
     //endregion
 
+    //TODO remove this get, it's here for team search:
+
+    public TeamOwner getTeamOwner() {
+        return teamOwner;
+    }
+
 
     //TODO observable
 

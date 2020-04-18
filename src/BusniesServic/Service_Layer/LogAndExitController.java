@@ -169,18 +169,25 @@ public class LogAndExitController{
     private boolean TeamOwnerForTeam(String userName){
         Subscription teamOwner = DataManagement.containSubscription(userName);
         if(teamOwner instanceof TeamOwner){
-            HashSet<Team> list =  DataManagement.getListTeam();
-            for (Team team: list) {
-                HashSet<TeamOwner> teamOwnerHash = team.getListTeamOwner();
-                if(teamOwnerHash.size() == 1){
-                    if(teamOwnerHash.contains(teamOwner)){
-                        return false;
-                    }
+            return searchTeamOwner((TeamOwner) teamOwner);
+        }
+        else if(teamOwner instanceof UnifiedSubscription && ((UnifiedSubscription)teamOwner).isATeamOwner())
+            return searchTeamOwner(((UnifiedSubscription)teamOwner).getTeamOwner());
+        return false;
+
+    }
+
+    private boolean searchTeamOwner(TeamOwner teamOwner) {
+        HashSet<Team> list =  DataManagement.getListTeam();
+        for (Team team: list) {
+            HashSet<TeamOwner> teamOwnerHash = team.getListTeamOwner();
+            if(teamOwnerHash.size() == 1){
+                if(teamOwnerHash.contains(teamOwner)){
+                    return true;
                 }
             }
         }
-        return true;
-
+        return false;
     }
 
 
