@@ -50,7 +50,7 @@ public class FanUserMenu implements UserMenu  {
             }
         }
         else if(input ==3 ) {
-            output += "Enter a game id: " + args[1] +"\n";
+            output += "insert game id: " + args[1] +"\n";
             int game =  Integer.parseInt(args[1]);
             if(StartSystem.getAc().fanRegisterToGameAlerts(game).isActionSuccessful()){
                 return new ActionStatus(true,output + "The transaction completed successfully.");
@@ -65,35 +65,35 @@ public class FanUserMenu implements UserMenu  {
         else if(input ==5 ) {
             return new ActionStatus(true ,output + StartSystem.getSc().showSearchHistory());
         }else if(input ==6 ) {
-            output += "choose action: \n1:Edit name \n2:Edit email" + args[1] + "\n";
+            output += "choose action: \n1:Edit name \n2:Edit email\nuser input- " + args[1] + "\n";
             int edit =  Integer.parseInt(args[1]);
             if(edit ==1 ){
-                output += "Write name:" + args[2] +"\n";
+                output += "insert name:\nuser input- " + args[2] +"\n";
                 String name =  args[2];
                 return new ActionStatus(true ,output + StartSystem.getESUDc().editSubscriptionName(DataManagement.getCurrent().getUserName(),name).getDescription());
             }else if(edit==2){
-                output += "Write emil:" + args[2] +"\n";
+                output += "insert emil:\nuser input- " + args[2] +"\n";
                 String name =  args[2];
                 return new ActionStatus(true ,output + StartSystem.getESUDc().editSubscriptionEmail(DataManagement.getCurrent().getUserName(),name).getDescription());
             }else{
-                return new ActionStatus(false ,output + "The digit is invalid.");
+                return new ActionStatus(false ,output + "Invalid choice.");
             }
         }
         else if(input==7) {
-            output += "Write Search word: " + args[1] + "\n";
+            output += "insert Search word:\nuser input- " + args[1] + "\n";
             String word = args[1];
             return new ActionStatus(true, output + StartSystem.getSc().findData(word));
         }
         else if(input ==8){
-            output += "insert User name: " + args[1] +"\n";
+            output += "insert User name:\nuser input-  " + args[1] +"\n";
             String username =   args[1];
-            output += "insert password: " + args[2] +"\n";
+            output += "insert password:\nuser input-  " + args[2] +"\n";
             String password =  args[2];
             ActionStatus ac = StartSystem.LEc.Exit(username,password);
             return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
         }
         else{
-            return new ActionStatus(false,output + "invalid choice");
+            return new ActionStatus(false,output + "Invalid choice");
         }
         return new ActionStatus(false,output);
     }
