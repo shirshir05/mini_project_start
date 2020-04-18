@@ -77,6 +77,8 @@ public class mainTest {
         system.cleanSystem();
         test(DataManagementTest.class);
 
+        System.out.println("---------------------------------------------------------------");
+
         System.out.println("Total number of tests: "+testCounter);
         System.out.println("Total number of failed tests: "+failedTests);
 
