@@ -15,7 +15,6 @@ import java.util.Observable;
 
 public class TeamController {
 
-    public TeamController(){}
 
     /**
      * @param arg_name
