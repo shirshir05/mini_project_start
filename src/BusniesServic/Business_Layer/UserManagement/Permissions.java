@@ -2,6 +2,7 @@ package BusniesServic.Business_Layer.UserManagement;
 
 import BusniesServic.Enum.PermissionAction;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class Permissions {
@@ -92,6 +93,15 @@ public class Permissions {
     public void copyPermissions(Permissions permissions){
         for(PermissionAction pa : permissions.list_Permissions){
             this.add_permissions(pa);
+        }
+    }
+
+    public static PermissionAction getPermissionActionFromString(String str){
+        if(! (Arrays.stream(PermissionAction.values()).anyMatch(e -> e.name().equals(str)))){
+            return null;
+        }else{
+            PermissionAction permission =  PermissionAction.valueOf(str);
+            return permission;
         }
     }
 
