@@ -8,6 +8,7 @@ import BusniesServic.Enum.EventType;
 import BusniesServic.Enum.PermissionAction;
 import DB_Layer.logger;
 import Presentation_Layer.Spelling;
+import Presentation_Layer.StartSystem;
 
 import javax.xml.crypto.Data;
 import java.time.LocalDate;
@@ -106,28 +107,25 @@ public class GameSettingsController {
      * @param add_or_remove is 0 to add and 1 to remove
      * @return true if the operation succeeded
      */
-    public boolean addOrDeleteRefereeToSystem(String referee_user_name, String referee_password, String mail, int add_or_remove){
-        boolean ans = false;
+    public ActionStatus addOrDeleteRefereeToSystem(String referee_user_name, String referee_password, String mail, int add_or_remove){
+        ActionStatus ac = null;
         if (DataManagement.getCurrent() instanceof UnionRepresentative) {
             if (referee_user_name != null && referee_password != null) {
                 Subscription current_referee = DataManagement.containSubscription(referee_user_name);
                 if (add_or_remove == 0 && current_referee != null) {
-                    Referee current = new Referee(referee_user_name, referee_password, mail);
+                    ac = StartSystem.LEc.Registration(referee_user_name, referee_password,"Referee", mail);
                     String mail_content= "Hello! you were invited to our system! your username: "+referee_user_name+" and you password: "+referee_password;
-                    DataManagement.getCurrent().sendEMail(mail,mail_content);
-                    DataManagement.setSubscription(current);
-                    ans = true;
-                    Spelling.updateDictionary("user: " + referee_user_name);
+                    DataManagement.getSubscription(referee_user_name).sendEMail(mail,mail_content);
+                    Spelling.updateDictionary("referee: " + referee_user_name);
                 } else if (add_or_remove == 1) {
                     if (current_referee != null) {
-                        Spelling.updateDictionary("referee: " + referee_user_name);
-                        ans =  true;
+                        ac = StartSystem.LEc.RemoveSubscription(referee_user_name);
                     }
                 }
             }
         }
-        logger.log("Settings controller: addOrDeleteRefereeToSystem, referee name: "+ referee_user_name +" ,add or remove: "+add_or_remove +" ,successful: "+ ans);
-        return ans;
+        logger.log("Settings controller: addOrDeleteRefereeToSystem, referee name: "+ referee_user_name +" ,add or remove: "+add_or_remove +" ,successful: "+ ac.isActionSuccessful() +", "+ ac.getDescription());
+        return ac;
     }
 
     /**
@@ -137,19 +135,25 @@ public class GameSettingsController {
      * @param season_year
      * @return
      */
-    public boolean defineRefereeInLeague(String league_name, String referee_user_name, String season_year) {
-        boolean ans = false;
+    public ActionStatus defineRefereeInLeague(String league_name, String referee_user_name, String season_year) {
+        ActionStatus ac = null;
         League league = DataManagement.findLeague(league_name);
         Subscription referee = DataManagement.containSubscription(referee_user_name);
         if (league != null && referee!=null && referee instanceof Referee) {
             Season season = league.getSeason(season_year);
             if (season!=null){
                 season.addReferee((Referee)referee);
-                ans = true;
+                ac = new ActionStatus(true, "set successfully");
+            }
+            else{
+                ac = new ActionStatus(false, "season not exists");
             }
         }
-        logger.log("Settings controller: defineRefereeInLeauge, leauge name: "+ league_name +" ,referee name: "+referee_user_name+" ,season: "+season_year +" ,successful: "+ ans);
-        return ans;
+        else{
+            ac = new ActionStatus(false, "league or referee user not exists");
+        }
+        logger.log("Settings controller: defineRefereeInLeauge, leauge name: "+ league_name +" ,referee name: "+referee_user_name+" ,season: "+season_year +" ,successful: "+ ac.isActionSuccessful() +" , "+ac.getDescription());
+        return ac;
     }
 
 
@@ -334,7 +338,6 @@ public class GameSettingsController {
     }
 
 
-    //TODO - test function(michal)
     public EventType getEventFromString(String str){
         if(! (Arrays.stream(EventType.values()).anyMatch(e -> e.name().equals(str)))){
             return null;

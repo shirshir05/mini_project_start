@@ -59,7 +59,7 @@ public class FanUserMenu implements UserMenu  {
         else if(input ==5 ) {
             return new ActionStatus(true ,output + StartSystem.getSc().showSearchHistory());
         }else if(input ==6 ) {
-            output += "choose action: \n1:Edit name \n2:Edit email\n \nuser input- " + args[1] + "\n";
+            output += "choose action: \n1:Edit name \n2:Edit email \nuser input- " + args[1] + "\n";
             int edit =  Integer.parseInt(args[1]);
             if(edit ==1 ){
                 output += "insert name: \nuser input- " + args[2] +"\n";
