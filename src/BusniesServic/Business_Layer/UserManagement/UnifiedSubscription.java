@@ -28,15 +28,26 @@ public class UnifiedSubscription extends Subscription implements Observer {
 
     //region Role Setter
 
-    public void setRole(Object role){
-        if(role instanceof Player)
+    public void setRole(Subscription role){
+        boolean correctRole = false;
+        if(role instanceof Player) {
             player = (Player) role;
-        if(role instanceof Coach)
+            correctRole = true;
+        }
+        else if(role instanceof Coach) {
             coach = (Coach) role;
-        if(role instanceof TeamManager)
+            correctRole = true;
+        }
+        else if(role instanceof TeamManager) {
             teamManager = (TeamManager) role;
-        if(role instanceof TeamOwner)
+            correctRole = true;
+        }
+        else if(role instanceof TeamOwner) {
             teamOwner = (TeamOwner) role;
+            correctRole = true;
+        }
+        if(correctRole)
+            getPermissions().copyPermissions(role.getPermissions());
     }
 
     //endregion

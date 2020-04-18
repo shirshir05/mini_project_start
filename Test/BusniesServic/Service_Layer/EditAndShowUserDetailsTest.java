@@ -2,18 +2,13 @@ package BusniesServic.Service_Layer;
 
 import BusniesServic.Business_Layer.Game.ScoreTable;
 import BusniesServic.Business_Layer.TeamManagement.Team;
-import BusniesServic.Business_Layer.Trace.PersonalPage;
-import BusniesServic.Business_Layer.Trace.PlayerPersonalPage;
-import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Enum.PermissionAction;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import javax.xml.crypto.Data;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
@@ -501,7 +496,7 @@ public class EditAndShowUserDetailsTest {
             registerPlayerAndCoach();
             registerTeam();
             loginUser(editingUserName);
-            assertEquals(controller.addPermissions(userToAddPermissionsTo).isActionSuccessful(),result);
+            assertEquals(controller.addPermissionsToCurrentUserPersonalPage(userToAddPermissionsTo).isActionSuccessful(),result);
         }
 
     }//addPermissions
