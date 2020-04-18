@@ -230,7 +230,7 @@ public class TeamController {
             }
         }
 
-        logger.log("Add Or Remove Team Owner to Team: "+name_team+"-"+AC.getDescription());
+        //logger.log("Add Or Remove Team Owner to Team: "+name_team+"-"+AC.getDescription());
         return AC;
     }
 

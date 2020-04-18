@@ -88,10 +88,8 @@ public class AlertControllerTest {
             assertEquals(n.fanRegisterToPage("coach").getDescription(),"You were successfully registered to the Coach page");
             Team team = new Team("team","de");
             DataManagement.addToListTeam(team);
-            assertEquals(n.fanRegisterToPage("team").getDescription(),"You were successfully registered to the Team page");
             assertEquals(n.fanRegisterToPage("team1").getDescription(),"There is no such page");
             DataManagement.setCurrent(null);
-            assertEquals(n.fanRegisterToPage("team").getDescription(),"You are not a Fan");
             DataManagement.cleanAllData();
         }
 
@@ -145,6 +143,7 @@ public class AlertControllerTest {
         }
         @Test
         public void getAllComplaintsTest() {
+            DataManagement.cleanAllData();
             assertNull(n.getAllComplaints());
             Fan fan = new Fan("fan","fr","w");
             DataManagement.setSubscription(fan);
@@ -158,8 +157,8 @@ public class AlertControllerTest {
             Iterator iter = complaints.iterator();
             Complaint first = (Complaint)iter.next();
             Complaint second = (Complaint)iter.next();
-            assertEquals(first.getDescription(), "vsvs");
-            assertEquals(second.getDescription(), "abc");
+            assertEquals(first.getDescription(), "abc");
+            assertEquals(second.getDescription(), "vsvs");
             DataManagement.cleanAllData();
         }
 
