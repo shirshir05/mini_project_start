@@ -18,6 +18,9 @@ public class PlayerPersonalPageTest {
 
     //region Date
 
+    /**
+     * Test -PP1
+     */
     @RunWith(Parameterized.class)
     public static class DateOfBirthTest {
 
@@ -54,6 +57,10 @@ public class PlayerPersonalPageTest {
     //endregion
 
     //region Country City and Position
+
+    /**
+     * Test -PP2
+     */
 
     @RunWith(Parameterized.class)
     public static class PositionAndCountryAndCityOfBirth {
@@ -99,6 +106,10 @@ public class PlayerPersonalPageTest {
 
     //region Height weight and jersey
 
+    /**
+     * Test -PP3
+     */
+
     @RunWith(Parameterized.class)
     public static class HeightWeightJersey{
 
@@ -143,6 +154,9 @@ public class PlayerPersonalPageTest {
 
     //region statistics
 
+    /**
+     * Test -PP4
+     */
     @RunWith(Parameterized.class)
     public static class Statistics {
 
@@ -173,4 +187,44 @@ public class PlayerPersonalPageTest {
     }
 
     //endregion
+
+    /**
+     * Test -PP5
+     */
+    @RunWith(Parameterized.class)
+    public static class equalsTest {
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {}
+            });
+        }
+
+        public equalsTest() {
+        }
+
+        @Test
+        public void equalsTest1() {
+            PlayerPersonalPage page = new PlayerPersonalPage("player");
+            page.setCountryOfBirth("Israel");
+            Calendar calendar = Calendar.getInstance();
+            page.setDateOfBirth(calendar.getTime());
+            page.setCityOfBirth("Rishon");
+            page.setHeight(1.80);
+            page.setJerseyNumber(1);
+            page.setPosition("Goal Keeper");
+            page.setWeight(80);
+            assertEquals(page.toString(),"The Player: " + "player" +"\n" +
+                    "date of Birth: " + calendar.getTime() + "\n" +
+                    "country of Birth:" + "Israel" + "\n"+
+                    "city of birth:" + "Rishon" +"\n" +
+                    "height:" + 1.80 + "\n" +
+                    "weight:" + 80.0 + "\n" +
+                    "position:" + "Goal Keeper" + "\n" +
+                    "jerseyNumber:" + 1 + "\n" +
+                    "statistic: " + "\n"+ "FootBallStatistic{goals=0shots=0gameMinutes=0substitutions=0penalties=0redCards=0assists=0starts=0fouls=0yellowCards=0doubleYellowCards=0");
+        }
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package BusniesServic.Business_Layer.Trace;
 
+
 public class FootballPlayerStatistic { //current/yearly statistic consider also all time statistic
 
     private int goals;
