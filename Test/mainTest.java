@@ -84,7 +84,7 @@ public class mainTest {
         test(TeamScore.class);
         test(PointsPolicy.class);
         test(ScoreTable.class);
-        
+
 
         System.out.println("---------------------------------------------------------------");
 
