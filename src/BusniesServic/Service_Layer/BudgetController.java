@@ -166,7 +166,6 @@ public class BudgetController {
         }
         return new ActionStatus(true, UPDATE_SUCCESSFUL);
     }
-    //TODO - check if current is the manager or owner of the team in those 3 func's
     public static ActionStatus addExpenseToTeam(String teamName, double expense, Expense description){
         if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Team_financial))
             return new ActionStatus(false, NOT_ALLOWED_TO_PERFORM_ACTIONS_ON_BUDGET);
@@ -175,6 +174,9 @@ public class BudgetController {
         Team team = DataManagement.findTeam(teamName);
         if(team == null)
             return new ActionStatus(false, "Team not found");
+        if(!team.checkIfObjectInTeam(DataManagement.getCurrent())){
+            return new ActionStatus(false, "You do not belong to the team.");
+        }
         return team.addExpense(expense, description);
     }
 
@@ -186,6 +188,9 @@ public class BudgetController {
         Team team = DataManagement.findTeam(teamName);
         if(team == null)
             return new ActionStatus(false, "Team not found");
+        if(!team.checkIfObjectInTeam(DataManagement.getCurrent())){
+            return new ActionStatus(false, "You do not belong to the team.");
+        }
         return team.addIncome(income, description);
     }
 
@@ -193,8 +198,12 @@ public class BudgetController {
         if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Team_financial))
             return -1;
         Team team = DataManagement.findTeam(teamName);
-        if(team != null)
+        if(team != null){
+            if(!team.checkIfObjectInTeam(DataManagement.getCurrent())){
+                return -1;
+            }
             return team.getCurrentAmountInBudget();
+        }
         return -1;
     }
 
