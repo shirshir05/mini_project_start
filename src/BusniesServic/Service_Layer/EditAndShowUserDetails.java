@@ -10,6 +10,7 @@ import BusniesServic.Business_Layer.TeamManagement.Team;
 import BusniesServic.Enum.PermissionAction;
 import DB_Layer.logger;
 
+import java.security.Permission;
 import java.util.Date;
 
 public class EditAndShowUserDetails {
@@ -39,6 +40,25 @@ public class EditAndShowUserDetails {
             return team.getPersonalPage();
         }
         return null;
+    }
+
+    public ActionStatus addPermissionToTeamManager(String team_manager_user_name,String permission){
+        ActionStatus ac = null;
+        if(DataManagement.getCurrent().permissions.check_permissions(PermissionAction.Appointment_of_team_manager)){
+            Subscription manager = DataManagement.getSubscription(team_manager_user_name);
+            PermissionAction perm = DataManagement.getCurrent().permissions.getPermissionActionFromString(permission);
+            if(manager!=null && perm!=null){
+                manager.getPermissions().add_permissions(perm);
+                ac = new ActionStatus(true,"permission added successfully");
+            }
+            else{
+                ac = new ActionStatus(false,"user mane or permission action invalid");
+            }
+        }
+        else{
+            ac = new ActionStatus(false,"you don't have permission for this action");
+        }
+        return ac;
     }
 
     public ActionStatus watchPersonalDetails(String user_name) {
