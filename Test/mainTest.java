@@ -26,6 +26,7 @@ public class mainTest {
         Game.game_id = 0;
 
 
+        
 
 
         //BudgetManagement
@@ -84,7 +85,8 @@ public class mainTest {
         test(FootballTeamStatisticTest.class);
         test(TeamScore.class);
         test(PointsPolicy.class);
-
+        test(ScoreTable.class);
+        
 
         System.out.println("---------------------------------------------------------------");
 
