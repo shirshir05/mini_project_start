@@ -24,3 +24,6 @@ Referee,refThree,123456,a@g.com
 Guest,Guest,123456,Guestmail@mail.com
 TeamOwner,teamNew,123456,a@g.com
 TeamManager,teamManagerNew,123456,a@g.com
+SystemAdministrator,SysAdmin,securePassWord,admin@mail.com
+UnionRepresentative,uni,uniuni,uni@uni.uni
+Fan,del,123456,del@post.bgu.ac.il
