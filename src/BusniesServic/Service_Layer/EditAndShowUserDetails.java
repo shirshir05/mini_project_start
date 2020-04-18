@@ -2,7 +2,6 @@ package BusniesServic.Service_Layer;
 
 import BusniesServic.Business_Layer.Trace.CoachPersonalPage;
 import BusniesServic.Business_Layer.Trace.PersonalPage;
-import BusniesServic.Business_Layer.Trace.PersonalPage;
 import BusniesServic.Business_Layer.Trace.PlayerPersonalPage;
 import BusniesServic.Business_Layer.UserManagement.*;
 import BusniesServic.Enum.ActionStatus;
@@ -10,10 +9,7 @@ import BusniesServic.Business_Layer.Game.ScoreTable;
 import BusniesServic.Business_Layer.TeamManagement.Team;
 import BusniesServic.Enum.PermissionAction;
 import DB_Layer.logger;
-import org.omg.CORBA.CODESET_INCOMPATIBLE;
 
-import javax.xml.crypto.Data;
-import java.time.LocalDate;
 import java.util.Date;
 
 public class EditAndShowUserDetails {
