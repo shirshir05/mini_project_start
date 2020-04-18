@@ -27,39 +27,40 @@ public class FanMenuTest {
         String number;
         String arg1;
         String arg2;
+        boolean ans;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
                     //3.1 Logout
-                    {"1","shir","1"},// =>password incorrect
-                    {"1","shir","12345"} ,// =>Exit
+                    {"1","shir","1",false},// =>
+                    {"1","shir","12345",true} ,// =>Exit
                     // 3.2 registration for tracking personal pages
-                    {"2","noam",null}, // =>There is no such page
-                    {"2","cUser",null},// =>You were successfully registered to the Team page
+                    {"2","noam",null,false}, // =>There is no such page
+                    {"2","cUser",null,true},// =>You were successfully registered to the Team page
                     //(3.3) Games alert notification
-                    {"3","80",null}, //=>There is no such game in the system
-                    {"3","1",null}, //=>You were registered successfully to the game alerts
+                    {"3","80",null,false}, //=>There is no such game in the system
+                    {"3","1",null,true}, //=>You were registered successfully to the game alerts
                     //(3.4) Insert a complaint
-                    {"4","I can't change my username on the system",null}, //=>Complaint added successfully
-                    {"4","",null}, //=>Complaint cannot be empty
+                    {"4","I can't change my username on the system",null,true}, //=>Complaint added successfully
+                    {"4","",null,false}, //=>Complaint cannot be empty
                     //(3.5) Viewing Search History
-                    {"5",null,null}, //=>no History
+                    {"5",null,null,true}, //=>no History
                     //(3.5) Search
-                    {"7","fa",null}, //=>
+                    {"7","fa",null,true}, //=>
                     //(3.5) Viewing Search History
-                    {"5",null,null}, //=>have History
+                    {"5",null,null,true}, //=>have History
                     //(3.6) Edit personal information
-                    {"6","1","shir cohen"}, //=>The name of the Subscription was successfully changed!
-                    {"6","2","shir0@"}, //=>The new email is not legal
-
+                    {"6","1","shir cohen",true}, //=>The name of the Subscription was successfully changed!
+                    {"6","2","shir0@",false}, //=>The new email is not legal
             });
         }
 
-        public FanTest(String number, String arg1, String arg2){
+        public FanTest(String number, String arg1, String arg2,boolean ans){
             this.number = number;
             this.arg1 = arg1;
             this.arg2 = arg2;
+            this.ans = ans;
         }
 
         @Test
@@ -75,8 +76,6 @@ public class FanMenuTest {
             ActionStatus ac =  FM.presentUserMenu(new String[]{number,arg1,arg2});
 
             System.out.print(ac.isActionSuccessful() + " " +ac.getDescription());
-
-
 
         }
     }

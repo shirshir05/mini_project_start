@@ -98,6 +98,7 @@ public class TeamController {
         }
         else{
             Team new_team = new Team(arg_name, arg_field);
+            new_team.getPersonalPage().addPermissionToEdit(DataManagement.getCurrent().getUserName());
             new_team.changeStatus(2);
             DataManagement.addToListTeam((new_team));
             //add the union representatives to the observers of the budget of the team:
@@ -219,8 +220,15 @@ public class TeamController {
             Subscription teamOwner = DataManagement.containSubscription(TeamOwner);
             Team team = DataManagement.findTeam(name_team);
             Subscription appointed = ((BusniesServic.Business_Layer.UserManagement.TeamOwner) teamOwner).getAppointedByTeamOwner();
-            ((BusniesServic.Business_Layer.UserManagement.TeamOwner) teamOwner).setAppointedByTeamOwner(null);
-            AC = team.EditTeamOwner((BusniesServic.Business_Layer.UserManagement.TeamOwner) teamOwner, add_or_remove);
+            if (appointed != null && DataManagement.containSubscription(appointed.getUserName()) != null) {
+                // The person responsible for appointing the team is still in the system
+                if (appointed != DataManagement.getCurrent()) {
+                    AC = new ActionStatus(false, "You do not appoint the team owner and therefore cannot remove them from the team");
+                }
+            }else{
+                ((BusniesServic.Business_Layer.UserManagement.TeamOwner) teamOwner).setAppointedByTeamOwner(null);
+                AC = team.EditTeamOwner((BusniesServic.Business_Layer.UserManagement.TeamOwner) teamOwner, add_or_remove);
+            }
         }
 
         logger.log("Add Or Remove Team Owner to Team: "+name_team+"-"+AC.getDescription());
@@ -262,8 +270,16 @@ public class TeamController {
             Subscription teamManager =DataManagement.containSubscription(TeamManager);
             Team team =DataManagement.findTeam(name_team);
             Subscription appointed = ((TeamManager) teamManager).getAppointedByTeamOwner();
-            ((TeamManager) teamManager).setAppointedByTeamOwner(null);
-            AC = team.EditTeamManager((TeamManager) teamManager, add_or_remove);
+            if (appointed != null && DataManagement.containSubscription(appointed.getUserName()) != null) {
+                // The person responsible for appointing the team is still in the system
+                if (appointed != DataManagement.getCurrent()) {
+                    AC = new ActionStatus(false, "You do not appoint the team owner and therefore cannot remove them from the team");
+                }
+
+            }else{
+                ((TeamManager) teamManager).setAppointedByTeamOwner(null);
+                AC = team.EditTeamManager((TeamManager) teamManager, add_or_remove);
+            }
         }
         logger.log("Add Or Remove Team Manager to Team: "+name_team+"-"+AC.getDescription());
         return AC;

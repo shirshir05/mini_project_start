@@ -12,6 +12,7 @@ import BusniesServic.Enum.PermissionAction;
 import DB_Layer.logger;
 import org.omg.CORBA.CODESET_INCOMPATIBLE;
 
+import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -363,6 +364,27 @@ public class EditAndShowUserDetails {
             else {
                 AC = new ActionStatus(false, "You do not have a personal page.");
             }
+        }
+        else{
+            AC = new ActionStatus(false,"You are not allowed to edit this personal page");
+        }
+        logger.log("added permissions to personal page of: "+ DataManagement.getCurrent().getUserName()+" to "+addPermissionsToThisUser+" "+ AC.getDescription());
+        return AC;
+    }
+
+    public ActionStatus addPermissionsToTeamPersonalPage(String addPermissionsToThisUser, String teamName) {
+        ActionStatus AC;
+        Team team = DataManagement.findTeam(teamName);
+        if(team == null){
+            AC = new ActionStatus(false, "Cannot find team");
+        }
+        else if(addPermissionsToThisUser == null || DataManagement.containSubscription(addPermissionsToThisUser) == null){
+            AC = new ActionStatus(false,"Invalid username.");
+        }
+        else if (DataManagement.getCurrent().permissions.check_permissions(PermissionAction.personal_page)
+                && team.getPersonalPage().chackperrmissiontoedit(DataManagement.getCurrent().getUserName())) {
+            team.getPersonalPage().addPermissionToEdit(addPermissionsToThisUser);
+            AC = new ActionStatus(true, "Permissions successfully added.");
         }
         else{
             AC = new ActionStatus(false,"You are not allowed to edit this personal page");

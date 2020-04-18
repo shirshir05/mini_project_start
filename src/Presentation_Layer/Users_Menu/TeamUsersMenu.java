@@ -7,7 +7,7 @@ import Presentation_Layer.UserCLI;
 
 public class TeamUsersMenu implements UserMenu {
 
-    private String teamMenu = "choose action: \n1:(6.1) update asset";
+    private String teamMenu = "choose action: \n1:(6.1,6.2,6.3,6.4,6.5) update asset \n2:(6.6) change status \n";
 
     @Override
     public ActionStatus presentUserMenu() {
@@ -20,9 +20,8 @@ public class TeamUsersMenu implements UserMenu {
         output += teamMenu + " " + args[0] + "\n";
         int input = Integer.parseInt(args[0]);
         if(input == 1) {
-            //edit personal info - get edit items choice by the type of subscription.
-            output += "\nchoose action: \n1:(6.1) update player \n2:(6.1) update coach \nn3:(6.1) update filed \n4:(6.1) update team owner\n" +
-                    "5:(6.1) update team manager \nuser input- " + args[1] +"\n";
+            output += "\nchoose action: \n1:(6.1) update player \n2:(6.1) update coach \nn3:(6.1) update filed \n4:(6.1,6.2,6.3) update team owner\n" +
+                    "5:(6.1,6.4,6.5) update team manager \nuser input- " + args[1] +"\n";
             int edit =  Integer.parseInt(args[1]);
             if(edit == 1){
                 output += "insert name team: \nuser input- " + args[2] +"\n";
@@ -33,37 +32,54 @@ public class TeamUsersMenu implements UserMenu {
                 int addOrRemove  =  Integer.parseInt(args[4]);
                 ActionStatus ac = StartSystem.getTc().AddOrRemovePlayer(nameTeam,namePlayer,addOrRemove);
                 return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
+            }else if(edit == 2){
+                output += "insert name team: \nuser input- " + args[2] +"\n";
+                String nameTeam  =  args[2];
+                output += "insert user name coach: \nuser input- " + args[3] +"\n";
+                String nameCoach =  args[3];
+                output += "insert 1 to add or 0 to remove: \nuser input- " + args[4] +"\n";
+                int addOrRemove  =  Integer.parseInt(args[4]);
+                ActionStatus ac = StartSystem.getTc().AddOrRemoveCoach(nameTeam,nameCoach,addOrRemove);
+                return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
+            } else if(edit == 3){
+                output += "insert name team: \nuser input- " + args[2] +"\n";
+                String nameTeam  =  args[2];
+                output += "insert user name filed: \nuser input- " + args[3] +"\n";
+                String nameFiled =  args[3];
+                output += "insert 1 to add or 0 to remove: \nuser input- " + args[4] +"\n";
+                int addOrRemove  =  Integer.parseInt(args[4]);
+                ActionStatus ac = StartSystem.getTc().AddOrRemoveTeamsAssets(nameTeam,nameFiled,addOrRemove);
+                return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
+            }else if(edit == 4){
+                output += "insert name team: \nuser input- " + args[2] +"\n";
+                String nameTeam  =  args[2];
+                output += "insert user name team owner: \nuser input- " + args[3] +"\n";
+                String nameTeamOwner =  args[3];
+                output += "insert 1 to add or 0 to remove: \nuser input- " + args[4] +"\n";
+                int addOrRemove  =  Integer.parseInt(args[4]);
+                ActionStatus ac = StartSystem.getTc().AddOrRemoveTeamOwner(nameTeam,nameTeamOwner,addOrRemove);
+                return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
+            }else if(edit == 5){
+                output += "insert name team: \nuser input- " + args[2] +"\n";
+                String nameTeam  =  args[2];
+                output += "insert user name team owner: \nuser input- " + args[3] +"\n";
+                String nameTeamManager =  args[3];
+                output += "insert 1 to add or 0 to remove: \nuser input- " + args[4] +"\n";
+                int addOrRemove  =  Integer.parseInt(args[4]);
+                ActionStatus ac = StartSystem.getTc().AddOrRemoveTeamManager(nameTeam,nameTeamManager,addOrRemove);
+                return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
             }
-
         }
-        else if(input == 2) {
-            //upload info to page
-
-        }
-        else if(input == 3) {
-            //chose type of asset in the team, set or remove(player,coach,manager,owner,files) or update info.
-
-        }
-        else if(input == 4) {
-            //close or open team
-
-        }
-        else if(input == 5) {
-            //manage finance
-
-        } else if (input == 6) {
-            //Exit
-            output += "insert User name: " + args[1] +"\n";
-            String username =   args[1];
-            output += "insert password: " + args[2] +"\n";
-            String password =  args[2];
-            ActionStatus ac = StartSystem.LEc.Exit(username,password);
+        if(input == 2) {
+            output += "insert status: 1- open, 0 -close:  \nuser input- " + args[1] +"\n";
+            int status  =  Integer.parseInt(args[1]);
+            output += "insert team name: \nuser input- " + args[2] +"\n";
+            String teamName  =  args[2];
+            ActionStatus ac = StartSystem.getTc().ChangeStatusTeam(teamName,status);
             return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
-
         } else {
             return new ActionStatus(false, output + "invalid choice\n");
         }
-        return new ActionStatus(false, output);
     }
 
 }

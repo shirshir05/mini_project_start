@@ -5,12 +5,15 @@ import BusniesServic.Service_Layer.DataManagement;
 import Presentation_Layer.StartSystem;
 import Presentation_Layer.Users_Menu.FanUserMenu;
 import Presentation_Layer.Users_Menu.TeamUsersMenu;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
+
+import static org.junit.Assert.assertEquals;
 
 public class TeamUsersMenuTest {
     /**
@@ -24,37 +27,59 @@ public class TeamUsersMenuTest {
         String arg2;
         String arg3;
         String arg4;
+        boolean ans;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
                     //(6.1) update asset
                     //(6.1) update player
-                    {"1","1","t","PlayerThree","1"},// =>The Team does not exist in the system.
+                    {"1","1","t","PlayerThree","1",false},// =>The Team does not exist in the system.
+                    {"1","1","teamOne","PlayerThree","1",true},//=>The player was successfully removed from the team.
+                    {"1","1","teamOne","teamCoachTwo","1",false},//=>The username is not defined as a player on the system.
+                    //(6.1) update Coach
+                    {"1","2","teamOne","teamCoachTwo","1",true},//=>The Coach was successfully added to the team.
+                    {"1","2","teamOne","teamCoachTwo","0",true},//=>The Coach was successfully removed from the team.
+                    {"1","2","teamOne","teamCoachTwo","0",false},//=>The Coach is not in the team.
+                    //(6.1) update filed
+                    {"1","3","teamOne","filed1","1",true},//=>The asset was added to the team
+                    {"1","3","teamOne","fil","0",false},//=>The team doesnt contains this asset
+                    //(6.1) update team owner
+                    {"1","4","teamOne","teamCoachTwo","1",false},//=>The username is not defined as a Team Owner on the system.
+                    {"1","4","teamOne","teamOwnerThree","1",false},//=>You are already set as a team owner.
+                    {"1","4","teamOne","teamNew","1",true},//=>The Team Owner was successfully added to the team.
+                    //(6.1) update team manager
+                    {"1","5","teamOne","teamManagerTwo","1",true},//=>The Team Manager was successfully added to the team.
+                    {"1","5","teamOne","teamManagerNew","0",false},//=>The Team Manager is not in the team.
+                    //(6.6) change status
+                    {"2","1","teamOne",null,null,false},//=>The group is already set 1
+                    {"2","0","teamOne",null,null,true},//=>The status of the group has changed successfully.
 
             });
         }
 
-        public TeamTest(String number, String arg1, String arg2, String arg3, String arg4){
+        public TeamTest(String number, String arg1, String arg2, String arg3, String arg4,boolean ans){
             this.number = number;
             this.arg1 = arg1;
             this.arg2 = arg2;
             this.arg3 = arg3;
             this.arg4 = arg4;
+            this.ans = ans;
         }
 
         @Test
         public void TeamTest1() {
-            if(number.equals("1")){
+            if(number.equals("1") && arg1.equals("1")){
                 StartSystem sys = new StartSystem();
                 sys.startFromDB();
             }
-            DataManagement.setCurrent(DataManagement.containSubscription("ortal"));
-            DataManagement.setSubscription(DataManagement.containSubscription("ortal"));
+            DataManagement.setCurrent(DataManagement.containSubscription("teamOwnerOne"));
+            DataManagement.setSubscription(DataManagement.containSubscription("teamOwnerOne"));
 
             TeamUsersMenu FM = new TeamUsersMenu();
             ActionStatus ac =  FM.presentUserMenu(new String[]{number,arg1,arg2,arg3,arg4});
 
+            assertEquals(ac.isActionSuccessful(),ans);
             System.out.print(ac.isActionSuccessful() + " " +ac.getDescription());
 
 

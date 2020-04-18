@@ -8,7 +8,6 @@ Coach,teamCoachOne,123456,a@g.com
 Player,PlayerOne,123456,a@g.com
 Player,PlayerTwo,123456,a@g.com
 TeamOwner,teamOwnerTwo,123456,a@g.com
-TeamOwner,ortal,12345,shir0@post.bgu.ac.il
 TeamManager,teamManagerTwo,123456,a@g.com
 Coach,teamCoachTwo,123456,a@g.com
 Player,PlayerThree,123456,a@g.com
@@ -23,3 +22,5 @@ Referee,refOne,123456,a@g.com
 Referee,refTwo,123456,a@g.com
 Referee,refThree,123456,a@g.com
 Guest,Guest,123456,Guestmail@mail.com
+TeamOwner,teamNew,123456,a@g.com
+TeamManager,teamManagerNew,123456,a@g.com

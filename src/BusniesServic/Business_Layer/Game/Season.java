@@ -1,4 +1,5 @@
 package BusniesServic.Business_Layer.Game;
+import BusniesServic.Business_Layer.TeamManagement.Team;
 import BusniesServic.Business_Layer.UserManagement.Referee;
 
 import java.time.Year;
@@ -9,6 +10,7 @@ public class Season {
     protected HashSet<Referee> list_referee;
     protected HashSet<Game> list_game;
     protected ScoreTable scoreTable;
+    protected HashSet<Team> list_team;
     /**
      * season constructor
      * @param year is the season's year
@@ -16,6 +18,7 @@ public class Season {
     public Season(String year) {
         list_referee = new HashSet<>();
         list_game = new HashSet<>();
+        list_team = new HashSet<>();
         season = year;
     }
 
@@ -104,5 +107,18 @@ public class Season {
 
     public void setScoreTable(ScoreTable scoreTable) {
         this.scoreTable = scoreTable;
+    }
+
+    public void addTeam(Team team){
+        if(team != null)
+            list_team.add(team);
+    }
+
+    public HashSet<Team> getListOfTeams() {
+        return list_team;
+    }
+
+    public HashSet<Referee> getListOfReferees() {
+        return list_referee;
     }
 }

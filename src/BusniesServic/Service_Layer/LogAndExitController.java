@@ -123,15 +123,15 @@ public class LogAndExitController{
         else if(DataManagement.containSubscription(userName) == null){
             AC =  new ActionStatus(false,  "There is no subscription with this username in the system.");
         }
-        else if(!(DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Removing_Subscriptions)))){
+        else if(!(DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Removing_Subscriptions)) || DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.remove_referee)))){
             AC =  new ActionStatus(false,  "You are not authorized to perform this action.");
         }
         else {
-            if(DataManagement.getCurrent().getPermissions().equals(userName)){
+            if(DataManagement.getCurrent().getUserName().equals(userName)){
                 DataManagement.setCurrent(null);
             }
             DataManagement.removeSubscription(userName);
-            AC = new ActionStatus(false, "the transaction completed successfully.");
+            AC = new ActionStatus(true, "the transaction completed successfully.");
         }
         logger.log("Remove Subscription attempt of user : "+userName+" "+AC.getDescription());
         return AC;

@@ -8,6 +8,7 @@ import BusniesServic.Enum.EventType;
 import BusniesServic.Enum.PermissionAction;
 import DB_Layer.logger;
 import Presentation_Layer.Spelling;
+import Presentation_Layer.StartSystem;
 
 import javax.xml.crypto.Data;
 import java.time.LocalDate;
@@ -15,6 +16,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class GameSettingsController {
 
@@ -106,28 +109,25 @@ public class GameSettingsController {
      * @param add_or_remove is 0 to add and 1 to remove
      * @return true if the operation succeeded
      */
-    public boolean addOrDeleteRefereeToSystem(String referee_user_name, String referee_password, String mail, int add_or_remove){
-        boolean ans = false;
+    public ActionStatus addOrDeleteRefereeToSystem(String referee_user_name, String referee_password, String mail, int add_or_remove){
+        ActionStatus ac = null;
         if (DataManagement.getCurrent() instanceof UnionRepresentative) {
             if (referee_user_name != null && referee_password != null) {
                 Subscription current_referee = DataManagement.containSubscription(referee_user_name);
                 if (add_or_remove == 0 && current_referee != null) {
-                    Referee current = new Referee(referee_user_name, referee_password, mail);
+                    ac = StartSystem.LEc.Registration(referee_user_name, referee_password,"Referee", mail);
                     String mail_content= "Hello! you were invited to our system! your username: "+referee_user_name+" and you password: "+referee_password;
-                    DataManagement.getCurrent().sendEMail(mail,mail_content);
-                    DataManagement.setSubscription(current);
-                    ans = true;
-                    Spelling.updateDictionary("user: " + referee_user_name);
+                    DataManagement.getSubscription(referee_user_name).sendEMail(mail,mail_content);
+                    Spelling.updateDictionary("referee: " + referee_user_name);
                 } else if (add_or_remove == 1) {
                     if (current_referee != null) {
-                        Spelling.updateDictionary("referee: " + referee_user_name);
-                        ans =  true;
+                        ac = StartSystem.LEc.RemoveSubscription(referee_user_name);
                     }
                 }
             }
         }
-        logger.log("Settings controller: addOrDeleteRefereeToSystem, referee name: "+ referee_user_name +" ,add or remove: "+add_or_remove +" ,successful: "+ ans);
-        return ans;
+        logger.log("Settings controller: addOrDeleteRefereeToSystem, referee name: "+ referee_user_name +" ,add or remove: "+add_or_remove +" ,successful: "+ ac.isActionSuccessful() +", "+ ac.getDescription());
+        return ac;
     }
 
     /**
@@ -137,19 +137,25 @@ public class GameSettingsController {
      * @param season_year
      * @return
      */
-    public boolean defineRefereeInLeague(String league_name, String referee_user_name, String season_year) {
-        boolean ans = false;
+    public ActionStatus defineRefereeInLeague(String league_name, String referee_user_name, String season_year) {
+        ActionStatus ac = null;
         League league = DataManagement.findLeague(league_name);
         Subscription referee = DataManagement.containSubscription(referee_user_name);
         if (league != null && referee!=null && referee instanceof Referee) {
             Season season = league.getSeason(season_year);
             if (season!=null){
                 season.addReferee((Referee)referee);
-                ans = true;
+                ac = new ActionStatus(true, "set successfully");
+            }
+            else{
+                ac = new ActionStatus(false, "season not exists");
             }
         }
-        logger.log("Settings controller: defineRefereeInLeauge, leauge name: "+ league_name +" ,referee name: "+referee_user_name+" ,season: "+season_year +" ,successful: "+ ans);
-        return ans;
+        else{
+            ac = new ActionStatus(false, "league or referee user not exists");
+        }
+        logger.log("Settings controller: defineRefereeInLeauge, leauge name: "+ league_name +" ,referee name: "+referee_user_name+" ,season: "+season_year +" ,successful: "+ ac.isActionSuccessful() +" , "+ac.getDescription());
+        return ac;
     }
 
 
@@ -173,14 +179,30 @@ public class GameSettingsController {
             AC = new ActionStatus(false, "One of the referees is not defined in the system");
         }
         else{
-            Game g = new Game(field, date, DataManagement.findTeam(host),DataManagement.findTeam(guest));
-            g.setLinesman1Referee((Referee)DataManagement.getSubscription(line1Referee));
-            g.setLinesman2Referee((Referee)DataManagement.getSubscription(line2Referee));
-            g.setHeadReferee((Referee)DataManagement.getSubscription(headReferee));
-            DataManagement.addGame(g);
+            createGameAfterChecks(date, field, host, guest, headReferee, line1Referee, line2Referee);
             AC = new ActionStatus(true, "The game was created successfully");
         }
         return AC;
+    }
+
+    /**
+     * Creates a game after checking all the fields are valid
+     * Cannot receive null or illegal parameters
+     * @param date notnull
+     * @param field notnull
+     * @param host notnull
+     * @param guest notnull
+     * @param headReferee notnull
+     * @param line1Referee notnull
+     * @param line2Referee notnull
+     */
+    private Game createGameAfterChecks(LocalDate date, String field, String host, String guest, String headReferee, String line1Referee, String line2Referee) {
+        Game g = new Game(field, date, DataManagement.findTeam(host),DataManagement.findTeam(guest));
+        g.setLinesman1Referee((Referee)DataManagement.getSubscription(line1Referee));
+        g.setLinesman2Referee((Referee)DataManagement.getSubscription(line2Referee));
+        g.setHeadReferee((Referee)DataManagement.getSubscription(headReferee));
+        DataManagement.addGame(g);
+        return g;
     }
 
 
@@ -337,7 +359,6 @@ public class GameSettingsController {
     }
 
 
-    //TODO - test function(michal)
     public EventType getEventFromString(String str){
         if(! (Arrays.stream(EventType.values()).anyMatch(e -> e.name().equals(str)))){
             return null;
@@ -345,6 +366,90 @@ public class GameSettingsController {
             EventType enumEvent =  EventType.valueOf(str);
             return enumEvent;
         }
+    }
+
+    /**
+     * Allows to add a team to a season in league. Only the union representative can perform this (with the permissions received by default)
+     */
+    public ActionStatus addTeamToSeasonInLeague(String teamName, String leagueName, String seasonName){
+        ActionStatus AC = null;
+        Team team = DataManagement.findTeam(teamName);
+        League league = DataManagement.findLeague(leagueName);
+        if (team == null || league == null){
+            AC = new ActionStatus(false,"Cannot find team or league");
+        }
+        else {
+            Season season = league.getSeason(seasonName);
+            if (season == null) {
+                AC = new ActionStatus(false, "Season does not exist in this league");
+            } else {
+                //check permissions
+                if (DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.add_team_to_season)) {
+                    season.addTeam(team);
+                    AC = new ActionStatus(true,"Team added successfully");
+                } else {
+                    AC = new ActionStatus(false, "You do not have permissions to perform this action");
+                }
+            }
+        }
+        return AC;
+    }
+
+    public void assignGamesInSeason(String seasonName){
+        if(DataManagement.getCurrent() != null && DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.setting_games)) {
+            // ActionStatus AC = null;
+            HashSet<League> allLeagues = DataManagement.getListLeague();
+            for (League league : allLeagues) {
+
+                Season season = league.getSeason(seasonName);
+                if (season != null) {
+                    //the season exists in the league
+                    HashSet<Team> teamsInSeason = season.getListOfTeams();
+                    //assign the games so each team is a host and guest
+                    for (Team host : teamsInSeason) {
+                        for (Team guest : teamsInSeason) {
+                            //a team will not play with itself
+                            if (!host.equals(guest)) {
+
+                                String field = getFieldFromHost(host);
+                                String[] threeReferees = getRefereesFromSeason(season);
+                                if (threeReferees != null && field != null) {
+                                    season.addGame(createGameAfterChecks(getDateForGame(), field, host.getName(), guest.getName(), threeReferees[0], threeReferees[1], threeReferees[2]));
+                                }
+                            } //host != guest
+                        }
+                    } //for: host teams
+                }// season != null
+            }//for: all leagues
+        }
+    }
+
+    private String[] getRefereesFromSeason(Season season) {
+        HashSet<Referee> referees = season.getListOfReferees();
+        if(referees.size() < 3)
+            return null;
+        String [] threeReferees = new String[3];
+        int index = 0;
+        for (Referee r :referees){
+            threeReferees[index] = r.getUserName();
+            index ++;
+            if (index == 2)
+                break;
+        }
+        return threeReferees;
+    }
+
+    private String getFieldFromHost(Team host) {
+        HashSet<Object> fields = host.getTeamAssets();
+        for (Object field : fields) {
+            if (field instanceof String)
+                return (String) field;
+        }
+        return null;
+    }
+
+    private LocalDate getDateForGame() {
+        return LocalDate.now();
     }
 
 }
