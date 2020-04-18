@@ -101,7 +101,7 @@ public class UnionUserMenu implements UserMenu {
             else if(edit == 3){
                 output += "insert referee user name: \nuser input- " + args[2] +"\n";
                 String referee_user_name =  args[2];
-                output += "insert referee password: \nuser input- " + args[3] +"\n";
+                output += "insert leauge name: \nuser input- " + args[3] +"\n";
                 String league_name =  args[3];
                 output += "insert season year: \nuser input- " + args[4] +"\n";
                 String season_year =  args[4];
@@ -111,16 +111,16 @@ public class UnionUserMenu implements UserMenu {
         }
         else if(input == 4) {
             // update score policy (and location in league???)
-            output += "insert league name: \nuser input- " + args[2] +"\n";
-            String league_name =  args[2];
-            output += "insert season year: \nuser input- " + args[3] +"\n";
-            String year =  args[3];
-            output += "insert new win score: \nuser input- " + args[4] +"\n";
-            int win =  Integer.parseInt(args[4]);
-            output += "insert new lose score: \nuser input- " + args[5] +"\n";
-            int lose =  Integer.parseInt(args[5]);
-            output += "insert new equal score: \nuser input- " + args[6] +"\n";
-            int equal =  Integer.parseInt(args[6]);
+            output += "insert league name: \nuser input- " + args[1] +"\n";
+            String league_name =  args[1];
+            output += "insert season year: \nuser input- " + args[2] +"\n";
+            String year =  args[2];
+            output += "insert new win score: \nuser input- " + args[3] +"\n";
+            int win =  Integer.parseInt(args[3]);
+            output += "insert new lose score: \nuser input- " + args[4] +"\n";
+            int lose =  Integer.parseInt(args[4]);
+            output += "insert new equal score: \nuser input- " + args[5] +"\n";
+            int equal =  Integer.parseInt(args[5]);
             ActionStatus ac = StartSystem.GSc.updatePointsPolicy(league_name, year, win,  lose,  equal);
             return new ActionStatus(ac.isActionSuccessful(),output+ac.getDescription());
         }
