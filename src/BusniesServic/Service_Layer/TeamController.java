@@ -98,6 +98,7 @@ public class TeamController {
         }
         else{
             Team new_team = new Team(arg_name, arg_field);
+            new_team.getPersonalPage().addPermissionToEdit(DataManagement.getCurrent().getUserName());
             new_team.changeStatus(2);
             DataManagement.addToListTeam((new_team));
             //add the union representatives to the observers of the budget of the team:
@@ -254,7 +255,6 @@ public class TeamController {
             else{
                 ((TeamManager) teamManager).setAppointedByTeamOwner(DataManagement.getCurrent());
                 AC = team.EditTeamManager((TeamManager) teamManager, add_or_remove);
-
             }
 
         }

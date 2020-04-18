@@ -45,11 +45,8 @@ public class RefereeMenuTest {
             String[] args = new String[20];
             //add strings to args!!!!!!
 
-
             ActionStatus ac = RM.presentUserMenu(args);
             System.out.println(ac.isActionSuccessful() + " " +ac.getDescription());
-
-
         }
     }
 }
