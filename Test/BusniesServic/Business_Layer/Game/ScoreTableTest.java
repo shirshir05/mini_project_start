@@ -21,6 +21,7 @@ public class ScoreTableTest {
     /**
      * Test - ST1
      */
+    @RunWith(Parameterized.class)
     public static class ScoreTable1 {
         private ScoreTable scoreTable;
         String ans;
@@ -50,17 +51,21 @@ public class ScoreTableTest {
     /**
      * Test - ST2
      */
+    @RunWith(Parameterized.class)
     public static class ScoreTable2 {
         private ScoreTable scoreTable;
+
+        String ans;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {}
+                    {null}
             });
         }
 
-        public ScoreTable2() {
+        public ScoreTable2(String ans) {
+            this.ans =ans;
         }
 
 
@@ -86,19 +91,21 @@ public class ScoreTableTest {
     /**
      * Test - ST3
      */
+    @RunWith(Parameterized.class)
     public static class ScoreTable3 {
         private ScoreTable scoreTable;
+        String ans;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {}
+                    {null}
             });
         }
 
-        public ScoreTable3() {
+        public ScoreTable3(String ans) {
+            this.ans =ans;
         }
-
 
         @Test
         public void testSetTeams() {
@@ -117,17 +124,20 @@ public class ScoreTableTest {
     /**
      * Test - ST4
      */
+    @RunWith(Parameterized.class)
     public static class ScoreTable4 {
         private ScoreTable scoreTable;
+        String ans;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {}
+                    {null}
             });
         }
 
-        public ScoreTable4() {
+        public ScoreTable4(String ans) {
+            this.ans =ans;
         }
 
 
@@ -158,17 +168,21 @@ public class ScoreTableTest {
     /**
      * Test - ST5
      */
+    @RunWith(Parameterized.class)
     public static class ScoreTable5 {
         private ScoreTable scoreTable;
+
+        String ans;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {}
+                    {null}
             });
         }
 
-        public ScoreTable5() {
+        public ScoreTable5(String ans) {
+            this.ans =ans;
         }
 
 
@@ -193,17 +207,20 @@ public class ScoreTableTest {
     /**
      * Test - ST6
      */
+    @RunWith(Parameterized.class)
     public static class ScoreTable6 {
         private ScoreTable scoreTable;
+        String ans;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {}
+                    {null}
             });
         }
 
-        public ScoreTable6() {
+        public ScoreTable6(String ans) {
+            this.ans =ans;
         }
 
 

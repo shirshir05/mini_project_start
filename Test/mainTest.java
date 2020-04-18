@@ -3,6 +3,7 @@ import BusniesServic.Business_Layer.BudgetManagement.TeamBudgetTest;
 import BusniesServic.Business_Layer.BudgetManagement.UnionBudgetTest;
 import BusniesServic.Business_Layer.Game.*;
 import BusniesServic.Business_Layer.TeamManagement.TeamScore;
+import BusniesServic.Business_Layer.TeamManagement.TeamScoreTest;
 import BusniesServic.Business_Layer.TeamManagement.TeamTest;
 import BusniesServic.Business_Layer.Trace.*;
 import BusniesServic.Business_Layer.UserManagement.*;
@@ -19,35 +20,27 @@ public class mainTest {
     static int failedTests = 0;
 
     public static void main(String[] args) throws InterruptedException {
-        test(ScoreTable.class);
+        test(ScoreTableTest.class);
         test(AlertControllerTest.class);
         test(TeamOwnerTest.class);
         Thread.sleep(1000);
         Game.game_id = 0;
-
-
         //BudgetManagement
         test(BudgetRegulationsTest.class);
         test(TeamBudgetTest.class);
         test(UnionBudgetTest.class);
-
         //Game
         test(EventTest.class);
         Game.game_id = 0;
-
         test(GameTest.class);
         Game.game_id = 0;
-
         test(LeagueTest.class);
         test(SeasonTest.class);
-
         //Team Management
         test(TeamTest.class);
-
         //Trace
         test(CoachPersonalPageTest.class);
         test(PlayerPersonalPageTest.class);
-
         //User Management
         test(CoachTest.class);
         test(ComplaintTest.class);
@@ -59,12 +52,9 @@ public class mainTest {
         test(SubscriptionTest.class);
         test(SystemAdministratorTest.class);
         test(TeamManagerTest.class);
-
         test(UnionRepresentativeTest.class);
-
         //Service Layer
         test(BudgetControllerTest.class);
-
         test(EditAndShowUserDetailsTest.class);
         test(GameSettingsControllerTest.class);
         test(LogAndExitControllerTest.class);
@@ -74,19 +64,13 @@ public class mainTest {
         StartSystem system = new StartSystem();
         system.cleanSystem();
         test(DataManagementTest.class);
-
-
         test(TeamPersonalPageTest.class);
         test(PersonalPageTest.class);
         test(FootballPlayerStatisticTest.class);
         test(FootballTeamStatisticTest.class);
-        test(TeamScore.class);
-        test(PointsPolicy.class);
-        test(ScoreTable.class);
-        
-
+        test(TeamScoreTest.class);
+        test(PointsPolicyTest.class);
         System.out.println("---------------------------------------------------------------");
-
         System.out.println("Total number of tests: "+testCounter);
         System.out.println("Total number of failed tests: "+failedTests);
 
