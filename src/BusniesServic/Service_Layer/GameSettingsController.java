@@ -13,6 +13,7 @@ import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Date;
 
 public class GameSettingsController {
@@ -191,18 +192,18 @@ public class GameSettingsController {
      * @param event
      * @return true if operation succeeded
      */
-    public String refereeCreateNewEvent(int game_id, String team_name, String player_name, EventType event ){
-        String explanation = null;
+    public ActionStatus refereeCreateNewEvent(int game_id, String team_name, String player_name, EventType event ){
+        ActionStatus ac = null;
         Game game = DataManagement.getGame(game_id);
         if(game == null ){
-            explanation = "The game id does not exist.";
+            ac = new ActionStatus(false,"The game id does not exist.") ;
 
         }
         else if(DataManagement.findTeam(team_name)== null){
-            explanation = "The team id does not exist.";
+            ac = new ActionStatus(false,"The team id does not exist.");
         }
         else if(DataManagement.findTeam(team_name).getPlayer(player_name) == null){
-            explanation =  "The player does not exist in the team.";
+            ac = new ActionStatus(false,"The player does not exist in the team.");
         }
         else if ((DataManagement.getCurrent() instanceof Referee) &&    DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.update_event)){
             // check if the referee is a referee of the team
@@ -210,27 +211,27 @@ public class GameSettingsController {
                     game.getLinesman1Referee().getUserName().equals(DataManagement.getCurrent().getUserName()) ||
                     game.getLinesman2Referee().getUserName().equals(DataManagement.getCurrent().getUserName()) ){
                 game.updateNewEvent(team_name,player_name,event);
-                explanation =  "Event successfully updated.";
+                ac = new ActionStatus(true, "Event successfully updated.");
             }else{
-                explanation =  "You are not a judge of the current game.";
+                ac = new ActionStatus(false,"You are not a judge of the current game.");
             }
         }else{
-            explanation =  "You may not take this action.";
+            ac = new ActionStatus(false,"You may not take this action.");
         }
-        logger.log("Game controller: refereeCreateNewEvent, team: "+team_name +" , player: "+ player_name +" ,event : " +event +" ,created:  "+ explanation);
-        return explanation;
+        logger.log("Game controller: refereeCreateNewEvent, team: "+team_name +" , player: "+ player_name +" ,event : " +event +" ,created:  "+ ac.getDescription());
+        return ac;
     }
 
     /**
      * This function shows a referee which games he particiapates in
      * @return
      */
-    public String refereeWatchGames(){
+    public ActionStatus refereeWatchGames(){
         if (DataManagement.getCurrent() instanceof Referee){
             Referee current = (Referee)DataManagement.getCurrent();
-            return current.gamesListToString();
+            return new ActionStatus(true,current.gamesListToString());
         }
-        return "You are not a referee!";
+        return new ActionStatus(false,"You are not a referee!");
     }
 
     /**
@@ -330,6 +331,17 @@ public class GameSettingsController {
             eventList+=e.toString()+"/n";
         }
         return eventList;
+    }
+
+
+    //TODO - test function(michal)
+    public EventType getEventFromString(String str){
+        if(! (Arrays.stream(EventType.values()).anyMatch(e -> e.name().equals(str)))){
+            return null;
+        }else{
+            EventType enumEvent =  EventType.valueOf(str);
+            return enumEvent;
+        }
     }
 
 }

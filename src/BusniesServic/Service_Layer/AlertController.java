@@ -1,14 +1,13 @@
 package BusniesServic.Service_Layer;
 
 import BusniesServic.Business_Layer.TeamManagement.Team;
-import BusniesServic.Business_Layer.UserManagement.Coach;
-import BusniesServic.Business_Layer.UserManagement.Complaint;
-import BusniesServic.Business_Layer.UserManagement.Fan;
-import BusniesServic.Business_Layer.UserManagement.Player;
+import BusniesServic.Business_Layer.Trace.PersonalPage;
+import BusniesServic.Business_Layer.UserManagement.*;
 import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Enum.PermissionAction;
 import DB_Layer.logger;
 
+import javax.xml.crypto.Data;
 import java.util.HashSet;
 import java.util.Observable;
 
@@ -38,35 +37,51 @@ public class AlertController {
      * @param arg_user_to_register is the name of the page the user wants to register to
      * @return true if the registeration succeeded
      */
-    public ActionStatus fanRegisterToPage(String arg_user_to_register){
+    public ActionStatus fanRegisterToPage(String arg_user_to_register) {
         ActionStatus AC = null;
-        BusniesServic.Business_Layer.UserManagement.Subscription current_user = DataManagement.containSubscription(arg_user_to_register);
-        Team t = DataManagement.findTeam(arg_user_to_register);
-        if (!(DataManagement.getCurrent() instanceof Fan)){
-            AC = new ActionStatus(false, "You are not a Fan");
-        }
-        else if(current_user==null && t==null){
-            AC = new ActionStatus(false, "There is no such page");
-        }
-        //TODO -add spelling correction here?
-        else if (current_user instanceof Coach) {
-            ((Coach) current_user).getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
-            AC = new ActionStatus(true, "You were successfully registered to the Coach page");
-        }
-        else if (current_user instanceof Player) {
-            ((Player) current_user).getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
-            AC = new ActionStatus(true, "You were successfully registered to the Player page");
-        }
-        else {
-                t.getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
+        if (DataManagement.getCurrent() != null) {
+            BusniesServic.Business_Layer.UserManagement.Subscription userWithPersonalPage = DataManagement.containSubscription(arg_user_to_register);
+            Team team = DataManagement.findTeam(arg_user_to_register);
+            if (!(DataManagement.getCurrent() instanceof Fan)) {
+                AC = new ActionStatus(false, "You are not a Fan");
+            } else if (userWithPersonalPage == null && team == null) {
+                AC = new ActionStatus(false, "There is no such page");
+            }
+            //TODO -add spelling correction here?
+            else if (userWithPersonalPage instanceof Coach) {
+                ((Coach) userWithPersonalPage).getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
+                AC = new ActionStatus(true, "You were successfully registered to the Coach page");
+            } else if (userWithPersonalPage instanceof Player) {
+                ((Player) userWithPersonalPage).getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
+                AC = new ActionStatus(true, "You were successfully registered to the Player page");
+            } else if (userWithPersonalPage instanceof UnifiedSubscription && (((UnifiedSubscription) userWithPersonalPage).isACoach() || ((UnifiedSubscription) userWithPersonalPage).isAPlayer())) {
+                //by default - registering to the player page. if it doesn't exist, then register to the coach page
+                UnifiedSubscription us = (UnifiedSubscription) userWithPersonalPage;
+                PersonalPage personalPage = us.getPlayerPersonalPage();
+                if (personalPage == null) {
+                    personalPage = us.getCoachPersonalPage();
+                }
+                if (personalPage != null) {
+                    personalPage.addObserver((Fan) DataManagement.getCurrent());
+                    AC = new ActionStatus(true, "You were successfully registered to the Player page");
+                }
+                else {
+                    AC = new ActionStatus(false, "Could not find the personal page you requested");
+                }
+            } else if (team != null) {
+                team.getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
                 AC = new ActionStatus(true, "You were successfully registered to the Team page");
-        }
-        if (DataManagement.getCurrent()!=null) {
+            } else {
+                AC = new ActionStatus(false, "Cannot find the personal page you requested");
+            }
+
             logger.log("fan_register_to_page, page name: " + arg_user_to_register + " ,user name: " + DataManagement.getCurrent().getUserName() + " successful: " + AC.getDescription());
         }
-        else{
-            logger.log("fan_register_to_page, page name: " + arg_user_to_register + " failed: " + AC.getDescription());
+        else {
+            AC = new ActionStatus(false,"No user is logged in to the system");
         }
+        logger.log("fan_register_to_page, page name: " + arg_user_to_register + " failed: " + AC.getDescription());
+
         return AC;
     }
 
