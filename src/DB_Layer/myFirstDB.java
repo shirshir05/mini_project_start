@@ -61,6 +61,7 @@ public class myFirstDB implements InitFromDB,saveToDB {
                 String[] splited = line.split(",");
                 Team team = new Team(splited[0],splited[1]);
                 DataManagement.addToListTeam(team);
+                ((TeamOwner)DataManagement.containSubscription(splited[2])).setAppointedByTeamOwner((TeamOwner)DataManagement.containSubscription(splited[2]));
                 team.EditTeamOwner((TeamOwner)DataManagement.containSubscription(splited[2]),1);
                 team.EditTeamManager((TeamManager) DataManagement.containSubscription(splited[3]),1);
                 team.AddOrRemoveCoach((Coach) DataManagement.containSubscription(splited[4]),1);

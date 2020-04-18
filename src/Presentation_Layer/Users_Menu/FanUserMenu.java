@@ -37,12 +37,10 @@ public class FanUserMenu implements UserMenu  {
             return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
         }
         else if(input==2) {
-            if (input == 2) {
                 output += "insert username of the person you want to follow:  \nuser input- " + args[1] +"\n";
                 String username =args[1];
                 ActionStatus ac = StartSystem.getAc().fanRegisterToPage(username);
                 return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
-            }
         }
         else if(input ==3 ) {
             output += "insert a game id: \nuser input-" + args[1] +"\n";
@@ -91,6 +89,5 @@ public class FanUserMenu implements UserMenu  {
         else{
             return new ActionStatus(false,output + "Invalid choice");
         }
-        return new ActionStatus(false,output);
     }
 }
