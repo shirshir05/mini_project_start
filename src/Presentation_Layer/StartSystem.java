@@ -1,6 +1,7 @@
 package Presentation_Layer;
 
 import BusniesServic.Business_Layer.BudgetManagement.BudgetRegulations;
+import BusniesServic.Business_Layer.Game.Game;
 import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Service_Layer.*;
 import DB_Layer.myFirstDB;
@@ -85,6 +86,7 @@ public class StartSystem {
         DataManagement.cleanAllData();
         myFirstDB db = new myFirstDB();
         String ans = "";
+        Game.game_id =0;
         ans += db.loadUsersInfo().getDescription() +"\n";
         ans += db.loadTeamInfo().getDescription() +"\n";
         ans += db.loadGameInfo().getDescription() +"\n";
