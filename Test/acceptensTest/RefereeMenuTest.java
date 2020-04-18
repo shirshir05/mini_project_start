@@ -75,8 +75,6 @@ public class RefereeMenuTest {
                      // invalid input
                      {"1", "3", null , null, null, null, false},  // => false- invalid input
                      {"4", null , null , null, null, null, false},  // => false- invalid input
-
-
             });
         }
 
@@ -120,6 +118,7 @@ public class RefereeMenuTest {
             ActionStatus ac = RM.presentUserMenu(args);
             assertEquals(ac.isActionSuccessful(),result);
             System.out.println(ac.isActionSuccessful() + " " +ac.getDescription());
+            DataManagement.cleanAllData();
         }
     }
 }
