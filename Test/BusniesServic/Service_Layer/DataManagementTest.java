@@ -199,46 +199,13 @@ public class DataManagementTest {
             Team team2 = new Team("Real Madrid", "Bernabeo");
             Game game = new Game("Bernabeo11", date, team1, team2);
             DataManagement.addGame(game);
-            assertEquals(DataManagement.getGame(2),game);
+            assertEquals(DataManagement.getGame(1),game);
         }
 
     }//addGame
 
 
-    /**
-     * Test - DM7
-     */
-    @RunWith(Parameterized.class)
-    public static class getGame{
-        //parameter
-        String name;
-        String filed;
 
-        @Parameterized.Parameters
-        public static Collection<Object[]> data() {
-            return Arrays.asList(new Object[][]{
-                    {"Barcelona", "Camp Nou"}
-            });
-        }
-
-        public getGame(String name, String filed) {
-            this.name = name;
-            this.filed= filed;
-        }
-        @Test
-        public void getGameTest() {
-            LocalDate date = LocalDate.of(1992, 11, 14);
-            Team team1 = new Team(name, filed);
-            Team team2 = new Team("Real Madrid", "Bernabeo");
-            Game game = new Game("Bernabeo", date, team1, team2);
-            DataManagement.addGame(game);
-            assertEquals(DataManagement.getGame(1),game);
-            assertNull(DataManagement.getGame(5));
-
-
-        }
-
-    }//getGame
 
 
     /**

@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import sun.management.GarbageCollectionNotifInfoCompositeData;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -190,7 +191,7 @@ public class RefereeTest {
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {"R1","123456","shir0@post.bgu.ac.il","You are participates in the next games: 3"}
+                    {"R1","123456","shir0@post.bgu.ac.il","You are participates in the next games: 1"}
             });
         }
         public gamesListToString(String userName, String password, String email,String ans) {
@@ -201,6 +202,7 @@ public class RefereeTest {
         }
         @Test
         public void gamesListToStringTest() {
+            Game.game_id =0;
             Referee referee = new Referee(userName,password,email);
             referee.addGame(new Game("f",null, null, null));
             assertEquals(referee.gamesListToString(),this.ans);
