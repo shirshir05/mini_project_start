@@ -17,15 +17,20 @@ public class AlertController {
     /**
      *  This function register the fan to alerts of a game he choose.
      */
-    public boolean fanRegisterToGameAlerts(int game_number){
-        Observable chosen_game = DataManagement.getGame(game_number);
-        if(DataManagement.getGame(game_number) != null){
-            chosen_game.addObserver((Fan) DataManagement.getCurrent());
-            return true;
+    public ActionStatus fanRegisterToGameAlerts(int game_number){
+        ActionStatus AC = null;
+        if (!(DataManagement.getCurrent() instanceof Fan)){
+            AC = new ActionStatus(false,"You are not a Fan");
+        }
+        else if(DataManagement.getGame(game_number) == null){
+            AC = new ActionStatus(false,"There is no such game in the system");
         }
         else{
-            return false;
+            Observable chosen_game = DataManagement.getGame(game_number);
+            chosen_game.addObserver((Fan) DataManagement.getCurrent());
+            AC = new ActionStatus(false,"You were registered successfully to the game alerts");
         }
+        return AC;
     }
 
     /**
@@ -33,47 +38,60 @@ public class AlertController {
      * @param arg_user_to_register is the name of the page the user wants to register to
      * @return true if the registeration succeeded
      */
-    public boolean fanRegisterToPage(String arg_user_to_register){
-        boolean ans = false;
+    public ActionStatus fanRegisterToPage(String arg_user_to_register){
+        ActionStatus AC = null;
         BusniesServic.Business_Layer.UserManagement.Subscription current_user = DataManagement.containSubscription(arg_user_to_register);
+        Team t = DataManagement.findTeam(arg_user_to_register);
+        if (!(DataManagement.getCurrent() instanceof Fan)){
+            AC = new ActionStatus(false, "You are not a Fan");
+        }
+        else if(current_user==null && t==null){
+            AC = new ActionStatus(false, "There is no such page");
+        }
         //TODO -add spelling correction here?
-        if (current_user instanceof Coach) {
+        else if (current_user instanceof Coach) {
             ((Coach) current_user).getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
-            ans = true;
+            AC = new ActionStatus(true, "You were successfully registered to the Coach page");
         }
         else if (current_user instanceof Player) {
             ((Player) current_user).getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
-            ans = true;
+            AC = new ActionStatus(true, "You were successfully registered to the Player page");
+        }
+        else {
+                t.getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
+                AC = new ActionStatus(true, "You were successfully registered to the Team page");
+        }
+        if (DataManagement.getCurrent()!=null) {
+            logger.log("fan_register_to_page, page name: " + arg_user_to_register + " ,user name: " + DataManagement.getCurrent().getUserName() + " successful: " + AC.getDescription());
         }
         else{
-            Team t = DataManagement.findTeam(arg_user_to_register);
-            if (t!=null){
-                t.getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
-                ans = true;
-            }
-        }if(!ans){
-            return ans;
+            logger.log("fan_register_to_page, page name: " + arg_user_to_register + " failed: " + AC.getDescription());
         }
-        logger.log("fan_register_to_page, page mane: "+arg_user_to_register+" ,user mane: "+ current_user.getUserName() +" successful: "+ans);
-        return ans;
+        return AC;
     }
 
     /**
      * This method adds a complaint by a user.
-     * @param fan the fan who created the complaint
+     * @param complaintDescription is the complaint
      */
-    public static ActionStatus addComplaint(String complaintDescription, Fan fan){
+    public ActionStatus addComplaint(String complaintDescription){
         ActionStatus AC = null;
         if(complaintDescription == null || complaintDescription.isEmpty()) {
             AC = new ActionStatus(false, "Complaint cannot be empty");
+            logger.log("Add complaint status: "+AC.getDescription());
+        }
+        else if (!(DataManagement.getCurrent() instanceof Fan)){
+            AC = new ActionStatus(false, "You are not a Fan");
+            logger.log("Add complaint status: "+AC.getDescription());
         }
         else {
+            Fan f = (Fan)DataManagement.getCurrent();
             Complaint c = new Complaint(complaintDescription);
-            fan.addComplaint(c);
+            f.addComplaint(c);
             DataManagement.addComplaint(c);
             AC = new ActionStatus(true, "Complaint added successfully");
+            logger.log("Add Complaint of user : "+ f.getName() +" "+AC.getDescription());
         }
-        logger.log("Add Complaint of user : "+ fan.getName() +" "+AC.getDescription());
         return AC;
     }
 
@@ -81,8 +99,8 @@ public class AlertController {
      * for the use of the system manager, to read all the complaints in the system
      * @return a hash set of all the complaints
      */
-    public static HashSet<Complaint> getAllComplaints() {
-        if(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints))
+    public HashSet<Complaint> getAllComplaints() {
+        if(DataManagement.getCurrent()!= null && DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints))
             return DataManagement.getAllComplaints();
         return null;
     }
@@ -90,14 +108,14 @@ public class AlertController {
     /**
      * for the use of the system manager, to read only the unanswered complaints in the system
      */
-    public static HashSet<Complaint> getUnansweredComplaints() {
-        if(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints))
+    public HashSet<Complaint> getUnansweredComplaints() {
+        if(DataManagement.getCurrent()!= null && DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints))
             return DataManagement.getUnansweredComplaints();
         return null;
     }
 
-    public static ActionStatus answerCompliant(Complaint complaint, String answer){
-        if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints)) {
+    public ActionStatus answerCompliant(Complaint complaint, String answer){
+        if(DataManagement.getCurrent()== null || !DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints)) {
             return new ActionStatus(false, "You do not have the required permissions to answer complaints");
         }
         if(complaint.isAnswered()){
