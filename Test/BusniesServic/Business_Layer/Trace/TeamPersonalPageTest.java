@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 public class TeamPersonalPageTest {
 
     /**
-     * Test -TP1
+     * Test -TPP1
      */
 
     @RunWith(Parameterized.class)
@@ -53,7 +53,7 @@ public class TeamPersonalPageTest {
     }
 
     /**
-     * Test -TP2
+     * Test -TPP2
      */
 
     @RunWith(Parameterized.class)

@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 public class CoachPersonalPageTest {
 
     /**
-     * Test -CP1
+     * Test -CPP1
      */
 
     @RunWith(Parameterized.class)
@@ -57,7 +57,7 @@ public class CoachPersonalPageTest {
     //region Country
 
     /**
-     * Test -CP2
+     * Test -CPP2
      */
     @RunWith(Parameterized.class)
     public static class CountryOfBirthTest {
@@ -92,7 +92,7 @@ public class CoachPersonalPageTest {
     //region Years of experience
 
     /**
-     * Test -CP3
+     * Test -CPP3
      */
 
     @RunWith(Parameterized.class)
@@ -128,7 +128,7 @@ public class CoachPersonalPageTest {
     //region Num of titles
 
     /**
-     * Test -CP4
+     * Test -CPP4
      */
 
     @RunWith(Parameterized.class)
@@ -162,7 +162,7 @@ public class CoachPersonalPageTest {
     //endregion
 
     /**
-     * Test -CP5
+     * Test -CPP5
      */
     @RunWith(Parameterized.class)
     public static class equalsTest {

@@ -139,7 +139,6 @@ public class BudgetControllerTest {
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
                     {"tester", -300, false}, {null, 300, false}, {"", 50, false},
-                    {"tester", 5500, true}, {"tester", 9000, true},{"tester", 700000, false}
             });
         }
 
@@ -173,6 +172,7 @@ public class BudgetControllerTest {
             DataManagement.setCurrent(subF);
             assertFalse(BudgetController.startNewQuarter().isActionSuccessful());
         }
+
 
         @Test
         public void BudgetTest2() {
@@ -220,9 +220,11 @@ public class BudgetControllerTest {
             }
             else{
                 DataManagement.setCurrent(subO);
-                assertTrue(i != BudgetController.getTeamBalanceForQuarter(name));
-                DataManagement.setCurrent(subM);
-                assertTrue(i != BudgetController.getTeamBalanceForQuarter(name));
+                if (expanse!=-300) {
+                    assertTrue(i != BudgetController.getTeamBalanceForQuarter(name));
+                    DataManagement.setCurrent(subM);
+                    assertTrue(i != BudgetController.getTeamBalanceForQuarter(name));
+                }
             }
             DataManagement.setCurrent(subF);
             assertTrue(i == BudgetController.getTeamBalanceForQuarter(name));

@@ -19,6 +19,8 @@ public class mainTest {
     static int failedTests = 0;
 
     public static void main(String[] args) throws InterruptedException {
+        test(ScoreTable.class);
+        test(AlertControllerTest.class);
         test(TeamOwnerTest.class);
         Thread.sleep(1000);
         Game.game_id = 0;
@@ -76,15 +78,13 @@ public class mainTest {
         test(DataManagementTest.class);
 
 
-        test(AlertControllerTest.class);
         test(TeamPersonalPageTest.class);
         test(PersonalPageTest.class);
         test(FootballPlayerStatisticTest.class);
         test(FootballTeamStatisticTest.class);
         test(TeamScore.class);
         test(PointsPolicy.class);
-        test(ScoreTable.class);
-        
+
 
         System.out.println("---------------------------------------------------------------");
 
