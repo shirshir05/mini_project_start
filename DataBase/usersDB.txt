@@ -22,3 +22,5 @@ Referee,refOne,123456,a@g.com
 Referee,refTwo,123456,a@g.com
 Referee,refThree,123456,a@g.com
 Guest,Guest,123456,Guestmail@mail.com
+TeamOwner,teamNew,123456,a@g.com
+TeamManager,teamManagerNew,123456,a@g.com
