@@ -10,14 +10,12 @@ import DB_Layer.logger;
 import Presentation_Layer.Spelling;
 import Presentation_Layer.StartSystem;
 
-import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 
 public class GameSettingsController {
 
