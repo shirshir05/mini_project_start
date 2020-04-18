@@ -71,7 +71,6 @@ public class RefereeUserMenu implements UserMenu {
                 String name = args[2];
                 ActionStatus ac = StartSystem.getESUDc().editSubscriptionName(DataManagement.getCurrent().getUserName(),name);
                 return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
-
             }else if(edit==2){
                 output += "insert emil:\nuser input- " + args[2] +"\n";
                 String name =  args[2];
@@ -99,7 +98,7 @@ public class RefereeUserMenu implements UserMenu {
             String nameTeam = args[2];
             output += "insert player name that take part in event:\nuser input- " + args[3] + "\n";
             String playerName =  args[3];
-            output += "insert eventType:\nuser input- " + args[3] + "\n";
+            output += "insert eventType:\nuser input- " + args[4] + "\n";
             String eventType =  args[4];
             EventType event = StartSystem.GSc.getEventFromString(eventType);
             ActionStatus ac =  StartSystem.getGSc().refereeCreateNewEvent(gameId,nameTeam,playerName,event);

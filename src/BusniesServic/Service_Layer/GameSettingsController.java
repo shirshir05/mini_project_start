@@ -205,9 +205,12 @@ public class GameSettingsController {
         else if(DataManagement.findTeam(team_name).getPlayer(player_name) == null){
             ac = new ActionStatus(false,"The player does not exist in the team.");
         }
+        else if(event==null){
+            ac = new ActionStatus(false,"The event type does not exist.");
+        }
         else if ((DataManagement.getCurrent() instanceof Referee) &&    DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.update_event)){
             // check if the referee is a referee of the team
-            if (game.getHeadReferee().getUserName().equals(DataManagement.getCurrent().getUserName()) ||
+            if ((game.getHeadReferee()!=null && game.getHeadReferee().getUserName().equals(DataManagement.getCurrent().getUserName()) )||
                     game.getLinesman1Referee().getUserName().equals(DataManagement.getCurrent().getUserName()) ||
                     game.getLinesman2Referee().getUserName().equals(DataManagement.getCurrent().getUserName()) ){
                 game.updateNewEvent(team_name,player_name,event);

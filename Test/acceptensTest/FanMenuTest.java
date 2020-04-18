@@ -24,8 +24,6 @@ public class FanMenuTest {
     @RunWith(Parameterized.class)
     public static class FanTest {
         //parameter
-
-
         String number;
         String arg1;
         String arg2;
