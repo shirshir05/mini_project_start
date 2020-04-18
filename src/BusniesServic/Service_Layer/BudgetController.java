@@ -8,6 +8,7 @@ import BusniesServic.Business_Layer.BudgetManagement.UnionBudget;
 import BusniesServic.Business_Layer.TeamManagement.Team;
 import BusniesServic.Enum.PermissionAction;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class BudgetController {
@@ -231,6 +232,24 @@ public class BudgetController {
         if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.change_budget_regulations))
             return -1;
         return unionBudget.getCurrentAmount();
+    }
+
+    public static Expense getExpenseFromString(String str){
+        if(! (Arrays.stream(Expense.values()).anyMatch(e -> e.name().equals(str)))){
+            return null;
+        }else{
+            Expense enumExpense =  Expense.valueOf(str);
+            return enumExpense;
+        }
+    }
+
+    public static Income getIncomeFromString(String str){
+        if(! (Arrays.stream(Income.values()).anyMatch(e -> e.name().equals(str)))){
+            return null;
+        }else{
+            Income enumIncome =  Income.valueOf(str);
+            return enumIncome;
+        }
     }
 
     //endregion
