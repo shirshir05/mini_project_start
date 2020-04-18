@@ -35,7 +35,7 @@ public class FanUserMenu implements UserMenu  {
             else if(input==2) {
                 if (input == 2) {
                     String username =  cli.presentAndGetString("Please enter a username of the person you want to follow:");
-                    if(system.getAc().fanRegisterToPage(username)){
+                    if(system.getAc().fanRegisterToPage(username).isActionSuccessful()){
                         cli.presentOnly("The transaction completed successfully.");
                     }else{
                         cli.presentOnly("The field you entered was incorrect.");
@@ -44,7 +44,7 @@ public class FanUserMenu implements UserMenu  {
             }
             else if(input ==3 ) {
                 int game =  cli.presentAndGetInt("Enter a game id:");
-                if(system.getAc().fanRegisterToGameAlerts(game)){
+                if(system.getAc().fanRegisterToGameAlerts(game).isActionSuccessful()){
                     cli.presentOnly("The transaction completed successfully.");
                 }else{
                     cli.presentOnly("The number you entered was incorrect.");
@@ -52,7 +52,7 @@ public class FanUserMenu implements UserMenu  {
             }
             else if(input ==4 ) {
                 String complaint =  cli.presentAndGetString("Write the complaint:");
-                cli.presentOnly(system.getAc().addComplaint(complaint,(Fan) DataManagement.getCurrent()).getDescription());
+                cli.presentOnly(system.getAc().addComplaint(complaint).getDescription());
             }
             else if(input ==5 ) {
                 cli.presentOnly(system.getSc().showSearchHistory());
