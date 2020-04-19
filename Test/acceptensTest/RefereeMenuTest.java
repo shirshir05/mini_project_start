@@ -9,6 +9,7 @@ import BusniesServic.Business_Layer.UserManagement.SystemAdministrator;
 import BusniesServic.Enum.ActionStatus;
 import BusniesServic.Service_Layer.DataManagement;
 import BusniesServic.Service_Layer.GameSettingsController;
+import Presentation_Layer.StartSystem;
 import Presentation_Layer.Users_Menu.FanUserMenu;
 import Presentation_Layer.Users_Menu.RefereeUserMenu;
 import org.junit.Test;
@@ -60,7 +61,7 @@ public class RefereeMenuTest {
                      // See games i am referee in
                     {"2" , null , null ,null , null , null , true},  //=> true- print the games      6
                     // Add event in game
-                    {"3" , "1", "Maccabi", "Oren", "goal", null, true}, //  => true- event added to the game  7
+                    {"3" , "1", "Maccabi", "Oren", "goal", null, false}, //  => false- event added to the game  7
                     {"3" , "5", "Maccabi", "Raz", "goal", null, false}, //  => false- wrong game id      8
                     {"3" , "1", "Hapoel", "Raz", "goal", null, false}, //  =>  false- wrong team name    9
                     {"3" , "1", null , "Raz", "goal", null, false}, //  =>  false- wrong team name    10
@@ -92,6 +93,7 @@ public class RefereeMenuTest {
 
         @Test
         public void  RefereeMenu1(){
+            StartSystem.cleanSystem();
             GameSettingsController g = new GameSettingsController();
             Referee ref = new Referee("Raz","1234","raz@post.bgu.ac.il");
             DataManagement.setCurrent(ref);
