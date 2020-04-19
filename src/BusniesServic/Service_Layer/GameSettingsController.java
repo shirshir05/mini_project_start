@@ -47,7 +47,7 @@ public class GameSettingsController {
         }
         if (year!=null && league_name!=null && DataManagement.getCurrent() instanceof UnionRepresentative && DataManagement.findLeague(league_name)!=null) {
             int intFormatYear= Integer.parseInt(year);
-            if (intFormatYear>1900 && intFormatYear<2021){
+            if (intFormatYear>1900 && intFormatYear<2022){
                 Season addSeason =new Season(year);
                 DataManagement.findLeague(league_name).addSeason(addSeason);
                 PointsPolicy pointsPolicy = new PointsPolicy(win,lose,equal);
@@ -112,7 +112,7 @@ public class GameSettingsController {
         if (DataManagement.getCurrent() instanceof UnionRepresentative) {
             if (referee_user_name != null && referee_password != null) {
                 Subscription current_referee = DataManagement.containSubscription(referee_user_name);
-                if (add_or_remove == 0 && current_referee != null) {
+                if (add_or_remove == 0 && current_referee == null) {
                     ac = StartSystem.LEc.Registration(referee_user_name, referee_password,"Referee", mail);
                     String mail_content= "Hello! you were invited to our system! your username: "+referee_user_name+" and you password: "+referee_password;
                     DataManagement.getSubscription(referee_user_name).sendEMail(mail,mail_content);
@@ -120,11 +120,18 @@ public class GameSettingsController {
                 } else if (add_or_remove == 1) {
                     if (current_referee != null) {
                         ac = StartSystem.LEc.RemoveSubscription(referee_user_name);
+                    }else{
+                        ac = new ActionStatus(false,"No subscription exists in the system");
+
                     }
+                }else{
+                    ac = new ActionStatus(false,"number illegal");
+
                 }
+
             }
         }
-        logger.log("Settings controller: addOrDeleteRefereeToSystem, referee name: "+ referee_user_name +" ,add or remove: "+add_or_remove +" ,successful: "+ ac.isActionSuccessful() +", "+ ac.getDescription());
+        //logger.log("Settings controller: addOrDeleteRefereeToSystem, referee name: "+ referee_user_name +" ,add or remove: "+add_or_remove +" ,successful: "+ ac.isActionSuccessful() +", "+ ac.getDescription());
         return ac;
     }
 
