@@ -65,7 +65,7 @@ public class LogAndExitControllerTest {
         }
 
     /**
-     * LEC12
+     * LEC2
      */
     @Test
         public void loginTest() {
