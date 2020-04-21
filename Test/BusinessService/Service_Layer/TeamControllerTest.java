@@ -498,7 +498,7 @@ public class TeamControllerTest {
             DataManagement.addToListTeam(team);
             assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset,1).getDescription(),"The asset was added to the team");
             assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset,0).getDescription(),"The asset was deleted from the team");
-            assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset+"x",0).getDescription(),"The team doesnt contains this asset");
+            assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset+"x",0).getDescription(),"The team does not contains this asset");
             assertEquals(n.AddOrRemoveTeamsAssets(teamName+"y",teamAasset+"x",0).getDescription(),"There is no such team in the system");
             assertEquals(n.AddOrRemoveTeamsAssets(teamName,null,0).getDescription(),"This asset is null");
             assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset,3).getDescription(),"Choose 1 or 0 only");

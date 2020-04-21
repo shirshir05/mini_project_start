@@ -126,7 +126,7 @@ public abstract class Subscription {
     //**********************************************equals ************************************************************//
 
     /**
-     * Thif function equal Subscription by user_name
+     * This function equal Subscription by user_name
      * @param o
      * @return
      */

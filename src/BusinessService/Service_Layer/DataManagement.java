@@ -171,13 +171,13 @@ public final class DataManagement {
     }
 
     /**
-     * This function gets a leaugeName and return Leauge
-     * @param leaugeName
+     * This function gets a leagueName and return League
+     * @param leagueName
      * @return
      */
-    public static League findLeague(String leaugeName) {
+    public static League findLeague(String leagueName) {
         for (League l : list_league) {
-            if (l.getName().equals(leaugeName)) {
+            if (l.getName().equals(leagueName)) {
                 return l;
             }
         }

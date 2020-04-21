@@ -21,8 +21,8 @@ public class GameSettingsController {
 
 
     /**
-     * this function let the union rep to define a leauge
-     * @param name is the name of the leauge
+     * this function let the union rep to define a league
+     * @param name is the name of the league
      * @return true if it was defined
      */
     public boolean defineLeague(String name){
@@ -159,7 +159,7 @@ public class GameSettingsController {
         else{
             ac = new ActionStatus(false, "league or referee user not exists");
         }
-        logger.log("Settings controller: defineRefereeInLeauge, leauge name: "+ league_name +" ,referee name: "+referee_user_name+" ,season: "+season_year +" ,successful: "+ ac.isActionSuccessful() +" , "+ac.getDescription());
+        logger.log("Settings controller: defineRefereeInLeague, league name: "+ league_name +" ,referee name: "+referee_user_name+" ,season: "+season_year +" ,successful: "+ ac.isActionSuccessful() +" , "+ac.getDescription());
         return ac;
     }
 
@@ -174,10 +174,10 @@ public class GameSettingsController {
             AC = new ActionStatus(false, "one of the parameters is null");
         }
         else if(DataManagement.findTeam(host)==null){
-            AC = new ActionStatus(false, "The host team doesnt exist in the system");
+            AC = new ActionStatus(false, "The host team does not exist in the system");
         }
         else if(DataManagement.findTeam(guest)==null){
-            AC = new ActionStatus(false, "The guest team doesnt exist in the system");
+            AC = new ActionStatus(false, "The guest team does not exist in the system");
         }
         else if(!(DataManagement.getSubscription(headReferee) instanceof Referee) || !(DataManagement.getSubscription(line1Referee) instanceof Referee)
         || !(DataManagement.getSubscription(line2Referee) instanceof Referee)){
@@ -253,7 +253,7 @@ public class GameSettingsController {
     }
 
     /**
-     * This function shows a referee which games he particiapates in
+     * This function shows a referee which games he participates in
      * @return
      */
     public ActionStatus refereeWatchGames(){
@@ -323,7 +323,7 @@ public class GameSettingsController {
                             currentEvent.setPlayer(arg_player);
                         }
                         else{
-                            AC = new ActionStatus(false, "the player doesnt play in that team");
+                            AC = new ActionStatus(false, "the player does not play in that team");
                         }
                     }
                     else if (arg_team!=null && game.getGuest().equals(arg_team)){
@@ -332,7 +332,7 @@ public class GameSettingsController {
                             currentEvent.setPlayer(arg_player);
                         }
                         else{
-                            AC = new ActionStatus(false, "the player doesnt play in that team");
+                            AC = new ActionStatus(false, "the player does not play in that team");
                         }
                     }
                     else{

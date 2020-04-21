@@ -359,7 +359,7 @@ public class TeamController {
             }
             else if (add_or_remove==0){
                 if (!t.getTeamAssets().contains(TeamAsset)){
-                    AC = new ActionStatus(false, "The team doesnt contains this asset");
+                    AC = new ActionStatus(false, "The team does not contains this asset");
                 }
                 else{
                     t.removeTeamAssets(TeamAsset);

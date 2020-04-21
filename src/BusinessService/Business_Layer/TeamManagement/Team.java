@@ -232,7 +232,7 @@ public class Team extends Observable implements Comparable {
     }
 
     /**
-     * The function allows to add and remove Team mANAGER from the team.
+     * The function allows to add and remove Team Manager from the team.
      * @param teamManager
      * @param add_or_remove
      * @return
@@ -264,7 +264,7 @@ public class Team extends Observable implements Comparable {
     //**********************************************change status************************************************************//
 
     /**
-     *cahnge status of team, 0 - close, 1 - open ; -1 - permanently close; 2 - waiting for approval
+     *change status of team, 0 - close, 1 - open ; -1 - permanently close; 2 - waiting for approval
      * @param status
      * @return
      */

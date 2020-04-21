@@ -8,7 +8,7 @@ public class League {
 
     /**
      * constructor
-     * @param arg_name is the leauge name
+     * @param arg_name is the league name
      */
     public League(String arg_name){
         name=arg_name;
@@ -16,7 +16,7 @@ public class League {
     }
 
     /**
-     * leauge name getter
+     * league name getter
      * @return name
      */
     public String getName(){
@@ -24,7 +24,7 @@ public class League {
     }
 
     /**
-     * this function adds a season to the keauge
+     * this function adds a season to the league
      * @param season
      * @return
      */
@@ -43,7 +43,7 @@ public class League {
     }
 
     /**
-     * This function gets a season in  a leauge
+     * This function gets a season in  a league
      * @param year
      * @return
      */

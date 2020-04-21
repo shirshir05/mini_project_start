@@ -39,8 +39,8 @@ public class myFirstDB implements InitFromDB,saveToDB {
             BufferedReader in = new BufferedReader(new FileReader(new File("DataBase/usersDB.txt")));
             String line = in.readLine();
             while(line!=null){
-                String[] splited = line.split(",");
-                ac = login.Registration(splited[1], splited[2], splited[0], splited[3]);
+                String[] spllited = line.split(",");
+                ac = login.Registration(spllited[1], spllited[2], spllited[0], spllited[3]);
                 done = done && ac.isActionSuccessful();
                 line = in.readLine();
             }

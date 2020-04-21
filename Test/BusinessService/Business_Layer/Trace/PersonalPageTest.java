@@ -33,7 +33,7 @@ public class PersonalPageTest {
             PersonalPage page = new PersonalPage("Shir");
             page.addPermissionToEdit("Raz");
             assertEquals(page.permissionToEdit.size(),2);
-            assertTrue(page.chackperrmissiontoedit("Raz"));
+            assertTrue(page.checkPermissionToEdit("Raz"));
             page.removePermissionToEdit("Yael");
             assertEquals(page.permissionToEdit.size(),2);
             page.removePermissionToEdit("Raz");

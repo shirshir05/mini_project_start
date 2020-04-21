@@ -36,7 +36,7 @@ public class PersonalPage extends Observable {
         permissionToEdit.add(user);
     }
 
-    public boolean chackperrmissiontoedit(String user){
+    public boolean checkPermissionToEdit(String user){
         return permissionToEdit.contains(user);
     }
 

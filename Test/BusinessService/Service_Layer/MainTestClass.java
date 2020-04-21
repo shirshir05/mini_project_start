@@ -29,7 +29,7 @@ public class MainTestClass {
         String role;
         String expected;
         String email;
-        boolean ifRegistationTest;
+        boolean ifRegistrationTest;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
@@ -70,7 +70,7 @@ public class MainTestClass {
         @Before
         public void setUp() throws Exception {
 
-            ifRegistationTest = false;
+            ifRegistrationTest = false;
             controller = new LogAndExitController();
             factory = new SubscriptionFactory();
         }
@@ -84,7 +84,7 @@ public class MainTestClass {
                     expected.equals("Subscription successfully added!") ||
                     expected.equals("The role does not exist in the system.")) {
 
-                ifRegistationTest = true;
+                ifRegistrationTest = true;
                 assertEquals(expected, controller.Registration(name, password, role,email));
 
                 if (expected.equals("Subscription successfully added!")) {
@@ -103,7 +103,7 @@ public class MainTestClass {
 
             //check Successfully Registration
             assertEquals("Subscription successfully added!", controller.Registration(name, password, role,email)); //maybe need to use stub and change it
-            //controller.Subscription.add(factory.Create(name,password, Role.Coach)); //Registare user manualy
+            //controller.Subscription.add(factory.Create(name,password, Role.Coach)); //Register user manually
 
             //check login when another subscription is connected
             DataManagement.setCurrent(DataManagement.containSubscription(name));

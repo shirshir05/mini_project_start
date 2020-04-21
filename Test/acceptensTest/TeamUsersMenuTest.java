@@ -45,7 +45,7 @@ public class TeamUsersMenuTest {
                     {"1","2","teamOne","teamCoachTwo","0",null,null,false},//=>The Coach is not in the team.
                     //(6.1) update filed
                     {"1","3","teamOne","filed1","1",null,null,true},//=>The asset was added to the team
-                    {"1","3","teamOne","fil","0",null,null,false},//=>The team doesnt contains this asset
+                    {"1","3","teamOne","fil","0",null,null,false},//=>The team doesn't contains this asset
                     //(6.1) update team owner
                     {"1","4","teamOne","teamCoachTwo","1",null,null,false},//=>The username is not defined as a Team Owner on the system.
                     {"1","4","teamOne","teamOwnerThree","1",null,null,false},//=>You are already set as a team owner.

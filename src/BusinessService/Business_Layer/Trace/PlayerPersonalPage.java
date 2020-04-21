@@ -61,11 +61,11 @@ public class PlayerPersonalPage extends PersonalPage{
         }
     }
 
-    public void setCountryOfBirth(String conutryOfBirth) {
+    public void setCountryOfBirth(String countryOfBirth) {
 
-        if(conutryOfBirth != null && conutryOfBirth.length() != 0){
+        if(countryOfBirth != null && countryOfBirth.length() != 0){
 
-            this.countryOfBirth = conutryOfBirth;
+            this.countryOfBirth = countryOfBirth;
         }
     }
 

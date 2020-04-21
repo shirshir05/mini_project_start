@@ -225,7 +225,7 @@ public class EditAndShowUserDetails {
         if(personalPage == null) {
             return new ActionStatus(false, "Cannot find personal page");
         }
-        if(!personalPage.chackperrmissiontoedit(theEditor.getUserName())){
+        if(!personalPage.checkPermissionToEdit(theEditor.getUserName())){
             return new ActionStatus(false, "You don't have permissions to edit this player's personal page");
         }
 
@@ -284,7 +284,7 @@ public class EditAndShowUserDetails {
         if(personalPage == null){
             return new ActionStatus(false, "Cannot find personal page");
         }
-        if(!personalPage.chackperrmissiontoedit(theEditor.getUserName())){
+        if(!personalPage.checkPermissionToEdit(theEditor.getUserName())){
 
             return new ActionStatus(false, "You do not have permissions to edit this coach personal page");
         }
@@ -321,7 +321,7 @@ public class EditAndShowUserDetails {
 
         Subscription theEditor = DataManagement.getCurrent();
 
-        if(!teamObject.getPersonalPage().chackperrmissiontoedit(theEditor.getUserName())){
+        if(!teamObject.getPersonalPage().checkPermissionToEdit(theEditor.getUserName())){
 
             return new ActionStatus(false, "You don't have permissions to edit this team's personal page");
         }
@@ -397,7 +397,7 @@ public class EditAndShowUserDetails {
             AC = new ActionStatus(false,"Invalid username.");
         }
         else if (DataManagement.getCurrent().permissions.check_permissions(PermissionAction.personal_page)
-                && team.getPersonalPage().chackperrmissiontoedit(DataManagement.getCurrent().getUserName())) {
+                && team.getPersonalPage().checkPermissionToEdit(DataManagement.getCurrent().getUserName())) {
             team.getPersonalPage().addPermissionToEdit(addPermissionsToThisUser);
             AC = new ActionStatus(true, "Permissions successfully added.");
         }

@@ -35,7 +35,7 @@ public class AlertController {
     /**
      * This function register the current user to the page he asked to be registered to.
      * @param arg_user_to_register is the name of the page the user wants to register to
-     * @return true if the registeration succeeded
+     * @return true if the registration succeeded
      */
     public ActionStatus fanRegisterToPage(String arg_user_to_register) {
         ActionStatus AC = null;
