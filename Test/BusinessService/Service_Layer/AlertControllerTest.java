@@ -8,10 +8,7 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -154,11 +151,12 @@ public class AlertControllerTest {
             DataManagement.setSubscription(s);
             DataManagement.setCurrent(s);
             HashSet<Complaint> complaints = n.getAllComplaints();
-            Iterator iter = complaints.iterator();
-            Complaint first = (Complaint)iter.next();
-            Complaint second = (Complaint)iter.next();
-            assertEquals(first.getDescription(), "abc");
-            assertEquals(second.getDescription(), "vsvs");
+            ArrayList<String> complaintsContent = new ArrayList<>();
+            Iterator it = complaints.iterator();
+            complaintsContent.add(((Complaint)it.next()).getDescription());
+            complaintsContent.add(((Complaint)it.next()).getDescription());
+            assertEquals(complaintsContent.contains("abc"), true);
+            assertEquals(complaintsContent.contains("vsvs"), true);
             DataManagement.cleanAllData();
         }
 

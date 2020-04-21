@@ -1,7 +1,6 @@
 package BusinessService.Business_Layer.TeamManagement;
 
 import BusinessService.Business_Layer.Game.PointsPolicy;
-import BusinessService.Business_Layer.Game.ScoreTable;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;

@@ -2,7 +2,6 @@ package BusinessService.Business_Layer.UserManagement;
 
 import BusinessService.Business_Layer.Trace.CoachPersonalPage;
 import BusinessService.Business_Layer.Trace.PlayerPersonalPage;
-import BusinessService.Enum.PermissionAction;
 
 import java.time.LocalDate;
 import java.util.Observable;

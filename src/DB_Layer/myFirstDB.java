@@ -1,13 +1,13 @@
 package DB_Layer;
 
-import BusniesServic.Business_Layer.Game.Game;
-import BusniesServic.Business_Layer.Game.League;
-import BusniesServic.Business_Layer.Game.Season;
-import BusniesServic.Business_Layer.TeamManagement.Team;
-import BusniesServic.Business_Layer.UserManagement.*;
-import BusniesServic.Enum.ActionStatus;
-import BusniesServic.Service_Layer.DataManagement;
-import BusniesServic.Service_Layer.LogAndExitController;
+import BusinessService.Business_Layer.Game.Game;
+import BusinessService.Business_Layer.Game.League;
+import BusinessService.Business_Layer.Game.Season;
+import BusinessService.Business_Layer.TeamManagement.Team;
+import BusinessService.Business_Layer.UserManagement.*;
+import BusinessService.Enum.ActionStatus;
+import BusinessService.Service_Layer.DataManagement;
+import BusinessService.Service_Layer.LogAndExitController;
 import Presentation_Layer.StartSystem;
 
 import java.io.BufferedReader;

@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import sun.management.GarbageCollectionNotifInfoCompositeData;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

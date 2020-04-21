@@ -2,20 +2,10 @@ package BusinessService.Service_Layer;
 
 import static org.junit.Assert.*;
 
-import BusinessService.Business_Layer.TeamManagement.Team;
-import BusinessService.Business_Layer.UserManagement.TeamOwner;
 import BusinessService.Enum.ActionStatus;
-import BusinessService.Business_Layer.UserManagement.Subscription;
 import BusinessService.Business_Layer.UserManagement.SubscriptionFactory;
 import BusinessService.Enum.Role;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 public class LogAndExitControllerTest {
 

@@ -1,14 +1,8 @@
 package Presentation_Layer.Users_Menu;
 
-import BusniesServic.Business_Layer.UserManagement.Fan;
-import BusniesServic.Enum.ActionStatus;
-import BusniesServic.Service_Layer.DataManagement;
-import BusniesServic.Service_Layer.LogAndExitController;
+import BusinessService.Enum.ActionStatus;
+import BusinessService.Service_Layer.DataManagement;
 import Presentation_Layer.StartSystem;
-import Presentation_Layer.UserCLI;
-
-import java.io.Console;
-import java.util.Scanner;
 
 public class FanUserMenu implements UserMenu  {
 

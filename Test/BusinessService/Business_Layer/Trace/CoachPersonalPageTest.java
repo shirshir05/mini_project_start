@@ -2,15 +2,12 @@ package BusinessService.Business_Layer.Trace;
 
 import static org.junit.Assert.*;
 
-import BusinessService.Business_Layer.UserManagement.Coach;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.*;
-
-import static org.junit.Assert.*;
 
 @RunWith(Enclosed.class)
 public class CoachPersonalPageTest {

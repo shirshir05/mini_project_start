@@ -1,13 +1,11 @@
 package BusinessService.Business_Layer.Trace;
 
-import BusinessService.Business_Layer.Game.ScoreTable;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
