@@ -1,8 +1,8 @@
 package Presentation_Layer.Users_Menu;
 
-import BusniesServic.Enum.ActionStatus;
-import BusniesServic.Enum.EventType;
-import BusniesServic.Service_Layer.DataManagement;
+import BusinessService.Enum.ActionStatus;
+import BusinessService.Enum.EventType;
+import BusinessService.Service_Layer.DataManagement;
 import Presentation_Layer.StartSystem;
 import Presentation_Layer.UserCLI;
 

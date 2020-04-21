@@ -1,7 +1,6 @@
 package Presentation_Layer.Users_Menu;
 
-import BusniesServic.Business_Layer.UserManagement.Subscription;
-import BusniesServic.Enum.ActionStatus;
+import BusinessService.Enum.ActionStatus;
 
 public interface UserMenu {
 

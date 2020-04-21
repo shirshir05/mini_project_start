@@ -1,6 +1,6 @@
 package DB_Layer;
 
-import BusniesServic.Enum.ActionStatus;
+import BusinessService.Enum.ActionStatus;
 
 
 public interface InitFromDB {

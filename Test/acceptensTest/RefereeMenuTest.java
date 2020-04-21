@@ -1,16 +1,14 @@
 package acceptensTest;
 
-import BusniesServic.Business_Layer.Game.Game;
-import BusniesServic.Business_Layer.TeamManagement.Team;
-import BusniesServic.Business_Layer.UserManagement.Fan;
-import BusniesServic.Business_Layer.UserManagement.Player;
-import BusniesServic.Business_Layer.UserManagement.Referee;
-import BusniesServic.Business_Layer.UserManagement.SystemAdministrator;
-import BusniesServic.Enum.ActionStatus;
-import BusniesServic.Service_Layer.DataManagement;
-import BusniesServic.Service_Layer.GameSettingsController;
+import BusinessService.Business_Layer.Game.Game;
+import BusinessService.Business_Layer.TeamManagement.Team;
+import BusinessService.Business_Layer.UserManagement.Player;
+import BusinessService.Business_Layer.UserManagement.Referee;
+import BusinessService.Business_Layer.UserManagement.SystemAdministrator;
+import BusinessService.Enum.ActionStatus;
+import BusinessService.Service_Layer.DataManagement;
+import BusinessService.Service_Layer.GameSettingsController;
 import Presentation_Layer.StartSystem;
-import Presentation_Layer.Users_Menu.FanUserMenu;
 import Presentation_Layer.Users_Menu.RefereeUserMenu;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -18,10 +16,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.time.LocalDate;
-import java.util.Calendar;
 
-
-import javax.xml.crypto.Data;
 
 import static org.junit.Assert.*;
 

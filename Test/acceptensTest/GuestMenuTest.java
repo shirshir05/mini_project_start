@@ -1,10 +1,7 @@
 package acceptensTest;
 
-import BusniesServic.Business_Layer.UserManagement.Guest;
-import BusniesServic.Business_Layer.UserManagement.Subscription;
-import BusniesServic.Enum.ActionStatus;
-import BusniesServic.Service_Layer.DataManagement;
-import Presentation_Layer.DisplayManager;
+import BusinessService.Enum.ActionStatus;
+import BusinessService.Service_Layer.DataManagement;
 import Presentation_Layer.StartSystem;
 import Presentation_Layer.Users_Menu.GuestUserMenu;
 import org.junit.Test;
@@ -12,11 +9,8 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Collection;
-
-import static org.junit.Assert.*;
 
 @RunWith(Enclosed.class)
 public class GuestMenuTest {

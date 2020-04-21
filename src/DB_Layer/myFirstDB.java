@@ -1,13 +1,13 @@
 package DB_Layer;
 
-import BusniesServic.Business_Layer.Game.Game;
-import BusniesServic.Business_Layer.Game.League;
-import BusniesServic.Business_Layer.Game.Season;
-import BusniesServic.Business_Layer.TeamManagement.Team;
-import BusniesServic.Business_Layer.UserManagement.*;
-import BusniesServic.Enum.ActionStatus;
-import BusniesServic.Service_Layer.DataManagement;
-import BusniesServic.Service_Layer.LogAndExitController;
+import BusinessService.Business_Layer.Game.Game;
+import BusinessService.Business_Layer.Game.League;
+import BusinessService.Business_Layer.Game.Season;
+import BusinessService.Business_Layer.TeamManagement.Team;
+import BusinessService.Business_Layer.UserManagement.*;
+import BusinessService.Enum.ActionStatus;
+import BusinessService.Service_Layer.DataManagement;
+import BusinessService.Service_Layer.LogAndExitController;
 import Presentation_Layer.StartSystem;
 
 import java.io.BufferedReader;
@@ -39,8 +39,8 @@ public class myFirstDB implements InitFromDB,saveToDB {
             BufferedReader in = new BufferedReader(new FileReader(new File("DataBase/usersDB.txt")));
             String line = in.readLine();
             while(line!=null){
-                String[] splited = line.split(",");
-                ac = login.Registration(splited[1], splited[2], splited[0], splited[3]);
+                String[] spllited = line.split(",");
+                ac = login.Registration(spllited[1], spllited[2], spllited[0], spllited[3]);
                 done = done && ac.isActionSuccessful();
                 line = in.readLine();
             }
