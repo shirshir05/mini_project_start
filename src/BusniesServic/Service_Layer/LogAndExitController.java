@@ -170,7 +170,7 @@ public class LogAndExitController{
         }
         else if(teamOwner instanceof UnifiedSubscription && ((UnifiedSubscription)teamOwner).isATeamOwner())
             return searchTeamOwner(((UnifiedSubscription)teamOwner).getTeamOwner());
-        return false;
+        return true;
 
     }
 

@@ -89,7 +89,9 @@ public class UnionUserMenu implements UserMenu {
                 String referee_password =  args[3];
                 output += "insert referee mail: \nuser input- " + args[4] +"\n";
                 String mail =  args[4];
-                ActionStatus ac =StartSystem.GSc.addOrDeleteRefereeToSystem(referee_user_name, referee_password, mail, 0);
+                output += "insert referee user name: \nuser input- " + args[5] +"\n";
+                int referee =  Integer.parseInt(args[5]);
+                ActionStatus ac =StartSystem.GSc.addOrDeleteRefereeToSystem(referee_user_name, referee_password, mail, referee);
                 return new ActionStatus(ac.isActionSuccessful(),output+ac.getDescription());
             }
             else if(edit == 2){
