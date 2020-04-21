@@ -112,7 +112,7 @@ public class LogAndExitController{
      * Only the administrator can delete  users
      * @return
      */
-    public ActionStatus RemoveSubscription(String userName){
+    public ActionStatus searchTeamOwnerRemoveSubscription(String userName){
         ActionStatus AC = null;
         if(!ConstraintsCorrectness(userName)){
             AC =  new ActionStatus(false,  "The system constraints do not allow this subscription to be deleted.");
