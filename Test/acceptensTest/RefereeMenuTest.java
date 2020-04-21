@@ -61,12 +61,12 @@ public class RefereeMenuTest {
                      // See games i am referee in
                     {"2" , null , null ,null , null , null , true},  //=> true- print the games      6
                     // Add event in game
-                    {"3" , "1", "Maccabi", "Oren", "goal", null, false}, //  => false- event added to the game  7
+                    {"3" , "1", "Maccabi", "Oren", "goal", null, true}, //  => false- event added to the game  7
                     {"3" , "5", "Maccabi", "Raz", "goal", null, false}, //  => false- wrong game id      8
-                    {"3" , "1", "Hapoel", "Raz", "goal", null, false}, //  =>  false- wrong team name    9
+                    {"3" , "5", "Hapoel", "Raz", "goal", null, false}, //  =>  false- wrong team name    9
                     {"3" , "1", null , "Raz", "goal", null, false}, //  =>  false- wrong team name    10
                     {"3" , "1", "Maccabi", "Happy", "goal", null, false}, //  => false - wrong player name   11
-                    {"3" , "1", "Maccabi", null , "goal", null, false}, //  => false - wrong player name    12
+                    {"3" , "5", "Maccabi", null , "goal", null, false}, //  => false - wrong player name    12
                     {"3" , "1", "Maccabi", "Oren", "flipflop", null, false}, //  => false- wrong event     13
                     {"3" , "1", "Maccabi", "Raz", null, null, false}, //  => false- wrong event       14
                     // Exit / Logout
@@ -94,6 +94,7 @@ public class RefereeMenuTest {
         @Test
         public void  RefereeMenu1(){
             StartSystem.cleanSystem();
+            Game.game_id =0;
             GameSettingsController g = new GameSettingsController();
             Referee ref = new Referee("Raz","1234","raz@post.bgu.ac.il");
             DataManagement.setCurrent(ref);
