@@ -41,11 +41,16 @@ public class EditAndShowUserDetails {
         return null;
     }
 
+    /**
+     * @param team_manager_user_name -
+     * @param permission -
+     * @return ActionStatus
+     */
     public ActionStatus addPermissionToTeamManager(String team_manager_user_name,String permission){
-        ActionStatus ac = null;
+        ActionStatus ac;
         if(DataManagement.getCurrent().permissions.check_permissions(PermissionAction.Appointment_of_team_manager)){
             Subscription manager = DataManagement.getSubscription(team_manager_user_name);
-            PermissionAction perm = DataManagement.getCurrent().permissions.getPermissionActionFromString(permission);
+            PermissionAction perm = Permissions.getPermissionActionFromString(permission);
             if(manager!=null && perm!=null){
                 manager.getPermissions().add_permissions(perm);
                 ac = new ActionStatus(true,"permission added successfully");
@@ -60,12 +65,18 @@ public class EditAndShowUserDetails {
         return ac;
     }
 
+    /**
+     * return personal page of user
+     * @param user_name -
+     * @return ActionStatus
+     */
     public ActionStatus watchPersonalDetails(String user_name) {
         Subscription subscription = DataManagement.containSubscription(user_name);
         ActionStatus ac = getActionStatus(subscription);
-        if (ac != null) return ac;
-        subscription.toString();
-        return new ActionStatus(true, "The user details was successfully shown!");
+        if (ac != null) {
+            return ac;
+        }
+        return new ActionStatus(true,  subscription.toString());
     }
 
     public ActionStatus editSubscriptionName(String user_name, String newValue) {
@@ -90,17 +101,6 @@ public class EditAndShowUserDetails {
         return new ActionStatus(true, "The Email of the Subscription was successfully changed!");
     }
 
-    public ActionStatus editSubscriptionUserName(String user_name, String newUserName) {
-        Subscription subscription = DataManagement.containSubscription(user_name);
-        ActionStatus ac = getActionStatus(subscription);
-        if (ac != null) return ac;
-        if(DataManagement.InputTest(newUserName, DEFAULT_PASSWORD) != null) {
-            return new ActionStatus(false, "The new User Name is not legal");
-        }
-        subscription.setUserName(newUserName);
-        return new ActionStatus(true, "The User Name of the Subscription was successfully changed!");
-    }
-
     public ActionStatus editSubscriptionPassword(String user_name, String currentPassword, String newPassword) {
         Subscription subscription = DataManagement.containSubscription(user_name);
         ActionStatus ac = getActionStatus(subscription);
@@ -120,7 +120,7 @@ public class EditAndShowUserDetails {
         Subscription subscription = DataManagement.containSubscription(user_name);
         ActionStatus ac = getActionStatus(subscription);
         if (ac != null) return ac;
-        if (!isACoach(subscription)) {
+        if (isNorACoach(subscription)) {
             return new ActionStatus(false, "The username is not defined as a coach on the system.");
         }
         if(newValue == null || newValue.length() == 0){
@@ -139,7 +139,7 @@ public class EditAndShowUserDetails {
         Subscription subscription = DataManagement.containSubscription(user_name);
         ActionStatus ac = getActionStatus(subscription);
         if (ac != null) return ac;
-        if (!isACoach(subscription)) {
+        if (isNorACoach(subscription)) {
             return new ActionStatus(false, "The username is not defined as a coach on the system.");
         }
         if(newValue == null || newValue.length() == 0){
@@ -173,7 +173,7 @@ public class EditAndShowUserDetails {
         Subscription subscription = DataManagement.containSubscription(user_name);
         ActionStatus ac = getActionStatus(subscription);
         if (ac != null) return ac;
-        if (!isAPlayer(subscription)) {
+        if (isNotAPlayer(subscription)) {
             return new ActionStatus(false, "The username is not defined as a player on the system.");
         }
         if(newValue == null || newValue.length() == 0){
@@ -188,6 +188,7 @@ public class EditAndShowUserDetails {
         return new ActionStatus(true, "The Position of player was successfully changed!");
     }
 
+    // TODO ORTAL
 /*    public ActionStatus editPlayerBirthDate(String user_name, LocalDate newValue) {
         Subscription subscription = DataManagement.containSubscription(user_name);
         ActionStatus ac = getActionStatus(subscription);
@@ -210,10 +211,9 @@ public class EditAndShowUserDetails {
         if (subscription == null) {
             return new ActionStatus(false, "there is no subscription in the system by this username.");
         }
-        if (!isAPlayer(subscription)) {
+        if (isNotAPlayer(subscription)) {
             return new ActionStatus(false, "The user is not defined as a player on the system.");
         }
-
         Subscription theEditor = DataManagement.getCurrent();
         PlayerPersonalPage personalPage = null;
         if(subscription instanceof Player) {
@@ -228,51 +228,36 @@ public class EditAndShowUserDetails {
         if(!personalPage.checkPermissionToEdit(theEditor.getUserName())){
             return new ActionStatus(false, "You don't have permissions to edit this player's personal page");
         }
-
         if(values == null || values.length != 8)
             return new ActionStatus(false,"Illegal parameters");
-
         if(values[0] instanceof Date)
             personalPage.setDateOfBirth((Date) values[0]);
-
         if(verifyString(1, values))
             personalPage.setCountryOfBirth((String) values[1]);
-
         if(verifyString(2, values))
             personalPage.setCityOfBirth((String) values[2]);
-
         if(verifyStringToDouble(3, values))
             personalPage.setHeight(Double.parseDouble((String) values[3]));
-
         if(verifyStringToDouble(4, values))
             personalPage.setWeight(Double.parseDouble((String) values[4]));
-
         if(verifyString(5, values))
             personalPage.setPosition((String) values[5]);
-
         if(verifyStringToInteger(6, values))
             personalPage.setJerseyNumber(Integer.parseInt((String) values[6]));
-
         if(verifyString(7, values))
             personalPage.setName((String) values[7]);
-
         return new ActionStatus(true, "The personal page of player was successfully updated!");
     }
 
     public ActionStatus editCoachPersonalPage(String user_name ,Object[] values) {
-
         Subscription subscription = DataManagement.containSubscription(user_name);
-
         if (subscription == null) {
             return new ActionStatus(false, "There is no subscription in the system by this username.");
         }
-
-        if (!isACoach(subscription)) {
+        if (isNorACoach(subscription)) {
             return new ActionStatus(false, "The username is not defined as a coach on the system.");
         }
-
         Subscription theEditor = DataManagement.getCurrent();
-
         CoachPersonalPage personalPage = null;
         if(subscription instanceof Coach) {
             personalPage = ((Coach) subscription).getPersonalPage();
@@ -280,7 +265,6 @@ public class EditAndShowUserDetails {
         else if (subscription instanceof UnifiedSubscription){
             personalPage = ((UnifiedSubscription)subscription).getCoachPersonalPage();
         }
-
         if(personalPage == null){
             return new ActionStatus(false, "Cannot find personal page");
         }
@@ -288,62 +272,45 @@ public class EditAndShowUserDetails {
 
             return new ActionStatus(false, "You do not have permissions to edit this coach personal page");
         }
-
         if(values == null || values.length != 5)
             return new ActionStatus(false,"Illegal parameters");
-
         if(values[0] instanceof Date)
             personalPage.setDateOfBirth((Date) values[0]);
-
         if(verifyString(1, values))
             personalPage.setCountryOfBirth((String)values[1]);
-
         if(verifyStringToDouble(2, values))
             personalPage.setYearOfExperience(Double.parseDouble((String) values[2]));
-
         if(verifyStringToInteger(3,values))
             personalPage.setNumOfTitles(Integer.parseInt((String) values[3]));
-
         if(verifyString(4, values))
             personalPage.setName((String) values[4]);
-
         return new ActionStatus(true, "The personal page of coach was successfully update!");
     }
 
     public ActionStatus editTeamPersonalPage(String team, Object[] values) {
 
         Team teamObject = DataManagement.findTeam(team);
-
         if(teamObject == null){
 
             return new ActionStatus(false, "There is no such a team in the system");
         }
-
         Subscription theEditor = DataManagement.getCurrent();
-
         if(!teamObject.getPersonalPage().checkPermissionToEdit(theEditor.getUserName())){
 
             return new ActionStatus(false, "You don't have permissions to edit this team's personal page");
         }
-
         if(values == null || values.length != 5)
             return new ActionStatus(false,"Illegal parameters");
-
         if(values[0] instanceof Date)
             teamObject.getPersonalPage().setYearOfFoundation((Date) values[0]);
-
         if(verifyString(1,values))
             teamObject.getPersonalPage().setPresidentName((String) values[1]);
-
         if(verifyString(2,values))
             teamObject.getPersonalPage().setStadiumName((String) values[2]);
-
         if(values[3] instanceof ScoreTable)
             teamObject.getPersonalPage().setScoreTable((ScoreTable) values[3]);
-
         if(verifyString(4,values))
             teamObject.getPersonalPage().setName((String) values[4]);
-
         return new ActionStatus(true, "The team personal page was successfully updated!");
     }
 
@@ -356,7 +323,6 @@ public class EditAndShowUserDetails {
             AC = new ActionStatus(false,"Invalid username.");
         }
         else if (DataManagement.getCurrent().permissions.check_permissions(PermissionAction.personal_page)) {
-
             if (DataManagement.getCurrent() instanceof Coach) {
                 Coach coach = (Coach) DataManagement.getCurrent();
                 coach.getPersonalPage().addPermissionToEdit(addPermissionsToThisUser);
@@ -455,12 +421,12 @@ public class EditAndShowUserDetails {
         return null;
     }
 
-    private boolean isACoach(Subscription subscription) {
-        return subscription instanceof Coach || (subscription instanceof UnifiedSubscription && ((UnifiedSubscription)subscription).isACoach());
+    private boolean isNorACoach(Subscription subscription) {
+        return !(subscription instanceof Coach) && (!(subscription instanceof UnifiedSubscription) || !((UnifiedSubscription) subscription).isACoach());
     }
 
-    private boolean isAPlayer(Subscription subscription) {
-        return subscription instanceof Player || (subscription instanceof UnifiedSubscription && ((UnifiedSubscription)subscription).isAPlayer());
+    private boolean isNotAPlayer(Subscription subscription) {
+        return !(subscription instanceof Player) && (!(subscription instanceof UnifiedSubscription) || !((UnifiedSubscription) subscription).isAPlayer());
     }
 
     //endregion

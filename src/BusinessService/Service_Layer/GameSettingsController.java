@@ -9,7 +9,9 @@ import BusinessService.Enum.PermissionAction;
 import DB_Layer.logger;
 import Presentation_Layer.Spelling;
 import Presentation_Layer.StartSystem;
+import org.omg.PortableInterceptor.ACTIVE;
 
+import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -20,358 +22,7 @@ import java.util.HashSet;
 public class GameSettingsController {
 
 
-    /**
-     * this function let the union rep to define a league
-     * @param name is the name of the league
-     * @return true if it was defined
-     */
-    public boolean defineLeague(String name){
-        if (name!=null && DataManagement.getCurrent() instanceof UnionRepresentative) {
-            DataManagement.addToListLeague(new League(name));
-            Spelling.updateDictionary("league: " + name);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * this function let the union rep to define a season to a leauge
-     * @param league_name is the name of the leauge
-     * @param year is the season
-     * @return true if the season was updated
-     */
-    public boolean defineSeasonToLeague(String league_name, String year,int win, int lose, int equal){
-        boolean ans = false;
-        if(win < 0 || lose < 0 || equal < 0){
-            return ans;
-        }
-        if (year!=null && league_name!=null && DataManagement.getCurrent() instanceof UnionRepresentative && DataManagement.findLeague(league_name)!=null) {
-            int intFormatYear= Integer.parseInt(year);
-            if (intFormatYear>1900 && intFormatYear<2022){
-                Season addSeason =new Season(year);
-                DataManagement.findLeague(league_name).addSeason(addSeason);
-                PointsPolicy pointsPolicy = new PointsPolicy(win,lose,equal);
-                ScoreTable scoreTable = new ScoreTable(pointsPolicy);
-                addSeason.setScoreTable(scoreTable);
-                ans = true;
-                Spelling.updateDictionary("season: " + league_name);
-            }
-
-        }
-        logger.log("Settings controller: defineSeasonToLeague, league name: "+ league_name+" ,year: "+year +" ,successful: "+ ans);
-        return ans;
-    }
-
-    /**
-     * update point policy of Season
-     * @param league_name
-     * @param year
-     * @param win
-     * @param lose
-     * @param equal
-     * @return
-     */
-    public ActionStatus updatePointsPolicy(String league_name, String year,int win, int lose, int equal){
-        ActionStatus AC;
-        if(win < 0 || lose < 0 || equal < 0){
-            AC = new ActionStatus(false,"Policy details below 0 are therefore invalid.");
-        }else{
-          if (year!=null && league_name!=null && DataManagement.getCurrent() instanceof UnionRepresentative && DataManagement.findLeague(league_name)!=null) {
-              int intFormatYear= Integer.parseInt(year);
-              Date date = new Date();
-              LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-              int yearNow  = localDate.getYear();
-              if(yearNow >=intFormatYear ){
-                  AC = new ActionStatus(false,"The season has already begun You are not allowed to change policies.");
-              }
-              else if(DataManagement.findLeague(league_name).getSeason(year)!=null){
-                    DataManagement.findLeague(league_name).getSeason(year).setScoreTable(new ScoreTable(new PointsPolicy(win,lose,equal)));
-                  AC = new ActionStatus(true,"The policy has been changed successfully.");
-              }else{
-                  AC = new ActionStatus(false,"One of the fields is incorrect..");
-              }
-            }else{
-              AC = new ActionStatus(false,"One of the fields is incorrect..");
-            }
-        }
-        return AC;
-
-    }
-
-    /**
-     * This function let the union rep to add a referee to the system
-     * int add_or_remove
-     * @param referee_user_name is the username of the referee
-     * @param referee_password is the password of the referee
-     * @param mail is the password of the referee
-     * @param add_or_remove is 0 to add and 1 to remove
-     * @return true if the operation succeeded
-     */
-    public ActionStatus addOrDeleteRefereeToSystem(String referee_user_name, String referee_password, String mail, int add_or_remove){
-        ActionStatus ac = null;
-        if (DataManagement.getCurrent() instanceof UnionRepresentative) {
-            if (referee_user_name != null && referee_password != null) {
-                Subscription current_referee = DataManagement.containSubscription(referee_user_name);
-                if (add_or_remove == 0 && current_referee == null) {
-                    ac = StartSystem.LEc.Registration(referee_user_name, referee_password,"Referee", mail);
-                    String mail_content= "Hello! you were invited to our system! your username: "+referee_user_name+" and you password: "+referee_password;
-                    DataManagement.getSubscription(referee_user_name).sendEMail(mail,mail_content);
-                    Spelling.updateDictionary("referee: " + referee_user_name);
-                } else if (add_or_remove == 1) {
-                    if (current_referee != null) {
-                        ac = StartSystem.LEc.RemoveSubscription(referee_user_name);
-                    }else{
-                        ac = new ActionStatus(false,"No subscription exists in the system");
-
-                    }
-                }else{
-                    ac = new ActionStatus(false,"number illegal");
-
-                }
-
-            }
-        }
-        //logger.log("Settings controller: addOrDeleteRefereeToSystem, referee name: "+ referee_user_name +" ,add or remove: "+add_or_remove +" ,successful: "+ ac.isActionSuccessful() +", "+ ac.getDescription());
-        return ac;
-    }
-
-    /**
-     * This function let the union rep to add a referee to the system
-     * @param league_name
-     * @param referee_user_name
-     * @param season_year
-     * @return
-     */
-    public ActionStatus defineRefereeInLeague(String league_name, String referee_user_name, String season_year) {
-        ActionStatus ac = null;
-        League league = DataManagement.findLeague(league_name);
-        Subscription referee = DataManagement.containSubscription(referee_user_name);
-        if (league != null && referee!=null && referee instanceof Referee) {
-            Season season = league.getSeason(season_year);
-            if (season!=null){
-                season.addReferee((Referee)referee);
-                ac = new ActionStatus(true, "set successfully");
-            }
-            else{
-                ac = new ActionStatus(false, "season not exists");
-            }
-        }
-        else{
-            ac = new ActionStatus(false, "league or referee user not exists");
-        }
-        logger.log("Settings controller: defineRefereeInLeague, league name: "+ league_name +" ,referee name: "+referee_user_name+" ,season: "+season_year +" ,successful: "+ ac.isActionSuccessful() +" , "+ac.getDescription());
-        return ac;
-    }
-
-
-    public ActionStatus createGame(LocalDate date, String field, String host, String guest,
-                              String headReferee, String line1Referee, String line2Referee){
-        ActionStatus AC = null;
-        if (! (DataManagement.getCurrent() instanceof SystemAdministrator)){
-            AC = new ActionStatus(false, "You are not a system administrator");
-        }
-        else if(date==null || field==null || host==null || guest==null || headReferee==null || line1Referee==null || line2Referee==null){
-            AC = new ActionStatus(false, "one of the parameters is null");
-        }
-        else if(DataManagement.findTeam(host)==null){
-            AC = new ActionStatus(false, "The host team does not exist in the system");
-        }
-        else if(DataManagement.findTeam(guest)==null){
-            AC = new ActionStatus(false, "The guest team does not exist in the system");
-        }
-        else if(!(DataManagement.getSubscription(headReferee) instanceof Referee) || !(DataManagement.getSubscription(line1Referee) instanceof Referee)
-        || !(DataManagement.getSubscription(line2Referee) instanceof Referee)){
-            AC = new ActionStatus(false, "One of the referees is not defined in the system");
-        }
-        else{
-            createGameAfterChecks(date, field, host, guest, headReferee, line1Referee, line2Referee);
-            AC = new ActionStatus(true, "The game was created successfully");
-        }
-        return AC;
-    }
-
-    /**
-     * Creates a game after checking all the fields are valid
-     * Cannot receive null or illegal parameters
-     * @param date notnull
-     * @param field notnull
-     * @param host notnull
-     * @param guest notnull
-     * @param headReferee notnull
-     * @param line1Referee notnull
-     * @param line2Referee notnull
-     */
-    private Game createGameAfterChecks(LocalDate date, String field, String host, String guest, String headReferee, String line1Referee, String line2Referee) {
-        Game g = new Game(field, date, DataManagement.findTeam(host),DataManagement.findTeam(guest));
-        g.setLinesman1Referee((Referee)DataManagement.getSubscription(line1Referee));
-        g.setLinesman2Referee((Referee)DataManagement.getSubscription(line2Referee));
-        g.setHeadReferee((Referee)DataManagement.getSubscription(headReferee));
-        DataManagement.addGame(g);
-        return g;
-    }
-
-
-    /**
-     * This function lets a referee in a game to update a new event
-     * @param game_id
-     * @param team_name
-     * @param player_name
-     * @param event
-     * @return true if operation succeeded
-     */
-    public ActionStatus refereeCreateNewEvent(int game_id, String team_name, String player_name, EventType event ){
-        ActionStatus ac = null;
-        Game game = DataManagement.getGame(game_id);
-        if(game == null ){
-            ac = new ActionStatus(false,"The game id does not exist.") ;
-
-        }
-        else if(DataManagement.findTeam(team_name)== null){
-            ac = new ActionStatus(false,"The team id does not exist.");
-        }
-        else if(DataManagement.findTeam(team_name).getPlayer(player_name) == null){
-            ac = new ActionStatus(false,"The player does not exist in the team.");
-        }
-        else if(event==null){
-            ac = new ActionStatus(false,"The event type does not exist.");
-        }
-        else if ((DataManagement.getCurrent() instanceof Referee) &&    DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.update_event)){
-            // check if the referee is a referee of the team
-            if ((game.getHeadReferee()!=null && game.getHeadReferee().getUserName().equals(DataManagement.getCurrent().getUserName()) )||
-                    game.getLinesman1Referee().getUserName().equals(DataManagement.getCurrent().getUserName()) ||
-                    game.getLinesman2Referee().getUserName().equals(DataManagement.getCurrent().getUserName()) ){
-                game.updateNewEvent(team_name,player_name,event);
-                ac = new ActionStatus(true, "Event successfully updated.");
-            }else{
-                ac = new ActionStatus(false,"You are not a judge of the current game.");
-            }
-        }else{
-            ac = new ActionStatus(false,"You may not take this action.");
-        }
-        logger.log("Game controller: refereeCreateNewEvent, team: "+team_name +" , player: "+ player_name +" ,event : " +event +" ,created:  "+ ac.getDescription());
-        return ac;
-    }
-
-    /**
-     * This function shows a referee which games he participates in
-     * @return
-     */
-    public ActionStatus refereeWatchGames(){
-        if (DataManagement.getCurrent() instanceof Referee){
-            Referee current = (Referee)DataManagement.getCurrent();
-            return new ActionStatus(true,current.gamesListToString());
-        }
-        return new ActionStatus(false,"You are not a referee!");
-    }
-
-    /**
-     *
-     */
-    public String displayScoreTable(String league, String seasonYear){
-        League leagueObject = DataManagement.findLeague(league);
-        if(leagueObject == null){
-            return "The system doesn't exist league with the name: " + league;
-        }
-        Season seasonObject = leagueObject.getSeason(seasonYear);
-        if(seasonObject == null){
-            return "The League doesn't exist season in the year of: " + seasonYear;
-        }
-        if(seasonObject.getScoreTable() == null){
-            return "The score table doesn't exist yet";
-        }
-        return seasonObject.getScoreTable().toString();
-    }
-
-    /**
-     * @param gameId
-     * @param hostGoals
-     * @param guestGoals
-     * @param seasonYear
-     * @param league
-     * @return
-     */
-    public ActionStatus endGame(int gameId, int hostGoals, int guestGoals, String seasonYear, String league) {
-        ActionStatus AC;
-        if(DataManagement.getGame(gameId) == null){
-            AC = new ActionStatus(false,"The game does not exist in the system.");
-        }
-        else if( DataManagement.findLeague(league) == null){
-        }
-        if(DataManagement.findLeague(league).getSeason(seasonYear) == null){
-            AC = new ActionStatus(false,"The League doesn't exist season in the year Of " + seasonYear);
-        }
-        if(!DataManagement.getGame(gameId).getHeadReferee().equals(DataManagement.getCurrent())){
-            AC = new ActionStatus(false,"You are not set as the main referee in the game and therefore you are not allowed to close a game.");
-        }
-        if(DataManagement.findLeague(league).getSeason(seasonYear).getScoreTable() == null){
-            AC = new ActionStatus(false,"The score table doesn't exist yet.");
-        }else{
-            DataManagement.getGame(gameId).endGame(DataManagement.findLeague(league).getSeason(seasonYear).getScoreTable(), hostGoals, guestGoals);
-            AC = new ActionStatus(false,"successfully end game.");
-        }
-        return AC;
-    }
-    public ActionStatus refereeEditGameEvent(int game_id, Team arg_team, EventType arg_event_type, Player arg_player, LocalDateTime eventTime){
-        ActionStatus AC = null;
-        Game game = DataManagement.getGame(game_id);
-        if (game.getHeadReferee().equals(DataManagement.getCurrent())){
-            for (Event currentEvent : game.getEventList()){
-                if (currentEvent.getEventTime().equals(eventTime)){
-                    if (arg_team!=null && game.getHost().equals(arg_team)){
-                        currentEvent.setTeam(arg_team);
-                        if (arg_player!=null && game.getHost().getPlayer(arg_player.getUserName()).equals(arg_player)){
-                            currentEvent.setPlayer(arg_player);
-                        }
-                        else{
-                            AC = new ActionStatus(false, "the player does not play in that team");
-                        }
-                    }
-                    else if (arg_team!=null && game.getGuest().equals(arg_team)){
-                        currentEvent.setTeam(arg_team);
-                        if (arg_player!=null && game.getGuest().getPlayer(arg_player.getUserName()).equals(arg_player)){
-                            currentEvent.setPlayer(arg_player);
-                        }
-                        else{
-                            AC = new ActionStatus(false, "the player does not play in that team");
-                        }
-                    }
-                    else{
-                        AC = new ActionStatus(false, "the team is not a part in the game");
-                    }
-                    currentEvent.setEventType(arg_event_type);
-                }
-                else{
-                    AC = new ActionStatus(false, "there was not event in this time");
-                }
-            }
-            if (AC!=null) {
-                AC = new ActionStatus(true, "The events were edited");
-            }
-        }
-        else{
-            AC = new ActionStatus(false,"you are not the head referee in the game.");
-        }
-        return AC;
-    }
-
-    public String printGameEvents(int game_id){
-        String eventList="";
-        Game g = DataManagement.getGame(game_id);
-        for (Event e : g.getEventList()){
-            eventList+=e.toString()+"/n";
-        }
-        return eventList;
-    }
-
-
-    public EventType getEventFromString(String str){
-        if(! (Arrays.stream(EventType.values()).anyMatch(e -> e.name().equals(str)))){
-            return null;
-        }else{
-            EventType enumEvent =  EventType.valueOf(str);
-            return enumEvent;
-        }
-    }
+/*----------------------------------------------------------create Game------------------------------------------------------------------------*/
 
     /**
      * Allows to add a team to a season in league. Only the union representative can perform this (with the permissions received by default)
@@ -405,7 +56,6 @@ public class GameSettingsController {
             // ActionStatus AC = null;
             HashSet<League> allLeagues = DataManagement.getListLeague();
             for (League league : allLeagues) {
-
                 Season season = league.getSeason(seasonName);
                 if (season != null) {
                     //the season exists in the league
@@ -456,5 +106,430 @@ public class GameSettingsController {
     private LocalDate getDateForGame() {
         return LocalDate.now();
     }
+
+
+    public ActionStatus createGame(LocalDate date, String field, String host, String guest,
+                                   String headReferee, String line1Referee, String line2Referee){
+        ActionStatus AC;
+        if (! (DataManagement.getCurrent() instanceof SystemAdministrator)){
+            AC = new ActionStatus(false, "You are not a system administrator");
+        }
+        else if(date==null || field==null || host==null || guest==null || headReferee==null || line1Referee==null || line2Referee==null){
+            AC = new ActionStatus(false, "one of the parameters is null");
+        }
+        else if(DataManagement.findTeam(host)==null){
+            AC = new ActionStatus(false, "The host team does not exist in the system");
+        }
+        else if(DataManagement.findTeam(guest)==null){
+            AC = new ActionStatus(false, "The guest team does not exist in the system");
+        }
+        else if(!(DataManagement.getSubscription(headReferee) instanceof Referee) || !(DataManagement.getSubscription(line1Referee) instanceof Referee)
+                || !(DataManagement.getSubscription(line2Referee) instanceof Referee)){
+            AC = new ActionStatus(false, "One of the referees is not defined in the system");
+        }
+        else{
+            createGameAfterChecks(date, field, host, guest, headReferee, line1Referee, line2Referee);
+            AC = new ActionStatus(true, "The game was created successfully");
+        }
+        return AC;
+    }
+
+
+    /**
+     * Creates a game after checking all the fields are valid
+     * Cannot receive null or illegal parameters
+     * @param date notnull
+     * @param field notnull
+     * @param host notnull
+     * @param guest notnull
+     * @param headReferee notnull
+     * @param line1Referee notnull
+     * @param line2Referee notnull
+     */
+    private Game createGameAfterChecks(LocalDate date, String field, String host, String guest, String headReferee, String line1Referee, String line2Referee) {
+        Game g = new Game(field, date, DataManagement.findTeam(host),DataManagement.findTeam(guest));
+        g.setLinesman1Referee((Referee)DataManagement.getSubscription(line1Referee));
+        g.setLinesman2Referee((Referee)DataManagement.getSubscription(line2Referee));
+        g.setHeadReferee((Referee)DataManagement.getSubscription(headReferee));
+        DataManagement.addGame(g);
+        return g;
+    }
+
+/*---------------------------------------------------------update point policy----------------------------------------------------------------*/
+
+    /**
+     * update point policy of Season -
+     * The league table is updated according to a number of wins, losses and equal
+     * @param league_name -
+     * @param year -
+     * @param win -
+     * @param lose -
+     * @param equal -
+     * @return ActionStatus
+     */
+    public ActionStatus updatePointsPolicy(String league_name, String year,int win, int lose, int equal){
+        ActionStatus AC;
+        if(win < 0 || lose < 0 || equal < 0){
+            AC = new ActionStatus(false,"Policy details below 0 are therefore invalid.");
+        }else{
+            League league = DataManagement.findLeague(league_name);
+            if (year!=null && league_name!=null && DataManagement.getCurrent() instanceof UnionRepresentative && league!=null) {
+                int intFormatYear= Integer.parseInt(year);
+                Date date = new Date();
+                LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                int yearNow  = localDate.getYear();
+                if(yearNow >=intFormatYear ){
+                    AC = new ActionStatus(false,"The season has already begun You are not allowed to change policies.");
+                }
+                else if(league.getSeason(year)!=null){
+                    league.getSeason(year).setScoreTable(new ScoreTable(new PointsPolicy(win,lose,equal)));
+                    AC = new ActionStatus(true,"The policy has been changed successfully.");
+                }else{
+                    AC = new ActionStatus(false,"No season exists in the league.");
+                }
+            }else{
+                AC = new ActionStatus(false,"One of the fields is incorrect..");
+            }
+        }
+        return AC;
+
+    }
+
+    /*------------------------------------------------------define League-----------------------------------------------------------------*/
+
+    /**
+     * this function let the union rep to define a league
+     * @param name is the name of the league
+     * @return true if it was defined
+     */
+    public ActionStatus defineLeague(String name){
+        ActionStatus AC;
+        if (name!=null && DataManagement.getCurrent() instanceof UnionRepresentative && DataManagement.findLeague(name)==null) {
+            DataManagement.addToListLeague(new League(name));
+            Spelling.updateDictionary("league: " + name);
+            AC = new ActionStatus(true, "The league was successfully added to the system.");
+        }else{
+            AC = new ActionStatus(false, "One of the parameters is incorrect, you are not allowed to perform the action or the league name is invalid.");
+
+        }
+        return AC;
+    }
+    /*------------------------------------------define Season To League--------------------------------------------------*/
+
+    /**
+     * this function let the union rep to define a season to a leauge
+     * @param league_name is the name of the leauge
+     * @param year is the season
+     * @return true if the season was updated
+     */
+    public ActionStatus defineSeasonToLeague(String league_name, String year,int win, int lose, int equal){
+        ActionStatus AC;
+        boolean ans = false;
+        if(win < 0 || lose < 0 || equal < 0){
+            AC = new ActionStatus(false, "The parameters cannot be less than 0.");
+        }
+        League league =  DataManagement.findLeague(league_name);
+        if (year!=null && league_name!=null && DataManagement.getCurrent() instanceof UnionRepresentative && league!=null) {
+            int intFormatYear= Integer.parseInt(year);
+            if (intFormatYear>1900 && intFormatYear<2022){
+                Season addSeason =new Season(year);
+                league.addSeason(addSeason);
+                PointsPolicy pointsPolicy = new PointsPolicy(win,lose,equal);
+                ScoreTable scoreTable = new ScoreTable(pointsPolicy);
+                addSeason.setScoreTable(scoreTable);
+                Spelling.updateDictionary("season: " + league_name);
+                AC = new ActionStatus(false, "The season has been set successfully in the league.");
+            }else{
+                AC = new ActionStatus(false, "The year must be less than 2022 and greater than 1900.");
+
+            }
+
+        }else{
+            AC = new ActionStatus(false, "One of the data is incorrect.");
+
+        }
+        logger.log("Settings controller: defineSeasonToLeague, league name: "+ league_name+" ,year: "+year +" ,successful: "+ ans);
+        return AC;
+    }
+
+
+    /*------------------------------------------referee function--------------------------------------------------*/
+
+    /**
+     * The main referee and the game. The referee updates the score ans win
+     * @param gameId -
+     * @param hostGoals -
+     * @param guestGoals -
+     * @param seasonYear -
+     * @param league -
+     * @return ActionStatus
+     */
+    public ActionStatus endGame(int gameId, int hostGoals, int guestGoals, String seasonYear, String league) {
+        ActionStatus AC;
+        League league1 =  DataManagement.findLeague(league);
+        Game game = DataManagement.getGame(gameId);
+        if( game== null){
+            AC = new ActionStatus(false,"The game does not exist in the system.");
+        }
+        else if(game.getDate().isAfter(LocalDate.now()) ){
+            AC = new ActionStatus(false,"The time of the game has not arrived.");
+        }
+        else if( league1 == null){
+            AC = new ActionStatus(false,"The league does not exist in the system.");
+        }
+        else if(league1.getSeason(seasonYear) == null){
+            AC = new ActionStatus(false,"The League doesn't exist season in the year Of " + seasonYear);
+        }
+        else if(!game.getHeadReferee().equals(DataManagement.getCurrent())){
+            AC = new ActionStatus(false,"You are not set as the main referee in the game and therefore you are not allowed to close a game.");
+        }
+        else if(league1.getSeason(seasonYear).getScoreTable() == null){
+            AC = new ActionStatus(false,"The score table doesn't exist yet.");
+        }else{
+            DataManagement.getGame(gameId).endGame(league1.getSeason(seasonYear).getScoreTable(), hostGoals, guestGoals);
+            AC = new ActionStatus(false,"successfully end game.");
+        }
+        return AC;
+    }
+
+
+    /**
+     * This function let the union rep to add a referee to the system
+     * int add_or_remove
+     * @param referee_user_name is the username of the referee
+     * @param referee_password is the password of the referee
+     * @param mail is the password of the referee
+     * @param add_or_remove is 0 to add and 1 to remove
+     * @return true if the operation succeeded
+     */
+    public ActionStatus addOrDeleteRefereeToSystem(String referee_user_name, String referee_password, String mail, int add_or_remove){
+        ActionStatus ac;
+        if (DataManagement.getCurrent() instanceof UnionRepresentative) {
+            if (referee_user_name != null && referee_password != null) {
+                Subscription current_referee = DataManagement.containSubscription(referee_user_name);
+                if (add_or_remove == 0 && current_referee == null) { //add
+                    ac = StartSystem.LEc.Registration(referee_user_name, referee_password,"Referee", mail);
+                    String mail_content= "Hello! you were invited to our system! your username: "+referee_user_name+" and you password: "+referee_password;
+                    //TODO RAZ - no mail????
+                    DataManagement.getSubscription(referee_user_name).sendEMail(mail,mail_content);
+                } else if (add_or_remove == 1) { //remove
+                    if (current_referee != null) {
+                        ac = StartSystem.LEc.RemoveSubscription(referee_user_name);
+                    }else{
+                        ac = new ActionStatus(false,"No subscription exists in the system");
+                    }
+                }else{
+                    ac = new ActionStatus(false,"number illegal");
+                }
+            }else{
+                ac = new ActionStatus(false,"Username or password cannot be empty");
+            }
+        }
+        else{
+            ac = new ActionStatus(false,"You are not authorized to perform this action.");
+        }
+        logger.log("Settings controller: addOrDeleteRefereeToSystem, referee name: "+ referee_user_name +" ,add or remove: "+add_or_remove +" ,successful: "+ ac.isActionSuccessful() +", "+ ac.getDescription());
+        return ac;
+    }
+
+
+    /**
+     * This function let the union rep to add a referee to the system
+     * @param league_name -
+     * @param referee_user_name -
+     * @param season_year -
+     * @return ActionStatus
+     */
+    public ActionStatus defineRefereeInLeague(String league_name, String referee_user_name, String season_year) {
+        ActionStatus ac;
+        League league = DataManagement.findLeague(league_name);
+        Subscription referee = DataManagement.containSubscription(referee_user_name);
+        if (league != null && referee instanceof Referee) {
+            Season season = league.getSeason(season_year);
+            if (season!=null){
+                season.addReferee((Referee)referee);
+                ac = new ActionStatus(true, "set successfully");
+            }
+            else{
+                ac = new ActionStatus(false, "season not exists");
+            }
+        }
+        else{
+            ac = new ActionStatus(false, "league or referee user not exists");
+        }
+        logger.log("Settings controller: defineRefereeInLeague, league name: "+ league_name +" ,referee name: "+referee_user_name+" ,season: "+season_year +" ,successful: "+ ac.isActionSuccessful() +" , "+ac.getDescription());
+        return ac;
+    }
+
+
+    /**
+     * A referee can add and edit events that happened in the game
+     * @param game_id  -
+     * @param arg_team -
+     * @param arg_event_type -
+     * @param arg_player -
+     * @param eventTime -
+     * @return ActionStatus
+     */
+    public ActionStatus refereeEditGameEvent(int game_id, String arg_team, String arg_event_type, Player arg_player, LocalDateTime eventTime){
+        ActionStatus AC = new ActionStatus(false, "one of details incorrect."); ;
+        Game game = DataManagement.getGame(game_id);
+        Team team = DataManagement.findTeam(arg_team);
+        boolean flag = false;
+        EventType eventType = getEventFromString(arg_event_type) ;
+        if (eventType != null && game != null && game.getHeadReferee() != null && game.getHeadReferee().equals(DataManagement.getCurrent())){
+            for (Event currentEvent : game.getEventList()){
+                if (currentEvent.getEventTime().equals(eventTime)){
+                    if (game.getHost().equals(team)){
+                        if (arg_player!=null && game.getHost().getPlayer(arg_player.getUserName()).equals(arg_player)){
+                            currentEvent.setPlayer(arg_player);
+                            currentEvent.setTeam(team);
+                            currentEvent.setEventType(eventType);
+                            AC = new ActionStatus(true, "The events were edited");
+                        }
+                        else{
+                            AC = new ActionStatus(false, "the player does not play in that team");
+                        }
+                    }
+                    else if (game.getGuest().equals(team)){
+                        if (arg_player!=null && game.getGuest().getPlayer(arg_player.getUserName()).equals(arg_player)){
+                            currentEvent.setTeam(team);
+                            currentEvent.setPlayer(arg_player);
+                            currentEvent.setEventType(eventType);
+                            AC = new ActionStatus(true, "The events were edited");
+                        }
+                        else{
+                            AC = new ActionStatus(false, "the player does not play in that team");
+                        }
+                    }
+                    else{
+                        AC = new ActionStatus(false, "the team is not a part in the game");
+                    }
+                    flag = true;
+                }
+            }
+            if(!flag){
+                    AC = new ActionStatus(false, "there was not event in this time");
+            }
+        }
+        else{
+            AC = new ActionStatus(false,"The game data is incorrect.");
+        }
+        return AC;
+    }
+
+    /**
+     * get all event in game
+     * @param game_id -
+     * @return String
+     */
+    public ActionStatus printGameEvents(int game_id){
+        ActionStatus AC;
+        StringBuilder eventList= new StringBuilder("");
+        Game game = DataManagement.getGame(game_id);
+        if(game != null){
+            for (Event e : game.getEventList()){
+                eventList.append(e.toString()).append("/n");
+            }
+            AC = new ActionStatus(true,eventList.toString());
+        }else{
+            eventList.append("No game with this id.");
+            AC = new ActionStatus(false,eventList.toString());
+        }
+        return AC;
+    }
+
+
+    /**
+     * get event type from string
+     * if event type not exists return null
+     * @param str  -
+     * @return EventType
+     */
+    public EventType getEventFromString(String str){
+        if(Arrays.stream(EventType.values()).noneMatch(e -> e.name().equals(str))){
+            return null;
+        }else{
+            return EventType.valueOf(str);
+        }
+    }
+
+    /**
+     * This function lets a referee in a game to update a new event
+     * @param game_id -
+     * @param team_name -
+     * @param player_name -
+     * @param event -
+     * @return true if operation succeeded
+     */
+    public ActionStatus refereeCreateNewEvent(int game_id, String team_name, String player_name, EventType event ){
+        ActionStatus ac;
+        Game game = DataManagement.getGame(game_id);
+        Team team = DataManagement.findTeam(team_name);
+        if(game == null ){
+            ac = new ActionStatus(false,"The game id does not exist.") ;
+        }
+        else if(team== null){
+            ac = new ActionStatus(false,"The team id does not exist.");
+        }
+        else if(team.getPlayer(player_name) == null){
+            ac = new ActionStatus(false,"The player does not exist in the team.");
+        }
+        else if(event==null){
+            ac = new ActionStatus(false,"The event type does not exist.");
+        }
+        else if ((DataManagement.getCurrent() instanceof Referee) && DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.update_event)){
+            // check if the referee is a referee of the team
+            if ((game.getHeadReferee()!=null && game.getHeadReferee().getUserName().equals(DataManagement.getCurrent().getUserName()) )||
+                    game.getLinesman1Referee().getUserName().equals(DataManagement.getCurrent().getUserName()) ||
+                    game.getLinesman2Referee().getUserName().equals(DataManagement.getCurrent().getUserName()) ){
+                game.updateNewEvent(team_name,player_name,event);
+                ac = new ActionStatus(true, "Event successfully updated.");
+            }else{
+                ac = new ActionStatus(false,"You are not a judge of the current game.");
+            }
+        }else{
+            ac = new ActionStatus(false,"You may not take this action.");
+        }
+        logger.log("Game controller: refereeCreateNewEvent, team: "+team_name +" , player: "+ player_name +" ,event : " +event +" ,created:  "+ ac.getDescription());
+        return ac;
+    }
+
+    /**
+     * This function shows a referee which games he participates in
+     * @return - ActionStatus
+     */
+    public ActionStatus refereeWatchGames(){
+        if (DataManagement.getCurrent() instanceof Referee){
+            Referee current = (Referee)DataManagement.getCurrent();
+            return new ActionStatus(true,current.gamesListToString());
+        }
+        return new ActionStatus(false,"You are not a referee!");
+    }
+
+    /*------------------------------------------display ScoreTable-------------------------------------------------*/
+
+
+    /**
+     *The function returns the scoring table for the season
+     */
+    public ActionStatus displayScoreTable(String league, String seasonYear){
+        ActionStatus AC;
+        League leagueObject = DataManagement.findLeague(league);
+        if(leagueObject == null){
+            AC = new ActionStatus(false,"The system doesn't exist league with the name: " + league) ;
+        }
+        else if(leagueObject.getSeason(seasonYear) == null){
+            AC = new ActionStatus(false,"The League doesn't exist season in the year of: " + seasonYear) ;
+        }
+        else if(leagueObject.getSeason(seasonYear).getScoreTable() == null){
+            AC = new ActionStatus(false,"The score table doesn't exist yet") ;
+        }else{
+            AC = new ActionStatus(true,leagueObject.getSeason(seasonYear).getScoreTable().toString()) ;
+
+        }
+        return AC;
+    }
+
 
 }

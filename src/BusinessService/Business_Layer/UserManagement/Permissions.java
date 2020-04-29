@@ -20,14 +20,12 @@ public class Permissions {
      * @param action
      */
     public void remove_permissions(PermissionAction action){
-        if(list_Permissions.contains(action)) {
-            list_Permissions.remove(action);
-        }
+        list_Permissions.remove(action);
     }
 
 
     /**
-     * @param action
+     * @param action -
      * @return true if has permission
      */
     public boolean check_permissions(PermissionAction action){
@@ -84,24 +82,23 @@ public class Permissions {
     }
 
     /**
-     * @param action
+     * @param action -
      */
     public void add_permissions(PermissionAction action){
         list_Permissions.add(action);
     }
 
-    public void copyPermissions(Permissions permissions){
+    void copyPermissions(Permissions permissions){
         for(PermissionAction pa : permissions.list_Permissions){
             this.add_permissions(pa);
         }
     }
 
     public static PermissionAction getPermissionActionFromString(String str){
-        if(! (Arrays.stream(PermissionAction.values()).anyMatch(e -> e.name().equals(str)))){
+        if(Arrays.stream(PermissionAction.values()).noneMatch(e -> e.name().equals(str))){
             return null;
         }else{
-            PermissionAction permission =  PermissionAction.valueOf(str);
-            return permission;
+            return PermissionAction.valueOf(str);
         }
     }
 

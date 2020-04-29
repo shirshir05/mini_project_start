@@ -156,12 +156,6 @@ public class EditAndShowUserDetailsTest {
             assertEquals(controller.editSubscriptionName(name,newName).isActionSuccessful(),result);
         }
 
-        @Test
-        public void editSubscriptionUserNameTest() {
-            setSubscriptions();
-            assertEquals(controller.editSubscriptionUserName(name,newName).isActionSuccessful(),result);
-            moreThanOneTimeForSub = false;
-        }
 
     }
 

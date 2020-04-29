@@ -16,18 +16,18 @@ import javafx.util.Pair;
 
 public class Game extends Observable{
     public static int game_id=0;
-    int id;
-    String field;
-    LocalDate date;
-    Team host;
-    Team guest;
-    Referee head;
-    Referee linesman1;
-    Referee linesman2;
-    LocalDateTime startTime;
-    LocalDateTime endTime;
-    Pair<Integer,Integer> score; // Integer[0] = host , Integer[1] = guest
-    HashSet<Event> eventList;
+    protected  int id;
+    private String field;
+    protected LocalDate date;
+    private Team host;
+    protected Team guest;
+    protected Referee head;
+    private Referee linesman1;
+    private Referee linesman2;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private Pair<Integer,Integer> score; // Integer[0] = host , Integer[1] = guest
+    private HashSet<Event> eventList;
 
     public Game(String f, LocalDate d, Team h, Team g){
         game_id++;
@@ -126,7 +126,7 @@ public class Game extends Observable{
 
     /**
      * host referee setter
-     * @param r
+     * @param r -
      */
     public void setHeadReferee(Referee r){
         if (r!=null) {
@@ -138,7 +138,7 @@ public class Game extends Observable{
 
     /**
      * linesman1 referee setter
-     * @param r
+     * @param r -
      */
     public void setLinesman1Referee(Referee r){
         if (r!=null) {
