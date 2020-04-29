@@ -60,7 +60,7 @@ public class UnionUserMenu implements UserMenu {
             //add league
             output += "insert new league name:\nuser input- " + args[1] + "\n";
             String name = args[1];
-            boolean b = StartSystem.GSc.defineLeague(name);
+            boolean b = StartSystem.GSc.defineLeague(name).isActionSuccessful();
             return new ActionStatus( b ,output +"new league created:" + b );
         }
         else if(input == 2) {
@@ -75,7 +75,7 @@ public class UnionUserMenu implements UserMenu {
             int lose = Integer.parseInt(args[4]);
             output += "insert equal score policy:\nuser input- " + args[5] + "\n";
             int equal = Integer.parseInt(args[5]);
-            boolean b =StartSystem.GSc.defineSeasonToLeague(league_name, year,win,lose,equal);
+            boolean b =StartSystem.GSc.defineSeasonToLeague(league_name, year,win,lose,equal).isActionSuccessful();
             return new ActionStatus( b ,output +"new season created:" + b );
         }
         else if(input == 3) {

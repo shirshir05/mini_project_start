@@ -54,9 +54,7 @@ public class PlayerPersonalPage extends PersonalPage{
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
-
         if(dateOfBirth != null){
-
             this.dateOfBirth = dateOfBirth;
         }
     }

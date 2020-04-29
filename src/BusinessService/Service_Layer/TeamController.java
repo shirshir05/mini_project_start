@@ -54,7 +54,7 @@ public class TeamController {
      * @param arg_field - name filed
      * @return - ActionStatus
      */
-    private ActionStatus CreateTeam(String arg_name, String arg_field) {
+    protected ActionStatus CreateTeam(String arg_name, String arg_field) {
         ActionStatus AC;
         if (arg_name==null || arg_name.isEmpty() ||arg_field==null || arg_field.isEmpty() ){
             AC = new ActionStatus(false, "One of the parameters is null");
@@ -254,7 +254,7 @@ public class TeamController {
         else if (add_or_remove == 0) {   // remove teamOwner to team
             Subscription teamOwner = DataManagement.containSubscription(TeamOwner);
             Team team = DataManagement.findTeam(name_team);
-            Subscription appointed = ((BusniesServic.Business_Layer.UserManagement.TeamOwner) teamOwner).getAppointedByTeamOwner();
+            Subscription appointed = ((TeamOwner) teamOwner).getAppointedByTeamOwner();
             if (appointed != null && DataManagement.containSubscription(appointed.getUserName()) != null) {
                 // The person responsible for appointing the team is still in the system
                 if (appointed != DataManagement.getCurrent()) {

@@ -42,10 +42,10 @@ public class TeamControllerTest {
             DataManagement.setSubscription(u);
             TeamOwner t = new TeamOwner("ad","ad","ad");
             DataManagement.setCurrent(t);
-            assertTrue(n.RequestCreateTeam(this.teamName,this.fieldName));
+            assertTrue(n.RequestCreateTeam(this.teamName,this.fieldName).isActionSuccessful());
             Player p = new Player("ad","ad","ad");
             DataManagement.setCurrent(p);
-            assertFalse(n.RequestCreateTeam(this.teamName,this.fieldName));
+            assertFalse(n.RequestCreateTeam(this.teamName,this.fieldName).isActionSuccessful());
             DataManagement.cleanAllData();
         }
 
@@ -159,7 +159,7 @@ public class TeamControllerTest {
             DataManagement.setSubscription(u3);
             DataManagement.setCurrent(owner);
             n.RequestCreateTeam(name,"Blumfield");
-            n.ApproveCreateTeamAlert("teamOwner:" + DataManagement.getCurrent() + "| Team;" + name, repName);
+            n.ApproveCreateTeamAlert("teamOwner:" + DataManagement.getCurrent() + "| Team;" + name);
             Team t = DataManagement.findTeam(name);
             assertEquals(t.getStatus(),2);
             DataManagement.cleanAllData();

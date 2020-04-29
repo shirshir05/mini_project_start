@@ -1,11 +1,13 @@
 package BusinessService.Service_Layer;
 
+import BusinessService.Business_Layer.Game.Game;
 import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.Trace.PersonalPage;
 import BusinessService.Business_Layer.UserManagement.*;
 import BusinessService.Enum.ActionStatus;
 import BusinessService.Enum.PermissionAction;
 import DB_Layer.logger;
+import com.sun.xml.internal.stream.buffer.AbstractCreator;
 
 
 import java.util.HashSet;
@@ -17,17 +19,17 @@ public class AlertController {
      *  This function register the fan to alerts of a game he choose.
      */
     public ActionStatus fanRegisterToGameAlerts(int game_number){
-        ActionStatus AC = null;
+        ActionStatus AC;
+        Game game = DataManagement.getGame(game_number);
         if (!(DataManagement.getCurrent() instanceof Fan)){
             AC = new ActionStatus(false,"You are not a Fan");
         }
-        else if(DataManagement.getGame(game_number) == null){
+        else if(game == null){
             AC = new ActionStatus(false,"There is no such game in the system");
         }
         else{
-            Observable chosen_game = DataManagement.getGame(game_number);
-            chosen_game.addObserver((Fan) DataManagement.getCurrent());
-            AC = new ActionStatus(false,"You were registered successfully to the game alerts");
+            game.addObserver((Fan) DataManagement.getCurrent());
+            AC = new ActionStatus(true,"You were registered successfully to the game alerts");
         }
         return AC;
     }
@@ -38,16 +40,15 @@ public class AlertController {
      * @return true if the registration succeeded
      */
     public ActionStatus fanRegisterToPage(String arg_user_to_register) {
-        ActionStatus AC = null;
+        ActionStatus AC ;
         if (DataManagement.getCurrent() != null) {
-            BusinessService.Business_Layer.UserManagement.Subscription userWithPersonalPage = DataManagement.containSubscription(arg_user_to_register);
+            Subscription userWithPersonalPage = DataManagement.containSubscription(arg_user_to_register);
             Team team = DataManagement.findTeam(arg_user_to_register);
             if (!(DataManagement.getCurrent() instanceof Fan)) {
                 AC = new ActionStatus(false, "You are not a Fan");
             } else if (userWithPersonalPage == null && team == null) {
                 AC = new ActionStatus(false, "There is no such page");
             }
-            //TODO -add spelling correction here?
             else if (userWithPersonalPage instanceof Coach) {
                 ((Coach) userWithPersonalPage).getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
                 AC = new ActionStatus(true, "You were successfully registered to the Coach page");
@@ -81,7 +82,6 @@ public class AlertController {
             AC = new ActionStatus(false,"No user is logged in to the system");
         }
         logger.log("fan_register_to_page, page name: " + arg_user_to_register + " failed: " + AC.getDescription());
-
         return AC;
     }
 
@@ -90,14 +90,12 @@ public class AlertController {
      * @param complaintDescription is the complaint
      */
     public ActionStatus addComplaint(String complaintDescription){
-        ActionStatus AC = null;
+        ActionStatus AC;
         if(complaintDescription == null || complaintDescription.isEmpty()) {
             AC = new ActionStatus(false, "Complaint cannot be empty");
-            logger.log("Add complaint status: "+AC.getDescription());
         }
         else if (!(DataManagement.getCurrent() instanceof Fan)){
             AC = new ActionStatus(false, "You are not a Fan");
-            logger.log("Add complaint status: "+AC.getDescription());
         }
         else {
             Fan f = (Fan)DataManagement.getCurrent();
@@ -105,8 +103,8 @@ public class AlertController {
             f.addComplaint(c);
             DataManagement.addComplaint(c);
             AC = new ActionStatus(true, "Complaint added successfully");
-            logger.log("Add Complaint of user : "+ f.getName() +" "+AC.getDescription());
         }
+        logger.log("Add complaint status: "+AC.getDescription());
         return AC;
     }
 
@@ -130,21 +128,24 @@ public class AlertController {
     }
 
     public ActionStatus answerCompliant(Complaint complaint, String answer){
+        ActionStatus AC;
         if(DataManagement.getCurrent()== null || !DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints)) {
-            return new ActionStatus(false, "You do not have the required permissions to answer complaints");
+            AC = new ActionStatus(false, "You do not have the required permissions to answer complaints");
         }
-        if(complaint.isAnswered()){
-            return new ActionStatus(false, "Complaint has been answered already");
+        else if(complaint.isAnswered()){
+            AC = new ActionStatus(false, "Complaint has been answered already");
         }
-        if(answer == null || answer.isEmpty()){
-            return new ActionStatus(false, "An answer to a complaint cannot be empty or null");
+        else if(answer == null || answer.isEmpty()){
+            AC = new ActionStatus(false, "An answer to a complaint cannot be empty or null");
+        }else{
+            //remove the complaint without the answer
+            DataManagement.getAllComplaints().remove(complaint);
+            //answer the complaint
+            complaint.answerComplaint(answer);
+            //add it back to the list of complaints
+            DataManagement.addComplaint(complaint);
+            AC= new ActionStatus(true, "Complaint has been answered successfully");
         }
-        //remove the complaint without the answer
-        DataManagement.getAllComplaints().remove(complaint);
-        //answer the complaint
-        complaint.answerComplaint(answer);
-        //add it back to the list of complaints
-        DataManagement.addComplaint(complaint);
-        return new ActionStatus(true, "Complaint has been answered successfully");
+        return AC;
     }
 }
