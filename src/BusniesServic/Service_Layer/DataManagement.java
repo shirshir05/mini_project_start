@@ -73,6 +73,9 @@ public final class DataManagement {
         return ac;
     }
 
+    /**
+     * function data clean all data set in system
+     */
     public static void cleanAllData(){
         Subscription = new HashSet<>();
         list_team = new HashSet<>();
@@ -84,7 +87,7 @@ public final class DataManagement {
 
     /**
      * A function is to check if there is a subscription in the system by username.
-     * @param arg_user_name
+     * @param arg_user_name -
      * @return Subscription
      */
     public static Subscription containSubscription(String arg_user_name){
@@ -96,17 +99,22 @@ public final class DataManagement {
         return null;
     }
 
-    protected static boolean isInEnum(String value) {
+    /**
+     * check if the role is enum in system
+     * @param value -
+     * @return boolean
+     */
+    static boolean isInEnum(String value) {
         return Arrays.stream(Role.values()).anyMatch(e -> e.name().equals(value));
     }
 
 
     /**
      * The function accepts a string with the role name and returns Enum.
-     * @param argRole
+     * @param argRole -
      * @return Role or null if the tole not found
      */
-    public static Role returnEnum(String argRole){
+    static Role returnEnum(String argRole){
         if (!isInEnum(argRole)) {
             return null;
         }
@@ -138,8 +146,8 @@ public final class DataManagement {
     }
 
     /**
-     * @param teamName
-     * @return
+     * @param teamName -  name team
+     * @return Team
      */
     public static Team findTeam(String teamName) {
         for (Team t : list_team){
@@ -151,7 +159,7 @@ public final class DataManagement {
 
     /**
      * add Game
-     * @param g
+     * @param g - game
      */
     public static void addGame(Game g){
         list_game.add(g);
@@ -159,8 +167,8 @@ public final class DataManagement {
 
     /**
      * This function get game_id and return Game
-     * @param game_id
-     * @return
+     * @param game_id -
+     * @return Game
      */
     public static Game getGame(int game_id){
         for ( Game g: list_game ){
@@ -173,9 +181,9 @@ public final class DataManagement {
     /**
      * This function gets a leaugeName and return Leauge
      * @param leaugeName
-     * @return
+     * @return - League
      */
-    public static League findLeague(String leaugeName) {
+    static League findLeague(String leaugeName) {
         for (League l : list_league) {
             if (l.getName().equals(leaugeName)) {
                 return l;

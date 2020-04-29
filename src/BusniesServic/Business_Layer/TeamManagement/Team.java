@@ -98,7 +98,13 @@ public class Team extends Observable implements Comparable {
      * @return
      */
     public boolean checkIfObjectInTeam(Subscription object){
-        return list_TeamManager.contains(object) || list_TeamOwner.contains(object) ;
+        boolean ans = false;
+        if(list_TeamManager != null ){
+            ans = list_TeamManager.contains(object);
+        }if(list_TeamOwner != null){
+            ans = ans || list_TeamOwner.contains(object) ;
+        }
+        return ans;
     }
 
     /**
@@ -270,15 +276,14 @@ public class Team extends Observable implements Comparable {
      */
     public ActionStatus changeStatus(int status){
         String notify="";
-
         if(status == this.status){
-            return new ActionStatus(false,  "The group is already set " + this.status);
+            return new ActionStatus(false,  "The Team is already set " + this.status);
         }
         this.status = status;
-        if (status==0){notify="The group "+this.Name+" is closed";}
-        else if(status==1){notify="The group "+this.Name+" is open";}
-        else if(status==-1){notify="The group "+this.Name+" is permanently closed";}
-        else if(status==2){notify="The group "+this.Name+" is waiting for union approval";}
+        if (status==0){notify="The Team "+this.Name+" is closed";}
+        else if(status==1){notify="The Team "+this.Name+" is open";}
+        else if(status==-1){notify="The Team "+this.Name+" is permanently closed";}
+        else if(status==2){notify="The Team "+this.Name+" is waiting for union approval";}
         setChanged();
         notifyObservers(notify);
 

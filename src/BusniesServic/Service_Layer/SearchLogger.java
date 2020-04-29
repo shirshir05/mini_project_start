@@ -1,28 +1,26 @@
 package BusniesServic.Service_Layer;
-
 import Presentation_Layer.Spelling;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
 public class SearchLogger {
-    protected String dataPath ="./lib/spellingDict.txt";
 
     /**
      * Search data according word
-     * @param keyWord
-     * @return
+     * @param keyWord -
+     * @return String
      */
     public String findData(String keyWord){
         DataManagement.getCurrent().addSearch(keyWord);
         String keyword2 = Spelling.getCorrectWord(keyWord);
         try
         {
+            String dataPath = "./lib/spellingDict.txt";
             File file=new File(dataPath);
             FileReader fr=new FileReader(file);
             BufferedReader br=new BufferedReader(fr);
-            StringBuffer sb=new StringBuffer();
+            StringBuilder sb=new StringBuilder();
             String line;
             while((line=br.readLine())!=null)
             {
@@ -44,10 +42,10 @@ public class SearchLogger {
 
     /**
      * Show the history of Search
-     * @return
+     * @return  String
      */
     public String showSearchHistory(){
-        StringBuffer sb=new StringBuffer();
+        StringBuilder sb=new StringBuilder();
         for (String s : DataManagement.getCurrent().getSearch()){
             sb.append(s);
             sb.append("\n");
