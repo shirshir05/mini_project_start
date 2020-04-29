@@ -1,11 +1,9 @@
 package acceptensTest;
 
-import BusniesServic.Enum.ActionStatus;
-import BusniesServic.Service_Layer.DataManagement;
+import BusinessService.Enum.ActionStatus;
+import BusinessService.Service_Layer.DataManagement;
 import Presentation_Layer.StartSystem;
-import Presentation_Layer.Users_Menu.FanUserMenu;
 import Presentation_Layer.Users_Menu.TeamUsersMenu;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -13,7 +11,6 @@ import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
@@ -48,7 +45,7 @@ public class TeamUsersMenuTest {
                     {"1","2","teamOne","teamCoachTwo","0",null,null,false},//=>The Coach is not in the team.
                     //(6.1) update filed
                     {"1","3","teamOne","filed1","1",null,null,true},//=>The asset was added to the team
-                    {"1","3","teamOne","fil","0",null,null,false},//=>The team doesnt contains this asset
+                    {"1","3","teamOne","fil","0",null,null,false},//=>The team doesn't contains this asset
                     //(6.1) update team owner
                     {"1","4","teamOne","teamCoachTwo","1",null,null,false},//=>The username is not defined as a Team Owner on the system.
                     {"1","4","teamOne","teamOwnerThree","1",null,null,false},//=>You are already set as a team owner.

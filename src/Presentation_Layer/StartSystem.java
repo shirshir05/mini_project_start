@@ -1,9 +1,9 @@
 package Presentation_Layer;
 
-import BusniesServic.Business_Layer.BudgetManagement.BudgetRegulations;
-import BusniesServic.Business_Layer.Game.Game;
-import BusniesServic.Enum.ActionStatus;
-import BusniesServic.Service_Layer.*;
+import BusinessService.Business_Layer.BudgetManagement.BudgetRegulations;
+import BusinessService.Business_Layer.Game.Game;
+import BusinessService.Enum.ActionStatus;
+import BusinessService.Service_Layer.*;
 import DB_Layer.myFirstDB;
 
 import java.io.File;

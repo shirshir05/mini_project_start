@@ -1,12 +1,8 @@
 package acceptensTest;
 
-import BusniesServic.Business_Layer.UserManagement.Guest;
-import BusniesServic.Business_Layer.UserManagement.Subscription;
-import BusniesServic.Business_Layer.UserManagement.SystemAdministrator;
-import BusniesServic.Enum.ActionStatus;
-import BusniesServic.Service_Layer.DataManagement;
+import BusinessService.Enum.ActionStatus;
+import BusinessService.Service_Layer.DataManagement;
 import Presentation_Layer.StartSystem;
-import Presentation_Layer.Users_Menu.GuestUserMenu;
 import Presentation_Layer.Users_Menu.SystemAdminUserMenu;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;

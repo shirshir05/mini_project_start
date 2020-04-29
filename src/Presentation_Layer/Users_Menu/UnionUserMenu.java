@@ -1,8 +1,8 @@
 package Presentation_Layer.Users_Menu;
 
-import BusniesServic.Business_Layer.BudgetManagement.Expense;
-import BusniesServic.Business_Layer.BudgetManagement.Income;
-import BusniesServic.Enum.ActionStatus;
+import BusinessService.Business_Layer.BudgetManagement.Expense;
+import BusinessService.Business_Layer.BudgetManagement.Income;
+import BusinessService.Enum.ActionStatus;
 import Presentation_Layer.StartSystem;
 import Presentation_Layer.UserCLI;
 
@@ -34,7 +34,7 @@ public class UnionUserMenu implements UserMenu {
 
             }
             else if(input == 5) {
-                //manage games - game setting policy and start outomatic games setting;
+                //manage games - game setting policy and start automatic games setting;
 
             }
             else if(input == 6) {
@@ -103,7 +103,7 @@ public class UnionUserMenu implements UserMenu {
             else if(edit == 3){
                 output += "insert referee user name: \nuser input- " + args[2] +"\n";
                 String referee_user_name =  args[2];
-                output += "insert leauge name: \nuser input- " + args[3] +"\n";
+                output += "insert league name: \nuser input- " + args[3] +"\n";
                 String league_name =  args[3];
                 output += "insert season year: \nuser input- " + args[4] +"\n";
                 String season_year =  args[4];
@@ -127,7 +127,7 @@ public class UnionUserMenu implements UserMenu {
             return new ActionStatus(ac.isActionSuccessful(),output+ac.getDescription());
         }
         else if(input == 5) {
-            //manage games - game setting policy and start outomatic games setting;
+            //manage games - game setting policy and start automatic games setting;
             //TODO - Start ortal's new function
             output += "insert season to assign games: \nuser input- " + args[1] +"\n";
             String str =  args[1];
