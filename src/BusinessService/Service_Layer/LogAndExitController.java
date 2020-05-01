@@ -178,25 +178,22 @@ public class LogAndExitController{
      */
     private boolean TeamOwnerForTeam(String userName){
         Subscription teamOwner = DataManagement.containSubscription(userName);
-        if(teamOwner instanceof TeamOwner){
-            return searchTeamOwner((TeamOwner) teamOwner);
-        }
-        else if(teamOwner instanceof UnifiedSubscription && ((UnifiedSubscription)teamOwner).isATeamOwner())
-            return searchTeamOwner(((UnifiedSubscription)teamOwner).getTeamOwner());
+        if(teamOwner instanceof UnifiedSubscription && ((UnifiedSubscription)teamOwner).isAnAppointedTeamOwner())
+            return searchTeamOwner((UnifiedSubscription)teamOwner);
         return true;
 
     }
 
     /**
-     * find all team owner in team and check if the team owner
-     * that want remove is the only in the team
+     * find all team owners in team and check if the team owner
+     * that wants to be removed is the only one in the team
      * @param teamOwner  -
      * @return boolean
      */
-    private boolean searchTeamOwner(TeamOwner teamOwner) {
+    private boolean searchTeamOwner(UnifiedSubscription teamOwner) {
         HashSet<Team> list =  DataManagement.getListTeam();
         for (Team team: list) {
-            HashSet<TeamOwner> teamOwnerHash = team.getListTeamOwner();
+            HashSet<UnifiedSubscription> teamOwnerHash = team.getListTeamOwner();
             if(teamOwnerHash.size() == 1){
                 if(teamOwnerHash.contains(teamOwner)){
                     return true;
@@ -208,11 +205,10 @@ public class LogAndExitController{
 
 
     /**
-     * TODO - ORTAL
      * Add user
      * The team owner can be a player, coach and manager
      */
-    public ActionStatus addRoleToUser(String role,String password) {
+    public ActionStatus addRoleToUser(String role, String password) {
         ActionStatus AC;
         if (!DataManagement.getCurrent().getPassword().equals(Subscription.getHash(password))) {
             AC = new ActionStatus(false, "The password does not match the password entered in the system.");
@@ -227,6 +223,13 @@ public class LogAndExitController{
             } else { //legal desired role
                 Subscription sub = DataManagement.getCurrent();
                 //the user is a subscription with allowed parallel roles:
+                if (sub instanceof UnifiedSubscription) {
+                    factory.addRoleToUnifiedSubscription((UnifiedSubscription) sub, desiredRole);
+                    AC = new ActionStatus(true, "The role " + role + " was added successfully to your account");
+                } else { // NOT one of the four roles who are allowed to be parallel users
+                    AC = new ActionStatus(false, "You are not authorized to perform this action.");
+                }
+/*
                 if (sub instanceof Player || sub instanceof Coach || sub instanceof TeamOwner || sub instanceof TeamManager) {
                     //delete current subscription of the user:
                     DataManagement.removeSubscription(sub.getUserName());
@@ -238,20 +241,18 @@ public class LogAndExitController{
                     if (currentSub instanceof UnifiedSubscription) {
                         UnifiedSubscription currentUnified = (UnifiedSubscription) currentSub;
                         //add the current role to subscription
-                        currentUnified.setRole(sub);
+                        currentUnified.setNewRole(sub);
                         //add the new role to the subscription
                         Subscription newRole = factory.Create(DataManagement.getCurrent().getUserName(), password, desiredRole, DataManagement.getCurrent().getEmail());
-                        currentUnified.setRole(newRole);
+                        currentUnified.setNewRole(newRole);
                         AC = new ActionStatus(true, "Added the role " + role + " to your user");
                     }
                     else {
                         //this means the current user is not a unified subscription
                         //should never happen:
                         AC = new ActionStatus(false, "Something went wrong. Please close the system and try again");
-                    }
-                } else { //not one of the four roles who are allowed to be parallel users
-                    AC = new ActionStatus(false, "You are not authorized to perform this action.");
-                }
+                    }*/
+
             }
         }
         logger.log("Add Subscription attempt of user : " + DataManagement.getCurrent().getUserName() + role + " " + AC.getDescription());

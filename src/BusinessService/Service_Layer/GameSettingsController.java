@@ -371,7 +371,7 @@ public class GameSettingsController {
      * @param eventTime -
      * @return ActionStatus
      */
-    public ActionStatus refereeEditGameEvent(int game_id, String arg_team, String arg_event_type, Player arg_player, LocalDateTime eventTime){
+    public ActionStatus refereeEditGameEvent(int game_id, String arg_team, String arg_event_type, UnifiedSubscription arg_player, LocalDateTime eventTime){
         ActionStatus AC = new ActionStatus(false, "one of details incorrect."); ;
         Game game = DataManagement.getGame(game_id);
         Team team = DataManagement.findTeam(arg_team);

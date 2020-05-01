@@ -1,5 +1,6 @@
 package BusinessService.Business_Layer.Game;
 
+import BusinessService.Business_Layer.UserManagement.UnifiedSubscription;
 import BusinessService.Enum.ActionStatus;
 import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.UserManagement.Player;
@@ -13,7 +14,7 @@ import java.time.temporal.ChronoUnit;
  */
 public class Event {
     private EventType eventType;
-    private Player player;
+    private UnifiedSubscription player;
     private Team team;
     private LocalDateTime eventTime;
 
@@ -21,16 +22,16 @@ public class Event {
      * event constructor
      * time==null => set the current time
      */
-    public Event(Team arg_team, EventType arg_event_type, Player arg_player,  LocalDateTime time){
+    public Event(Team arg_team, EventType arg_event_type, UnifiedSubscription arg_player, LocalDateTime time){
         team=arg_team;
         eventType =arg_event_type;
         if (arg_team.getPlayer(arg_player.getUserName())!=null){
-            player=arg_player;
+            player = arg_player;
         }
         else{
             player=null;
             //todo - change to ActionStatus, cant print from business layer
-            System.out.println("The player is not a part of the team!");
+            //System.out.println("The player is not a part of the team!");
         }
         if (time==null) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
@@ -41,12 +42,12 @@ public class Event {
         }
     }
 
-    public ActionStatus editEvent(LocalDateTime endOfGameTime, Team arg_team, EventType arg_event_type, Player arg_player, LocalDateTime time){
+    public ActionStatus editEvent(LocalDateTime endOfGameTime, Team arg_team, EventType arg_event_type, UnifiedSubscription arg_player, LocalDateTime time){
         ActionStatus ac = null;
         if(ChronoUnit.MINUTES.between(endOfGameTime,LocalDateTime.now())<=300){
-            this.team=arg_team;
+            this.team = arg_team;
             this.eventType=arg_event_type;
-            this.player=player;
+            this.player = arg_player;
             if (time==null){
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
                 eventTime = LocalDateTime.now();
@@ -70,7 +71,7 @@ public class Event {
         return eventType;
     }
 
-    public Player getPlayer() {
+    public UnifiedSubscription getPlayer() {
         return player;
     }
 
@@ -83,7 +84,7 @@ public class Event {
             this.eventType = eventType;
     }
 
-    public void setPlayer(Player player) {
+    public void setPlayer(UnifiedSubscription player) {
         this.player = player;
     }
 

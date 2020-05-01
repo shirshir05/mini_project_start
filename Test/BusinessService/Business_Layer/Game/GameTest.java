@@ -3,6 +3,7 @@ import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.TeamManagement.TeamScore;
 import BusinessService.Business_Layer.UserManagement.Player;
 import BusinessService.Business_Layer.UserManagement.Referee;
+import BusinessService.Business_Layer.UserManagement.UnifiedSubscription;
 import BusinessService.Enum.EventType;
 import org.junit.Test;
 
@@ -14,6 +15,12 @@ import static org.junit.Assert.*;
 public class GameTest {
 
     private Game game;
+
+    private UnifiedSubscription createPlayer(String name,String password, String email){
+        UnifiedSubscription us = new UnifiedSubscription(name,password,email);
+        us.setNewRole(new Player(us.getUserName()));
+        return us;
+    }
 
     /**
      * Test - G1
@@ -382,8 +389,8 @@ public class GameTest {
         assertEquals(false, game.updateNewEvent(team1.getName(), "messi", EventType.foul).isActionSuccessful());
         assertEquals(false, game.updateNewEvent(team2.getName(), "messi", EventType.foul).isActionSuccessful());
 
-        team1.addOrRemovePlayer(new Player("messi", "123456", "31212fsf@gmail.com"), 1);
-        team2.addOrRemovePlayer(new Player("Ronaldo", "123456", "31212fsf@gmail.com"), 1);
+        team1.addOrRemovePlayer(createPlayer("messi", "123456", "31212fsf@gmail.com"), 1);
+        team2.addOrRemovePlayer(createPlayer("Ronaldo", "123456", "31212fsf@gmail.com"), 1);
         assertEquals(true, game.updateNewEvent(team1.getName(), "messi", EventType.foul).isActionSuccessful());
         assertEquals(true, game.updateNewEvent(team2.getName(), "Ronaldo", EventType.foul).isActionSuccessful());
 
