@@ -16,21 +16,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 
-public class myFirstDB implements InitFromDB,saveToDB {
+public class myFirstDB  {
 
     LogAndExitController login = StartSystem.getLEc();;
 
-    @Override
+
     public ActionStatus startDBConnection() {
         return new ActionStatus(true,"good");
     }
 
-    @Override
+
     public ActionStatus checkDBConnection() {
         return  new ActionStatus(true,"good");
     }
 
-    @Override
     public ActionStatus loadUsersInfo() {
         ActionStatus ac = null;
         boolean done = true;
@@ -51,7 +50,7 @@ public class myFirstDB implements InitFromDB,saveToDB {
         return ac;
     }
 
-    @Override
+
     public ActionStatus loadTeamInfo() {
         ActionStatus ac = null;
         try {
@@ -78,7 +77,7 @@ public class myFirstDB implements InitFromDB,saveToDB {
         return ac;
     }
 
-    @Override
+
     public ActionStatus loadGameInfo() {
 
         //LocalDate date = LocalDate.of(1992, 11, 14);
@@ -101,7 +100,7 @@ public class myFirstDB implements InitFromDB,saveToDB {
         return ac;
     }
 
-    @Override
+
     public ActionStatus loadLeagueInfo() {
         ActionStatus ac = null;
         try {
@@ -139,25 +138,25 @@ public class myFirstDB implements InitFromDB,saveToDB {
 
 
     //SAVE TO NEW DATA-BASE
-    @Override
+
     public ActionStatus SaveUsersInfo() {
         return new ActionStatus(false,"function SaveUsersInfo not implemented");
 
     }
 
-    @Override
+
     public ActionStatus SaveTeamInfo() {
         return new ActionStatus(false,"function SaveTeamInfo not implemented");
 
     }
 
-    @Override
+
     public ActionStatus SaveGameInfo() {
         return new ActionStatus(false,"function SaveGameInfo not implemented");
 
     }
 
-    @Override
+
     public ActionStatus SaveLeagueInfo() {
         return new ActionStatus(false,"function SaveLeagueInfo not implemented");
     }
