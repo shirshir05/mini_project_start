@@ -112,7 +112,7 @@ public class databaseController {
 
                  //todo- add game to season...
                  //add here
-                
+
                  //load event objects into game
                  ResultSet rs2 = sqlConn.find("EventInGame",new String[]{""+rs.getInt("gameID")});
                  while(rs2.next()){

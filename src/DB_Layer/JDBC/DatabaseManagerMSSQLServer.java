@@ -1,5 +1,7 @@
 package DB_Layer.JDBC;
 
+import BusinessService.Enum.ActionStatus;
+
 public class DatabaseManagerMSSQLServer extends DatabaseManager {
 
     public DatabaseManagerMSSQLServer(String databaseName) {
@@ -17,14 +19,17 @@ public class DatabaseManagerMSSQLServer extends DatabaseManager {
 
 
     @Override
-    public void startConnection() {
+    public ActionStatus startConnection() {
+        ActionStatus ac = null;
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            super.startConnection();
+            ac = super.startConnection();
         } catch (Exception e) {
-            System.out.println(String.format("Error starting connection to database '%s'", databaseName));
-            System.out.println(e.getMessage());
+            //System.out.println(String.format("Error starting connection to database '%s'", databaseName));
+            //System.out.println(e.getMessage());
+            ac = new ActionStatus(false,String.format("Error starting connection to database '%s'", databaseName));
         }
+        return ac;
     }
 
 }
