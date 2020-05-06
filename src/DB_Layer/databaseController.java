@@ -23,7 +23,7 @@ public class databaseController {
         return sqlConn.connect();
     }
 
-    //init users from DB
+    //init all Users from DB
     public ActionStatus loadUsersInfo() {
         ActionStatus ac = null;
         try {
@@ -38,7 +38,7 @@ public class databaseController {
         return ac;
     }
 
-    //init teams data from DB
+    //init all teams data from DB
     public ActionStatus loadTeamInfo() {
         ActionStatus ac = null;
         try {
@@ -70,7 +70,7 @@ public class databaseController {
         return ac;
     }
 
-
+    //init all Leagues & Seasons data from DB
     public ActionStatus loadLeagueInfo() {
         ActionStatus ac = null;
         try {
@@ -100,7 +100,7 @@ public class databaseController {
         return ac;
     }
 
-
+    //init all Games data from DB
      public ActionStatus loadGameInfo() {
          ActionStatus ac = null;
          try {
