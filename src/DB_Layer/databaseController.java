@@ -23,6 +23,7 @@ public class databaseController {
         return sqlConn.connect();
     }
 
+    //init users from DB
     public ActionStatus loadUsersInfo() {
         ActionStatus ac = null;
         try {
@@ -37,6 +38,7 @@ public class databaseController {
         return ac;
     }
 
+    //init teams data from DB
     public ActionStatus loadTeamInfo() {
         ActionStatus ac = null;
         try {
