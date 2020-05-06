@@ -49,22 +49,17 @@ public class AlertController {
             } else if (userWithPersonalPage == null && team == null) {
                 AC = new ActionStatus(false, "There is no such page");
             }
-            else if (userWithPersonalPage instanceof Coach) {
-                ((Coach) userWithPersonalPage).getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
-                AC = new ActionStatus(true, "You were successfully registered to the Coach page");
-            } else if (userWithPersonalPage instanceof Player) {
-                ((Player) userWithPersonalPage).getPersonalPage().addObserver((Fan) DataManagement.getCurrent());
-                AC = new ActionStatus(true, "You were successfully registered to the Player page");
-            } else if (userWithPersonalPage instanceof UnifiedSubscription && (((UnifiedSubscription) userWithPersonalPage).isACoach() || ((UnifiedSubscription) userWithPersonalPage).isAPlayer())) {
+             else if (userWithPersonalPage instanceof UnifiedSubscription && (((UnifiedSubscription) userWithPersonalPage).isACoach() || ((UnifiedSubscription) userWithPersonalPage).isAPlayer())) {
                 //by default - registering to the player page. if it doesn't exist, then register to the coach page
                 UnifiedSubscription us = (UnifiedSubscription) userWithPersonalPage;
                 PersonalPage personalPage = us.getPlayerPersonalPage();
+                AC = new ActionStatus(true, "You were successfully registered to the Player page");
                 if (personalPage == null) {
                     personalPage = us.getCoachPersonalPage();
+                    AC = new ActionStatus(true, "You were successfully registered to the Coach page");
                 }
                 if (personalPage != null) {
                     personalPage.addObserver((Fan) DataManagement.getCurrent());
-                    AC = new ActionStatus(true, "You were successfully registered to the Player page");
                 }
                 else {
                     AC = new ActionStatus(false, "Could not find the personal page you requested");

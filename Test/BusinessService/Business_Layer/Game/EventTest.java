@@ -1,6 +1,7 @@
 package BusinessService.Business_Layer.Game;
 import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.UserManagement.Player;
+import BusinessService.Business_Layer.UserManagement.UnifiedSubscription;
 import BusinessService.Enum.EventType;
 import org.junit.Test;
 
@@ -18,7 +19,8 @@ public class EventTest {
      */
     @Test
     public void testEventConstructor() {
-        Player player = new Player("messi", "123456", "31212fsf@gmail.com");
+        UnifiedSubscription player = new UnifiedSubscription("messi", "123456", "31212fsf@gmail.com");
+        player.setNewRole(new Player(player.getUserName()));
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
@@ -43,7 +45,8 @@ public class EventTest {
      */
     @Test
     public void testGetPlayer() {
-        Player player = new Player("messi", "123456", "31212fsf@gmail.com");
+        UnifiedSubscription player = new UnifiedSubscription("messi", "123456", "31212fsf@gmail.com");
+        player.setNewRole(new Player(player.getUserName()));
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
@@ -57,7 +60,8 @@ public class EventTest {
      */
     @Test
     public void testGetTeam() {
-        Player player = new Player("messi", "123456", "31212fsf@gmail.com");
+        UnifiedSubscription player = new UnifiedSubscription("messi", "123456", "31212fsf@gmail.com");
+        player.setNewRole(new Player(player.getUserName()));
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
@@ -71,7 +75,8 @@ public class EventTest {
      */
     @Test
     public void testGetEventType() {
-        Player player = new Player("messi", "123456", "31212fsf@gmail.com");
+        UnifiedSubscription player = new UnifiedSubscription("messi", "123456", "31212fsf@gmail.com");
+        player.setNewRole(new Player(player.getUserName()));
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
@@ -85,7 +90,8 @@ public class EventTest {
      */
     @Test
     public void testSetEventType() {
-        Player player = new Player("messi", "123456", "31212fsf@gmail.com");
+        UnifiedSubscription player = new UnifiedSubscription("messi", "123456", "31212fsf@gmail.com");
+        player.setNewRole(new Player(player.getUserName()));
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
@@ -108,7 +114,8 @@ public class EventTest {
      */
     @Test
     public void testSetTeam() {
-        Player player = new Player("messi", "123456", "31212fsf@gmail.com");
+        UnifiedSubscription player = new UnifiedSubscription("messi", "123456", "31212fsf@gmail.com");
+        player.setNewRole(new Player(player.getUserName()));
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
@@ -132,7 +139,8 @@ public class EventTest {
      */
     @Test
     public void testSetPlayer() {
-        Player player = new Player("messi", "123456", "31212fsf@gmail.com");
+        UnifiedSubscription player = new UnifiedSubscription("messi", "123456", "31212fsf@gmail.com");
+        player.setNewRole(new Player(player.getUserName()));
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);
@@ -140,7 +148,8 @@ public class EventTest {
 
         assertEquals(player, event.getPlayer());
 
-        Player player1 = new Player("Ronaldo", "65464", "31212fsf@gmail.com");
+        UnifiedSubscription player1 = new UnifiedSubscription("Ronaldo", "65464", "31212fsf@gmail.com");
+        player1.setNewRole(new Player(player1.getUserName()));
         team1.addOrRemovePlayer(player, 1);
 
         event.setPlayer(player1);
@@ -158,7 +167,8 @@ public class EventTest {
     @Test
     public void testEventToString() {
 
-        Player player = new Player("messi", "123456", "31212fsf@gmail.com");
+        UnifiedSubscription player = new UnifiedSubscription("messi", "123456", "31212fsf@gmail.com");
+        player.setNewRole(new Player(player.getUserName()));
         EventType eventType = EventType.goal;
         Team team1 = new Team("Barcelona", "Camp Nou");
         team1.addOrRemovePlayer(player, 1);

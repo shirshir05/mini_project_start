@@ -2,16 +2,16 @@ package BusinessService.Business_Layer.UserManagement;
 
 import BusinessService.Business_Layer.Trace.CoachPersonalPage;
 
-public class Coach extends Subscription {
+public class Coach /*extends Subscription*/ {
 
     protected CoachPersonalPage PersonalPage;
     protected String qualification;
     protected String roleInTeam;
 
-    public Coach(String arg_user_name, String arg_password,String email) {
-        super(arg_user_name, arg_password,email);
+    public Coach(String arg_user_name/*, String arg_password,String email*/) {
+      //  super(arg_user_name, arg_password,email);
         PersonalPage = new CoachPersonalPage(arg_user_name);
-        permissions.add_default_player_or_coach_permission();
+      //  permissions.add_default_player_or_coach_permission();
     }
 
     //**********************************************get & set ************************************************************//
@@ -63,8 +63,8 @@ public class Coach extends Subscription {
     public String toString() {
 
         return "Coach: " + "\n" +
-                "name: " + name + "\n" +
-                "email: " + email + "\n" +
+             //   "name: " + name + "\n" +
+              //  "email: " + email + "\n" +
                 "qualification: " + qualification + "\n" +
                 "roleInTeam: " + roleInTeam;
     }

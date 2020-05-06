@@ -13,6 +13,12 @@ import static org.junit.Assert.*;
 @RunWith(Enclosed.class)
 public class SubscriptionTest {
 
+    private static UnifiedSubscription createCoach(String name, String password, String email){
+        UnifiedSubscription us = new UnifiedSubscription(name, password, email);
+        us.setNewRole(new Coach(us.userName));
+        return us;
+    }
+
     /**
      * Test - Sub1
      */
@@ -38,7 +44,7 @@ public class SubscriptionTest {
 
         @Test
         public void getAlertsTest() {
-            Subscription sub = new Coach(userName,password,email);
+            Subscription sub = createCoach(userName,password,email);
             assertNotNull(sub.searchHistory);
             sub.addAlert("shir");
             assertEquals(sub.getAlerts().toString(),"[shir]");
@@ -70,7 +76,7 @@ public class SubscriptionTest {
 
         @Test
         public void getNameTest() {
-            Subscription sub = new Coach(userName,password,email);
+            Subscription sub = createCoach(userName,password,email);
             sub.setName("shir");
             assertEquals(sub.getName(),"shir");
         }
@@ -101,7 +107,7 @@ public class SubscriptionTest {
 
         @Test
         public void setEmailTest() {
-            Subscription sub = new Coach(userName,password,email);
+            Subscription sub = createCoach(userName,password,email);
             sub.setEmail("shir0@post.bgu.ac.il");
             assertEquals(sub.getEmail(),"shir0@post.bgu.ac.il");
         }
@@ -132,7 +138,7 @@ public class SubscriptionTest {
 
         @Test
         public void setPasswordTest() {
-            Subscription sub = new Coach(userName,password,email);
+            Subscription sub = createCoach(userName,password,email);
             sub.setPassword("123456");
             assertEquals(sub.getPassword(), Subscription.getHash("123456"));
 
@@ -165,7 +171,7 @@ public class SubscriptionTest {
 
         @Test
         public void setUserNameTest() {
-            Subscription sub = new Coach(userName,password,email);
+            Subscription sub = createCoach(userName,password,email);
             sub.setUserName("hi");
             assertEquals(sub.getUserName(),("hi"));
         }
@@ -196,7 +202,7 @@ public class SubscriptionTest {
 
         @Test
         public void sendEMailTest() {
-            Subscription sub = new Coach(userName,password,email);
+            Subscription sub = createCoach(userName,password,email);
             assertEquals( sub.sendEMail("shir0@post.bgu.ac.il","hi"),("Send to: shir0@post.bgu.ac.il From: shir0@post.bgu.ac.il Mail: hi"));
         }
     }//sendEMail
@@ -226,7 +232,7 @@ public class SubscriptionTest {
 
         @Test
         public void addSearchTest() {
-            Subscription sub = new Coach(userName,password,email);
+            Subscription sub = createCoach(userName,password,email);
             assertEquals(sub.getSearch().size(),0);
             sub.addSearch("shir");
             assertEquals(sub.getSearch().size(),1);
@@ -260,7 +266,7 @@ public class SubscriptionTest {
 
         @Test
         public void getPermissionsTest() {
-            Subscription sub = new Coach(userName,password,email);
+            Subscription sub = createCoach(userName,password,email);
             Permissions p = new Permissions();
             p.add_default_player_or_coach_permission();
             assertEquals(sub.permissions, sub.getPermissions());
@@ -296,11 +302,11 @@ public class SubscriptionTest {
 
         @Test
         public void equalsTest() {
-            Subscription sub = new Coach(userName,password,email);
+            Subscription sub = createCoach(userName,password,email);
            assertTrue(sub.equals(sub));
            assertFalse(sub.equals(null));
            assertFalse(sub.equals("shir"));
-            assertFalse(sub.equals(new Coach("din",password,email)));
+           assertFalse(sub.equals(createCoach("din",password,email)));
 
 
 

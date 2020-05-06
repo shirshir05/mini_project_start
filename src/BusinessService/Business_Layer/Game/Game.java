@@ -8,6 +8,7 @@ import java.util.Observable;
 import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.UserManagement.Player;
 import BusinessService.Business_Layer.UserManagement.Referee;
+import BusinessService.Business_Layer.UserManagement.UnifiedSubscription;
 import BusinessService.Enum.ActionStatus;
 import BusinessService.Enum.EventType;
 import DB_Layer.logger;
@@ -95,7 +96,7 @@ public class Game extends Observable{
     public ActionStatus updateNewEvent(String team_name, String player_name, EventType event){
         ActionStatus ac = null;
         Event new_event = null;
-        Player p = null;
+        UnifiedSubscription p = null;
         if (host.getName().equals(team_name)) {
            p = host.getPlayer(player_name);
            if(p != null){

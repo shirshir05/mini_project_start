@@ -5,7 +5,7 @@ import BusinessService.Enum.PermissionAction;
 import java.util.Observable;
 import java.util.Observer;
 
-public class TeamOwner extends Subscription  implements Observer{
+public class TeamOwner /*extends Subscription*/  implements Observer{
 
 
     //teamOwner or SystemAdministrator
@@ -14,12 +14,9 @@ public class TeamOwner extends Subscription  implements Observer{
 
     /**
      * constructor
-     * @param arg_user_name
-     * @param arg_password
-     * @param email
      */
-    public TeamOwner(String arg_user_name, String arg_password,String email) {
-        super(arg_user_name, arg_password,email);
+    public TeamOwner(/*String arg_user_name, String arg_password,String email*/) {
+       // super(arg_user_name, arg_password,email);
         appointedByTeamOwner = null;
     }
 
@@ -34,8 +31,10 @@ public class TeamOwner extends Subscription  implements Observer{
      * @param appointedByTeamOwner
      */
     public void setAppointedByTeamOwner(Subscription appointedByTeamOwner) {
-        //Removing the appointed
-        if(appointedByTeamOwner == null){
+        this.appointedByTeamOwner = appointedByTeamOwner;
+
+        // removing the appointee
+        /*if(appointedByTeamOwner == null){
             this.appointedByTeamOwner = null;
             permissions.remove_permissions(PermissionAction.Edit_team);
             permissions.remove_permissions(PermissionAction.Appointment_of_team_owner);
@@ -50,14 +49,15 @@ public class TeamOwner extends Subscription  implements Observer{
         }else {
             permissions.add_default_owner_permission();
             this.appointedByTeamOwner = appointedByTeamOwner;
-        }
+        }*/
+
     }
 
     //**********************************************function************************************************************//
 
     @Override
     public void update(Observable o, Object arg) {
-        this.alerts.add((String)arg);
+        /*this.alerts.add((String)arg);*/
     }
 
     //**********************************************to string************************************************************//
@@ -65,9 +65,14 @@ public class TeamOwner extends Subscription  implements Observer{
     @Override
     public String toString() {
 
-        return "TeamOwner: " + "\n" +
-                "name: " + name + "\n" +
-                "email: " + email;
+        String res = "TeamOwner: " + "\n";
+        if(appointedByTeamOwner != null){
+            res = res + "Appointed by: "+appointedByTeamOwner.userName;
+        }
+        else {
+            res = res + "Appointed by: null";
+        }
+        return  res;
     }
 
 }

@@ -4,6 +4,7 @@ import BusinessService.Business_Layer.Game.Game;
 import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.UserManagement.Player;
 import BusinessService.Business_Layer.UserManagement.Referee;
+import BusinessService.Business_Layer.UserManagement.UnifiedSubscription;
 import BusinessService.Enum.EventType;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -249,14 +250,21 @@ public class GameSettingsControllerTest {
             }
             DataManagement.addToListTeam(t);
             DataManagement.addGame(g);
-            DataManagement.findTeam("shir1").addOrRemovePlayer(new Player("mor","123456","shir0@post.bgu.ac.il"),1);
-            DataManagement.findTeam("shir1").addOrRemovePlayer(new Player("din","123456","shir0@post.bgu.ac.il"),1);
-            DataManagement.findTeam("shir1").addOrRemovePlayer(new Player("shir","123456","shir0@post.bgu.ac.il"),1);
-            DataManagement.findTeam("shir1").addOrRemovePlayer(new Player("dan","123456","shir0@post.bgu.ac.il"),1);
+            DataManagement.findTeam("shir1").addOrRemovePlayer(createPlayer("mor","123456","shir0@post.bgu.ac.il"),1);
+            DataManagement.findTeam("shir1").addOrRemovePlayer(createPlayer("din","123456","shir0@post.bgu.ac.il"),1);
+            DataManagement.findTeam("shir1").addOrRemovePlayer(createPlayer("shir","123456","shir0@post.bgu.ac.il"),1);
+            DataManagement.findTeam("shir1").addOrRemovePlayer(createPlayer("dan","123456","shir0@post.bgu.ac.il"),1);
 
             assertEquals(gm.refereeCreateNewEvent(game_id,team_name,player_name,event).getDescription(),ans);
 
 
+        }
+
+
+        private static UnifiedSubscription createPlayer(String name, String password, String email){
+            UnifiedSubscription us = new UnifiedSubscription(name,password,email);
+            us.setNewRole(new Player(us.getUserName()));
+            return us;
         }
 
 

@@ -17,36 +17,40 @@ public class UnifiedSubscription extends Subscription implements Observer {
     TeamManager teamManager;
     Coach coach;
 
-    public UnifiedSubscription(String argUserName, String argPassword, String email, Player player, TeamOwner teamOwner, TeamManager teamManager, Coach coach) {
+    public UnifiedSubscription(String argUserName, String argPassword, String email) {
         super(argUserName, argPassword, email);
-        this.player = player;
-        this.teamOwner = teamOwner;
-        this.teamManager = teamManager;
-        this.coach = coach;
+        this.player = null;
+        this.teamOwner = null;
+        this.teamManager = null;
+        this.coach = null;
     }
 
     //region Role Setter
 
-    public void setRole(Subscription role){
+    /**
+     * sets a new role to the subscription and adds the correct permissions for this role.
+     * @param role an object representing the role to be added to the subscription
+     */
+    public void setNewRole(Object role){
         boolean correctRole = false;
         if(role instanceof Player) {
             player = (Player) role;
-            correctRole = true;
+            permissions.add_default_player_or_coach_permission();
+            //correctRole = true;
         }
         else if(role instanceof Coach) {
             coach = (Coach) role;
-            correctRole = true;
+            permissions.add_default_player_or_coach_permission();
+            //correctRole = true;
         }
         else if(role instanceof TeamManager) {
             teamManager = (TeamManager) role;
-            correctRole = true;
+            // correctRole = true;
         }
         else if(role instanceof TeamOwner) {
             teamOwner = (TeamOwner) role;
-            correctRole = true;
+            // correctRole = true;
         }
-        if(correctRole)
-            getPermissions().copyPermissions(role.getPermissions());
     }
 
     //endregion
@@ -61,10 +65,30 @@ public class UnifiedSubscription extends Subscription implements Observer {
         return coach!=null;
     }
 
+    /**
+     * returns true if the subscription is a team owner in the system and someone appointed them
+     */
+    public boolean isAnAppointedTeamOwner(){
+        return teamOwner!=null && teamOwner.getAppointedByTeamOwner()!=null;
+    }
+
+    /**
+     * returns true if the subscription is a team owner (not necessarily appointed by another user)
+     */
     public boolean isATeamOwner(){
         return teamOwner!=null;
     }
 
+    /**
+     * returns true if the subscription is a team manager in the system and someone appointed them
+     */
+    public boolean isAnAppointedTeamManager(){
+        return teamManager!=null && teamManager.getAppointedByTeamOwner()!=null;
+    }
+
+    /**
+     * returns true if the subscription is a team manager (not necessarily appointed by another user)
+     */
     public boolean isATeamManager(){
         return teamManager!=null;
     }
@@ -102,7 +126,7 @@ public class UnifiedSubscription extends Subscription implements Observer {
     }
 
 
-    public void setPersonalPage(PlayerPersonalPage personalPage) {
+    public void setPlayerPersonalPage(PlayerPersonalPage personalPage) {
         if(isAPlayer())
             player.setPersonalPage(personalPage);
     }
@@ -112,14 +136,25 @@ public class UnifiedSubscription extends Subscription implements Observer {
     //region Team Owner functionality
 
     public Subscription teamOwner_getAppointedByTeamOwner() {
-        if(isATeamOwner())
+        if(isAnAppointedTeamOwner())
+            // will return null is the team owner was not appointed by anyone yet
             return teamOwner.getAppointedByTeamOwner();
         return null;
     }
 
     public void teamOwner_setAppointedByTeamOwner(Subscription appointedByTeamOwner) {
-        if(isATeamOwner())
-            teamOwner.setAppointedByTeamOwner(appointedByTeamOwner);
+        if (isATeamOwner()) {
+            if (appointedByTeamOwner == null) {
+                //removing the subscription from being a team owner
+                // first, remove the permissions
+                permissions.removePermissionsOfTeamOwner();
+                // then, assign this team owner to be null so the subscription is not a team owner anymore
+                teamOwner = null;
+            } else {
+                teamOwner.setAppointedByTeamOwner(appointedByTeamOwner);
+                permissions.add_default_owner_permission();
+            }
+        }
     }
 
     //endregion
@@ -127,14 +162,22 @@ public class UnifiedSubscription extends Subscription implements Observer {
     //region Team Manager functionality
 
     public Subscription teamManager_getAppointedByTeamOwner() {
-        if(isATeamManager())
+        if(isAnAppointedTeamManager())
+            // will return null is the team manager was not appointed by anyone yet
             return teamManager.getAppointedByTeamOwner();
         return null;
     }
 
     public void teamManager_setAppointedByTeamOwner(Subscription appointedByTeamOwner) {
-        if(isATeamManager())
-            teamManager.setAppointedByTeamOwner(appointedByTeamOwner);
+        if(isATeamManager()) {
+            if (appointedByTeamOwner == null) {
+                //removing the subscription from being a team manager
+                // assign this team manager to be null so the subscription is not a team owner anymore
+                teamManager = null;
+            } else {
+                teamManager.setAppointedByTeamOwner(appointedByTeamOwner);
+            }
+        }
     }
 
 
@@ -170,18 +213,12 @@ public class UnifiedSubscription extends Subscription implements Observer {
         return null;
     }
 
-    public void setPersonalPage(CoachPersonalPage personalPage) {
+    public void setCoachPersonalPage(CoachPersonalPage personalPage) {
         if(isACoach())
             coach.setPersonalPage(personalPage);
     }
 
     //endregion
-
-    //TODO remove this get, it's here for team search:
-
-    public TeamOwner getTeamOwner() {
-        return teamOwner;
-    }
 
 
     //TODO observable
@@ -193,15 +230,17 @@ public class UnifiedSubscription extends Subscription implements Observer {
 
     @Override
     public String toString() {
-        String result = "";
+        String result =
+                "name: " + name + "\n" +
+                 "email: " + email + "\n";
         if(player!=null)
-            result = result + player.toString();
+            result = result + player.toString() + "\n";
         if(coach!=null)
-            result = result + "\n" +coach.toString();
+            result = result + coach.toString() + "\n";
         if(teamManager!=null)
-            result = result + "\n" +teamManager.toString();
+            result = result + teamManager.toString() + "\n";
         if(teamOwner!=null)
-            result = result + "\n" +teamOwner.toString();
+            result = result + teamOwner.toString();
         return result;
     }
 }

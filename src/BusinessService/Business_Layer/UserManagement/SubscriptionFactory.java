@@ -17,9 +17,15 @@ public class SubscriptionFactory {
         if(userName==null || password==null || role==null || userName.equals("") || password.equals("")) {
             return null;
         }
-        if(role == Role.Coach ){
+        /*if(role == Role.Coach ){
             Spelling.updateDictionary("coach: " + userName);
             return new Coach(userName,password, email);
+        }*/
+        else if (role == Role.Coach || role == Role.Player || role == Role.TeamManager || role == Role.TeamOwner){
+            //create a unified subscription with this role
+            UnifiedSubscription unified = new UnifiedSubscription(userName,password,email);
+            addRoleToUnifiedSubscription(unified, role);
+            return unified;
         }
         else if (role == Role.Fan){
             Spelling.updateDictionary("fan: " + userName);
@@ -28,10 +34,10 @@ public class SubscriptionFactory {
         else if (role == Role.Guest){
             return new Guest(userName,password, email);
         }
-        else if (role == Role.Player){
+        /*else if (role == Role.Player){
             Spelling.updateDictionary("player: " + userName);
             return new Player(userName,password, email);
-        }
+        }*/
         else if (role == Role.Referee){
             Spelling.updateDictionary("referee: " + userName);
             return new Referee(userName,password, email);
@@ -40,21 +46,40 @@ public class SubscriptionFactory {
             Spelling.updateDictionary("systemAdministrator: " + userName);
             return new SystemAdministrator(userName,password, email);
         }
-        else if (role == Role.TeamManager){
+        /*else if (role == Role.TeamManager){
             Spelling.updateDictionary("teamManager: " + userName);
             return new TeamManager(userName,password, email);
         }
         else if (role == Role.TeamOwner){
             Spelling.updateDictionary("teamOwner: " + userName);
             return new TeamOwner(userName,password, email);
-        }
-        else if(role == Role.UnifiedSubscription){
+        }*/
+       /* else if(role == Role.UnifiedSubscription){
             Spelling.updateDictionary("unifiedSubscription: " + userName);
-            return new UnifiedSubscription(userName,password, email,null,null,null,null);
-        }
+            return new UnifiedSubscription(userName,password, email);
+        }*/
         //else if (role == Role.UnionRepresentative){
        // }
         Spelling.updateDictionary("unionRepresentative: " + userName);
         return new UnionRepresentative(userName,password, email);
+    }
+
+    public void addRoleToUnifiedSubscription(UnifiedSubscription sub, Role role) {
+        if(role == Role.Coach ){
+            Spelling.updateDictionary("coach: " + sub.userName);
+            sub.setNewRole(new Coach(sub.userName));
+        }
+        else if (role == Role.TeamManager){
+            Spelling.updateDictionary("teamManager: " + sub.userName);
+            sub.setNewRole(new TeamManager());
+        }
+        else if (role == Role.TeamOwner){
+            Spelling.updateDictionary("teamOwner: " + sub.userName);
+            sub.setNewRole(new TeamOwner());
+        }
+        else if (role == Role.Player){
+            Spelling.updateDictionary("player: " + sub.userName);
+            sub.setNewRole(new Player(sub.userName));
+        }
     }
 }

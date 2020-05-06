@@ -65,7 +65,6 @@ public class GameSettingsController {
                         for (Team guest : teamsInSeason) {
                             //a team will not play with itself
                             if (!host.equals(guest)) {
-
                                 String field = getFieldFromHost(host);
                                 String[] threeReferees = getRefereesFromSeason(season);
                                 if (threeReferees != null && field != null) {
@@ -371,7 +370,7 @@ public class GameSettingsController {
      * @param eventTime -
      * @return ActionStatus
      */
-    public ActionStatus refereeEditGameEvent(int game_id, String arg_team, String arg_event_type, Player arg_player, LocalDateTime eventTime){
+    public ActionStatus refereeEditGameEvent(int game_id, String arg_team, String arg_event_type, UnifiedSubscription arg_player, LocalDateTime eventTime){
         ActionStatus AC = new ActionStatus(false, "one of details incorrect."); ;
         Game game = DataManagement.getGame(game_id);
         Team team = DataManagement.findTeam(arg_team);

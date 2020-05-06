@@ -18,10 +18,10 @@ import java.util.Observable;
 public class Team extends Observable implements Comparable {
 
     private String Name;
-    private HashSet<Player> list_Player;
-    private HashSet<Coach> list_Coach;
-    private HashSet<TeamManager> list_TeamManager;
-    private HashSet<TeamOwner> list_TeamOwner;
+    private HashSet<UnifiedSubscription> list_Player;
+    private HashSet<UnifiedSubscription> list_Coach;
+    private HashSet<UnifiedSubscription> list_TeamManager;
+    private HashSet<UnifiedSubscription> list_TeamOwner;
     private HashSet<Object> list_assets;
     private TeamPersonalPage PersonalPage;
     private int status; // 0 - off 1 - on -1 - always close
@@ -112,9 +112,9 @@ public class Team extends Observable implements Comparable {
      * @param player_name
      * @return
      */
-    public Player getPlayer(String player_name){
+    public UnifiedSubscription getPlayer(String player_name){
         if ( player_name!=null) {
-            for (Player p : list_Player) {
+            for (UnifiedSubscription p : list_Player) {
                 if (p.getUserName().equals(player_name)) {
                     return p;
                 }
@@ -128,9 +128,7 @@ public class Team extends Observable implements Comparable {
 
 
     /**
-     * A function that allows add assets like a plot for a group
-     * @param asset
-     * @return
+     * A function that allows to add assets like a field for a team
      */
     public Object setAsset(String asset) {
         if(status == -1 || status == 0 || status==2){
@@ -145,18 +143,13 @@ public class Team extends Observable implements Comparable {
      * @param asset
      */
     public void removeTeamAssets(Object asset){
-        if(list_assets.contains(asset)) {
-            list_assets.remove(asset);
-        }
+        list_assets.remove(asset);
     }
 
     /**
      * The function allows a player to be added to a team or to remove a player from the team.
-     * @param player
-     * @param add_or_remove
-     * @return
      */
-    public ActionStatus addOrRemovePlayer(Player player, int add_or_remove ){
+    public ActionStatus addOrRemovePlayer(UnifiedSubscription player, int add_or_remove ){
         if(status == -1 || status == 0 || status==2){
             return new ActionStatus(false,"The team is inactive so no activity can be performed on it");
         }
@@ -186,7 +179,7 @@ public class Team extends Observable implements Comparable {
      * @param add_or_remove
      * @return
      */
-    public ActionStatus AddOrRemoveCoach(Coach coach_add, int add_or_remove ){
+    public ActionStatus AddOrRemoveCoach(UnifiedSubscription coach_add, int add_or_remove ){
         if(status == -1 || status == 0 || status==2){
             return new ActionStatus(false,  "The team is inactive so no activity can be performed on it");
         }
@@ -214,8 +207,9 @@ public class Team extends Observable implements Comparable {
      * @param add_or_remove
      * @return
      */
-    public ActionStatus EditTeamOwner(TeamOwner TeamOwner, int add_or_remove){
-        if(status == -1 || status == 0 || status==2){
+    public ActionStatus EditTeamOwner(UnifiedSubscription TeamOwner, int add_or_remove){
+        if(status == -1 || status == 0 /*|| status==2*/){
+            //if the status is 2 then the team was just created
             return new ActionStatus(false, "The team is inactive so no activity can be performed on it");
         }
         //remove the TeamOwner
@@ -243,7 +237,7 @@ public class Team extends Observable implements Comparable {
      * @param add_or_remove
      * @return
      */
-    public ActionStatus EditTeamManager(TeamManager teamManager, int add_or_remove){
+    public ActionStatus EditTeamManager(UnifiedSubscription teamManager, int add_or_remove){
         if(status == -1 || status == 0 || status==2){
             return new ActionStatus(false,  "The team is inactive so no activity can be performed on it");
         }
@@ -277,7 +271,7 @@ public class Team extends Observable implements Comparable {
     public ActionStatus changeStatus(int status){
         String notify="";
         if(status == this.status){
-            return new ActionStatus(false,  "The Team is already set " + this.status);
+            return new ActionStatus(false,  "The team is already set " + this.status);
         }
         this.status = status;
         if (status==0){notify="The Team "+this.Name+" is closed";}
@@ -287,7 +281,7 @@ public class Team extends Observable implements Comparable {
         setChanged();
         notifyObservers(notify);
 
-        return new ActionStatus(true,  "The status of the group has changed successfully.");
+        return new ActionStatus(true,  "The status of the team has changed successfully.");
     }
 
     //**********************************************region Budget************************************************************//
@@ -309,11 +303,11 @@ public class Team extends Observable implements Comparable {
         return budget.getCurrentAmount();
     }
 
-    public HashSet<TeamManager> getListTeamManager() {
+    public HashSet<UnifiedSubscription> getListTeamManager() {
         return list_TeamManager;
     }
 
-    public HashSet<TeamOwner> getListTeamOwner() {
+    public HashSet<UnifiedSubscription> getListTeamOwner() {
         return list_TeamOwner;
     }
 
