@@ -428,7 +428,6 @@ public class ResultSetPrinter {
                 System.err.println("DBTablePrinter Info: Invalid max. varchar column width. Using default!");
                 maxStringColWidth = DEFAULT_MAX_TEXT_COL_WIDTH;
             }
-
             // Get the meta data object of this ResultSet.
             ResultSetMetaData rsmd;
             rsmd = rs.getMetaData();

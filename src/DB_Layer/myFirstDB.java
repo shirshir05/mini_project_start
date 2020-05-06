@@ -18,6 +18,9 @@ import java.time.LocalDate;
 
 public class myFirstDB  {
 
+
+
+    /**
     LogAndExitController login = StartSystem.getLEc();;
 
 
@@ -34,7 +37,6 @@ public class myFirstDB  {
         ActionStatus ac = null;
         boolean done = true;
         try {
-
             BufferedReader in = new BufferedReader(new FileReader(new File("DataBase/usersDB.txt")));
             String line = in.readLine();
             while(line!=null){
@@ -160,4 +162,5 @@ public class myFirstDB  {
     public ActionStatus SaveLeagueInfo() {
         return new ActionStatus(false,"function SaveLeagueInfo not implemented");
     }
+     **/
 }
