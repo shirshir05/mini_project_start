@@ -51,9 +51,6 @@ public class UnifiedSubscription extends Subscription implements Observer {
             teamOwner = (TeamOwner) role;
             // correctRole = true;
         }
-        /*
-        if(correctRole)
-            getPermissions().copyPermissions(role.getPermissions());*/
     }
 
     //endregion

@@ -30,7 +30,11 @@ public class TeamController {
                 flag = true;
             }
             if (flag){
-                AC = CreateTeam(arg_name,arg_field);
+                if(CreateTeam(arg_name,arg_field).isActionSuccessful()){
+                   AC =new ActionStatus(true, "The team wait for approve union representative.");
+                }else{
+                    AC =new ActionStatus(false, "The operation was not performed.");
+                }
             }
             else{
                 AC = new ActionStatus(false, "The operation was not performed because no union representative in system.");
@@ -76,7 +80,8 @@ public class TeamController {
             for(UnionRepresentative s: unionReps){
                 budget.addObserver(s);
             }
-            AC = new_team.EditTeamOwner((UnifiedSubscription) DataManagement.getCurrent(),1);
+           // AC = new_team.EditTeamOwner((UnifiedSubscription) DataManagement.getCurrent(),1);
+            AC  =new ActionStatus(true, "The team wait for approve union representative.");
             Spelling.updateDictionary("team: " + arg_name);
         }
         logger.log("Create Team: "+arg_name+"-"+AC.getDescription());

@@ -65,7 +65,6 @@ public class GameSettingsController {
                         for (Team guest : teamsInSeason) {
                             //a team will not play with itself
                             if (!host.equals(guest)) {
-
                                 String field = getFieldFromHost(host);
                                 String[] threeReferees = getRefereesFromSeason(season);
                                 if (threeReferees != null && field != null) {

@@ -229,29 +229,6 @@ public class LogAndExitController{
                 } else { // NOT one of the four roles who are allowed to be parallel users
                     AC = new ActionStatus(false, "You are not authorized to perform this action.");
                 }
-/*
-                if (sub instanceof Player || sub instanceof Coach || sub instanceof TeamOwner || sub instanceof TeamManager) {
-                    //delete current subscription of the user:
-                    DataManagement.removeSubscription(sub.getUserName());
-                    //add a subscription with the roles required:
-                    Registration(DataManagement.getCurrent().getUserName(), password, "UnifiedSubscription", DataManagement.getCurrent().getEmail());
-                    //in registration, the user is logged in automatically, getting the new user:
-                    Subscription currentSub = DataManagement.getCurrent();
-                    //just to make sure:
-                    if (currentSub instanceof UnifiedSubscription) {
-                        UnifiedSubscription currentUnified = (UnifiedSubscription) currentSub;
-                        //add the current role to subscription
-                        currentUnified.setNewRole(sub);
-                        //add the new role to the subscription
-                        Subscription newRole = factory.Create(DataManagement.getCurrent().getUserName(), password, desiredRole, DataManagement.getCurrent().getEmail());
-                        currentUnified.setNewRole(newRole);
-                        AC = new ActionStatus(true, "Added the role " + role + " to your user");
-                    }
-                    else {
-                        //this means the current user is not a unified subscription
-                        //should never happen:
-                        AC = new ActionStatus(false, "Something went wrong. Please close the system and try again");
-                    }*/
 
             }
         }
