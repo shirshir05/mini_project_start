@@ -36,12 +36,14 @@ public class sqlConnection implements interfaceDB {
 
     @Override
     public ResultSet find(String table, String[] key) {
-        int i = 1;
-        int length = keys.get(table).length-1;
-        String query =  "use FootBallDB SELECT * FROM "+ table + " WHERE " + keys.get(table)[0] + " = " + "'"+key[0]+"'";
-        for (int k=0; k<length; k++){
-            query += " AND " + keys.get(table)[i] + " = " + "'"+key[i]+"'";
-            i++;
+
+        String query =  "use FootBallDB SELECT * FROM "+ table;
+        if (key != null) {
+            query += " WHERE " + keys.get(table)[0] + " = " + "'"+key[0]+"'";
+            int length = key.length;
+            for (int k = 0; k < length ; k++) {
+                query += " AND " + keys.get(table)[k + 1] + " = " + "'" + key[k + 1] + "'";
+            }
         }
         PreparedStatement sqlStatement = null;
         ResultSet result = null;
@@ -143,7 +145,7 @@ public class sqlConnection implements interfaceDB {
     public sqlConnection() {
         databaseName = "FootBallDB";
         databaseManager = new DatabaseManagerMSSQLServer(databaseName);
-        connect();
+
         keys = new HashMap<>();
         keys.put("Users", new String[]{"userName"});
         keys.put("Team",new String[]{"teamName"});
@@ -152,14 +154,14 @@ public class sqlConnection implements interfaceDB {
         keys.put("EventInGame",new String[]{"gameID","eventTime"});
         keys.put("League",new String[]{"leagueName"});
         keys.put("Season",new String[]{"leagueName","seasonYear"});
-        keys.put("RefereeInSeason",new String[]{"refereeName","leagueName","seasonYear"});
+        keys.put("RefereeInSeason",new String[]{"leagueName","seasonYear","refereeName"});
 
         //ResultSet resultSet = databaseManager.executeQuerySelect("Select * From Users");
         //ResultSetPrinter.printResultSet(resultSet);
     }
 
-    public void connect(){
-        databaseManager.startConnection();
+    public ActionStatus connect(){
+        return databaseManager.startConnection();
     }
 
     public ActionStatus closeConnection(){

@@ -385,7 +385,7 @@ public class GameSettingsController {
                             currentEvent.setPlayer(arg_player);
                             currentEvent.setTeam(team);
                             currentEvent.setEventType(eventType);
-                            AC = new ActionStatus(true, "The events were edited");
+                            AC = new ActionStatus(true, "The event was edited");
                         }
                         else{
                             AC = new ActionStatus(false, "the player does not play in that team");
@@ -396,7 +396,7 @@ public class GameSettingsController {
                             currentEvent.setTeam(team);
                             currentEvent.setPlayer(arg_player);
                             currentEvent.setEventType(eventType);
-                            AC = new ActionStatus(true, "The events were edited");
+                            AC = new ActionStatus(true, "The event was edited");
                         }
                         else{
                             AC = new ActionStatus(false, "the player does not play in that team");
