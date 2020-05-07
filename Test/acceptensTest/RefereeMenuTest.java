@@ -110,7 +110,7 @@ public class RefereeMenuTest {
             SystemAdministrator sys = new SystemAdministrator("sys","123","sys@gmail.com");
             DataManagement.setSubscription(sys);
             DataManagement.setCurrent(sys);
-            g.createGame(LocalDate.now(),"Teddi","Maccabi","Haifa","Raz", "ben", "ziv");
+            //g.createGame(LocalDate.now(),"Teddi","Maccabi","Haifa","Raz", "ben", "ziv");
             DataManagement.setCurrent(ref);
             RefereeUserMenu RM = new RefereeUserMenu();
             String[] args = {arg0,arg1,arg2,arg3,arg4};
