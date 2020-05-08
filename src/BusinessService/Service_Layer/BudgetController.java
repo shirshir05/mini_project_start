@@ -161,10 +161,12 @@ public class BudgetController {
     public static ActionStatus startNewQuarter(){
         if(!DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Team_financial))
             return new ActionStatus(false, NOT_ALLOWED_TO_PERFORM_ACTIONS_ON_BUDGET);
+        /*
         HashSet<Team> teams = DataManagement.getListTeam();
         for (Team t:teams){
             t.startNewQuarterForBudget();
         }
+         */
         return new ActionStatus(true, UPDATE_SUCCESSFUL);
     }
     public static ActionStatus addExpenseToTeam(String teamName, double expense, Expense description){

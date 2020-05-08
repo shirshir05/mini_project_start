@@ -239,4 +239,5 @@ public class Game extends Observable{
     private void setScore(int host, int guest) {
         this.score = new Pair<>(host, guest);
     }
+
 }

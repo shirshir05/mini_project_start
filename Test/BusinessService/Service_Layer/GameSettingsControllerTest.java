@@ -255,7 +255,7 @@ public class GameSettingsControllerTest {
             DataManagement.findTeam("shir1").addOrRemovePlayer(createPlayer("shir","123456","shir0@post.bgu.ac.il"),1);
             DataManagement.findTeam("shir1").addOrRemovePlayer(createPlayer("dan","123456","shir0@post.bgu.ac.il"),1);
 
-            assertEquals(gm.refereeCreateNewEvent(game_id,team_name,player_name,event).getDescription(),ans);
+            assertEquals(gm.refereeCreateNewEvent(game_id,team_name,player_name,event.toString()).getDescription(),ans);
 
 
         }

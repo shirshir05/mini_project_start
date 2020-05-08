@@ -191,7 +191,8 @@ public class LogAndExitController{
      * @return boolean
      */
     private boolean searchTeamOwner(UnifiedSubscription teamOwner) {
-        HashSet<Team> list =  DataManagement.getListTeam();
+        //TODO - FIX IN db; CHECK IN TEAM ASSET IF USER EXISTS AS TEAM OWNER.
+        HashSet<Team> list =  null; //DataManagement.getListTeam();
         for (Team team: list) {
             HashSet<UnifiedSubscription> teamOwnerHash = team.getListTeamOwner();
             if(teamOwnerHash.size() == 1){
@@ -234,5 +235,9 @@ public class LogAndExitController{
         }
         logger.log("Add Subscription attempt of user : " + DataManagement.getCurrent().getUserName() + role + " " + AC.getDescription());
         return AC;
+    }
+
+    public Subscription createUserByType(String arg_user_name,String arg_password,String role_enum,String email){
+        return factory.Create(arg_user_name, arg_password, DataManagement.returnEnum(role_enum), email);
     }
 }

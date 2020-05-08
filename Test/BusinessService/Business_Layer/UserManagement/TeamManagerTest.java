@@ -103,7 +103,7 @@ public class TeamManagerTest {
         @Test
         public void setAppointed_by_teamOwnerTest() {
             UnifiedSubscription teamManager = createTeamManager(userName,password,email);
-            teamManager.teamManager_setAppointedByTeamOwner(createTeamManager("shir","123456","shir0@post.bgu.ac.il"));
+            teamManager.teamManager_setAppointedByTeamOwner("shir");
             assertEquals(teamManager.teamManager_getAppointedByTeamOwner(),createTeamManager("shir","123456","shir0@post.bgu.ac.il"));
         }
     }//setAppointed_by_teamOwner
