@@ -196,8 +196,8 @@ public final class DataManagement {
      * return all Union Representatives in system
      * @return ArrayList
      */
-    static ArrayList<UnionRepresentative> getUnionRepresentatives(){
-        ArrayList<UnionRepresentative> unionReps = new ArrayList<>();
+    static HashSet<UnionRepresentative> getUnionRepresentatives(){
+        HashSet<UnionRepresentative> unionReps = new HashSet<>();
         for(Subscription s: Subscription){
             if(s instanceof UnionRepresentative)
                 unionReps.add((UnionRepresentative)s);

@@ -12,6 +12,7 @@ import Presentation_Layer.Users_Menu.RefereeUserMenu;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashSet;
 
 public class databaseController {
 
@@ -21,7 +22,7 @@ public class databaseController {
         return sqlConn.connect();
     }
 
-    //init User by user name from DB
+    //Get User by user name from DB
     public Subscription loadUserByName(String userID) {
         try {
             ResultSet rs = sqlConn.findByKey("Users", new String[]{userID});
@@ -70,22 +71,22 @@ public class databaseController {
         return null;
     }
 
-    //init User by user name from DB
-    public ActionStatus loadUsersByRole(String role) {
-        ActionStatus ac = null;
+    //Get Users list by user role from DB (used for user without personal info)
+    public HashSet<Subscription> loadUsersByRole(String role) {
+        HashSet<Subscription> set = null;
         try {
             ResultSet rs = sqlConn.findByValue("Users","userRole",role);
             while (rs.next()){
-                ac = StartSystem.LEc.Registration(rs.getString("userName"),rs.getString("userPassword"),rs.getString("userRole"),rs.getString("email"));
+                Subscription sub = StartSystem.LEc.createUserByType(rs.getString("userName"),rs.getString("userPassword"),rs.getString("userRole"),rs.getString("email"));
+                set.add(sub);
             }
         }
         catch (SQLException e){
-            ac = new ActionStatus(false,"Sql SQLException");
         }
-        return ac;
+        return set;
     }
 
-    //init all teams data from DB
+    //Get team data by team name from DB
     public Team loadTeamInfo(String team_name) {
         try {
             ResultSet rs = sqlConn.findByKey("Team", new String[]{team_name});

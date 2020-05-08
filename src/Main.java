@@ -18,7 +18,7 @@ public class Main {
         int year  = localDate.getYear();
         System.out.println(year);
         StartSystem sys = new StartSystem();
-        //sys.startFromDB();
-        sys.ResetToFactory();
+        sys.startFromDB(); //first option
+        sys.ResetToFactory(); //second option
     }
 }
