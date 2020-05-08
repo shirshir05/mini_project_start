@@ -259,7 +259,7 @@ public class GameSettingsController {
                     ac = StartSystem.LEc.Registration(referee_user_name, referee_password,"Referee", mail);
                     String mail_content= "Hello! you were invited to our system! your username: "+referee_user_name+" and you password: "+referee_password;
                     //TODO RAZ - no mail????
-                    DataManagement.getSubscription(referee_user_name).sendEMail(mail,mail_content);
+                    DataManagement.containSubscription(referee_user_name).sendEMail(mail,mail_content);
                 } else if (add_or_remove == 1) { //remove
                     if (current_referee != null) {
                         ac = StartSystem.LEc.RemoveSubscription(referee_user_name);

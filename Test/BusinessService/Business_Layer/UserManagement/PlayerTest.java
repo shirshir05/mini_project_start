@@ -172,47 +172,7 @@ public class PlayerTest {
             this.date = d;
         }
 
-        @Test
-        public void getBirthdayTest() {
-            UnifiedSubscription player = createPlayer(userName,password,email);
-            player.setBirthday(date);
-            assertNotNull(player.getBirthday());
-        }
     }//getBirthday
-
-    /**
-     * Test - P5
-     */
-    @RunWith(Parameterized.class)
-    public static class setBirthday{
-
-        public String userName;
-        public String password;
-        public String email;
-        public LocalDate date;
-
-
-        @Parameterized.Parameters
-        public static Collection<Object[]> data() {
-            return Arrays.asList(new Object[][]{
-                    {"P1","123456","shir0@post.bgu.ac.il",LocalDate.of(1995,2,3)},
-
-            });
-        }
-        public setBirthday(String userName, String password, String email,LocalDate d) {
-            this.userName = userName;
-            this.password = password;
-            this.email = email;
-            this.date = d;
-        }
-
-        @Test
-        public void setBirthdayTest() {
-            UnifiedSubscription player = createPlayer(userName,password,email);
-            player.setBirthday(date);
-            assertEquals(player.getBirthday(),LocalDate.of(1995,2,3));
-        }
-    }//setBirthday
 
 
     /**
@@ -361,7 +321,6 @@ public class PlayerTest {
         public void toStringTest() {
             UnifiedSubscription player = createPlayer(userName,password,email);
             player.setPosition(position);
-            player.setBirthday(birthday);
             assertEquals(player.toString(),toString);
         }
     }//toString

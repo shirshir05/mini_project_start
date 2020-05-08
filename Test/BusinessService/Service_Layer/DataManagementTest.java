@@ -52,7 +52,7 @@ public class DataManagementTest {
         public void containSubscriptionTest() {
             Subscription sub = createCoach(userName,password,email);
             DataManagement.setSubscription(sub);
-            assertEquals(sub, DataManagement.getSubscription(sub.getUserName()));
+            assertEquals(sub, DataManagement.containSubscription(sub.getUserName()));
             assertNotNull(DataManagement.containSubscription("shir"));
             assertNull(DataManagement.containSubscription("dana"));
 
@@ -484,12 +484,6 @@ public class DataManagementTest {
             this.name = name;
             this.filed= filed;
         }
-        @Test
-        public void getListTeamTest() {
-            Team team1 = new Team(name,filed);
-            DataManagement.addToListTeam(team1);
-            assertTrue(DataManagement.getListTeam().contains(team1));
-        }
 
     }//getListTeam
 
@@ -513,44 +507,9 @@ public class DataManagementTest {
             this.name = name;
             //parameter
         }
-        @Test
-        public void addToListLeagueTest() {
-            League l = new League(name);
-            DataManagement.addToListLeague(l);
-            DataManagement.getListLeague().contains(l);
-
-        }
 
     }//addToListLeague
 
-
-    /**
-     * Test - DM18
-     */
-    @RunWith(Parameterized.class)
-    public static class getListLeague{
-        String name;
-
-
-        @Parameterized.Parameters
-        public static Collection<Object[]> data() {
-            return Arrays.asList(new Object[][]{
-                    {"shir"}
-            });
-        }
-        public getListLeague(String name) {
-            this.name = name;
-            //parameter
-        }
-        @Test
-        public void getListLeagueTest() {
-            League l = new League(name);
-            DataManagement.addToListLeague(l);
-            DataManagement.getListLeague().contains(l);
-
-        }
-
-    }//getListLeague
 
 
 

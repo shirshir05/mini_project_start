@@ -11,7 +11,7 @@ public class Player/* extends Subscription */implements Observer {
 
     protected PlayerPersonalPage PersonalPage;
     protected String position;
-    protected LocalDate birthday;
+    //protected LocalDate birthday;
 
 
     public Player(String arg_user_name/*, String arg_password,String email*/) {
@@ -37,19 +37,17 @@ public class Player/* extends Subscription */implements Observer {
     }
 
 
-    /**
-     * @return
-     */
+    /*
     public LocalDate getBirthday() {
         return birthday;
     }
-
-    /**
-     * @param birthday
      */
+
+    /*
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
+     */
 
     public PlayerPersonalPage getPersonalPage() {
         return PersonalPage;
@@ -80,8 +78,9 @@ public class Player/* extends Subscription */implements Observer {
         return "Player: " + "\n" +
 //                "name: " + name + "\n" +
 //                "email: " + email + "\n" +
-                "position: " + position + "\n" +
-                "birthday: " + birthday;
+//                "birthday: " + birthday + "\n" +
+                "position: " + position;
+
     }
 
 }

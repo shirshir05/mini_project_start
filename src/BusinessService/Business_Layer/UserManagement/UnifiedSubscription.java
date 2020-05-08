@@ -108,6 +108,7 @@ public class UnifiedSubscription extends Subscription implements Observer {
             player.setPosition(position);
     }
 
+    /*
     public LocalDate getBirthday() {
         if(isAPlayer())
             return player.getBirthday();
@@ -118,6 +119,7 @@ public class UnifiedSubscription extends Subscription implements Observer {
         if(isAPlayer())
             player.setBirthday(birthday);
     }
+*/
 
     public PlayerPersonalPage getPlayerPersonalPage() {
         if(isAPlayer())
@@ -135,14 +137,14 @@ public class UnifiedSubscription extends Subscription implements Observer {
 
     //region Team Owner functionality
 
-    public Subscription teamOwner_getAppointedByTeamOwner() {
+    public String teamOwner_getAppointedByTeamOwner() {
         if(isAnAppointedTeamOwner())
             // will return null is the team owner was not appointed by anyone yet
             return teamOwner.getAppointedByTeamOwner();
         return null;
     }
 
-    public void teamOwner_setAppointedByTeamOwner(Subscription appointedByTeamOwner) {
+    public void teamOwner_setAppointedByTeamOwner(String appointedByTeamOwner) {
         if (isATeamOwner()) {
             if (appointedByTeamOwner == null) {
                 //removing the subscription from being a team owner
@@ -161,14 +163,14 @@ public class UnifiedSubscription extends Subscription implements Observer {
 
     //region Team Manager functionality
 
-    public Subscription teamManager_getAppointedByTeamOwner() {
+    public String teamManager_getAppointedByTeamOwner() {
         if(isAnAppointedTeamManager())
             // will return null is the team manager was not appointed by anyone yet
             return teamManager.getAppointedByTeamOwner();
         return null;
     }
 
-    public void teamManager_setAppointedByTeamOwner(Subscription appointedByTeamOwner) {
+    public void teamManager_setAppointedByTeamOwner(String appointedByTeamOwner) {
         if(isATeamManager()) {
             if (appointedByTeamOwner == null) {
                 //removing the subscription from being a team manager

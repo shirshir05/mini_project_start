@@ -10,10 +10,13 @@ import BusinessService.Business_Layer.UserManagement.SystemAdministrator;
 import BusinessService.Business_Layer.UserManagement.UnionRepresentative;
 import BusinessService.Enum.ActionStatus;
 import BusinessService.Enum.Role;
+import DB_Layer.JDBC.sqlConnection;
+import DB_Layer.databaseController;
 import DB_Layer.logger;
 import DB_Layer.stateTaxSystem;
 import DB_Layer.unionFinanceSystem;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,6 +26,7 @@ public final class DataManagement {
 
     private static final DataManagement instance = new DataManagement();
     // A list that keeps all the subscriptions that are currently subscribed to the system
+    private static databaseController sql = new databaseController();
     private static HashSet<Subscription>  Subscription = new HashSet<>();
 
     private static HashSet<Team> list_team = new HashSet<>();
@@ -91,12 +95,7 @@ public final class DataManagement {
      * @return Subscription
      */
     public static Subscription containSubscription(String arg_user_name){
-        for (Subscription  subscription : Subscription) {
-            if (subscription.getUserName().equals(arg_user_name)){
-                return subscription;
-            }
-        }
-        return null;
+        return sql.loadUserByName(arg_user_name);
     }
 
     /**
@@ -239,22 +238,10 @@ public final class DataManagement {
         logger.log("DataManagement :new team was added, team name: " + team.getName());
     }
 
-    //todo - delete!!!
-    static HashSet<Team>  getListTeam(){
-            return list_team;
-    }
-
     public static void addToListLeague(League league){
         list_league.add(league);
         logger.log("DataManagement :new league was added, team name: " + league.getName());
     }
-
-    //todo - delete!!!
-    /*
-    static  HashSet<League> getListLeague(){
-        return list_league;
-    }
-     */
 
     /**
      * This function returns a list of all the System Administrators in the system
@@ -333,17 +320,5 @@ public final class DataManagement {
             list_Complaints.add(complaint);
         }
     }
-
-    static Subscription getSubscription(String userName){
-        if (userName!=null) {
-            for (Subscription s : Subscription) {
-                if (s.getUserName().equals(userName)) {
-                    return s;
-                }
-            }
-        }
-        return null;
-    }
-
 
 }

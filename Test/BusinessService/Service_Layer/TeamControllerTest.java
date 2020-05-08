@@ -416,12 +416,12 @@ public class TeamControllerTest {
 
             UnifiedSubscription teamOwner = new UnifiedSubscription("owner","123456","");
             teamOwner.setNewRole(new TeamOwner());
-            teamOwner.teamOwner_setAppointedByTeamOwner(teamOwner);
+            teamOwner.teamOwner_setAppointedByTeamOwner(teamOwner.getUserName());
             team.EditTeamOwner(teamOwner,1);
 
             UnifiedSubscription anotherTeamOwner = new UnifiedSubscription("manager","123456","");
             anotherTeamOwner.setNewRole(new TeamOwner());
-            anotherTeamOwner.teamOwner_setAppointedByTeamOwner(anotherTeamOwner);
+            anotherTeamOwner.teamOwner_setAppointedByTeamOwner(anotherTeamOwner.getUserName());
 
             Fan player = new Fan("player","123456","");
 

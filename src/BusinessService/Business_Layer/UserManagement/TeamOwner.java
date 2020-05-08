@@ -9,7 +9,7 @@ public class TeamOwner /*extends Subscription*/  implements Observer{
 
 
     //teamOwner or SystemAdministrator
-    private Subscription appointedByTeamOwner;
+    private String ownerAppointedByTeamOwner;
 
 
     /**
@@ -17,21 +17,21 @@ public class TeamOwner /*extends Subscription*/  implements Observer{
      */
     public TeamOwner(/*String arg_user_name, String arg_password,String email*/) {
        // super(arg_user_name, arg_password,email);
-        appointedByTeamOwner = null;
+        ownerAppointedByTeamOwner = null;
     }
 
     //**********************************************get & set************************************************************//
 
-    public Subscription getAppointedByTeamOwner() {
-        return appointedByTeamOwner;
+    public String getAppointedByTeamOwner() {
+        return ownerAppointedByTeamOwner;
     }
 
     /**
      * The function allows you to save who has appointed the group owner
      * @param appointedByTeamOwner
      */
-    public void setAppointedByTeamOwner(Subscription appointedByTeamOwner) {
-        this.appointedByTeamOwner = appointedByTeamOwner;
+    public void setAppointedByTeamOwner(String appointedByTeamOwner) {
+        this.ownerAppointedByTeamOwner = appointedByTeamOwner;
 
         // removing the appointee
         /*if(appointedByTeamOwner == null){
@@ -66,8 +66,8 @@ public class TeamOwner /*extends Subscription*/  implements Observer{
     public String toString() {
 
         String res = "TeamOwner: " + "\n";
-        if(appointedByTeamOwner != null){
-            res = res + "Appointed by: "+appointedByTeamOwner.userName;
+        if(ownerAppointedByTeamOwner != null){
+            res = res + "Appointed by: "+ownerAppointedByTeamOwner;
         }
         else {
             res = res + "Appointed by: null";
