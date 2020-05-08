@@ -22,10 +22,10 @@ public class sqlConnection implements interfaceDB {
     }
 
     @Override
-    public int update(String table, String[] key, String fieldName, String value) {
+    public int update(String table, String[] key, String column, String value) {
         int i = 1;
         int length = keys.get(table).length-1;
-        String query =  "use FootBallDB UPDATE "+ table + " SET " +fieldName + " = '" + value +"' WHERE " + keys.get(table)[0] + " = " + "'"+key[0]+"'";
+        String query =  "use FootBallDB UPDATE "+ table + " SET " + column + " = '" + value +"' WHERE " + keys.get(table)[0] + " = " + "'"+key[0]+"'";
         for (int k=0; k<length; k++){
             query += " AND " + keys.get(table)[i] + " = " + "'"+key[i]+"'";
             i++;
@@ -35,14 +35,39 @@ public class sqlConnection implements interfaceDB {
     }
 
     @Override
-    public ResultSet find(String table, String[] key) {
-        int i = 1;
-        int length = keys.get(table).length-1;
-        String query =  "use FootBallDB SELECT * FROM "+ table + " WHERE " + keys.get(table)[0] + " = " + "'"+key[0]+"'";
-        for (int k=0; k<length; k++){
-            query += " AND " + keys.get(table)[i] + " = " + "'"+key[i]+"'";
-            i++;
+    public ResultSet findByKey(String table, String[] key) {
+
+        String query =  "use FootBallDB SELECT * FROM "+ table;
+        if (key != null) {
+            query += " WHERE " + keys.get(table)[0] + " = " + "'"+key[0]+"'";
+            int length = key.length;
+            for (int k = 0; k < length ; k++) {
+                query += " AND " + keys.get(table)[k + 1] + " = " + "'" + key[k + 1] + "'";
+            }
         }
+        PreparedStatement sqlStatement = null;
+        ResultSet result = null;
+        try{
+            if(this.databaseManager == null){
+                connect();
+            }
+            if( this.databaseManager.conn.isClosed()){
+                connect();
+            }
+            sqlStatement = databaseManager.conn.prepareStatement(query);
+            result = sqlStatement.executeQuery();
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public ResultSet findByValue(String table, String column,String value) {
+
+        String query =  "use FootBallDB SELECT * FROM "+ table + " WHERE " + column + " = " + "'"+value+"'";
+
         PreparedStatement sqlStatement = null;
         ResultSet result = null;
         try{
@@ -74,7 +99,8 @@ public class sqlConnection implements interfaceDB {
         return ans;
     }
 
-    public int execute(String query){
+
+    private int execute(String query){
         PreparedStatement sqlStatement = null;
         int rowsEdited = -1;
         try{
@@ -143,7 +169,7 @@ public class sqlConnection implements interfaceDB {
     public sqlConnection() {
         databaseName = "FootBallDB";
         databaseManager = new DatabaseManagerMSSQLServer(databaseName);
-        connect();
+
         keys = new HashMap<>();
         keys.put("Users", new String[]{"userName"});
         keys.put("Team",new String[]{"teamName"});
@@ -152,14 +178,14 @@ public class sqlConnection implements interfaceDB {
         keys.put("EventInGame",new String[]{"gameID","eventTime"});
         keys.put("League",new String[]{"leagueName"});
         keys.put("Season",new String[]{"leagueName","seasonYear"});
-        keys.put("RefereeInSeason",new String[]{"refereeName","leagueName","seasonYear"});
+        keys.put("RefereeInSeason",new String[]{"leagueName","seasonYear","refereeName"});
 
         //ResultSet resultSet = databaseManager.executeQuerySelect("Select * From Users");
         //ResultSetPrinter.printResultSet(resultSet);
     }
 
-    public void connect(){
-        databaseManager.startConnection();
+    public ActionStatus connect(){
+        return databaseManager.startConnection();
     }
 
     public ActionStatus closeConnection(){
@@ -171,7 +197,7 @@ public class sqlConnection implements interfaceDB {
         sqlConnection sql = new sqlConnection();
         ResultSet resultSet0 = sql.databaseManager.executeQuerySelect("Select * From Users");
         ResultSetPrinter.printResultSet(resultSet0);
-        ResultSetPrinter.printResultSet(sql.find("Game",new String[]{"1"}));
+        ResultSetPrinter.printResultSet(sql.findByKey("Game",new String[]{"1"}));
 
     }
 

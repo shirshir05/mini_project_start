@@ -140,7 +140,7 @@ public class TeamOwnerTest {
             teamOwner.setNewRole(new TeamOwner());
             UnifiedSubscription appointedBy = new UnifiedSubscription("shir","123456","");
             appointedBy.setNewRole(new TeamOwner());
-            teamOwner.teamOwner_setAppointedByTeamOwner(appointedBy);
+            teamOwner.teamOwner_setAppointedByTeamOwner(appointedBy.userName);
             assertTrue(teamOwner.getPermissions().check_permissions(PermissionAction.Edit_team));
             assertTrue(teamOwner.getPermissions().check_permissions(PermissionAction.Appointment_of_team_owner));
             assertTrue(teamOwner.getPermissions().check_permissions(PermissionAction.Remove_Appointment_of_team_owner));

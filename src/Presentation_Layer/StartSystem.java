@@ -4,6 +4,7 @@ import BusinessService.Business_Layer.BudgetManagement.BudgetRegulations;
 import BusinessService.Business_Layer.Game.Game;
 import BusinessService.Enum.ActionStatus;
 import BusinessService.Service_Layer.*;
+import DB_Layer.databaseController;
 import DB_Layer.myFirstDB;
 
 import java.io.File;
@@ -18,6 +19,7 @@ public class StartSystem {
     public static SearchLogger Sc = new SearchLogger();
     public static TeamController Tc = new TeamController();
     public static UserCLI cli = new UserCLI();
+    public static databaseController db = new databaseController();
 
     public static void cleanSystem(){
         //clean old data in system
@@ -84,13 +86,12 @@ public class StartSystem {
 
     public void startFromDB(){
         DataManagement.cleanAllData();
-        myFirstDB db = new myFirstDB();
         String ans = "";
         Game.game_id =0;
-        ans += db.loadUsersInfo().getDescription() +"\n";
-        ans += db.loadTeamInfo().getDescription() +"\n";
-        ans += db.loadGameInfo().getDescription() +"\n";
-        ans += db.loadLeagueInfo().getDescription();
+        //ans += db.loadUserInfo().getDescription() +"\n";
+        //ans += db.loadTeamInfo().getDescription() +"\n";
+        //ans += db.loadLeagueInfo().getDescription() +"\n";
+        //ans += db.loadGameInfo().getDescription();
         cli.presentOnly(ans);
         DataManagement.setCurrent(null);
         cli.presentOnly(LEc.Login("Guest", "123456").getDescription());

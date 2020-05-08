@@ -17,7 +17,7 @@ public class EditAndShowUserDetails {
     private static final String DEFAULT_PASSWORD = "11111";
 
     public PersonalPage getPersonalPageOfCoachOrPlayer(String user_name){
-        Subscription subscription = DataManagement.getSubscription(user_name);
+        Subscription subscription = DataManagement.containSubscription(user_name);
         if(subscription != null){
             if (subscription instanceof UnifiedSubscription){
                 PersonalPage personalPage = ((UnifiedSubscription)subscription).getPlayerPersonalPage();
@@ -45,7 +45,7 @@ public class EditAndShowUserDetails {
     public ActionStatus addPermissionToTeamManager(String team_manager_user_name,String permission){
         ActionStatus ac;
         if(DataManagement.getCurrent().permissions.check_permissions(PermissionAction.Appointment_of_team_manager)){
-            Subscription manager = DataManagement.getSubscription(team_manager_user_name);
+            Subscription manager = DataManagement.containSubscription(team_manager_user_name);
             PermissionAction perm = Permissions.getPermissionActionFromString(permission);
             if(manager!=null && perm!=null){
                 manager.getPermissions().add_permissions(perm);
