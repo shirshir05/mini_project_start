@@ -1,6 +1,9 @@
 package DB_Layer;
 
 import BusinessService.Business_Layer.Game.League;
+import BusinessService.Business_Layer.Game.PointsPolicy;
+import BusinessService.Business_Layer.Game.ScoreTable;
+import BusinessService.Business_Layer.Game.Season;
 import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.TeamManagement.TeamScore;
 import BusinessService.Business_Layer.UserManagement.*;
@@ -129,33 +132,39 @@ public class databaseController {
     }
 
     //init all Leagues & Seasons data from DB
-    public ActionStatus loadLeagueInfo() {
-        ActionStatus ac = null;
+    public League loadLeagueInfo(String league_name) {
+        League league = null;
         try {
             //load league objects
-            ResultSet rs = sqlConn.findByKey("League", null);
+            ResultSet rs = sqlConn.findByKey("League", new String[]{league_name});
             while (rs.next()){
                 String leagueName =rs.getString("leagueName");
-                DataManagement.addToListLeague(new League(leagueName));
+                league = new League(leagueName);
+                DataManagement.addToListLeague(league); // ???
 
                 //load season objects into this league
                 ResultSet rs2 = sqlConn.findByKey("Season",new String[]{leagueName});
                 while(rs2.next()){
-                    StartSystem.GSc.defineSeasonToLeague(leagueName,""+rs2.getString("seasonYear"),rs2.getInt("win"),rs2.getInt("lose"),rs2.getInt("equal"));
+                    Season season =new Season(rs2.getString("seasonYear"));
+                    league.addSeason(season);
+                    PointsPolicy pointsPolicy = new PointsPolicy(rs2.getInt("win"),rs2.getInt("lose"),rs2.getInt("equal"));
+                    ScoreTable scoreTable = new ScoreTable(pointsPolicy);
+                    season.setScoreTable(scoreTable);
                 }
 
                 //load Referee objects into this league for each season
+
                 ResultSet rs3 = sqlConn.findByKey("RefereeInSeason",new String[]{leagueName});
                 while(rs3.next()){
-                    StartSystem.GSc.defineRefereeInLeague(leagueName,rs3.getString("refereeName"),""+rs3.getString("seasonYear"));
+                    Season s = league.getSeason(rs3.getString("seasonYear"));
+                    s.addReferee((Referee)loadUserByName(rs3.getString("refereeName")));
                 }
+
             }
-            ac = new ActionStatus(true,"loaded successfully");
         }
         catch (SQLException e){
-            ac = new ActionStatus(false,"Sql SQLException");
         }
-        return ac;
+        return league;
     }
 
     //init all Games data from DB
