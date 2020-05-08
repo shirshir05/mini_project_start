@@ -2,6 +2,7 @@ package DB_Layer;
 
 import BusinessService.Business_Layer.Game.League;
 import BusinessService.Business_Layer.TeamManagement.Team;
+import BusinessService.Business_Layer.TeamManagement.TeamScore;
 import BusinessService.Business_Layer.UserManagement.*;
 import BusinessService.Enum.ActionStatus;
 import BusinessService.Service_Layer.DataManagement;
@@ -93,17 +94,31 @@ public class databaseController {
             if (rs.next()){
                 String teamName = rs.getString("teamName");
                 Team team = new Team(teamName,rs.getString("mainFiled"));
-                DataManagement.addToListTeam(team);
+                //  ?? DataManagement.addToListTeam(team)
+                // TODO - ?? team budget ??
+                team.changeStatus(rs.getInt("teamStatus"));
+                TeamScore score = new TeamScore(teamName);
+                score.setWins(rs.getInt("wins"));
+                score.setDrawn(rs.getInt("drawns"));
+                score.setLoses(rs.getInt("loses"));
+                score.setPoints(rs.getInt("totalScore"));
+                score.setNumberOfGames(rs.getInt("numOfGames"));
+                score.setGoalsGet(rs.getInt("goalesGoten")); //todo- fix name in table
+                score.setGoalsScores(rs.getInt("goalesScored")); //todo- fix name in table
+                team.setTeamScore(score);
+                //get all users connected to team
                 ResultSet rs2 = sqlConn.findByKey("AssetsInTeam",new String[]{teamName});
                 while(rs2.next()){
                     if(rs2.getString("assetRole").equals("TeamOwner")){
-                        StartSystem.Tc.AddOrRemoveTeamOwner(teamName,rs2.getString("assetName"),1);
+                        team.EditTeamOwner((UnifiedSubscription) loadUserByName(rs2.getString("assetName")),1);
                     }else if(rs2.getString("assetRole").equals("Coach")){
-                        StartSystem.Tc.AddOrRemoveCoach(teamName,rs2.getString("assetName"),1);
+                        team.AddOrRemoveCoach((UnifiedSubscription)loadUserByName(rs2.getString("assetName")),1);
                     }else if(rs2.getString("assetRole").equals("TeamManager")){
-                        StartSystem.Tc.AddOrRemoveTeamManager(teamName,rs2.getString("assetName"),1);
+                        team.EditTeamManager((UnifiedSubscription)loadUserByName(rs2.getString("assetName")),1);
                     }else if(rs2.getString("assetRole").equals("Player")){
-                        StartSystem.Tc.AddOrRemovePlayer(teamName,rs2.getString("assetName"),1);
+                        team.addOrRemovePlayer((UnifiedSubscription)loadUserByName(rs2.getString("assetName")),1);
+                    }else if(rs2.getString("assetRole").equals("Filed")){
+                        team.setAsset(rs2.getString("assetName"));
                     }
                 }
             }
