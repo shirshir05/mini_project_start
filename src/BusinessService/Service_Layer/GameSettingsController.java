@@ -10,6 +10,7 @@ import DB_Layer.logger;
 import Presentation_Layer.Spelling;
 import Presentation_Layer.StartSystem;
 
+import javax.xml.crypto.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -36,6 +37,7 @@ public class GameSettingsController {
             for (League league : allLeagues) {
                 if(league.getName().equals(leagueParameter)){
                     Season season = league.getSeason(seasonName);
+                    // TODO - TIME
                     if (season != null) {
                         flag = true;
                         HashSet<Team> teamsInSeason = season.getListOfTeams();
@@ -319,18 +321,25 @@ public class GameSettingsController {
      * @param eventTime -
      * @return ActionStatus
      */
-    public ActionStatus refereeEditGameEvent(int game_id, String arg_team, String arg_event_type, UnifiedSubscription arg_player, LocalDateTime eventTime){
+    public ActionStatus refereeEditGameEvent(int game_id, String arg_team, String arg_event_type, String arg_player, LocalDateTime eventTime){
         ActionStatus AC = new ActionStatus(false, "one of details incorrect."); ;
         Game game = DataManagement.getGame(game_id);
         Team team = DataManagement.findTeam(arg_team);
         boolean flag = false;
+        boolean flag_player = false;
         EventType eventType = getEventFromString(arg_event_type) ;
-        if (eventType != null && game != null && game.getHeadReferee() != null && game.getHeadReferee().equals(DataManagement.getCurrent())){
+        Subscription player = DataManagement.containSubscription(arg_player);
+        if(player instanceof UnifiedSubscription){
+            if(((UnifiedSubscription) player).isAPlayer()){
+                flag_player = true;
+            }
+        }
+        if ( flag_player  && eventType != null && game != null && game.getHeadReferee() != null && game.getHeadReferee().equals(DataManagement.getCurrent())){
             for (Event currentEvent : game.getEventList()){
                 if (currentEvent.getEventTime().equals(eventTime)){
                     if (game.getHost().equals(team)){
-                        if (arg_player!=null && game.getHost().getPlayer(arg_player.getUserName()).equals(arg_player)){
-                            currentEvent.setPlayer(arg_player);
+                        if (arg_player!=null && game.getHost().getPlayer(player.getUserName()).equals(player)){
+                            currentEvent.setPlayer((UnifiedSubscription)player);
                             currentEvent.setTeam(team);
                             currentEvent.setEventType(eventType);
                             AC = new ActionStatus(true, "The events were edited");
@@ -340,9 +349,9 @@ public class GameSettingsController {
                         }
                     }
                     else if (game.getGuest().equals(team)){
-                        if (arg_player!=null && game.getGuest().getPlayer(arg_player.getUserName()).equals(arg_player)){
+                        if (arg_player!=null && game.getGuest().getPlayer(player.getUserName()).equals(player)){
                             currentEvent.setTeam(team);
-                            currentEvent.setPlayer(arg_player);
+                            currentEvent.setPlayer((UnifiedSubscription)player);
                             currentEvent.setEventType(eventType);
                             AC = new ActionStatus(true, "The events were edited");
                         }
@@ -394,7 +403,7 @@ public class GameSettingsController {
      * @param str  -
      * @return EventType
      */
-    public EventType getEventFromString(String str){
+    protected EventType getEventFromString(String str){
         if(Arrays.stream(EventType.values()).noneMatch(e -> e.name().equals(str))){
             return null;
         }else{
@@ -410,11 +419,15 @@ public class GameSettingsController {
      * @param event -
      * @return true if operation succeeded
      */
-    public ActionStatus refereeCreateNewEvent(int game_id, String team_name, String player_name, EventType event ){
+    public ActionStatus refereeCreateNewEvent(int game_id, String team_name, String player_name, String event ){
         ActionStatus ac;
         Game game = DataManagement.getGame(game_id);
         Team team = DataManagement.findTeam(team_name);
-        if(game == null ){
+        EventType eventType = getEventFromString(event);
+        if(eventType == null){
+            ac = new ActionStatus(false,"The Event Type does not exist.") ;
+        }
+        else if(game == null ){
             ac = new ActionStatus(false,"The game id does not exist.") ;
         }
         else if(team== null){
@@ -431,7 +444,7 @@ public class GameSettingsController {
             if ((game.getHeadReferee()!=null && game.getHeadReferee().getUserName().equals(DataManagement.getCurrent().getUserName()) )||
                     game.getLinesman1Referee().getUserName().equals(DataManagement.getCurrent().getUserName()) ||
                     game.getLinesman2Referee().getUserName().equals(DataManagement.getCurrent().getUserName()) ){
-                game.updateNewEvent(team_name,player_name,event);
+                game.updateNewEvent(team_name,player_name,eventType);
                 ac = new ActionStatus(true, "Event successfully updated.");
             }else{
                 ac = new ActionStatus(false,"You are not a judge of the current game.");

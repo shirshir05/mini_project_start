@@ -132,7 +132,7 @@ public class TeamController {
      * deleted from all other association representatives
      * @param teamName - name of team
      */
-    public void DeleteCreateTeamRequest(String teamName){
+    void DeleteCreateTeamRequest(String teamName){
         if (teamName!=null) {
             ArrayList<UnionRepresentative> union = DataManagement.getUnionRepresentatives();
             for (UnionRepresentative u : union) {
@@ -326,7 +326,7 @@ public class TeamController {
      * @param user_name - user change
      * @return - null if all OK
      */
-    public String CheckInputEditTeam(String name_team, String user_name) {
+    String CheckInputEditTeam(String name_team, String user_name) {
         String value=null;
         if (name_team==null ||name_team.isEmpty() || user_name==null || user_name.isEmpty()){
             value= "One of the parameters is empty";
