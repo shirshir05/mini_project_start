@@ -1,11 +1,8 @@
 package acceptensTest;
 
-import BusniesServic.Business_Layer.Game.Game;
-import BusniesServic.Business_Layer.UserManagement.Fan;
-import BusniesServic.Business_Layer.UserManagement.Guest;
-import BusniesServic.Business_Layer.UserManagement.Subscription;
-import BusniesServic.Enum.ActionStatus;
-import BusniesServic.Service_Layer.DataManagement;
+
+import BusinessService.Enum.ActionStatus;
+import BusinessService.Service_Layer.DataManagement;
 import Presentation_Layer.StartSystem;
 import Presentation_Layer.Users_Menu.FanUserMenu;
 import org.junit.Test;

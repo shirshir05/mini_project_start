@@ -1,16 +1,15 @@
 package acceptensTest;
 
-import BusniesServic.Business_Layer.Game.Game;
-import BusniesServic.Business_Layer.TeamManagement.Team;
-import BusniesServic.Business_Layer.UserManagement.Fan;
-import BusniesServic.Business_Layer.UserManagement.Player;
-import BusniesServic.Business_Layer.UserManagement.Referee;
-import BusniesServic.Business_Layer.UserManagement.SystemAdministrator;
-import BusniesServic.Enum.ActionStatus;
-import BusniesServic.Service_Layer.DataManagement;
-import BusniesServic.Service_Layer.GameSettingsController;
+import BusinessService.Business_Layer.Game.Game;
+import BusinessService.Business_Layer.TeamManagement.Team;
+import BusinessService.Business_Layer.UserManagement.Player;
+import BusinessService.Business_Layer.UserManagement.Referee;
+import BusinessService.Business_Layer.UserManagement.SystemAdministrator;
+import BusinessService.Business_Layer.UserManagement.UnifiedSubscription;
+import BusinessService.Enum.ActionStatus;
+import BusinessService.Service_Layer.DataManagement;
+import BusinessService.Service_Layer.GameSettingsController;
 import Presentation_Layer.StartSystem;
-import Presentation_Layer.Users_Menu.FanUserMenu;
 import Presentation_Layer.Users_Menu.RefereeUserMenu;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -18,10 +17,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.time.LocalDate;
-import java.util.Calendar;
 
-
-import javax.xml.crypto.Data;
 
 import static org.junit.Assert.*;
 
@@ -61,12 +57,12 @@ public class RefereeMenuTest {
                      // See games i am referee in
                     {"2" , null , null ,null , null , null , true},  //=> true- print the games      6
                     // Add event in game
-                    {"3" , "1", "Maccabi", "Oren", "goal", null, false}, //  => false- event added to the game  7
+                    {"3" , "1", "Maccabi", "Oren", "goal", null, true}, //  => false- event added to the game  7
                     {"3" , "5", "Maccabi", "Raz", "goal", null, false}, //  => false- wrong game id      8
-                    {"3" , "1", "Hapoel", "Raz", "goal", null, false}, //  =>  false- wrong team name    9
+                    {"3" , "5", "Hapoel", "Raz", "goal", null, false}, //  =>  false- wrong team name    9
                     {"3" , "1", null , "Raz", "goal", null, false}, //  =>  false- wrong team name    10
                     {"3" , "1", "Maccabi", "Happy", "goal", null, false}, //  => false - wrong player name   11
-                    {"3" , "1", "Maccabi", null , "goal", null, false}, //  => false - wrong player name    12
+                    {"3" , "5", "Maccabi", null , "goal", null, false}, //  => false - wrong player name    12
                     {"3" , "1", "Maccabi", "Oren", "flipflop", null, false}, //  => false- wrong event     13
                     {"3" , "1", "Maccabi", "Raz", null, null, false}, //  => false- wrong event       14
                     // Exit / Logout
@@ -94,12 +90,14 @@ public class RefereeMenuTest {
         @Test
         public void  RefereeMenu1(){
             StartSystem.cleanSystem();
+            Game.game_id =0;
             GameSettingsController g = new GameSettingsController();
             Referee ref = new Referee("Raz","1234","raz@post.bgu.ac.il");
             DataManagement.setCurrent(ref);
             DataManagement.setSubscription(ref);
             Team host = new Team("Maccabi","Teddi");
-            Player p = new Player("Oren","frfr","raz@gmail.com");
+            UnifiedSubscription p = new UnifiedSubscription("Oren","frfr","raz@gmail.com");
+            p.setNewRole(new Player(p.getUserName()));
             DataManagement.setSubscription(p);
             host.addOrRemovePlayer(p,1);
             Team guest = new Team("Haifa","Sami");
@@ -112,7 +110,7 @@ public class RefereeMenuTest {
             SystemAdministrator sys = new SystemAdministrator("sys","123","sys@gmail.com");
             DataManagement.setSubscription(sys);
             DataManagement.setCurrent(sys);
-            g.createGame(LocalDate.now(),"Teddi","Maccabi","Haifa","Raz", "ben", "ziv");
+            //g.createGame(LocalDate.now(),"Teddi","Maccabi","Haifa","Raz", "ben", "ziv");
             DataManagement.setCurrent(ref);
             RefereeUserMenu RM = new RefereeUserMenu();
             String[] args = {arg0,arg1,arg2,arg3,arg4};

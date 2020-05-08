@@ -1,9 +1,9 @@
 package Presentation_Layer;
 
-import BusniesServic.Business_Layer.UserManagement.*;
-import BusniesServic.Business_Layer.UserManagement.Subscription;
-import BusniesServic.Enum.ActionStatus;
-import BusniesServic.Service_Layer.DataManagement;
+import BusinessService.Business_Layer.UserManagement.*;
+import BusinessService.Business_Layer.UserManagement.Subscription;
+import BusinessService.Enum.ActionStatus;
+import BusinessService.Service_Layer.DataManagement;
 import Presentation_Layer.Users_Menu.*;
 
 public class DisplayManager {
@@ -31,7 +31,7 @@ public class DisplayManager {
                 FanUserMenu FM = new FanUserMenu();
                 FM.presentUserMenu();
             }
-            else if(sub instanceof Player || sub instanceof Coach || sub instanceof TeamManager || sub instanceof TeamOwner){
+            else if(sub instanceof UnifiedSubscription){
                 //create new ..... menu and show its menu
                 TeamUsersMenu TM = new TeamUsersMenu();
                 TM.presentUserMenu();
