@@ -3,10 +3,7 @@ package BusinessService.Service_Layer;
 import BusinessService.Business_Layer.Game.Game;
 import BusinessService.Business_Layer.Game.League;
 import BusinessService.Business_Layer.TeamManagement.Team;
-import BusinessService.Business_Layer.UserManagement.Coach;
-import BusinessService.Business_Layer.UserManagement.Subscription;
-import BusinessService.Business_Layer.UserManagement.SystemAdministrator;
-import BusinessService.Business_Layer.UserManagement.UnionRepresentative;
+import BusinessService.Business_Layer.UserManagement.*;
 import BusinessService.Enum.Role;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -23,6 +20,11 @@ import static org.junit.Assert.*;
 public class DataManagementTest {
 
 
+    private static UnifiedSubscription createCoach(String name, String password, String email){
+        UnifiedSubscription us = new UnifiedSubscription(name,password,email);
+        us.setNewRole(new Coach(us.getUserName()));
+        return us;
+    }
 
     /**
      * Test - DM3
@@ -48,7 +50,7 @@ public class DataManagementTest {
 
         @Test
         public void containSubscriptionTest() {
-            Subscription sub = new Coach(userName,password,email);
+            Subscription sub = createCoach(userName,password,email);
             DataManagement.setSubscription(sub);
             assertEquals(sub, DataManagement.getSubscription(sub.getUserName()));
             assertNotNull(DataManagement.containSubscription("shir"));
@@ -267,7 +269,7 @@ public class DataManagementTest {
         public void getUnionRepresentativesTest() {
             Subscription sub = new UnionRepresentative(userName,password,email);
             DataManagement.setSubscription(sub);
-            DataManagement.setSubscription(new Coach("shir",password,email));
+            DataManagement.setSubscription(createCoach("shir",password,email));
             DataManagement.getUnionRepresentatives().contains(sub);
 
         }
@@ -304,7 +306,7 @@ public class DataManagementTest {
         public void setSubscriptionTest() {
             Subscription sub = new UnionRepresentative(userName,password,email);
             DataManagement.setSubscription(sub);
-            DataManagement.setSubscription(new Coach("shir",password,email));
+            DataManagement.setSubscription(createCoach("shir",password,email));
             assertEquals(DataManagement.containSubscription(userName),sub);
 
         }
@@ -339,7 +341,7 @@ public class DataManagementTest {
         public void removeSubscriptionTest() {
             Subscription sub = new UnionRepresentative(userName,password,email);
             DataManagement.setSubscription(sub);
-            DataManagement.setSubscription(new Coach("shir",password,email));
+            DataManagement.setSubscription(createCoach("shir",password,email));
             assertEquals(DataManagement.containSubscription(userName),sub);
             DataManagement.removeSubscription(userName);
             assertNull(DataManagement.containSubscription(userName));
@@ -661,7 +663,7 @@ public class DataManagementTest {
         }
         @Test
         public void InputTestTest() {
-            DataManagement.setSubscription(new Coach("shir","123456","shir0post.bgu.ac.il"));
+            DataManagement.setSubscription(createCoach("shir","123456","shir0post.bgu.ac.il"));
             assertEquals(DataManagement.InputTest(user,password),ans);
         }
 

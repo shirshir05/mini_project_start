@@ -17,6 +17,12 @@ import static org.junit.Assert.*;
 @RunWith(Enclosed.class)
 public class CoachTest {
 
+    private static UnifiedSubscription createCoach(String userName, String password, String email) {
+        UnifiedSubscription coach = new UnifiedSubscription(userName,password,email);
+        coach.setNewRole(new Coach(coach.getUserName()));
+        return coach;
+    }
+
     /**
      * Test - C1
      */
@@ -58,7 +64,7 @@ public class CoachTest {
 
         @Test
         public void CoachTest() {
-            Coach coach = new Coach(userName,password,email);
+            UnifiedSubscription coach = createCoach(userName,password,email);
             assertEquals(coach.getUserName(),(userName));
             assertEquals(coach.getPassword(),getHash(password));
             assertEquals(coach.getEmail(),(email));
@@ -95,7 +101,7 @@ public class CoachTest {
         }
         @Test
         public void setQualificationTest() {
-            Coach coach = new Coach(userName,password,email);
+            UnifiedSubscription coach = createCoach(userName,password,email);
             coach.setQualification(qualification);
             assertEquals(coach.getQualification(),qualification);
         }
@@ -128,7 +134,7 @@ public class CoachTest {
         }
         @Test
         public void getQualificationTest() {
-            Coach coach = new Coach(userName,password,email);
+            UnifiedSubscription coach = createCoach(userName,password,email);
             coach.setQualification(qualification);
             assertEquals(coach.getQualification(),qualification);
         }
@@ -163,7 +169,7 @@ public class CoachTest {
         }
         @Test
         public void setRoleInTeamTest() {
-            Coach coach = new Coach(userName,password,email);
+            UnifiedSubscription coach = createCoach(userName,password,email);
             coach.setRoleInTeam(Role);
             assertEquals(coach.getRoleInTeam(),Role);
         }
@@ -197,7 +203,7 @@ public class CoachTest {
         }
         @Test
         public void getRoleInTeamTest() {
-            Coach coach = new Coach(userName,password,email);
+            UnifiedSubscription coach = createCoach(userName,password,email);
             coach.setRoleInTeam(Role);
             assertEquals(coach.getRoleInTeam(),Role);
         }
@@ -220,11 +226,12 @@ public class CoachTest {
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {"Coach1","123456","shir0@post.bgu.ac.il","qualifications","role","Coach: \n" +
+                    {"Coach1","123456","shir0@post.bgu.ac.il","qualifications","role",
                             "name: null\n" +
                             "email: shir0@post.bgu.ac.il\n" +
+                                    "Coach: \n" +
                             "qualification: qualifications\n" +
-                            "roleInTeam: role"},
+                            "roleInTeam: role"+"\n"},
 
             });
         }
@@ -238,7 +245,7 @@ public class CoachTest {
         }
         @Test
         public void toStringTest() {
-            Coach coach = new Coach(userName,password,email);
+            UnifiedSubscription coach = createCoach(userName,password,email);
             coach.setRoleInTeam(Role);
             coach.setQualification(qualification);
             assertEquals(coach.toString(),toString);
@@ -275,9 +282,9 @@ public class CoachTest {
 
         @Test
         public void setPersonalPageTest() {
-            Coach coach = new Coach(userName,password,email);
-            coach.setPersonalPage(null);
-            assertNull(coach.getPersonalPage());
+            UnifiedSubscription coach = createCoach(userName,password,email);
+            coach.setCoachPersonalPage(null);
+            assertNull(coach.getCoachPersonalPage());
         }
     }//setPersonalPage
 
@@ -309,9 +316,9 @@ public class CoachTest {
 
         @Test
         public void getPersonalPageTest() {
-            Coach coach = new Coach(userName,password,email);
-            coach.setPersonalPage(new CoachPersonalPage(userName));
-            assertNotNull(coach.getPersonalPage());
+            UnifiedSubscription coach = createCoach(userName,password,email);
+            coach.setCoachPersonalPage(new CoachPersonalPage(userName));
+            assertNotNull(coach.getCoachPersonalPage());
         }
     }//getPersonalPage
 

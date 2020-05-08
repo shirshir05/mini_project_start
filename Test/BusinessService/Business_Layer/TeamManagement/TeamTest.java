@@ -20,6 +20,30 @@ import static org.junit.Assert.*;
 
 public class TeamTest {
 
+    private static UnifiedSubscription createTeamOwner(String name, String password, String email){
+        UnifiedSubscription us = new UnifiedSubscription(name, password, email);
+        us.setNewRole(new TeamOwner());
+        return us;
+    }
+
+    private static UnifiedSubscription createTeamManager(String name, String password, String email){
+        UnifiedSubscription us = new UnifiedSubscription(name, password, email);
+        us.setNewRole(new TeamManager());
+        return us;
+    }
+
+    private static UnifiedSubscription createPlayer(String name, String password, String email){
+        UnifiedSubscription us = new UnifiedSubscription(name, password, email);
+        us.setNewRole(new Player(us.getUserName()));
+        return us;
+    }
+
+    private static UnifiedSubscription createCoach (String name, String password, String email){
+        UnifiedSubscription us = new UnifiedSubscription(name, password, email);
+        us.setNewRole(new Coach(us.getUserName()));
+        return us;
+    }
+
 
     /**
      * Test - T1
@@ -212,8 +236,8 @@ public class TeamTest {
         @Test
         public void checkIfObjectInTeamTest() {
             Team team = new Team(this.name,this.field);
-            TeamManager manager = new TeamManager(this.subName+"m",this.subPassword+"m","m"+this.subEmail);
-            TeamOwner owner = new TeamOwner(this.subName+"o",this.subPassword+"o","o"+this.subEmail);
+            UnifiedSubscription manager = createTeamManager(this.subName+"m",this.subPassword+"m","m"+this.subEmail);
+            UnifiedSubscription owner = createTeamOwner(this.subName+"m",this.subPassword+"m","m"+this.subEmail);
             team.EditTeamOwner(owner,1);
             team.EditTeamManager(manager,1);
             assertTrue(team.checkIfObjectInTeam(manager));
@@ -254,8 +278,8 @@ public class TeamTest {
         @Test
         public void getPlayerTest() {
             Team team = new Team(this.name,this.field);
-            Player player = new Player(this.subName,this.subPassword,this.subEmail);
-            Player player2 = new Player("a","b","c");
+            UnifiedSubscription player = createPlayer(this.subName,this.subPassword,this.subEmail);
+            UnifiedSubscription player2 = createPlayer("a","b","c");
 
             team.addOrRemovePlayer(player,1);
             assertEquals(team.getPlayer(this.subName),player);
@@ -362,7 +386,7 @@ public class TeamTest {
         @Test
         public void addOrRemovePlayerTest() {
             Team team = new Team(this.name,this.field);
-            Player player = new Player(this.subName,this.subPassword,this.subEmail);
+            UnifiedSubscription player = createPlayer(this.subName,this.subPassword,this.subEmail);
             assertEquals(team.addOrRemovePlayer(player,1).getDescription(),"The player was successfully added to the team.");
             assertEquals(team.addOrRemovePlayer(player,1).getDescription(),"The player is already in the team.");
             assertEquals(team.addOrRemovePlayer(player,0).getDescription(),"The player was successfully removed from the team.");
@@ -402,7 +426,7 @@ public class TeamTest {
         @Test
         public void AddOrRemoveCoachTest() {
             Team team = new Team(this.name,this.field);
-            Coach player = new Coach(this.subName,this.subPassword,this.subEmail);
+            UnifiedSubscription player = createCoach(this.subName,this.subPassword,this.subEmail);
             assertEquals(team.AddOrRemoveCoach(player,1).getDescription(),"The Coach was successfully added to the team.");
             assertEquals(team.AddOrRemoveCoach(player,1).getDescription(),"The Coach is already in the team.");
             assertEquals(team.AddOrRemoveCoach(player,0).getDescription(),"The Coach was successfully removed from the team.");
@@ -442,7 +466,7 @@ public class TeamTest {
         @Test
         public void EditTeamOwnerTest() {
             Team team = new Team(this.name,this.field);
-            TeamOwner player = new TeamOwner(this.subName,this.subPassword,this.subEmail);
+            UnifiedSubscription player = createTeamOwner(this.subName,this.subPassword,this.subEmail);
             assertEquals(team.EditTeamOwner(player,1).getDescription(),"The Team Owner was successfully added to the team.");
             assertEquals(team.EditTeamOwner(player,1).getDescription(),"The Team Owner is already in the team.");
             assertEquals(team.EditTeamOwner(player,0).getDescription(),"The Team Owner was successfully removed from the team.");
@@ -482,7 +506,7 @@ public class TeamTest {
         @Test
         public void EditTeamManagerTest() {
             Team team = new Team(this.name,this.field);
-            TeamManager player = new TeamManager(this.subName,this.subPassword,this.subEmail);
+            UnifiedSubscription player = createTeamManager(this.subName,this.subPassword,this.subEmail);
             assertEquals(team.EditTeamManager(player,1).getDescription(),"The Team Manager was successfully added to the team.");
             assertEquals(team.EditTeamManager(player,1).getDescription(),"The Team Manager is already in the team.");
             assertEquals(team.EditTeamManager(player,0).getDescription(),"The Team Manager was successfully removed from the team.");
@@ -519,8 +543,8 @@ public class TeamTest {
         @Test
         public void changeStatusTest() {
             Team team = new Team(this.name,this.field);
-            assertEquals(team.changeStatus(1).getDescription(),"The group is already set 1");
-            assertEquals(team.changeStatus(-1).getDescription(),"The status of the group has changed successfully.");
+            assertEquals(team.changeStatus(1).getDescription(),"The team is already set 1");
+            assertEquals(team.changeStatus(-1).getDescription(),"The status of the team has changed successfully.");
             assertEquals(team.getStatus(),-1);
             team.changeStatus(0);
             assertEquals(team.getStatus(),0);
@@ -683,13 +707,13 @@ public class TeamTest {
         @Test
         public void getListTeamOwnerTest() {
             Team team = new Team(this.name,this.field);
-            TeamOwner owner1 = new TeamOwner(this.name1,this.pass1,this.mail1);
-            TeamOwner owner2 = new TeamOwner(this.name2,this.pass2,this.mail2);
-            TeamOwner owner3 = new TeamOwner(this.name3,this.pass3,this.mail3);
+            UnifiedSubscription owner1 = createTeamOwner(this.name1,this.pass1,this.mail1);
+            UnifiedSubscription owner2 = createTeamOwner(this.name2,this.pass2,this.mail2);
+            UnifiedSubscription owner3 = createTeamOwner(this.name3,this.pass3,this.mail3);
             team.EditTeamOwner(owner1,1);
             team.EditTeamOwner(owner2,1);
             team.EditTeamOwner(owner3,1);
-            HashSet<TeamOwner> list = new HashSet<>();
+            HashSet<UnifiedSubscription> list = new HashSet<>();
             list.add(owner1);
             list.add(owner2);
             list.add(owner3);
@@ -744,13 +768,13 @@ public class TeamTest {
         @Test
         public void getListTeamOwnerTest() {
             Team team = new Team(this.name,this.field);
-            TeamManager owner1 = new TeamManager(this.name1,this.pass1,this.mail1);
-            TeamManager owner2 = new TeamManager(this.name2,this.pass2,this.mail2);
-            TeamManager owner3 = new TeamManager(this.name3,this.pass3,this.mail3);
+            UnifiedSubscription owner1 = createTeamManager(this.name1,this.pass1,this.mail1);
+            UnifiedSubscription owner2 = createTeamManager(this.name2,this.pass2,this.mail2);
+            UnifiedSubscription owner3 = createTeamManager(this.name3,this.pass3,this.mail3);
             team.EditTeamManager(owner1,1);
             team.EditTeamManager(owner2,1);
             team.EditTeamManager(owner3,1);
-            HashSet<TeamManager> list = new HashSet<>();
+            HashSet<UnifiedSubscription> list = new HashSet<>();
             list.add(owner1);
             list.add(owner2);
             list.add(owner3);
@@ -792,7 +816,7 @@ public class TeamTest {
             Team team1 = new Team(this.name1, this.field1);
             Team team2 = new Team(this.name2, this.field2);
             Team team3 = new Team(this.name1, this.field1);
-            Player player = new Player(this.name1, "", "");
+            UnifiedSubscription player = createPlayer(this.name1, "", "");
             Team nullTeam = null;
             assertFalse(team1.equals(nullTeam));
             assertTrue(team1.equals(team1));

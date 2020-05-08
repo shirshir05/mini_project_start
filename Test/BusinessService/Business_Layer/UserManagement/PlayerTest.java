@@ -19,6 +19,12 @@ import static org.junit.Assert.*;
 @RunWith(Enclosed.class)
 public class PlayerTest {
 
+    private static UnifiedSubscription createPlayer(String name, String password, String email){
+        UnifiedSubscription us = new UnifiedSubscription(name, password, email);
+        us.setNewRole(new Player(us.userName));
+        return us;
+    }
+
     /**
      * Test - P1
      */
@@ -60,7 +66,7 @@ public class PlayerTest {
 
         @Test
         public void Player1Test() {
-            Player player = new Player(userName,password,email);
+            UnifiedSubscription player = createPlayer(userName,password,email);
             assertEquals(player.getUserName(),(userName));
             assertEquals(player.getPassword(),getHash(password));
             assertEquals(player.getEmail(),(email));
@@ -97,7 +103,7 @@ public class PlayerTest {
 
         @Test
         public void getPositionTest() {
-            Player player = new Player(userName,password,email);
+            UnifiedSubscription player = createPlayer(userName,password,email);
             player.setPosition(position);
             assertEquals(player.getPosition(),position);
         }
@@ -132,7 +138,7 @@ public class PlayerTest {
 
         @Test
         public void setPositionTest() {
-            Player player = new Player(userName,password,email);
+            UnifiedSubscription player = createPlayer(userName,password,email);
             player.setPosition(position);
             assertEquals(player.getPosition(),position);
         }
@@ -168,7 +174,7 @@ public class PlayerTest {
 
         @Test
         public void getBirthdayTest() {
-            Player player = new Player(userName,password,email);
+            UnifiedSubscription player = createPlayer(userName,password,email);
             player.setBirthday(date);
             assertNotNull(player.getBirthday());
         }
@@ -202,7 +208,7 @@ public class PlayerTest {
 
         @Test
         public void setBirthdayTest() {
-            Player player = new Player(userName,password,email);
+            UnifiedSubscription player = createPlayer(userName,password,email);
             player.setBirthday(date);
             assertEquals(player.getBirthday(),LocalDate.of(1995,2,3));
         }
@@ -236,9 +242,9 @@ public class PlayerTest {
 
         @Test
         public void setPersonalPageTest() {
-            Player player = new Player(userName,password,email);
-            player.setPersonalPage(null);
-            assertNull(player.getPersonalPage());
+            UnifiedSubscription player = createPlayer(userName,password,email);
+            player.setPlayerPersonalPage(null);
+            assertNull(player.getPlayerPersonalPage());
         }
     }//setPersonalPage
 
@@ -271,9 +277,9 @@ public class PlayerTest {
 
         @Test
         public void getPersonalPageTest() {
-            Player player = new Player(userName,password,email);
-            player.setPersonalPage(new PlayerPersonalPage(userName));
-            assertNotNull(player.getPersonalPage());
+            UnifiedSubscription player = createPlayer(userName,password,email);
+            player.setPlayerPersonalPage(new PlayerPersonalPage(userName));
+            assertNotNull(player.getPlayerPersonalPage());
         }
     }//getPersonalPage
 
@@ -304,7 +310,7 @@ public class PlayerTest {
         }
         @Test
         public void updateTest() {
-            Player player = new Player(userName,password,email);
+            UnifiedSubscription player = createPlayer(userName,password,email);
             assertEquals(player.alerts.size(),0);
             player.update(new Game("s",LocalDate.of(1995,8,18),new Team("1","r"),new Team("2","r")),"shir");
             assertEquals(player.alerts.size(),1);
@@ -333,11 +339,12 @@ public class PlayerTest {
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {"P1","123456","shir0@post.bgu.ac.il","position", LocalDate.of(1995,2,3),"Player: \n" +
+                    {"P1","123456","shir0@post.bgu.ac.il","position", LocalDate.of(1995,2,3),
                             "name: null\n" +
-                            "email: shir0@post.bgu.ac.il\n" +
+                                    "email: shir0@post.bgu.ac.il\n" +
+                                    "Player: \n" +
                             "position: position\n" +
-                            "birthday: 1995-02-03"},
+                            "birthday: 1995-02-03"+"\n"},
 
             });
         }
@@ -352,7 +359,7 @@ public class PlayerTest {
 
         @Test
         public void toStringTest() {
-            Player player = new Player(userName,password,email);
+            UnifiedSubscription player = createPlayer(userName,password,email);
             player.setPosition(position);
             player.setBirthday(birthday);
             assertEquals(player.toString(),toString);

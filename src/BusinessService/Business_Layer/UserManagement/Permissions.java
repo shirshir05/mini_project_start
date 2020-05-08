@@ -102,5 +102,17 @@ public class Permissions {
         }
     }
 
+    public void removePermissionsOfTeamOwner(){
+        remove_permissions(PermissionAction.Edit_team);
+        remove_permissions(PermissionAction.Appointment_of_team_owner);
+        remove_permissions(PermissionAction.Remove_Appointment_of_team_owner);
+        remove_permissions(PermissionAction.Appointment_of_team_manager);
+        remove_permissions(PermissionAction.Remove_Appointment_of_team_manager);
+        remove_permissions(PermissionAction.Appointment_of_player);
+        remove_permissions(PermissionAction.Close_team);
+        remove_permissions(PermissionAction.Team_financial);
+        remove_permissions(PermissionAction.Remove_Appointment_of_player);
+    }
+
 
 }

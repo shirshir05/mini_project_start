@@ -40,8 +40,8 @@ public class myFirstDB  {
             BufferedReader in = new BufferedReader(new FileReader(new File("DataBase/usersDB.txt")));
             String line = in.readLine();
             while(line!=null){
-                String[] spllited = line.split(",");
-                ac = login.Registration(spllited[1], spllited[2], spllited[0], spllited[3]);
+                String[] split = line.split(",");
+                ac = login.Registration(split[1], split[2], split[0], split[3]);
                 done = done && ac.isActionSuccessful();
                 line = in.readLine();
             }
@@ -62,13 +62,13 @@ public class myFirstDB  {
                 String[] splited = line.split(",");
                 Team team = new Team(splited[0],splited[1]);
                 DataManagement.addToListTeam(team);
-                ((TeamOwner)DataManagement.containSubscription(splited[2])).setAppointedByTeamOwner((TeamOwner)DataManagement.containSubscription(splited[2]));
-                team.EditTeamOwner((TeamOwner)DataManagement.containSubscription(splited[2]),1);
-                team.EditTeamManager((TeamManager) DataManagement.containSubscription(splited[3]),1);
-                team.AddOrRemoveCoach((Coach) DataManagement.containSubscription(splited[4]),1);
+                ((UnifiedSubscription)DataManagement.containSubscription(splited[2])).teamOwner_setAppointedByTeamOwner(DataManagement.containSubscription(splited[2]));
+                team.EditTeamOwner((UnifiedSubscription)DataManagement.containSubscription(splited[2]),1);
+                team.EditTeamManager((UnifiedSubscription) DataManagement.containSubscription(splited[3]),1);
+                team.AddOrRemoveCoach((UnifiedSubscription) DataManagement.containSubscription(splited[4]),1);
                 String[] player = splited[5].split(";");
                 for(String s : player){
-                    team.addOrRemovePlayer((Player) DataManagement.containSubscription(s),1);
+                    team.addOrRemovePlayer((UnifiedSubscription) DataManagement.containSubscription(s),1);
                 }
                 line = in.readLine();
             }

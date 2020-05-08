@@ -18,6 +18,12 @@ import static org.junit.Assert.*;
 public class TeamManagerTest {
 
 
+    private static UnifiedSubscription createTeamManager(String name, String password, String email){
+        UnifiedSubscription us = new UnifiedSubscription(name, password, email);
+        us.setNewRole(new TeamManager());
+        return us;
+    }
+
     /**
      * Test - TM1
      */
@@ -59,11 +65,11 @@ public class TeamManagerTest {
 
         @Test
         public void TeamManager1Test() {
-            TeamManager teamManager = new TeamManager(userName,password,email);
+            UnifiedSubscription teamManager = createTeamManager(userName,password,email);
             assertEquals(teamManager.getUserName(),(userName));
             assertEquals(teamManager.getPassword(),getHash(password));
             assertEquals(teamManager.getEmail(),(email));
-            assertNull(teamManager.getAppointedByTeamOwner());
+            assertNull(teamManager.teamManager_getAppointedByTeamOwner());
         }
     }//TeamManager1
 
@@ -96,9 +102,9 @@ public class TeamManagerTest {
         }
         @Test
         public void setAppointed_by_teamOwnerTest() {
-            TeamManager teamManager = new TeamManager(userName,password,email);
-            teamManager.setAppointedByTeamOwner(new TeamManager("shir","123456","shir0@post.bgu.ac.il"));
-            assertEquals(teamManager.getAppointedByTeamOwner(),new TeamManager("shir","123456","shir0@post.bgu.ac.il"));
+            UnifiedSubscription teamManager = createTeamManager(userName,password,email);
+            teamManager.teamManager_setAppointedByTeamOwner(createTeamManager("shir","123456","shir0@post.bgu.ac.il"));
+            assertEquals(teamManager.teamManager_getAppointedByTeamOwner(),createTeamManager("shir","123456","shir0@post.bgu.ac.il"));
         }
     }//setAppointed_by_teamOwner
 
@@ -129,8 +135,8 @@ public class TeamManagerTest {
         }
         @Test
         public void getAppointed_by_teamOwnerTest() {
-            TeamManager teamManager = new TeamManager(userName,password,email);
-            assertNull(teamManager.getAppointedByTeamOwner());
+            UnifiedSubscription teamManager = createTeamManager(userName,password,email);
+            assertNull(teamManager.teamManager_getAppointedByTeamOwner());
         }
     }//getAppointed_by_teamOwner
 
@@ -159,7 +165,7 @@ public class TeamManagerTest {
 
         @Test
         public void updateTest() {
-            TeamManager teamManager = new TeamManager(userName,password,email);
+            UnifiedSubscription teamManager = createTeamManager(userName,password,email);
             assertEquals(teamManager.alerts.size(),0);
             teamManager.update(new Game("s", LocalDate.of(1995,8,8),new Team("1","r"),new Team("2","r")),"shir");
             assertEquals(teamManager.alerts.size(),1);
@@ -185,9 +191,10 @@ public class TeamManagerTest {
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {"r1","123456","shir0@post.bgu.ac.il","TeamManager: \n" +
-                            "name: null\n" +
-                            "email: shir0@post.bgu.ac.il"}
+                    {"r1","123456","shir0@post.bgu.ac.il",
+                            "name: null" + "\n" +
+                            "email: shir0@post.bgu.ac.il" + "\n"+
+                            "TeamManager: \n" + "Appointed by: null"+"\n"}
 
             });
         }
@@ -199,7 +206,7 @@ public class TeamManagerTest {
         }
         @Test
         public void toStringTest() {
-            TeamManager teamManager = new TeamManager(userName,password,email);
+            UnifiedSubscription teamManager = createTeamManager(userName,password,email);
             assertEquals(teamManager.toString(),toString);
         }
     }//toString

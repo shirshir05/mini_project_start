@@ -5,6 +5,7 @@ import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.UserManagement.Player;
 import BusinessService.Business_Layer.UserManagement.Referee;
 import BusinessService.Business_Layer.UserManagement.SystemAdministrator;
+import BusinessService.Business_Layer.UserManagement.UnifiedSubscription;
 import BusinessService.Enum.ActionStatus;
 import BusinessService.Service_Layer.DataManagement;
 import BusinessService.Service_Layer.GameSettingsController;
@@ -95,7 +96,8 @@ public class RefereeMenuTest {
             DataManagement.setCurrent(ref);
             DataManagement.setSubscription(ref);
             Team host = new Team("Maccabi","Teddi");
-            Player p = new Player("Oren","frfr","raz@gmail.com");
+            UnifiedSubscription p = new UnifiedSubscription("Oren","frfr","raz@gmail.com");
+            p.setNewRole(new Player(p.getUserName()));
             DataManagement.setSubscription(p);
             host.addOrRemovePlayer(p,1);
             Team guest = new Team("Haifa","Sami");
@@ -108,7 +110,7 @@ public class RefereeMenuTest {
             SystemAdministrator sys = new SystemAdministrator("sys","123","sys@gmail.com");
             DataManagement.setSubscription(sys);
             DataManagement.setCurrent(sys);
-            g.createGame(LocalDate.now(),"Teddi","Maccabi","Haifa","Raz", "ben", "ziv");
+            //g.createGame(LocalDate.now(),"Teddi","Maccabi","Haifa","Raz", "ben", "ziv");
             DataManagement.setCurrent(ref);
             RefereeUserMenu RM = new RefereeUserMenu();
             String[] args = {arg0,arg1,arg2,arg3,arg4};

@@ -2,11 +2,13 @@ package BusinessService.Service_Layer;
 
 import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.UserManagement.*;
+import com.sun.corba.se.spi.activation.ServerAlreadyUninstalled;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import javax.xml.crypto.Data;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -16,6 +18,31 @@ import static org.junit.Assert.*;
 @RunWith(Enclosed.class)
 public class TeamControllerTest {
     public static TeamController n = new TeamController();
+
+    private static UnifiedSubscription createPlayer(String name, String password, String email){
+        UnifiedSubscription us = new UnifiedSubscription(name,password,email);
+        us.setNewRole(new Player(us.getUserName()));
+        return us;
+    }
+
+    private static UnifiedSubscription createCoach(String name, String password, String email){
+        UnifiedSubscription us = new UnifiedSubscription(name,password,email);
+        us.setNewRole(new Coach(us.getUserName()));
+        return us;
+    }
+
+    private static UnifiedSubscription createTeamOwner(String oUser, String s, String s1) {
+        UnifiedSubscription us = new UnifiedSubscription(oUser,s,s1);
+        us.setNewRole(new TeamOwner());
+        return us;
+    }
+
+    private static UnifiedSubscription createTeamManager(String oUser, String s, String s1) {
+        UnifiedSubscription us = new UnifiedSubscription(oUser,s,s1);
+        us.setNewRole(new TeamManager());
+        return us;
+    }
+
 
     /**
      * Test -TC0
@@ -28,7 +55,7 @@ public class TeamControllerTest {
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
-                    {"Raz","Blumfield"}
+                    {"Ortal","Blumfield"}
             });
         }
         public RequestCreateTeam(String name, String field) {
@@ -40,10 +67,10 @@ public class TeamControllerTest {
         public void RequestCreateTeamTest() {
             UnionRepresentative u = new UnionRepresentative("ffe","fefe","fef");
             DataManagement.setSubscription(u);
-            TeamOwner t = new TeamOwner("ad","ad","ad");
+            UnifiedSubscription t = createTeamOwner("ad","ad","ad");
             DataManagement.setCurrent(t);
             assertTrue(n.RequestCreateTeam(this.teamName,this.fieldName).isActionSuccessful());
-            Player p = new Player("ad","ad","ad");
+            UnifiedSubscription p = createPlayer("ad","ad","ad");
             DataManagement.setCurrent(p);
             assertFalse(n.RequestCreateTeam(this.teamName,this.fieldName).isActionSuccessful());
             DataManagement.cleanAllData();
@@ -70,11 +97,11 @@ public class TeamControllerTest {
         }
         @Test
         public void CreateTeamTest() {
-            TeamOwner owner = new TeamOwner("ab","fs","fe");
-            Player player = new Player("zab","zfs","zfe");
+            UnifiedSubscription owner = createTeamOwner("ab","fs","fe");
+            UnifiedSubscription player = createPlayer("zab","zfs","zfe");
             Team team = new Team(name+"t",field+"t");
             DataManagement.setCurrent(player);
-            assertEquals(n.CreateTeam(name+"t",field+"t").getDescription(),"You are not allowed to perform actions on the group.");
+            assertEquals(n.CreateTeam(name+"t",field+"t").getDescription(),"You are not allowed to perform actions on the team.");
             DataManagement.setCurrent(owner);
             DataManagement.addToListTeam(team);
             assertEquals(n.CreateTeam(name+"t",field+"t").getDescription(),"The Team already exists in the system.");
@@ -108,7 +135,7 @@ public class TeamControllerTest {
         }
         @Test
         public void DeleteCreateTeamRequestTest() {
-            TeamOwner owner = new TeamOwner("c","d","d");
+            UnifiedSubscription owner = createTeamOwner("c","d","d");
             UnionRepresentative u1 = new UnionRepresentative("a","a","a");
             UnionRepresentative u2 = new UnionRepresentative("b","b","b");
             UnionRepresentative u3 = new UnionRepresentative("e","e","e");
@@ -150,7 +177,7 @@ public class TeamControllerTest {
         }
         @Test
         public void ApproveCreateTeamAlertTest() {
-            TeamOwner owner = new TeamOwner("c","d","d");
+            UnifiedSubscription owner = createTeamOwner("c","d","d");
             UnionRepresentative u1 = new UnionRepresentative(repName,"a","a");
             UnionRepresentative u2 = new UnionRepresentative(repName+"b","b","b");
             UnionRepresentative u3 = new UnionRepresentative(repName+"e","e","e");
@@ -196,10 +223,10 @@ public class TeamControllerTest {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Player player = new Player(name,password,email);
-            TeamOwner owner = new TeamOwner("zdab", "zfcs", "zdfe");
+            UnifiedSubscription player = createPlayer(name,password,email);
+            UnifiedSubscription owner = createTeamOwner("zdab", "zfcs", "zdfe");
             DataManagement.setCurrent(player);
-            assertEquals(n.AddOrRemovePlayer(teamName,name,1).getDescription(),"You are not allowed to perform actions on the group.");
+            assertEquals(n.AddOrRemovePlayer(teamName,name,1).getDescription(),"You are not allowed to perform actions on the team.");
             owner.getPermissions().add_permissions(Edit_team);
             DataManagement.setCurrent(owner);
             Team team = new Team(teamName, name);
@@ -244,10 +271,10 @@ public class TeamControllerTest {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Coach player = new Coach(name,password,email);
-            TeamOwner owner = new TeamOwner("zdab", "zfcs", "zdfe");
+            UnifiedSubscription player = createCoach(name,password,email);
+            UnifiedSubscription owner = createTeamOwner("zdab", "zfcs", "zdfe");
             DataManagement.setCurrent(player);
-            assertEquals(n.AddOrRemoveCoach(teamName,name,1).getDescription(),"You are not allowed to perform actions on the group.");
+            assertEquals(n.AddOrRemoveCoach(teamName,name,1).getDescription(),"You are not allowed to perform actions on the team.");
             owner.getPermissions().add_permissions(Edit_team);
             DataManagement.setCurrent(owner);
             Team team = new Team(teamName, name);
@@ -287,11 +314,11 @@ public class TeamControllerTest {
         @Test
         public void AddOrRemoveTeamOwnerTest() {
             DataManagement.cleanAllData();
-            Player play = new Player("bgdd","cs","dw");
-            TeamOwner player = new TeamOwner(name,password,email);
-            TeamOwner owner = new TeamOwner("zdab", "zfcs", "zdfe");
+            UnifiedSubscription play = createPlayer("bgdd","cs","dw");
+            UnifiedSubscription player = createTeamOwner(name,password,email);
+            UnifiedSubscription owner = createTeamOwner("zdab", "zfcs", "zdfe");
             DataManagement.setCurrent(player);
-            assertEquals(n.AddOrRemoveTeamOwner(teamName,name,1).getDescription(),"You are not allowed to perform actions on the group.");
+            assertEquals(n.AddOrRemoveTeamOwner(teamName,name,1).getDescription(),"You are not allowed to perform actions on the team.");
             owner.getPermissions().add_permissions(Edit_team);
             DataManagement.setCurrent(owner);
             Team team = new Team(teamName, name);
@@ -305,7 +332,7 @@ public class TeamControllerTest {
             assertEquals(n.AddOrRemoveTeamOwner(teamName,"bgdd",1).getDescription(),"The username is not defined as a Team Owner on the system.");
             assertEquals(n.AddOrRemoveTeamOwner(teamName,name,1).getDescription(),"You are already set as a team owner.");
             // DELETE
-            TeamOwner owner2 = new TeamOwner("owner2", "zfcs", "zdfe");
+            UnifiedSubscription owner2 = createTeamOwner("owner2", "zfcs", "zdfe");
             DataManagement.setSubscription(owner2);
             n.AddOrRemoveTeamOwner(teamName,"owner2",1);
             //assertEquals(n.AddOrRemoveTeamOwner(teamName,"owner2",0).getDescription(),"The Team Owner was successfully removed from the team.");
@@ -343,12 +370,12 @@ public class TeamControllerTest {
         }
         @Test
         public void AddOrRemoveTeamManagerTest() {
-            TeamManager manager = new TeamManager(name,password,email);
+            UnifiedSubscription manager = createTeamManager(name,password,email);
             DataManagement.setSubscription(manager);
-            TeamOwner owner = new TeamOwner(name+"x",password="x",email+"x");
+            UnifiedSubscription owner = createTeamOwner(name+"x",password="x",email+"x");
             DataManagement.setSubscription(owner);
             DataManagement.setCurrent(owner);
-            assertEquals(n.AddOrRemoveTeamManager(teamName,name,1).getDescription(),"You are not allowed to perform actions on the group.");
+            assertEquals(n.AddOrRemoveTeamManager(teamName,name,1).getDescription(),"You are not allowed to perform actions on the team.");
             owner.getPermissions().add_permissions(Edit_team);
             Team t = new Team(teamName,"fr");
             t.EditTeamOwner(owner,1);
@@ -360,7 +387,7 @@ public class TeamControllerTest {
             // new owner as curent
             DataManagement.removeSubscription(owner.getUserName());
             t.EditTeamOwner(owner,0);
-            TeamOwner owner2 = new TeamOwner(name+"x"+"2",password="x",email+"x");
+            UnifiedSubscription owner2 = createTeamOwner(name+"x"+"2",password="x",email+"x");
             DataManagement.setSubscription(owner2);
             DataManagement.setCurrent(owner2);
             owner2.getPermissions().add_permissions(Edit_team);
@@ -376,49 +403,60 @@ public class TeamControllerTest {
      *Test - TC7
      */
     @RunWith(Parameterized.class)
-    public static class CheckInputEditTeam{
+    public static class CheckInputEditTeam {
         String teamname;
         String username;
+        Subscription current;
+        String ans;
+        Team team;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
+            Team team = new Team("Maccabi","Beersheva");
+
+            UnifiedSubscription teamOwner = new UnifiedSubscription("owner","123456","");
+            teamOwner.setNewRole(new TeamOwner());
+            teamOwner.teamOwner_setAppointedByTeamOwner(teamOwner);
+            team.EditTeamOwner(teamOwner,1);
+
+            UnifiedSubscription anotherTeamOwner = new UnifiedSubscription("manager","123456","");
+            anotherTeamOwner.setNewRole(new TeamOwner());
+            anotherTeamOwner.teamOwner_setAppointedByTeamOwner(anotherTeamOwner);
+
+            Fan player = new Fan("player","123456","");
+
+            SystemAdministrator sysAdmin = new SystemAdministrator("sys_admin","123456","");
+
             return Arrays.asList(new Object[][]{
-                    {"Maccabi","Raz"},{"","Raz1"},{"Maccabi2",""},{null,"Raz3"},{"Maccabi4",null},{null,null}
+                    {team,"","",null,"One of the parameters is empty"},
+                    {team,null,null,null,"One of the parameters is empty"},
+                    {team,team.getName(),player.getUserName(),player,"You are not allowed to perform actions on the team."},
+                    {team,"---",teamOwner.getUserName(),teamOwner,"The Team does not exist in the system."},
+                    {team,team.getName(),anotherTeamOwner.getUserName(),anotherTeamOwner,"You are not allowed to perform actions on this team."},
+                    {team,team.getName(),teamOwner.getUserName(),teamOwner,null},
+                    {team,team.getName(),sysAdmin.getUserName(),sysAdmin,null},
+                    {team,team.getName(),"doesnt_exist",teamOwner,"The username does not exist on the system."}
             });
         }
-        public CheckInputEditTeam(String name1, String name2) {
-            teamname=name1;
-            username=name2;
+
+        public CheckInputEditTeam(Team team, String name1, String name2, Subscription sub, String ans) {
+            this.team = team;
+            teamname = name1;
+            username = name2;
+            current = sub;
+            this.ans = ans;
         }
+
         @Test
         public void CheckInputEditTeamTest() {
-            // first if - one of the parameters is null
-            if (teamname==null||username==null){
-                assertEquals(n.CheckInputEditTeam(teamname,username),"One of the parameters is null");
-                assertEquals(n.CheckInputEditTeam(null,null),"One of the parameters is null");
-                assertEquals(n.CheckInputEditTeam("abc",null),"One of the parameters is null");
-            }
-            else {
-                // second if - don't have permissions to edit
-                Player player = new Player("zab", "zfs", "zfe");
-                DataManagement.setCurrent(player);
-                assertEquals(n.CheckInputEditTeam(teamname, username), "You are not allowed to perform actions on the group.");
-                // fourth if - the team is not in the system
-                player.getPermissions().add_permissions(Edit_team);
-                Team team = new Team(teamname, username);
-                TeamOwner owner = new TeamOwner("zdab", "zfcs", "zdfe");
-                team.EditTeamOwner(owner, 1);
+            if (current != null) {
+                DataManagement.setSubscription(current);
+                DataManagement.setCurrent(current);
                 DataManagement.addToListTeam(team);
-                SystemAdministrator sysAdmin = new SystemAdministrator("zabc", "zfsc", "zfec");
-                assertEquals(n.CheckInputEditTeam(teamname, username), "You are not allowed to perform actions in this group.");
-                // last if - the team is not in the system
-                owner.getPermissions().add_permissions(Edit_team);
-                DataManagement.setCurrent(owner);
-                DataManagement.setSubscription(player);
-                assertEquals(n.CheckInputEditTeam(teamname, username), "The username does not exist on the system.");
-                assertEquals(n.CheckInputEditTeam(teamname, "zab"), null);
-                // fourth if - the team does not exist
-                assertEquals(n.CheckInputEditTeam("aac","Cdds"),"The Team does not exist in the system.");
+            }
+            assertEquals(n.CheckInputEditTeam(teamname, username), ans);
+            if(username != null && username.equals("doesnt_exist")){
+                //last test
                 DataManagement.cleanAllData();
             }
         }
@@ -443,7 +481,7 @@ public class TeamControllerTest {
         @Test
         public void ChangeStatusTeamTest() {
             assertEquals(n.ChangeStatusTeam(teamName,4).getDescription(),"The action is invalid.");
-            TeamOwner owner = new TeamOwner("owner","cd","cd");
+            UnifiedSubscription owner = createTeamOwner("owner","cd","cd");
             owner.getPermissions().add_permissions(Edit_team);
             DataManagement.setSubscription(owner);
             DataManagement.setCurrent(owner);
@@ -452,18 +490,18 @@ public class TeamControllerTest {
             team.EditTeamOwner(owner,1);
             team.changeStatus(-1);
             DataManagement.addToListTeam(team);
-            assertEquals(n.ChangeStatusTeam(teamName,2).getDescription(),"The team is permanently closed.");
+            assertEquals(n.ChangeStatusTeam(teamName,1).getDescription(),"The team is permanently closed.");
             team.changeStatus(1);
             assertEquals(n.ChangeStatusTeam(teamName,0).getDescription(),"You are not allowed to close a team.");
             assertEquals(n.ChangeStatusTeam(teamName,-1).getDescription(),"You are not authorized to perform this action.");
             owner.getPermissions().add_permissions(Close_team);
-            assertEquals(n.ChangeStatusTeam(teamName,0).getDescription(),"The status of the group has changed successfully.");
-            assertEquals(n.ChangeStatusTeam(teamName,2).getDescription(),"The status of the group has changed successfully.");
+            assertEquals(n.ChangeStatusTeam(teamName,0).getDescription(),"The status of the team has changed successfully.");
+            assertEquals(n.ChangeStatusTeam(teamName,1).getDescription(),"The status of the team has changed successfully.");
             SystemAdministrator sys = new SystemAdministrator("sys","de","de");
             DataManagement.setSubscription(sys);
             DataManagement.setCurrent(sys);
             team.changeStatus(1);
-            assertEquals(n.ChangeStatusTeam(teamName,-1).getDescription(),"The status of the group has changed successfully.");
+            assertEquals(n.ChangeStatusTeam(teamName,-1).getDescription(),"The status of the team has changed successfully.");
             DataManagement.cleanAllData();
         }
 
@@ -489,7 +527,7 @@ public class TeamControllerTest {
         }
         @Test
         public void AddOrRemoveTeamsAssetsTest() {
-            TeamOwner owner = new TeamOwner("owner","cd","cd");
+            UnifiedSubscription owner = createTeamOwner("owner","cd","cd");
             owner.getPermissions().add_permissions(Edit_team);
             DataManagement.setSubscription(owner);
             DataManagement.setCurrent(owner);
@@ -498,11 +536,11 @@ public class TeamControllerTest {
             DataManagement.addToListTeam(team);
             assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset,1).getDescription(),"The asset was added to the team");
             assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset,0).getDescription(),"The asset was deleted from the team");
-            assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset+"x",0).getDescription(),"The team does not contains this asset");
+            assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset+"x",0).getDescription(),"The team does not contain this asset");
             assertEquals(n.AddOrRemoveTeamsAssets(teamName+"y",teamAasset+"x",0).getDescription(),"There is no such team in the system");
             assertEquals(n.AddOrRemoveTeamsAssets(teamName,null,0).getDescription(),"This asset is null");
             assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset,3).getDescription(),"Choose 1 or 0 only");
-            Player p = new Player("123","123","123");
+            UnifiedSubscription p = createPlayer("123","123","123");
             DataManagement.setSubscription(p);
             DataManagement.setCurrent(p);
             assertEquals(n.AddOrRemoveTeamsAssets(teamName,teamAasset,0).getDescription(),"You are not a team owner");

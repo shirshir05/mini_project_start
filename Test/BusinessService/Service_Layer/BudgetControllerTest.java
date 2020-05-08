@@ -20,6 +20,19 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(Enclosed.class)
 public class BudgetControllerTest {
+
+    private static UnifiedSubscription createTeamOwner(String oUser, String s, String s1) {
+        UnifiedSubscription us = new UnifiedSubscription(oUser,s,s1);
+        us.setNewRole(new TeamOwner());
+        return us;
+    }
+
+    private static UnifiedSubscription createTeamManager(String oUser, String s, String s1) {
+        UnifiedSubscription us = new UnifiedSubscription(oUser,s,s1);
+        us.setNewRole(new TeamManager());
+        return us;
+    }
+
     /**
      * Test - BC1
      */
@@ -130,8 +143,8 @@ public class BudgetControllerTest {
         double expanse;
         boolean correct;
         Team team = new Team("tester","homeFiled");
-        TeamOwner subO = new TeamOwner("oUser", "123456", "usero@gmail.com");
-        TeamManager subM = new TeamManager("mUser", "123456", "userm@gmail.com");
+        UnifiedSubscription subO = createTeamOwner("oUser", "123456", "usero@gmail.com");
+        UnifiedSubscription subM = createTeamManager("mUser", "123456", "userm@gmail.com");
         Subscription subF = new Fan("fUser", "123456", "userf@gmail.com");
 
 

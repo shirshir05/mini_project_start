@@ -16,6 +16,18 @@ import static org.junit.Assert.*;
 public class AlertControllerTest {
     public static AlertController n = new AlertController();
 
+    private static UnifiedSubscription createPlayer(String name, String password, String email){
+        UnifiedSubscription us = new UnifiedSubscription(name,password,email);
+        us.setNewRole(new Player(us.getUserName()));
+        return us;
+    }
+
+    private static UnifiedSubscription createCoach(String name, String password, String email){
+        UnifiedSubscription us = new UnifiedSubscription(name,password,email);
+        us.setNewRole(new Coach(us.getUserName()));
+        return us;
+    }
+
     /**
      * Test -AC1
      */
@@ -34,7 +46,7 @@ public class AlertControllerTest {
         }
         @Test
         public void fanRegisterToGameAlertsTest() {
-            Player player = new Player("play","frp","wp");
+            UnifiedSubscription player = createPlayer("play","frp","wp");
             DataManagement.setSubscription(player);
             DataManagement.setCurrent(player);
             assertEquals(n.fanRegisterToGameAlerts(0).getDescription(),"You are not a Fan");
@@ -71,7 +83,7 @@ public class AlertControllerTest {
         }
         @Test
         public void fanRegisterToPageTest() {
-            Player player = new Player("play","frp","wp");
+            UnifiedSubscription player = createPlayer("play","frp","wp");
             DataManagement.setSubscription(player);
             DataManagement.setCurrent(player);
             assertEquals(n.fanRegisterToPage("me").getDescription(),"You are not a Fan");
@@ -80,7 +92,7 @@ public class AlertControllerTest {
             DataManagement.setCurrent(fan);
             assertEquals(n.fanRegisterToPage("me").getDescription(),"There is no such page");
             assertEquals(n.fanRegisterToPage("play").getDescription(),"You were successfully registered to the Player page");
-            Coach coach = new Coach("coach","frdep","wpde");
+            UnifiedSubscription coach = createCoach("coach","frdep","wpde");
             DataManagement.setSubscription(coach);
             assertEquals(n.fanRegisterToPage("coach").getDescription(),"You were successfully registered to the Coach page");
             Team team = new Team("team","de");
