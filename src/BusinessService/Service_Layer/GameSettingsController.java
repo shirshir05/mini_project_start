@@ -221,10 +221,10 @@ public class GameSettingsController {
         if( game== null){
             AC = new ActionStatus(false,"The game does not exist in the system.");
         }
-        else if(game.getDate().isAfter(LocalDate.now()) ){
+        else if(game.getDate().isAfter(LocalDate.now())){
             AC = new ActionStatus(false,"The time of the game has not arrived.");
         }
-        else if( league1 == null){
+        else if(league1 == null){
             AC = new ActionStatus(false,"The league does not exist in the system.");
         }
         else if(league1.getSeason(seasonYear) == null){

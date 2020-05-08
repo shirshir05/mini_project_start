@@ -42,8 +42,7 @@ public class RefereeUserMenu implements UserMenu {
                 String nameTeam =  cli.presentAndGetString("Write name team:");
                 String playerName =  cli.presentAndGetString("Write player name that take part in event:");
                 String eventType =  cli.presentAndGetString("Write eventType:");
-                EventType event = StartSystem.GSc.getEventFromString(eventType);
-                ActionStatus ac = system.getGSc().refereeCreateNewEvent(gameId,nameTeam,playerName,event);
+                ActionStatus ac = system.getGSc().refereeCreateNewEvent(gameId,nameTeam,playerName,eventType);
                 cli.presentOnly(ac.getDescription());
             }
             else if(input == 4) {
@@ -100,8 +99,8 @@ public class RefereeUserMenu implements UserMenu {
             String playerName =  args[3];
             output += "insert eventType:\nuser input- " + args[4] + "\n";
             String eventType =  args[4];
-            EventType event = StartSystem.GSc.getEventFromString(eventType);
-            ActionStatus ac =  StartSystem.getGSc().refereeCreateNewEvent(gameId,nameTeam,playerName,event);
+            //EventType event = StartSystem.GSc.getEventFromString(eventType);
+            ActionStatus ac =  StartSystem.getGSc().refereeCreateNewEvent(gameId,nameTeam,playerName,eventType);
             return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
         }
         else if(input == 4) {
