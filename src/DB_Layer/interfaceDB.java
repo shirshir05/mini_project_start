@@ -11,7 +11,9 @@ public interface interfaceDB {
 
     public int update(String table,String[] key,String fieldName, String value);
 
-    public ResultSet find(String table,String[] key);
+    public ResultSet findByKey(String table,String[] key);
+
+    public ResultSet findByValue(String table, String column,String value);
 
     public int delete(String table,String[] key);
 

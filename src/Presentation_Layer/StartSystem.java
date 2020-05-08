@@ -88,10 +88,10 @@ public class StartSystem {
         DataManagement.cleanAllData();
         String ans = "";
         Game.game_id =0;
-        ans += db.loadUsersInfo().getDescription() +"\n";
-        ans += db.loadTeamInfo().getDescription() +"\n";
-        ans += db.loadLeagueInfo().getDescription() +"\n";
-        ans += db.loadGameInfo().getDescription();
+        //ans += db.loadUserInfo().getDescription() +"\n";
+        //ans += db.loadTeamInfo().getDescription() +"\n";
+        //ans += db.loadLeagueInfo().getDescription() +"\n";
+        //ans += db.loadGameInfo().getDescription();
         cli.presentOnly(ans);
         DataManagement.setCurrent(null);
         cli.presentOnly(LEc.Login("Guest", "123456").getDescription());

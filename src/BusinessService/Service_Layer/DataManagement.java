@@ -239,6 +239,7 @@ public final class DataManagement {
         logger.log("DataManagement :new team was added, team name: " + team.getName());
     }
 
+    //todo - delete!!!
     static HashSet<Team>  getListTeam(){
             return list_team;
     }
@@ -248,9 +249,12 @@ public final class DataManagement {
         logger.log("DataManagement :new league was added, team name: " + league.getName());
     }
 
+    //todo - delete!!!
+    /*
     static  HashSet<League> getListLeague(){
         return list_league;
     }
+     */
 
     /**
      * This function returns a list of all the System Administrators in the system

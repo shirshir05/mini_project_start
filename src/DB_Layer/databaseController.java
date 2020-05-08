@@ -23,11 +23,26 @@ public class databaseController {
         return sqlConn.connect();
     }
 
-    //init all Users from DB
-    public ActionStatus loadUsersInfo() {
+    //init User by user name from DB
+    public ActionStatus loadUserByName(String userID) {
         ActionStatus ac = null;
         try {
-            ResultSet rs = sqlConn.find("Users", null);
+            ResultSet rs = sqlConn.findByKey("Users", new String[]{userID});
+            while (rs.next()){
+                ac = StartSystem.LEc.Registration(rs.getString("userName"),rs.getString("userPassword"),rs.getString("userRole"),rs.getString("email"));
+            }
+        }
+        catch (SQLException e){
+            ac = new ActionStatus(false,"Sql SQLException");
+        }
+        return ac;
+    }
+
+    //init User by user name from DB
+    public ActionStatus loadUsersByRole(String role) {
+        ActionStatus ac = null;
+        try {
+            ResultSet rs = sqlConn.findByValue("Users","userRole",role);
             while (rs.next()){
                 ac = StartSystem.LEc.Registration(rs.getString("userName"),rs.getString("userPassword"),rs.getString("userRole"),rs.getString("email"));
             }
@@ -42,13 +57,13 @@ public class databaseController {
     public ActionStatus loadTeamInfo() {
         ActionStatus ac = null;
         try {
-            ResultSet rs = sqlConn.find("Team", null);
+            ResultSet rs = sqlConn.findByKey("Team", null);
             while (rs.next()){
                 String teamName = rs.getString("teamName");
                 Team team = new Team(teamName,rs.getString("mainFiled"));
                 DataManagement.addToListTeam(team);
 
-                ResultSet rs2 = sqlConn.find("AssetsInTeam",new String[]{teamName});
+                ResultSet rs2 = sqlConn.findByKey("AssetsInTeam",new String[]{teamName});
 
                 while(rs2.next()){
                     if(rs2.getString("assetRole").equals("TeamOwner")){
@@ -75,19 +90,19 @@ public class databaseController {
         ActionStatus ac = null;
         try {
             //load league objects
-            ResultSet rs = sqlConn.find("League", null);
+            ResultSet rs = sqlConn.findByKey("League", null);
             while (rs.next()){
                 String leagueName =rs.getString("leagueName");
                 DataManagement.addToListLeague(new League(leagueName));
 
                 //load season objects into this league
-                ResultSet rs2 = sqlConn.find("Season",new String[]{leagueName});
+                ResultSet rs2 = sqlConn.findByKey("Season",new String[]{leagueName});
                 while(rs2.next()){
                     StartSystem.GSc.defineSeasonToLeague(leagueName,""+rs2.getString("seasonYear"),rs2.getInt("win"),rs2.getInt("lose"),rs2.getInt("equal"));
                 }
 
                 //load Referee objects into this league for each season
-                ResultSet rs3 = sqlConn.find("RefereeInSeason",new String[]{leagueName});
+                ResultSet rs3 = sqlConn.findByKey("RefereeInSeason",new String[]{leagueName});
                 while(rs3.next()){
                     StartSystem.GSc.defineRefereeInLeague(leagueName,rs3.getString("refereeName"),""+rs3.getString("seasonYear"));
                 }
@@ -105,18 +120,18 @@ public class databaseController {
          ActionStatus ac = null;
          try {
              //load league objects
-             ResultSet rs = sqlConn.find("Game", null);
+             ResultSet rs = sqlConn.findByKey("Game", null);
              while (rs.next()){
                  String leagueName =rs.getString("leagueName");
                  LocalDate ld = rs.getDate("gameDate").toLocalDate();
-                 StartSystem.GSc.createGame(ld, rs.getString("field"), rs.getString("homeTeam"), rs.getString("guestTeam"),
-                         rs.getString("headReferee"),  rs.getString("linesmanOneReferee"), rs.getString("linesmanTwoReferee"));
+                 //StartSystem.GSc.createGame(ld, rs.getString("field"), rs.getString("homeTeam"), rs.getString("guestTeam"),
+                 //        rs.getString("headReferee"),  rs.getString("linesmanOneReferee"), rs.getString("linesmanTwoReferee"));
 
                  //todo- add game to season...
                  //add here
 
                  //load event objects into game
-                 ResultSet rs2 = sqlConn.find("EventInGame",new String[]{""+rs.getInt("gameID")});
+                 ResultSet rs2 = sqlConn.findByKey("EventInGame",new String[]{""+rs.getInt("gameID")});
                  while(rs2.next()){
                      //todo- add events to game...
                  }

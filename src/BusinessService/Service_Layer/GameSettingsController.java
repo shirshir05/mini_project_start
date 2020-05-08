@@ -32,32 +32,30 @@ public class GameSettingsController {
     public ActionStatus schedulingGame(String leagueParameter, String seasonName, int policy){
         ActionStatus AC = new ActionStatus(false,"The operation was not performed on the system.");
         if(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.setting_games)) {
-            HashSet<League> allLeagues = DataManagement.getListLeague();
             boolean flag = false;
-            for (League league : allLeagues) {
-                if(league.getName().equals(leagueParameter)){
-                    Season season = league.getSeason(seasonName);
-                    // TODO - TIME
-                    if (season != null) {
-                        flag = true;
-                        HashSet<Team> teamsInSeason = season.getListOfTeams();
-                        if(teamsInSeason.size() < 2){
-                            AC = new ActionStatus(false, "Error - The number of teams in league less than 2.");
-                        }else if(getRefereesFromSeason(season)){
-                            AC = new ActionStatus(false, "Error - The number of referees in league less than 3.");
-                        }else{
-                            FactoryPolicyScheduling factoryPolicyScheduling = new FactoryPolicyScheduling();
-                            SchedulingGame policyCreateGame = factoryPolicyScheduling.definePolicy(policy);
-                            if(policyCreateGame == null){
-                                AC = new ActionStatus(false, "Error - The number of policies entered is invalid.");
-                            }else{
-                                policyCreateGame.algorithm(teamsInSeason, season);
-                                AC = new ActionStatus(true, "The games were created according to the policy set.");
-                            }
-                        }
+            League league = DataManagement.findLeague(leagueParameter);
+            Season season = league.getSeason(seasonName);
+            // TODO - TIME
+            if (season != null) {
+                flag = true;
+                HashSet<Team> teamsInSeason = season.getListOfTeams();
+                if(teamsInSeason.size() < 2){
+                    AC = new ActionStatus(false, "Error - The number of teams in league less than 2.");
+                }else if(getRefereesFromSeason(season)){
+                    AC = new ActionStatus(false, "Error - The number of referees in league less than 3.");
+                }else{
+                    FactoryPolicyScheduling factoryPolicyScheduling = new FactoryPolicyScheduling();
+                    SchedulingGame policyCreateGame = factoryPolicyScheduling.definePolicy(policy);
+                    if(policyCreateGame == null){
+                        AC = new ActionStatus(false, "Error - The number of policies entered is invalid.");
+                    }else{
+                        policyCreateGame.algorithm(teamsInSeason, season);
+                        AC = new ActionStatus(true, "The games were created according to the policy set.");
                     }
                 }
             }
+
+
             if(!flag){
                 AC = new ActionStatus(false, "This season was not in the system.");
             }
@@ -403,7 +401,7 @@ public class GameSettingsController {
      * @param str  -
      * @return EventType
      */
-    protected EventType getEventFromString(String str){
+    private EventType getEventFromString(String str){
         if(Arrays.stream(EventType.values()).noneMatch(e -> e.name().equals(str))){
             return null;
         }else{
