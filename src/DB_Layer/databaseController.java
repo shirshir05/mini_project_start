@@ -172,6 +172,87 @@ public class databaseController {
          return ac;
     }
 
+    public static void main(String[] args){
+
+        sqlConnection sql = new sqlConnection();
+        sql.connect();
+        databaseController data = new databaseController();
+        Subscription s1 = data.loadUserByName("user1");
+        Subscription s2 = data.loadUserByName("user3");
+    }
+
+    private static void deleteTestUsers() {
+        sqlConnection sql = new sqlConnection();
+        sql.connect();
+        // Insert Users
+
+        // Insert UsersData
+        sql.delete("UsersData",new String[]{"user1","position"});
+        sql.delete("UsersData",new String[]{"user2","position"});
+        sql.delete("UsersData",new String[]{"user3","qualification"});
+        sql.delete("UsersData",new String[]{"user4","qualification"});
+        sql.delete("UsersData",new String[]{"user8","qualification"});
+        sql.delete("UsersData",new String[]{"user9","qualification"});
+        sql.delete("UsersData",new String[]{"user10","qualification"});
+        sql.delete("UsersData",new String[]{"user14","managerAppointedByTeamOwner"});
+        sql.delete("UsersData",new String[]{"user15","managerAppointedByTeamOwner"});
+        sql.delete("UsersData",new String[]{"user16","ownerAppointedByTeamOwner"});
+        sql.delete("UsersData",new String[]{"user17","ownerAppointedByTeamOwner"});
+
+        sql.delete("Users",new String[]{"user1"});
+        sql.delete("Users",new String[]{"user2"});
+        sql.delete("Users",new String[]{"user3"});
+        sql.delete("Users",new String[]{"user4"});
+        sql.delete("Users",new String[]{"user6"});
+        sql.delete("Users",new String[]{"user7"});
+        sql.delete("Users",new String[]{"user8"});
+        sql.delete("Users",new String[]{"user9"});
+        sql.delete("Users",new String[]{"user10"});
+        sql.delete("Users",new String[]{"user11"});
+        sql.delete("Users",new String[]{"user12"});
+        sql.delete("Users",new String[]{"user13"});
+        sql.delete("Users",new String[]{"user14"});
+        sql.delete("Users",new String[]{"user15"});
+        sql.delete("Users",new String[]{"user16"});
+        sql.delete("Users",new String[]{"user17"});
+
+    }
+    private static void testUsers() {
+        sqlConnection sql = new sqlConnection();
+        sql.connect();
+        // Insert Users
+        sql.insert("Users",new String[]{"user1","1","UnifiedSubscription","@"});
+        sql.insert("Users",new String[]{"user2","1","UnifiedSubscription","@"});
+        sql.insert("Users",new String[]{"user3","1","UnifiedSubscription","@"});
+        sql.insert("Users",new String[]{"user4","1","UnifiedSubscription","@"});
+        sql.insert("Users",new String[]{"user6","1","UnifiedSubscription","@"});
+        sql.insert("Users",new String[]{"user7","1","UnifiedSubscription","@"});
+        sql.insert("Users",new String[]{"user8","1","Referee","@"});
+        sql.insert("Users",new String[]{"user9","1","Referee","@"});
+        sql.insert("Users",new String[]{"user10","1","Referee","@"});
+        sql.insert("Users",new String[]{"user11","1","SystemAdministrator","@"});
+        sql.insert("Users",new String[]{"user12","1","SystemAdministrator","@"});
+        sql.insert("Users",new String[]{"user13","1","UnionRepresentative","@"});
+        sql.insert("Users",new String[]{"user14","1","UnifiedSubscription","@"});
+        sql.insert("Users",new String[]{"user15","1","UnifiedSubscription","@"});
+        sql.insert("Users",new String[]{"user16","1","UnifiedSubscription","@"});
+        sql.insert("Users",new String[]{"user17","1","UnifiedSubscription","@"});
+
+        // Insert UsersData
+        sql.insert("UsersData",new String[]{"user1","position","p1"});
+        sql.insert("UsersData",new String[]{"user2","position","p2"});
+        sql.insert("UsersData",new String[]{"user3","qualification","q1"});
+        sql.insert("UsersData",new String[]{"user4","qualification","q2"});
+        sql.insert("UsersData",new String[]{"user8","qualification","q12"});
+        sql.insert("UsersData",new String[]{"user9","qualification","q13"});
+        sql.insert("UsersData",new String[]{"user10","qualification","q14"});
+        sql.insert("UsersData",new String[]{"user14","managerAppointedByTeamOwner","user16"});
+        sql.insert("UsersData",new String[]{"user15","managerAppointedByTeamOwner","user16"});
+        sql.insert("UsersData",new String[]{"user16","ownerAppointedByTeamOwner","TeamOwner",""});
+        sql.insert("UsersData",new String[]{"user17","ownerAppointedByTeamOwner","TeamOwner","user16"});
+    }
+
+
     /*
     public ActionStatus SaveUsersInfo() {
     }
