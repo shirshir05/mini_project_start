@@ -4,7 +4,7 @@ package BusinessService.Business_Layer.BudgetManagement;
  *
  * A Class that manages the budget in the system
  */
-public class BudgetRegulations {
+public class BudgetRegulations implements java.io.Serializable{
 
     private static final int DEFAULT_MAX_SALARY = 10000;
     private static final int MIN_SALARY = 5000;

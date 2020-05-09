@@ -9,7 +9,7 @@ import java.util.Observable;
  * The budget is initialized to be zero until updated to be otherwise
  */
 
-public class TeamBudget extends Observable implements IBudget {
+public class TeamBudget extends Observable implements IBudget, java.io.Serializable{
 
     //region Members
 

@@ -25,6 +25,11 @@ public class UnifiedSubscription extends Subscription implements Observer {
         this.coach = null;
     }
 
+    @Override
+    public String getRole() {
+        return "UnifiedSubscription";
+    }
+
     //region Role Setter
 
     /**

@@ -3,13 +3,20 @@ package DB_Layer;
 import BusinessService.Business_Layer.Game.*;
 import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.TeamManagement.TeamScore;
+import BusinessService.Business_Layer.Trace.PersonalPage;
+import BusinessService.Business_Layer.Trace.TeamPersonalPage;
 import BusinessService.Business_Layer.UserManagement.*;
 import BusinessService.Enum.ActionStatus;
 import BusinessService.Enum.EventType;
 import BusinessService.Service_Layer.DataManagement;
 import DB_Layer.JDBC.sqlConnection;
 import Presentation_Layer.StartSystem;
+import com.microsoft.sqlserver.jdbc.SQLServerBlob;
+import com.microsoft.sqlserver.jdbc.SQLServerConnection;
 
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.*;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -56,15 +63,32 @@ public class databaseController {
                             subUn.teamManager_setAppointedByTeamOwner(rs2.getString("dataValue"));
                         }
                     }
+                    //set user personal page
+                    /*
+                    ResultSet rs3 = sqlConn.findByKey("Blobs", new String[]{userID+"PersonalPage"});
+                    if(rs3.next()){
+                        PersonalPage page = (PersonalPage)deserialize(new ByteArrayInputStream(rs3.getBytes("value")));
+                        //TODO- MAKE UnifiedSubscription one personal page. and save to user.
+                    }
+                    */
+
                 } else if (rs.getString("userRole").equals("Referee")) {
                     ResultSet rs2 = sqlConn.findByKey("UsersData", new String[]{thisUserName});
                     Referee subRef = (Referee) sub;
-                    if (rs2.next()) {
+                    while (rs2.next()) {
                         if (rs2.getString("dataType").equals("qualification")) {
                             subRef.setQualification(rs2.getString("dataValue"));
+                        }else if(rs2.getString("dataType").equals("refereeGames")){
+                            subRef.setGamesList(rs2.getString("dataValue"));
                         }
                     }
                 }
+                //GET PERMISSIONS FROM BLOB
+                ResultSet rs4 = sqlConn.findByKey("Blobs", new String[]{userID+"Permissions"});
+                if(rs4.next()){
+                    sub.permissions = (Permissions)deserialize(new ByteArrayInputStream(rs4.getBytes("value")));
+                }
+
                 return sub;
             }
         } catch (SQLException e) {
@@ -79,6 +103,10 @@ public class databaseController {
             ResultSet rs = sqlConn.findByValue("Users", "userRole", role);
             while (rs.next()) {
                 Subscription sub = StartSystem.LEc.createUserByType(rs.getString("userName"), rs.getString("userPassword"), rs.getString("userRole"), rs.getString("email"));
+                ResultSet rs2 = sqlConn.findByKey("Blobs", new String[]{rs.getString("userName")+"Permissions"});
+                if(rs2.next()){
+                    sub.permissions = (Permissions)deserialize(new ByteArrayInputStream(rs2.getBytes("value")));
+                }
                 set.add(sub);
             }
         } catch (SQLException e) {
@@ -121,6 +149,13 @@ public class databaseController {
                         team.setAsset(rs2.getString("assetName"));
                     }
                 }
+                //set team personal page
+                ResultSet rs3 = sqlConn.findByKey("Blobs", new String[]{teamName+"TeamPage"});
+                if(rs3.next()){
+                    TeamPersonalPage page = (TeamPersonalPage)deserialize(new ByteArrayInputStream(rs3.getBytes("value")));
+                    team.setPersonalPage(page);
+                }
+
                 return team;
             }
         } catch (SQLException e) {
@@ -212,9 +247,39 @@ public class databaseController {
         return null;
     }
 
+
+    //get Complaint data from DB
+    public HashSet<Complaint> loadComplaintInfo(boolean onlyUnread) {
+        try {
+            ResultSet rs = sqlConn.findByKey("Blobs", new String[]{"Complaint"});
+            if (rs.next()) {
+                HashSet<Complaint> list_Complaints =  (HashSet<Complaint>)deserialize(new ByteArrayInputStream(rs.getBytes("value")));
+                if(onlyUnread) {
+                    HashSet<Complaint> unanswered =  new HashSet<>();
+                    for (Complaint c : list_Complaints) {
+                        if (!c.isAnswered()) {
+                            unanswered.add(c);
+                        }
+                    }
+                    return unanswered;
+                }else{
+                    return list_Complaints;
+                }
+            }
+        } catch(SQLException e){
+
+        }
+        return null;
+    }
+
     public int insert(String table, String[] values) {
         return sqlConn.insert(table, values);
     }
+
+    public int insertBlob(String table,String key,Object value) {
+        return sqlConn.insertBlob(table,key,serialize(value));
+    }
+
 
     public int update(String table, String[] key, String column, String value) {
         return sqlConn.update(table, key, column, value);
@@ -224,5 +289,56 @@ public class databaseController {
         return sqlConn.delete(table, key);
     }
 
+
+
+
+    /*-------------------------------------       SQL BLOB FUNCTIONS     --------------------------------------------*/
+
+    private Object deserialize(InputStream stream) {
+        try {
+            ObjectInputStream ois = new ObjectInputStream(stream);
+            try {
+                return ois.readObject();
+            } finally {
+                ois.close();
+            }
+        }catch (Exception e){
+
+        }
+        return null;
+    }
+
+    private byte[] serialize(Object object) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(object);
+            oos.close();
+            return baos.toByteArray();
+        }
+        catch (Exception e){
+
+        }
+        return null;
+    }
+
+    private Object getObjectFromBlob(Blob blob){
+        try {
+            return deserialize(blob.getBinaryStream());
+        }catch (Exception e){
+
+        }
+        return null;
+    }
+
+    private Blob getBlob(Object o){
+        try {
+            Blob blob=new SerialBlob(serialize(o));;
+            return blob;
+        }catch (Exception e){
+
+        }
+        return null;
+    }
 }
 
