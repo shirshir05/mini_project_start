@@ -22,13 +22,15 @@ public class Game extends Observable{
     protected LocalDate date;
     private Team host;
     protected Team guest;
-    protected Referee head;
-    private Referee linesman1;
-    private Referee linesman2;
+    protected String head;
+    private String linesman1;
+    private String linesman2;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Pair<Integer,Integer> score; // Integer[0] = host , Integer[1] = guest
     private HashSet<Event> eventList;
+    private String league;
+    private String season;
 
     public Game(String f, LocalDate d, Team h, Team g){
         game_id++;
@@ -133,7 +135,7 @@ public class Game extends Observable{
         if (r!=null) {
             r.addGame(this);
             this.addObserver(r);
-            head = r;
+            head = r.getUserName();
         }
     }
 
@@ -145,7 +147,7 @@ public class Game extends Observable{
         if (r!=null) {
             r.addGame(this);
             this.addObserver(r);
-            linesman1 = r;
+            linesman1 = r.getUserName();
         }
     }
     /**
@@ -156,24 +158,24 @@ public class Game extends Observable{
         if (r!=null) {
             r.addGame(this);
             this.addObserver(r);
-            linesman2 = r;
+            linesman2 = r.getUserName();
         }
     }
     /**
      * head referee getter
      * @return
      */
-    public Referee getHeadReferee(){ return head;}
+    public String getHeadReferee(){ return head;}
     /**
      * linesman1 referee getter
      * @return
      */
-    public Referee getLinesman1Referee(){ return linesman1;}
+    public String getLinesman1Referee(){ return linesman1;}
     /**
      * linesman2 referee getter
      * @return
      */
-    public Referee getLinesman2Referee(){ return linesman2;}
+    public String getLinesman2Referee(){ return linesman2;}
 
     public void change_field(String new_field){
 
@@ -240,4 +242,20 @@ public class Game extends Observable{
         this.score = new Pair<>(host, guest);
     }
 
+    public void setLeague(String league) {
+        this.league = league;
+    }
+
+    public void setSeason(String season) {
+        this.season = season;
+    }
+
+    public String getLeague() {
+        return league;
+    }
+
+    public String getSeason() {
+        return season;
+    }
 }
+
