@@ -105,7 +105,7 @@ public class SystemAdminUserMenu implements UserMenu {
             String username =   args[1];
             output += "insert password:\nuser input-  " + args[2] +"\n";
             String password =  args[2];
-            ActionStatus ac = StartSystem.LEc.Exit(username,password);
+            ActionStatus ac = StartSystem.LEc.Exit(username);
             return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
 
         } else {

@@ -1,8 +1,10 @@
 package BusinessService;
 
 import BusinessService.Business_Layer.UserManagement.UnifiedSubscription;
+import BusinessService.Business_Layer.UserManagement.UnionRepresentative;
 import BusinessService.Enum.ActionStatus;
 import BusinessService.Enum.PermissionAction;
+import BusinessService.Service_Layer.GameSettingsController;
 import BusinessService.Service_Layer.LogAndExitController;
 import BusinessService.Service_Layer.TeamController;
 import org.junit.experimental.runners.Enclosed;
@@ -20,11 +22,12 @@ import static org.junit.Assert.assertEquals;
 public class Test {
 
 
+
     /**
-     * Test - UC - LOGIN
+     * Test - UC Login and Create Team
      */
     @RunWith(Parameterized.class)
-    public static class Login{
+    public static class LoginCreateTeam{
 
         public String userName;
         public String password;
@@ -43,7 +46,7 @@ public class Test {
                     {2, "TeamOwner","123456","TeamOwner","shir0@post.bgu.ac.il","Subscription successfully added!","team2"},
             });
         }
-        public Login(int test , String userName, String password, String role, String email, String ans, String team) {
+        public LoginCreateTeam(int test , String userName, String password, String role, String email, String ans, String team) {
             this.userName = userName;
             this.password = password;
             this.email = email;
@@ -53,7 +56,7 @@ public class Test {
             this.team = team;
         }
         @org.junit.Test
-        public void LoginTest() {
+        public void LoginCreateTeamTest() {
             LogAndExitController controller = new LogAndExitController();
            controller.Registration("UnionRepresentative","12345","UnionRepresentative","shirshir05@walla.co.il");
             controller.Registration("player","12345","Player","shirshir05@walla.co.il");
@@ -73,19 +76,21 @@ public class Test {
                 assertEquals(teamController.RequestCreateTeam(team,"filed").getDescription(),"The team wait for approve union representative.");
                 assertEquals((teamController.ChangeStatusTeam(team,2).getDescription()),"The action is invalid.");
                 assertEquals((teamController.AddOrRemovePlayer(team,"player", 1).getDescription()),"You are not allowed to perform actions on the team.");
-                controller.Exit(userName,password);
+                controller.Exit(userName);
                 controller.Login("UnionRepresentative","12345");
                 assertEquals(teamController.ApproveCreateTeamAlert("teamOwner:" +userName + "| Team;" +team).getDescription(),"Team status successfully changed to 1.");
                 assertEquals((teamController.AddOrRemovePlayer(team,"player", 1).getDescription()),"You are not allowed to perform actions on the team.");
-                controller.Exit("UnionRepresentative","12345");
+                controller.Exit("UnionRepresentative");
                 controller.Login("SystemAdministrator","12345");
                 assertEquals(teamController.AddOrRemoveTeamOwner(team,userName, 1).getDescription(),"The Team Owner was successfully added to the team.");
-                controller.Exit("UnionRepresentative","12345");
+                controller.Exit("UnionRepresentative");
                 controller.Login(userName,password);
                 assertEquals((teamController.AddOrRemovePlayer(team,"player", 1).getDescription()),"The player was successfully added to the team.");
             }
         }
-    }//
+    }
 
 
 }
+
+

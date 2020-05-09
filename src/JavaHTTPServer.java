@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
@@ -48,11 +49,6 @@ public class JavaHTTPServer implements Runnable{
 
     public static void main(String[] args) {
         System.out.println(Character.isDigit('0'));
-        //System.out.println(isNumeric(""));
-        //String string = "POST /api/register HTTP/1.1";
-        //System.out.println("register");
-        //System.out.println(string.lastIndexOf("api"));
-        //System.out.println(string.substring(string.indexOf("api") + 4, string.lastIndexOf(" ")));
         try {
             ServerSocket serverConnect = new ServerSocket(PORT);
             System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
@@ -114,6 +110,7 @@ public class JavaHTTPServer implements Runnable{
             jsonObject = new JSONObject(payload.toString());
             if(METHOD.equals("POST")){
                 actionStatus = handlePostMethod(controllerMethod);
+                String str = "two";
             }
 
             else if(METHOD.equals("GET")){
@@ -164,8 +161,7 @@ public class JavaHTTPServer implements Runnable{
                 break;
             case "logout":
                 as = StartSystem.getLEc().Exit
-                        (jsonObject.getString("username"),
-                                jsonObject.getString("password"));
+                        (jsonObject.getString("username"));
                 break;
 //            case "answercomplaints":
 //                as = StartSystem.getAc().answerCompliant(
