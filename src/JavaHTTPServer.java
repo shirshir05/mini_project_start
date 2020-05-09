@@ -114,7 +114,6 @@ public class JavaHTTPServer implements Runnable{
             jsonObject = new JSONObject(payload.toString());
             if(METHOD.equals("POST")){
                 actionStatus = handlePostMethod(controllerMethod);
-                String str = "two";
             }
 
             else if(METHOD.equals("GET")){
@@ -173,62 +172,31 @@ public class JavaHTTPServer implements Runnable{
 //                (jsonObject.getString("username"),
 //                        jsonObject.getString("password"));
 //                break;
-
-                case "changestatusforteam":
-                if(isStatusValidDigit(jsonObject.getString("status"))){
-                    as = StartSystem.getTc().ChangeStatusTeam
-                            (jsonObject.getString("nameteam"),
-                                    Integer.parseInt(jsonObject.getString("status")));
-                }
-                else {
-                    as = new ActionStatus(false, "error......");
-                }
-                break;
-
             case "onschedulingpolicy":
-                if(isPolicyValidDigit(jsonObject.getString("policy"))){
                     as = StartSystem.getGSc().schedulingGame
                             (jsonObject.getString("nameleague"),
                                     jsonObject.getString("seasonname"),
                                     Integer.parseInt(jsonObject.getString("policy")));
-                }
-                else {
-                    as = new ActionStatus(false, "error......");
-                }
                 break;
             case "defineleague":
                 as = StartSystem.getGSc().defineLeague
                         (jsonObject.getString("nameleague"));
                 break;
             case "defineseason":
-                if(isLegalWinLossEqual(jsonObject.getString("win"),
-                        jsonObject.getString("loss"),
-                        jsonObject.getString("equal"))){
                     as = StartSystem.getGSc().defineSeasonToLeague
                             (jsonObject.getString("nameleague"),
                                     jsonObject.getString("year"),
                                     Integer.parseInt(jsonObject.getString("win")),
                                     Integer.parseInt(jsonObject.getString("loss")),
                                     Integer.parseInt(jsonObject.getString("equal")));
-                }
-                else {
-                    as = new ActionStatus(false, "error......");
-                }
                 break;
             case "updatepointpolicy":
-                if(isLegalWinLossEqual(jsonObject.getString("win"),
-                        jsonObject.getString("loss"),
-                        jsonObject.getString("equal"))){
                     as = StartSystem.getGSc().updatePointsPolicy
                             (jsonObject.getString("nameleague"),
                                     jsonObject.getString("year"),
                                     Integer.parseInt(jsonObject.getString("win")),
                                     Integer.parseInt(jsonObject.getString("loss")),
                                     Integer.parseInt(jsonObject.getString("equal")));
-                }
-                else {
-                    as = new ActionStatus(false, "error......");
-                }
                 break;
             case "addteamtoleague":
                     as = StartSystem.getGSc().addTeamToSeasonInLeague
@@ -236,30 +204,14 @@ public class JavaHTTPServer implements Runnable{
                                     jsonObject.getString("nameleague"),
                                     jsonObject.getString("year"));
                 break;
-            case "addreferee":
-                if (jsonObject.getString("onlyweb").equals("0")){
+            case "addreferee": case "removereferee":
                     as = StartSystem.getGSc().addOrDeleteRefereeToSystem
                             (jsonObject.getString("usernamereferee"),
                                     jsonObject.getString("password"),
                                     jsonObject.getString("email"),
                                     Integer.parseInt(jsonObject.getString("onlyweb")));
-                }
-                else {
-                    as = new ActionStatus(false, "error......");
-                }
                 break;
-            case "removereferee":
-                if (jsonObject.getString("onlyweb").equals("1")){
-                    as = StartSystem.getGSc().addOrDeleteRefereeToSystem
-                            (jsonObject.getString("usernamereferee"),
-                                    jsonObject.getString("password"),
-                                    jsonObject.getString("email"),
-                                    Integer.parseInt(jsonObject.getString("onlyweb")));
-                }
-                else {
-                    as = new ActionStatus(false, "error......");
-                }
-                break;
+
             case "setrefereeonleague":
                 as = StartSystem.getGSc().defineRefereeInLeague
                         (jsonObject.getString("nameleague"),
@@ -272,7 +224,21 @@ public class JavaHTTPServer implements Runnable{
 //                                jsonObject.getString("usernamereferee"),
 //                                jsonObject.getString("year"));
 //                break;
-
+            case "changestatusforteam":
+                    as = StartSystem.getTc().ChangeStatusTeam
+                            (jsonObject.getString("nameteam"),
+                                    Integer.parseInt(jsonObject.getString("status")));
+                break;
+            case "addteamfiled":
+                if(jsonObject.getString("onlyweb").equals("1") ){
+                    as = StartSystem.getTc().AddOrRemoveTeamsAssets
+                            (jsonObject.getString("nameteam"), jsonObject.getString("namefiled"),
+                                    Integer.parseInt(jsonObject.getString("onlyweb")));
+                }
+                else {
+                    as = new ActionStatus(false, "error......");
+                }
+                break;
                 default:
                 System.out.println("no match");
         }
