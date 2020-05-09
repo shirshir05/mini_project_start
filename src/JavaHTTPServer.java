@@ -53,26 +53,26 @@ public class JavaHTTPServer implements Runnable{
         //System.out.println("register");
         //System.out.println(string.lastIndexOf("api"));
         //System.out.println(string.substring(string.indexOf("api") + 4, string.lastIndexOf(" ")));
-//        try {
-//            ServerSocket serverConnect = new ServerSocket(PORT);
-//            System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
-//
-//            // we listen until user halts server execution
-//            while (true) {
-//                JavaHTTPServer myServer = new JavaHTTPServer(serverConnect.accept());
-//
-//                if (verbose) {
-//                    System.out.println("Connecton opened. (" + new Date() + ")");
-//                }
-//
-//                // create dedicated thread to manage the client connection
-//                Thread thread = new Thread(myServer);
-//                thread.start();
-//            }
-//
-//        } catch (IOException e) {
-//            System.err.println("Server Connection error : " + e.getMessage());
-//        }
+        try {
+            ServerSocket serverConnect = new ServerSocket(PORT);
+            System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
+
+            // we listen until user halts server execution
+            while (true) {
+                JavaHTTPServer myServer = new JavaHTTPServer(serverConnect.accept());
+
+                if (verbose) {
+                    System.out.println("Connecton opened. (" + new Date() + ")");
+                }
+
+                // create dedicated thread to manage the client connection
+                Thread thread = new Thread(myServer);
+                thread.start();
+            }
+
+        } catch (IOException e) {
+            System.err.println("Server Connection error : " + e.getMessage());
+        }
     }
 
     @Override
@@ -125,16 +125,17 @@ public class JavaHTTPServer implements Runnable{
 
             }
 
-//            System.out.println(jsonObject.get("User name"));
-//            System.out.println(jsonObject.get("Password"));
-//            System.out.println(jsonObject.get("Role"));
-//            System.out.println(jsonObject.get("Email"));
-//            System.out.println("Payload data is: " + payload.toString());
+            System.out.println(jsonObject.get("User name"));
+            System.out.println(jsonObject.get("Password"));
+            System.out.println(jsonObject.get("Role"));
+            System.out.println(jsonObject.get("Email"));
+            System.out.println("Payload data is: " + payload.toString());
 
             out.println("HTTP/1.1 200 OK");
             out.println("Server: Java HTTP Server from SSaurel : 1.0");
             out.println("Date: " + new Date());
             //out.println("Content-type: " );
+            out.println("Access-Control-Allow-Origin: *");
             out.println("Content-length: 12" );
             out.println(""); // blank line between headers and content, very important !
             out.println("Hello world!");
