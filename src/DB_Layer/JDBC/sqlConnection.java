@@ -40,7 +40,7 @@ public class sqlConnection implements interfaceDB {
         String query =  "use FootBallDB SELECT * FROM "+ table;
         if (key != null) {
             query += " WHERE " + keys.get(table)[0] + " = " + "'"+key[0]+"'";
-            int length = key.length;
+            int length = key.length-1;
             for (int k = 0; k < length ; k++) {
                 query += " AND " + keys.get(table)[k + 1] + " = " + "'" + key[k + 1] + "'";
             }
@@ -49,6 +49,9 @@ public class sqlConnection implements interfaceDB {
         ResultSet result = null;
         try{
             if(this.databaseManager == null){
+                connect();
+            }
+            if (this.databaseManager.conn==null){
                 connect();
             }
             if( this.databaseManager.conn.isClosed()){
@@ -72,6 +75,9 @@ public class sqlConnection implements interfaceDB {
         ResultSet result = null;
         try{
             if(this.databaseManager == null){
+                connect();
+            }
+            if( this.databaseManager.conn==null){
                 connect();
             }
             if( this.databaseManager.conn.isClosed()){
@@ -147,7 +153,7 @@ public class sqlConnection implements interfaceDB {
                     values[7]+"','"+values[8]+"','"+values[9]+"')";
         }
         else if(table.equals("EventInGame")){
-            query += " ([refereeName], [playerName], [gameID], [eventType], [eventTime]) VALUES ('"+
+            query += " ([gameID],  [eventTime], [refereeName], [playerName],  [eventType],) VALUES ('"+
                     values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"','"+values[3]+"')";
         }
         else if(table.equals("League")){
@@ -160,7 +166,11 @@ public class sqlConnection implements interfaceDB {
 
         }
         else if(table.equals("RefereeInSeason")){
-            query += " ([refereeName], [leagueName], [seasonYear]) VALUES ('"+
+            query += " ( [leagueName], [seasonYear], [refereeName]) VALUES ('"+
+                    values[0]+"','"+values[1]+"','"+values[2]+"')";
+        }
+        else if(table.equals("UsersData")){
+            query += " ([userName], [dataType], [dataValue]) VALUES ('"+
                     values[0]+"','"+values[1]+"','"+values[2]+"')";
         }
         return query;
@@ -179,6 +189,9 @@ public class sqlConnection implements interfaceDB {
         keys.put("League",new String[]{"leagueName"});
         keys.put("Season",new String[]{"leagueName","seasonYear"});
         keys.put("RefereeInSeason",new String[]{"leagueName","seasonYear","refereeName"});
+        keys.put("UsersData",new String[]{"userName","dataType"});
+        connect();
+
 
         //ResultSet resultSet = databaseManager.executeQuerySelect("Select * From Users");
         //ResultSetPrinter.printResultSet(resultSet);
@@ -191,14 +204,6 @@ public class sqlConnection implements interfaceDB {
     public ActionStatus closeConnection(){
         databaseManager.closeConnection();
         return new ActionStatus(true, "DB closed");
-    }
-
-    public static void main(String[] args){
-        sqlConnection sql = new sqlConnection();
-        ResultSet resultSet0 = sql.databaseManager.executeQuerySelect("Select * From Users");
-        ResultSetPrinter.printResultSet(resultSet0);
-        ResultSetPrinter.printResultSet(sql.findByKey("Game",new String[]{"1"}));
-
     }
 
 }

@@ -149,11 +149,7 @@ public final class DataManagement {
      * @return Team
      */
     public static Team findTeam(String teamName) {
-        for (Team t : list_team){
-            if (t.getName().equals(teamName))
-                return t;
-        }
-        return null;
+        return sql.loadTeamInfo(teamName);
     }
 
     /**
@@ -170,11 +166,7 @@ public final class DataManagement {
      * @return Game
      */
     public static Game getGame(int game_id){
-        for ( Game g: list_game ){
-            if (g.getGameId()==game_id)
-                return g;
-        }
-        return null;
+        return sql.loadGameInfo(game_id);
     }
 
     /**
@@ -183,12 +175,7 @@ public final class DataManagement {
      * @return -
      */
     static League findLeague(String leagueName) {
-        for (League l : list_league) {
-            if (l.getName().equals(leagueName)) {
-                return l;
-            }
-        }
-        return null;
+        return sql.loadLeagueInfo(leagueName);
     }
 
 
@@ -196,13 +183,8 @@ public final class DataManagement {
      * return all Union Representatives in system
      * @return ArrayList
      */
-    static ArrayList<UnionRepresentative> getUnionRepresentatives(){
-        ArrayList<UnionRepresentative> unionReps = new ArrayList<>();
-        for(Subscription s: Subscription){
-            if(s instanceof UnionRepresentative)
-                unionReps.add((UnionRepresentative)s);
-        }
-        return unionReps;
+    static HashSet<Subscription> getUnionRepresentatives(){
+        return sql.loadUsersByRole("UnionRepresentative");
     }
 
 
@@ -231,9 +213,9 @@ public final class DataManagement {
 
     public static void addToListTeam(Team team){
         list_team.add(team);
-        HashSet<SystemAdministrator> list = getSystemAdministratorsList();
-        for (SystemAdministrator s : list) {
-            team.addObserver(s);
+        HashSet<Subscription> list = getSystemAdministratorsList();
+        for (Subscription s : list) {
+            team.addObserver((SystemAdministrator)s);
         }
         logger.log("DataManagement :new team was added, team name: " + team.getName());
     }
@@ -247,14 +229,8 @@ public final class DataManagement {
      * This function returns a list of all the System Administrators in the system
      * @return -
      */
-    static HashSet<SystemAdministrator> getSystemAdministratorsList(){
-        HashSet<SystemAdministrator> list = new HashSet<>();
-        for (Subscription s : Subscription){
-            if (s instanceof SystemAdministrator){
-                list.add((SystemAdministrator)s);
-            }
-        }
-        return list;
+    static HashSet<Subscription> getSystemAdministratorsList(){
+        return sql.loadUsersByRole("UnionRepresentative");
     }
 
     /**

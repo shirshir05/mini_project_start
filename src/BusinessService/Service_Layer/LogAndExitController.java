@@ -216,6 +216,7 @@ public class LogAndExitController{
      * @return false - error the action illegal
      */
     private boolean numberSystemAdministrator(String userName){
+        /*
         HashSet<SystemAdministrator> list =  DataManagement.getSystemAdministratorsList();
         if(list.size() == 1){
             for (SystemAdministrator user: list) {
@@ -226,6 +227,8 @@ public class LogAndExitController{
             }
 
         }
+
+         */
         return true;
     }
 

@@ -21,7 +21,7 @@ public class SubscriptionFactory {
             Spelling.updateDictionary("coach: " + userName);
             return new Coach(userName,password, email);
         }*/
-        else if (role == Role.Coach || role == Role.Player || role == Role.TeamManager || role == Role.TeamOwner){
+        else if (role == Role.Coach || role == Role.Player || role == Role.TeamManager || role == Role.TeamOwner || role==Role.UnifiedSubscription){
             //create a unified subscription with this role
             UnifiedSubscription unified = new UnifiedSubscription(userName,password,email);
             addRoleToUnifiedSubscription(unified, role);
