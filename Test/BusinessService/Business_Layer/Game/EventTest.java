@@ -26,16 +26,16 @@ public class EventTest {
         team1.addOrRemovePlayer(player, 1);
         event = new Event(team1, eventType, player,null);
 
-        assertEquals(team1, event.getTeam());
+        assertEquals(team1.getName(), event.getTeam());
         assertEquals(eventType, event.getEventType());
-        assertEquals(player, event.getPlayer());
+        assertEquals(player.getName(), event.getPlayer());
 
         team1.addOrRemovePlayer(player, 0);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         LocalDateTime eventTime = LocalDateTime.now();
         event = new Event(team1, eventType, player,eventTime);
 
-        assertEquals(team1, event.getTeam());
+        assertEquals(team1.getName(), event.getTeam());
         assertEquals(eventType, event.getEventType());
 
     }
@@ -52,7 +52,7 @@ public class EventTest {
         team1.addOrRemovePlayer(player, 1);
         event = new Event(team1, eventType, player,null);
 
-        assertEquals(player, event.getPlayer());
+        assertEquals(player.getName(), event.getPlayer());
     }
 
     /**
@@ -67,7 +67,7 @@ public class EventTest {
         team1.addOrRemovePlayer(player, 1);
         event = new Event(team1, eventType, player,null);
 
-        assertEquals(team1, event.getTeam());
+        assertEquals(team1.getName(), event.getTeam());
     }
 
     /**
@@ -121,17 +121,17 @@ public class EventTest {
         team1.addOrRemovePlayer(player, 1);
         event = new Event(team1, eventType, player,null);
 
-        assertEquals(team1, event.getTeam());
+        assertEquals(team1.getName(), event.getTeam());
 
         Team team2 = new Team("Real Madrid", "fdsfsdfu");
         team2.addOrRemovePlayer(player, 1);
         event.setTeam(team2);
 
-        assertEquals(team2, event.getTeam());
+        assertEquals(team2.getName(), event.getTeam());
 
         event.setTeam(null);
 
-        assertNotEquals(team2, event.getTeam());
+        assertNotEquals(team2.getName(), event.getTeam());
     }
 
     /**
@@ -146,7 +146,7 @@ public class EventTest {
         team1.addOrRemovePlayer(player, 1);
         event = new Event(team1, eventType, player,null);
 
-        assertEquals(player, event.getPlayer());
+        assertEquals(player.getName(), event.getPlayer());
 
         UnifiedSubscription player1 = new UnifiedSubscription("Ronaldo", "65464", "31212fsf@gmail.com");
         player1.setNewRole(new Player(player1.getUserName()));
@@ -154,11 +154,11 @@ public class EventTest {
 
         event.setPlayer(player1);
 
-        assertEquals(player1, event.getPlayer());
+        assertEquals(player1.getName(), event.getPlayer());
 
         event.setPlayer(null);
 
-        assertNotEquals(player1, event.getPlayer());
+        assertNotEquals(player1.getName(), event.getPlayer());
     }
 
     /**

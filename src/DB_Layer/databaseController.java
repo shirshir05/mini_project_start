@@ -5,6 +5,7 @@ import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.TeamManagement.TeamScore;
 import BusinessService.Business_Layer.UserManagement.*;
 import BusinessService.Enum.ActionStatus;
+import BusinessService.Enum.EventType;
 import BusinessService.Service_Layer.DataManagement;
 import DB_Layer.JDBC.sqlConnection;
 import Presentation_Layer.StartSystem;
@@ -12,6 +13,7 @@ import Presentation_Layer.StartSystem;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 
 public class databaseController {
@@ -161,25 +163,46 @@ public class databaseController {
         return league;
     }
 
+    /*
+    pro
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private Pair<Integer,Integer> score; // Integer[0] = host , Integer[1] = guest
+    private HashSet<Event> eventList;
+    private String league;
+    private String season;
+    */
+
     //init all Games data from DB
     public Game loadGameInfo(int game_id) {
         ActionStatus ac = null;
         try {
             //load league objects
             ResultSet rs = sqlConn.findByKey("Game", null);
-            while (rs.next()) {
+            if (rs.next()) {
                 String leagueName = rs.getString("leagueName");
-                LocalDate ld = rs.getDate("gameDate").toLocalDate();
-                //StartSystem.GSc.createGame(ld, rs.getString("field"), rs.getString("homeTeam"), rs.getString("guestTeam"),
-                //        rs.getString("headReferee"),  rs.getString("linesmanOneReferee"), rs.getString("linesmanTwoReferee"));
+                String Season = rs.getString("seasonYear");
 
-                //todo- add game to season...
-                //add here
+                LocalDate ld = rs.getDate("gameDate").toLocalDate();
+                LocalDateTime ldtStart = LocalDateTime.of(ld,rs.getTime("gameStartTime").toLocalTime());
+                LocalDateTime ldtEnd = LocalDateTime.of(ld,rs.getTime("gameEndTime").toLocalTime());
+                Team home = loadTeamInfo(rs.getString("homeTeam"));
+                Team guest = loadTeamInfo(rs.getString("guestTeam"));
+
+                Game game = new Game(rs.getString("filed"), ld,home,guest,rs.getInt("gameID"));
+                game.setHeadReferee((Referee)loadUserByName(rs.getString("headReferee")));
+                game.setLinesman1Referee((Referee)loadUserByName(rs.getString("linesmanOneReferee")));
+                game.setLinesman2Referee((Referee)loadUserByName(rs.getString("linesmanTwoReferee")));
+                game.setLeague(leagueName);
+                game.setSeason(Season);
+                game.setStartAndEndTime(ldtStart,ldtEnd);
 
                 //load event objects into game
                 ResultSet rs2 = sqlConn.findByKey("EventInGame", new String[]{"" + rs.getInt("gameID")});
                 while (rs2.next()) {
-                    //todo- add events to game...
+                    LocalDateTime eventTime = LocalDateTime.of(ld,rs.getTime("eventTime").toLocalTime());
+                    Event event = new Event(rs.getString("team"), EventType.valueOf(rs.getString("eventType")),rs.getString("playerName"),eventTime);
+                    game.addEvent(event);
                 }
             }
             ac = new ActionStatus(true, "loaded successfully");

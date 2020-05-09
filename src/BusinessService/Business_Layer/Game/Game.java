@@ -42,9 +42,23 @@ public class Game extends Observable{
         eventList = new HashSet<>();
     }
 
+    public Game(String f, LocalDate d, Team h, Team g,int gameId){
+        id = gameId;
+        this.field=f;
+        this.date=d;
+        this.host=h;
+        this.guest=g;
+        eventList = new HashSet<>();
+    }
+
     public void setGameStartTime(){
         startTime = LocalDateTime.now();
         endTime = startTime.plusMinutes(140);
+    }
+
+    public void setStartAndEndTime(LocalDateTime start,LocalDateTime end){
+        startTime = start;
+        endTime = end;
     }
 
     public void endGame(ScoreTable scoreTable, int hostGoals, int guestGoals){
@@ -125,6 +139,14 @@ public class Game extends Observable{
         }
         logger.log("Game: update_new_event, team: " + team_name + " ,player " + player_name + " ,event " + event+ " " + ac.getDescription());
         return ac;
+    }
+
+    /**
+     * used to insert existing events from database
+     * @param e
+     */
+    public void addEvent(Event e){
+        eventList.add(e);
     }
 
     /**
