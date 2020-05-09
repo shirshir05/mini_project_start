@@ -35,7 +35,7 @@ public class AllForAllTwo extends SchedulingGame {
                         field = "Field will select later";
                     }
                     LocalDate date = LocalDate.of( Integer.parseInt(season.getYear()),month,day);
-                    season.addGame(createGameAfterChecks(date, field, host.getName(), guest.getName(), array[refereesToGame[0]], array[refereesToGame[1]], array[refereesToGame[2]]));
+                    createGameAfterChecks(season.getLeague(), season.getYear(),date, field, host.getName(), guest.getName(), array[refereesToGame[0]], array[refereesToGame[1]], array[refereesToGame[2]]);
                     day += 7;
                     if(day > 28){
                         day = 1;

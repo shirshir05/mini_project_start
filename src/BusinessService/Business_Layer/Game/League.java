@@ -31,6 +31,7 @@ public class League {
     public boolean addSeason(Season season){
         if (season!=null){
             seasons.add(season);
+            season.setLeague(this.name);
             return true;
         }
         return false;
