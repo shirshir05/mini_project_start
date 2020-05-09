@@ -76,14 +76,14 @@ public class Test {
                 assertEquals(teamController.RequestCreateTeam(team,"filed").getDescription(),"The team wait for approve union representative.");
                 assertEquals((teamController.ChangeStatusTeam(team,2).getDescription()),"The action is invalid.");
                 assertEquals((teamController.AddOrRemovePlayer(team,"player", 1).getDescription()),"You are not allowed to perform actions on the team.");
-                controller.Exit(userName,password);
+                controller.Exit(userName);
                 controller.Login("UnionRepresentative","12345");
                 assertEquals(teamController.ApproveCreateTeamAlert("teamOwner:" +userName + "| Team;" +team).getDescription(),"Team status successfully changed to 1.");
                 assertEquals((teamController.AddOrRemovePlayer(team,"player", 1).getDescription()),"You are not allowed to perform actions on the team.");
-                controller.Exit("UnionRepresentative","12345");
+                controller.Exit("UnionRepresentative");
                 controller.Login("SystemAdministrator","12345");
                 assertEquals(teamController.AddOrRemoveTeamOwner(team,userName, 1).getDescription(),"The Team Owner was successfully added to the team.");
-                controller.Exit("UnionRepresentative","12345");
+                controller.Exit("UnionRepresentative");
                 controller.Login(userName,password);
                 assertEquals((teamController.AddOrRemovePlayer(team,"player", 1).getDescription()),"The player was successfully added to the team.");
             }

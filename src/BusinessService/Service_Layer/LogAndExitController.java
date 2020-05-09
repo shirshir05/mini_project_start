@@ -151,14 +151,13 @@ public class LogAndExitController{
     /**
      * The function allows logging off of a user connected to the system
      * @param arg_user_name -
-     * @param arg_password -
      * @return comment print to user
      */
-    public ActionStatus Exit(String arg_user_name, String arg_password){
+    public ActionStatus Exit(String arg_user_name){
         ActionStatus AC;
         if(DataManagement.getCurrent() != null){
             //Successfully disconnected from the system
-            if(DataManagement.getCurrent().getUserName().equals(arg_user_name) && DataManagement.getCurrent().getPassword().equals(Subscription.getHash(arg_password))){
+            if(DataManagement.getCurrent().getUserName().equals(arg_user_name)){
                 DataManagement.setCurrent(null);
                 AC = new ActionStatus(true,  "Successfully disconnected from the system.");
             }

@@ -184,7 +184,7 @@ public class GameSettingsControllerTest {
             lg.Registration("s","12345", "Coach","shir0@post.bgu.ac.il");
             lg.Login("s","12345");
             assertEquals(gm.refereeWatchGames().getDescription(),"You are not a referee!");
-            lg.Exit("s","12345");
+            lg.Exit("s");
             lg.Registration("ss","12345", "Referee","shir0@post.bgu.ac.il");
             lg.Login("ss","12345");
             assertEquals(gm.refereeWatchGames().getDescription(),"You are participates in the next games");

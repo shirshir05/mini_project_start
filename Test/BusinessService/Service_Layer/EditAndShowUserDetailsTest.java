@@ -41,7 +41,7 @@ public class EditAndShowUserDetailsTest {
         LogAndExitController lg = new LogAndExitController();
         lg.Registration("player","12345","Player","player@gmail.com");
         lg.Registration("coach","12345","Coach","coach@gmail.com");
-        lg.Exit("coach","12345");
+        lg.Exit("coach");
         lg.Login("Ortal","12345");
         moreThanOneTimeForPersonalPages = true;
     }
@@ -51,7 +51,7 @@ public class EditAndShowUserDetailsTest {
             return;
         LogAndExitController lg = new LogAndExitController();
         lg.Registration("referee","12345","Referee","referee@gmail.com");
-        lg.Exit("referee","12345");
+        lg.Exit("referee");
         lg.Login("Ortal","12345");
         moreThanOneTimeForReferee = true;
     }
@@ -65,7 +65,7 @@ public class EditAndShowUserDetailsTest {
         tc.CreateTeam("team","beersheva");
         Team t = DataManagement.findTeam("team");
         if(t!=null) t.getPersonalPage().addPermissionToEdit("Ortal");
-        lg.Exit("teamOwner","12345");
+        lg.Exit("teamOwner");
         lg.Login("Ortal","12345");
         moreThanOneTimeForTeam = true;
     }
@@ -73,7 +73,7 @@ public class EditAndShowUserDetailsTest {
     private static void loginUser(String userName) {
         LogAndExitController lg = new LogAndExitController();
         if (DataManagement.getCurrent() != null && !DataManagement.getCurrent().getUserName().equals(userName))
-            lg.Exit(DataManagement.getCurrent().getUserName(), "12345");
+            lg.Exit(DataManagement.getCurrent().getUserName());
         lg.Login(userName, "12345");
     }
 

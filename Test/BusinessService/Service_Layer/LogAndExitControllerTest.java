@@ -115,23 +115,23 @@ public class LogAndExitControllerTest {
         //check exit wrong user name
         this.name = "mata";
         actionStatus = new ActionStatus(false, "One of the details you entered is incorrect.");
-        assertEquals(actionStatus, controller.Exit(name, password));
+        assertEquals(actionStatus, controller.Exit(name));
         this.name = "matan";
 
         //check exit wrong password
         this.password = "1s2345";
         actionStatus = new ActionStatus(false, "One of the details you entered is incorrect.");
-        assertEquals(actionStatus, controller.Exit(name, password));
+        assertEquals(actionStatus, controller.Exit(name));
         this.password = "12345";
 
         //check exit Successfully
         actionStatus = new ActionStatus(true, "Successfully disconnected from the system.");
-        assertEquals(actionStatus, controller.Exit(name, password));
+        assertEquals(actionStatus, controller.Exit(name));
 
         //check exit no current login user
         DataManagement.setCurrent(null);
         actionStatus = new ActionStatus(false, "One of the details you entered is incorrect.");
-        assertEquals(actionStatus, controller.Exit(name, password));
+        assertEquals(actionStatus, controller.Exit(name));
         DataManagement.cleanAllData();
     }
 
