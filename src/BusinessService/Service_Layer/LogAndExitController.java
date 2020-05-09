@@ -88,6 +88,18 @@ public class LogAndExitController{
         return AC;
     }
 
+    //TODO -
+    private String roleInString(Subscription toLogin){
+        if(toLogin instanceof Fan){
+            return "fan";
+        }else if (toLogin instanceof Referee){
+            return "referee";
+        }else if (toLogin instanceof UnionRepresentative){
+            return "unionrepresentative";
+        }
+        return null;
+    }
+
 
     /**
      * The function allows logging off of a user connected to the system

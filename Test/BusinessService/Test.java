@@ -88,7 +88,7 @@ public class Test {
                 assertEquals((teamController.AddOrRemovePlayer(team,"player", 1).getDescription()),"The player was successfully added to the team.");
             }
         }
-    }//
+    }
 
 
 }
