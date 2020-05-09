@@ -25,7 +25,6 @@ public class Team extends Observable implements Comparable {
     private HashSet<Object> list_assets;
     private TeamPersonalPage PersonalPage;
     private int status; // 0 - off 1 - on -1 - always close
-    private HashMap<Integer, Pair<String,Integer>> financial;//Integer  = quarterly
     private TeamBudget budget;
     private TeamScore teamScore;
 

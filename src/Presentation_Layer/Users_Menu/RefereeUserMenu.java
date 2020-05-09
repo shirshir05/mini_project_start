@@ -99,6 +99,7 @@ public class RefereeUserMenu implements UserMenu {
             String playerName =  args[3];
             output += "insert eventType:\nuser input- " + args[4] + "\n";
             String eventType =  args[4];
+            //EventType event = StartSystem.GSc.getEventFromString(eventType);
             ActionStatus ac =  StartSystem.getGSc().refereeCreateNewEvent(gameId,nameTeam,playerName,eventType);
             return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
         }
