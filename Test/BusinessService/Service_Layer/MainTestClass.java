@@ -137,20 +137,20 @@ public class MainTestClass {
 
             //check exit wrong user name
             this.name = "mata";
-            assertEquals("One of the details you entered is incorrect.", controller.Exit(name, password));
+            assertEquals("One of the details you entered is incorrect.", controller.Exit(name));
             this.name = "matan";
 
             //check exit wrong password
             this.password = "1s2345";
-            assertEquals("One of the details you entered is incorrect.", controller.Exit(name, password));
+            assertEquals("One of the details you entered is incorrect.", controller.Exit(name));
             this.password = "12345";
 
             //check exit Successfully
-            assertEquals("Successfully disconnected from the system.", controller.Exit(name, password));
+            assertEquals("Successfully disconnected from the system.", controller.Exit(name));
 
             //check exit no current login user
             DataManagement.setCurrent(null);
-            assertEquals("One of the details you entered is incorrect.", controller.Exit(name, password));
+            assertEquals("One of the details you entered is incorrect.", controller.Exit(name));
         }
     }
 

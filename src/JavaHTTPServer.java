@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
@@ -108,7 +109,7 @@ public class JavaHTTPServer implements Runnable{
             System.out.println("payload is: " + payload);
             jsonObject = new JSONObject(payload.toString());
             if(METHOD.equals("POST")){
-                actionStatus = handlePostMethod(controllerMethod);
+                //actionStatus = handlePostMethod(controllerMethod);
                 String str = "two";
             }
 
@@ -120,11 +121,6 @@ public class JavaHTTPServer implements Runnable{
 
             }
 
-            System.out.println(jsonObject.get("User name"));
-            System.out.println(jsonObject.get("Password"));
-            System.out.println(jsonObject.get("Role"));
-            System.out.println(jsonObject.get("Email"));
-            System.out.println("Payload data is: " + payload.toString());
 
             out.println("HTTP/1.1 200 OK");
             out.println("Server: Java HTTP Server from SSaurel : 1.0");
@@ -133,7 +129,10 @@ public class JavaHTTPServer implements Runnable{
             out.println("Access-Control-Allow-Origin: *");
             out.println("Content-length: 12" );
             out.println(""); // blank line between headers and content, very important !
-            out.println("Hello world!");
+            //out.println("Hello world!");
+            JSONObject shir = new JSONObject(payload.toString());
+            out.println(shir);
+            //out.println(shir.toString());
             out.flush(); // flush character output stream buffer
             connect.close();
 
@@ -160,8 +159,7 @@ public class JavaHTTPServer implements Runnable{
                 break;
             case "logout":
                 as = StartSystem.getLEc().Exit
-                        (jsonObject.getString("username"),
-                                jsonObject.getString("password"));
+                        (jsonObject.getString("username"));
                 break;
 //            case "answercomplaints":
 //                as = StartSystem.getAc().answerCompliant(
