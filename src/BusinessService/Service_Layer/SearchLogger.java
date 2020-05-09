@@ -1,5 +1,6 @@
 package BusinessService.Service_Layer;
 
+import BusinessService.Enum.ActionStatus;
 import Presentation_Layer.Spelling;
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,7 +14,8 @@ public class SearchLogger {
      * @param keyWord
      * @return
      */
-    public String findData(String keyWord){
+    public ActionStatus findData(String keyWord){
+        ActionStatus AC;
         DataManagement.getCurrent().addSearch(keyWord);
         String keyword2 = Spelling.getCorrectWord(keyWord);
         try
@@ -32,13 +34,15 @@ public class SearchLogger {
                 }
             }
             fr.close();
-            return sb.toString();
+            AC = new ActionStatus(true, sb.toString());
+            return AC;
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
-        return null;
+        AC = new ActionStatus(false, "");
+        return AC;
     }
 
 
@@ -46,13 +50,13 @@ public class SearchLogger {
      * Show the history of Search
      * @return  String
      */
-    public String showSearchHistory(){
+    public ActionStatus showSearchHistory(){
         StringBuilder sb=new StringBuilder();
         for (String s : DataManagement.getCurrent().getSearch()){
             sb.append(s);
             sb.append("\n");
         }
-        return sb.toString();
+        return new ActionStatus(true, sb.toString());
     }
 
 
