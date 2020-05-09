@@ -48,11 +48,6 @@ public class JavaHTTPServer implements Runnable{
 
     public static void main(String[] args) {
         System.out.println(Character.isDigit('0'));
-        //System.out.println(isNumeric(""));
-        //String string = "POST /api/register HTTP/1.1";
-        //System.out.println("register");
-        //System.out.println(string.lastIndexOf("api"));
-        //System.out.println(string.substring(string.indexOf("api") + 4, string.lastIndexOf(" ")));
         try {
             ServerSocket serverConnect = new ServerSocket(PORT);
             System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");

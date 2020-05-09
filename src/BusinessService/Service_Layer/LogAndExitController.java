@@ -82,24 +82,71 @@ public class LogAndExitController{
         //Login successful
         else {
             DataManagement.setCurrent(toLogin);
-            AC = new ActionStatus(true, "Login successful.");
+            AC = new ActionStatus(true, roleInString(toLogin));
         }
         logger.log("Login attempt of user : " + arg_user_name + " " + AC.getDescription());
         return AC;
     }
 
-    //TODO -
-    private String roleInString(Subscription toLogin){
-        if(toLogin instanceof Fan){
+
+    /**
+     * function taht return the role
+     * @param toLogin -
+     * @return -
+     */
+    private String roleInString(Subscription toLogin) {
+        if (toLogin instanceof Fan) {
             return "fan";
-        }else if (toLogin instanceof Referee){
+        } else if (toLogin instanceof Referee) {
             return "referee";
-        }else if (toLogin instanceof UnionRepresentative){
+        } else if (toLogin instanceof UnionRepresentative) {
             return "unionrepresentative";
+        } else if (toLogin instanceof UnifiedSubscription) {
+            if (((UnifiedSubscription) toLogin).isAPlayer()) {
+                return "player";
+            } else if (((UnifiedSubscription) toLogin).isACoach()) {
+                return "coach";
+            } else if (((UnifiedSubscription) toLogin).isATeamManager()) {
+                return "teammanager";
+            } else if (((UnifiedSubscription) toLogin).isATeamOwner()) {
+                return "teamowner";
+            }
         }
-        return null;
+        return "";
     }
 
+
+    /**
+     * check if tole exist in current
+     * @param role -
+     * @return -
+     */
+    public ActionStatus haveRole(String role){
+        ActionStatus AC;
+        Subscription sub = DataManagement.getCurrent();
+        if( sub!= null){
+            if (sub instanceof UnifiedSubscription){
+                if(role.equals("player")){
+                    AC = new ActionStatus(((UnifiedSubscription) sub).isAPlayer(), "");
+                }else if(role.equals("coach")){
+                    AC = new ActionStatus(((UnifiedSubscription) sub).isACoach(), "");
+                }else if(role.equals("teammanager")){
+                    AC = new ActionStatus(((UnifiedSubscription) sub).isATeamManager(), "");
+                }else if(role.equals("teamowner")){
+                    AC = new ActionStatus(((UnifiedSubscription) sub).isATeamOwner(), "");
+                }else{
+                    AC = new ActionStatus(false, "One of the details you entered is incorrect.");
+                }
+            }else{
+                AC = new ActionStatus(false, "One of the details you entered is incorrect.");
+            }
+        }
+        //One of the details you entered is incorrect
+        else{
+            AC = new ActionStatus(false, "One of the details you entered is incorrect.");
+        }
+        return AC;
+    }
 
     /**
      * The function allows logging off of a user connected to the system
