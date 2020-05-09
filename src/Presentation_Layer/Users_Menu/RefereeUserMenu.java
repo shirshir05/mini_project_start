@@ -99,6 +99,7 @@ public class RefereeUserMenu implements UserMenu {
             String playerName =  args[3];
             output += "insert eventType:\nuser input- " + args[4] + "\n";
             String eventType =  args[4];
+            //EventType event = StartSystem.GSc.getEventFromString(eventType);
             ActionStatus ac =  StartSystem.getGSc().refereeCreateNewEvent(gameId,nameTeam,playerName,eventType);
             return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
         }
@@ -108,7 +109,7 @@ public class RefereeUserMenu implements UserMenu {
             String username =   args[1];
             output += "insert password:\nuser input-  " + args[2] +"\n";
             String password =  args[2];
-            ActionStatus ac = StartSystem.LEc.Exit(username,password);
+            ActionStatus ac = StartSystem.LEc.Exit(username);
             return new ActionStatus(ac.isActionSuccessful(),output + ac.getDescription());
         }
         else{

@@ -184,7 +184,7 @@ public class GameSettingsControllerTest {
             lg.Registration("s","12345", "Coach","shir0@post.bgu.ac.il");
             lg.Login("s","12345");
             assertEquals(gm.refereeWatchGames().getDescription(),"You are not a referee!");
-            lg.Exit("s","12345");
+            lg.Exit("s");
             lg.Registration("ss","12345", "Referee","shir0@post.bgu.ac.il");
             lg.Login("ss","12345");
             assertEquals(gm.refereeWatchGames().getDescription(),"You are participates in the next games");
@@ -201,23 +201,23 @@ public class GameSettingsControllerTest {
         int game_id;
         String team_name;
         String player_name;
-        EventType event;
+        String event;
         String ans;
 
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
                     {1,"shir1","mor",EventType.red_ticket,"You may not take this action."},
-                    {0,"0","0",EventType.red_ticket,"The game id does not exist."},
-                    {1,"0","0",EventType.red_ticket,"The team id does not exist."},
-                    {1,"shir1","0",EventType.red_ticket,"The player does not exist in the team."},
-                    {1,"shir1","shir",EventType.red_ticket,"Event successfully updated."},
-                    {1,"shir1","din",EventType.red_ticket,"You may not take this action."},
-                    {1,"shir1","dan",EventType.red_ticket,"You are not a judge of the current game."}
+                    {0,"0","0","red_ticket","The game id does not exist."},
+                    {1,"0","0","red_ticket","The team id does not exist."},
+                    {1,"shir1","0","red_ticket","The player does not exist in the team."},
+                    {1,"shir1","shir","red_ticket","Event successfully updated."},
+                    {1,"shir1","din","red_ticket","You may not take this action."},
+                    {1,"shir1","dan","red_ticket","You are not a judge of the current game."}
 
             });
         }
-        public refereeCreateNewEvent(int game_id, String team_name, String player_name,EventType event,String ans) {
+        public refereeCreateNewEvent(int game_id, String team_name, String player_name,String event,String ans) {
             this.game_id = game_id;
             this.team_name = team_name;
             this.player_name = player_name;
