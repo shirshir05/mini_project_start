@@ -1,9 +1,6 @@
 package DB_Layer;
 
-import BusinessService.Business_Layer.Game.League;
-import BusinessService.Business_Layer.Game.PointsPolicy;
-import BusinessService.Business_Layer.Game.ScoreTable;
-import BusinessService.Business_Layer.Game.Season;
+import BusinessService.Business_Layer.Game.*;
 import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.TeamManagement.TeamScore;
 import BusinessService.Business_Layer.UserManagement.*;
@@ -11,7 +8,6 @@ import BusinessService.Enum.ActionStatus;
 import BusinessService.Service_Layer.DataManagement;
 import DB_Layer.JDBC.sqlConnection;
 import Presentation_Layer.StartSystem;
-import Presentation_Layer.Users_Menu.RefereeUserMenu;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,38 +26,38 @@ public class databaseController {
     public Subscription loadUserByName(String userID) {
         try {
             ResultSet rs = sqlConn.findByKey("Users", new String[]{userID});
-            if (rs.next()){
+            if (rs.next()) {
                 String thisUserName = rs.getString("userName");
-                Subscription sub =  StartSystem.LEc.createUserByType(thisUserName,rs.getString("userPassword"),rs.getString("userRole"),rs.getString("email"));
-                if(rs.getString("userRole").equals("UnifiedSubscription")){
+                Subscription sub = StartSystem.LEc.createUserByType(thisUserName, rs.getString("userPassword"), rs.getString("userRole"), rs.getString("email"));
+                if (rs.getString("userRole").equals("UnifiedSubscription")) {
                     ResultSet rs2 = sqlConn.findByKey("UsersData", new String[]{thisUserName});
                     UnifiedSubscription subUn = (UnifiedSubscription) sub;
-                    while(rs2.next()) {
+                    while (rs2.next()) {
                         if (rs2.getString("dataType").equals("position")) {
                             subUn.setNewRole(new Player(thisUserName));
                             subUn.setPosition(rs2.getString("dataValue"));
-                        }else if (rs2.getString("dataType").equals("qualification")) {
-                            if(!subUn.isACoach()){
+                        } else if (rs2.getString("dataType").equals("qualification")) {
+                            if (!subUn.isACoach()) {
                                 subUn.setNewRole(new Coach(thisUserName));
                             }
                             subUn.setQualification(rs2.getString("dataValue"));
-                        }else if (rs2.getString("dataType").equals("roleInTeam")) {
-                            if(!subUn.isACoach()){
+                        } else if (rs2.getString("dataType").equals("roleInTeam")) {
+                            if (!subUn.isACoach()) {
                                 subUn.setNewRole(new Coach(thisUserName));
                             }
                             subUn.setRoleInTeam(rs2.getString("dataValue"));
-                        }else if (rs2.getString("dataType").equals("ownerAppointedByTeamOwner")) {
+                        } else if (rs2.getString("dataType").equals("ownerAppointedByTeamOwner")) {
                             subUn.setNewRole(new TeamOwner());
                             subUn.teamOwner_setAppointedByTeamOwner(rs2.getString("dataValue"));
-                        }else if (rs2.getString("dataType").equals("managerAppointedByTeamOwner")) {
+                        } else if (rs2.getString("dataType").equals("managerAppointedByTeamOwner")) {
                             subUn.setNewRole(new TeamOwner());
                             subUn.teamManager_setAppointedByTeamOwner(rs2.getString("dataValue"));
                         }
                     }
-                }else if(rs.getString("userRole").equals("Referee")){
+                } else if (rs.getString("userRole").equals("Referee")) {
                     ResultSet rs2 = sqlConn.findByKey("UsersData", new String[]{thisUserName});
                     Referee subRef = (Referee) sub;
-                    if(rs2.next()) {
+                    if (rs2.next()) {
                         if (rs2.getString("dataType").equals("qualification")) {
                             subRef.setQualification(rs2.getString("dataValue"));
                         }
@@ -69,23 +65,21 @@ public class databaseController {
                 }
                 return sub;
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
         }
         return null;
     }
 
     //Get Users list by user role from DB (used for user without personal info)
     public HashSet<Subscription> loadUsersByRole(String role) {
-        HashSet<Subscription> set = null;
+        HashSet<Subscription> set = new HashSet<Subscription>();
         try {
-            ResultSet rs = sqlConn.findByValue("Users","userRole",role);
-            while (rs.next()){
-                Subscription sub = StartSystem.LEc.createUserByType(rs.getString("userName"),rs.getString("userPassword"),rs.getString("userRole"),rs.getString("email"));
+            ResultSet rs = sqlConn.findByValue("Users", "userRole", role);
+            while (rs.next()) {
+                Subscription sub = StartSystem.LEc.createUserByType(rs.getString("userName"), rs.getString("userPassword"), rs.getString("userRole"), rs.getString("email"));
                 set.add(sub);
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
         }
         return set;
     }
@@ -94,12 +88,13 @@ public class databaseController {
     public Team loadTeamInfo(String team_name) {
         try {
             ResultSet rs = sqlConn.findByKey("Team", new String[]{team_name});
-            if (rs.next()){
+            if (rs.next()) {
                 String teamName = rs.getString("teamName");
-                Team team = new Team(teamName,rs.getString("mainFiled"));
+                Team team = new Team(teamName, rs.getString("mainFiled"));
                 //  ?? DataManagement.addToListTeam(team)
                 // TODO - ?? team budget ??
                 team.changeStatus(rs.getInt("teamStatus"));
+                team.EditTeamOwner((UnifiedSubscription) loadUserByName(rs.getString("mainFiled")), 1);
                 TeamScore score = new TeamScore(teamName);
                 score.setWins(rs.getInt("wins"));
                 score.setDrawn(rs.getInt("drawns"));
@@ -107,26 +102,26 @@ public class databaseController {
                 score.setPoints(rs.getInt("totalScore"));
                 score.setNumberOfGames(rs.getInt("numOfGames"));
                 score.setGoalsGet(rs.getInt("goalesGoten")); //todo- fix name in table
-                score.setGoalsScores(rs.getInt("goalesScored")); //todo- fix name in table
+                score.setGoalsScores(rs.getInt("goalsScored")); //todo- fix name in table
                 team.setTeamScore(score);
                 //get all users connected to team
-                ResultSet rs2 = sqlConn.findByKey("AssetsInTeam",new String[]{teamName});
-                while(rs2.next()){
-                    if(rs2.getString("assetRole").equals("TeamOwner")){
-                        team.EditTeamOwner((UnifiedSubscription) loadUserByName(rs2.getString("assetName")),1);
-                    }else if(rs2.getString("assetRole").equals("Coach")){
-                        team.AddOrRemoveCoach((UnifiedSubscription)loadUserByName(rs2.getString("assetName")),1);
-                    }else if(rs2.getString("assetRole").equals("TeamManager")){
-                        team.EditTeamManager((UnifiedSubscription)loadUserByName(rs2.getString("assetName")),1);
-                    }else if(rs2.getString("assetRole").equals("Player")){
-                        team.addOrRemovePlayer((UnifiedSubscription)loadUserByName(rs2.getString("assetName")),1);
-                    }else if(rs2.getString("assetRole").equals("Filed")){
+                ResultSet rs2 = sqlConn.findByKey("AssetsInTeam", new String[]{teamName});
+                while (rs2.next()) {
+                    if (rs2.getString("assetRole").equals("TeamOwner")) {
+                        team.EditTeamOwner((UnifiedSubscription) loadUserByName(rs2.getString("assetName")), 1);
+                    } else if (rs2.getString("assetRole").equals("Coach")) {
+                        team.AddOrRemoveCoach((UnifiedSubscription) loadUserByName(rs2.getString("assetName")), 1);
+                    } else if (rs2.getString("assetRole").equals("TeamManager")) {
+                        team.EditTeamManager((UnifiedSubscription) loadUserByName(rs2.getString("assetName")), 1);
+                    } else if (rs2.getString("assetRole").equals("Player")) {
+                        team.addOrRemovePlayer((UnifiedSubscription) loadUserByName(rs2.getString("assetName")), 1);
+                    } else if (rs2.getString("assetRole").equals("Filed")) {
                         team.setAsset(rs2.getString("assetName"));
                     }
                 }
+                return team;
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
         }
         return null;
     }
@@ -137,154 +132,74 @@ public class databaseController {
         try {
             //load league objects
             ResultSet rs = sqlConn.findByKey("League", new String[]{league_name});
-            while (rs.next()){
-                String leagueName =rs.getString("leagueName");
+            while (rs.next()) {
+                String leagueName = rs.getString("leagueName");
                 league = new League(leagueName);
                 DataManagement.addToListLeague(league); // ???
 
                 //load season objects into this league
-                ResultSet rs2 = sqlConn.findByKey("Season",new String[]{leagueName});
-                while(rs2.next()){
-                    Season season =new Season(rs2.getString("seasonYear"));
+                ResultSet rs2 = sqlConn.findByKey("Season", new String[]{leagueName});
+                while (rs2.next()) {
+                    Season season = new Season(rs2.getString("seasonYear"));
                     league.addSeason(season);
-                    PointsPolicy pointsPolicy = new PointsPolicy(rs2.getInt("win"),rs2.getInt("lose"),rs2.getInt("equal"));
+                    PointsPolicy pointsPolicy = new PointsPolicy(rs2.getInt("win"), rs2.getInt("lose"), rs2.getInt("equal"));
                     ScoreTable scoreTable = new ScoreTable(pointsPolicy);
                     season.setScoreTable(scoreTable);
                 }
 
                 //load Referee objects into this league for each season
 
-                ResultSet rs3 = sqlConn.findByKey("RefereeInSeason",new String[]{leagueName});
-                while(rs3.next()){
+                ResultSet rs3 = sqlConn.findByKey("RefereeInSeason", new String[]{leagueName});
+                while (rs3.next()) {
                     Season s = league.getSeason(rs3.getString("seasonYear"));
-                    s.addReferee((Referee)loadUserByName(rs3.getString("refereeName")));
+                    s.addReferee((Referee) loadUserByName(rs3.getString("refereeName")));
                 }
 
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
         }
         return league;
     }
 
     //init all Games data from DB
-     public ActionStatus loadGameInfo() {
-         ActionStatus ac = null;
-         try {
-             //load league objects
-             ResultSet rs = sqlConn.findByKey("Game", null);
-             while (rs.next()){
-                 String leagueName =rs.getString("leagueName");
-                 LocalDate ld = rs.getDate("gameDate").toLocalDate();
-                 //StartSystem.GSc.createGame(ld, rs.getString("field"), rs.getString("homeTeam"), rs.getString("guestTeam"),
-                 //        rs.getString("headReferee"),  rs.getString("linesmanOneReferee"), rs.getString("linesmanTwoReferee"));
+    public Game loadGameInfo(int game_id) {
+        ActionStatus ac = null;
+        try {
+            //load league objects
+            ResultSet rs = sqlConn.findByKey("Game", null);
+            while (rs.next()) {
+                String leagueName = rs.getString("leagueName");
+                LocalDate ld = rs.getDate("gameDate").toLocalDate();
+                //StartSystem.GSc.createGame(ld, rs.getString("field"), rs.getString("homeTeam"), rs.getString("guestTeam"),
+                //        rs.getString("headReferee"),  rs.getString("linesmanOneReferee"), rs.getString("linesmanTwoReferee"));
 
-                 //todo- add game to season...
-                 //add here
+                //todo- add game to season...
+                //add here
 
-                 //load event objects into game
-                 ResultSet rs2 = sqlConn.findByKey("EventInGame",new String[]{""+rs.getInt("gameID")});
-                 while(rs2.next()){
-                     //todo- add events to game...
-                 }
-             }
-             ac = new ActionStatus(true,"loaded successfully");
-         }
-         catch (SQLException e){
-             ac = new ActionStatus(false,"Sql SQLException");
-         }
-         return ac;
+                //load event objects into game
+                ResultSet rs2 = sqlConn.findByKey("EventInGame", new String[]{"" + rs.getInt("gameID")});
+                while (rs2.next()) {
+                    //todo- add events to game...
+                }
+            }
+            ac = new ActionStatus(true, "loaded successfully");
+        } catch (SQLException e) {
+            ac = new ActionStatus(false, "Sql SQLException");
+        }
+        return null;
     }
 
-    public static void main(String[] args){
-
-        sqlConnection sql = new sqlConnection();
-        sql.connect();
-        databaseController data = new databaseController();
-        Subscription s1 = data.loadUserByName("user1");
-        Subscription s2 = data.loadUserByName("user3");
+    public int insert(String table, String[] values) {
+        return sqlConn.insert(table, values);
     }
 
-    private static void deleteTestUsers() {
-        sqlConnection sql = new sqlConnection();
-        sql.connect();
-        // Insert Users
-
-        // Insert UsersData
-        sql.delete("UsersData",new String[]{"user1","position"});
-        sql.delete("UsersData",new String[]{"user2","position"});
-        sql.delete("UsersData",new String[]{"user3","qualification"});
-        sql.delete("UsersData",new String[]{"user4","qualification"});
-        sql.delete("UsersData",new String[]{"user8","qualification"});
-        sql.delete("UsersData",new String[]{"user9","qualification"});
-        sql.delete("UsersData",new String[]{"user10","qualification"});
-        sql.delete("UsersData",new String[]{"user14","managerAppointedByTeamOwner"});
-        sql.delete("UsersData",new String[]{"user15","managerAppointedByTeamOwner"});
-        sql.delete("UsersData",new String[]{"user16","ownerAppointedByTeamOwner"});
-        sql.delete("UsersData",new String[]{"user17","ownerAppointedByTeamOwner"});
-
-        sql.delete("Users",new String[]{"user1"});
-        sql.delete("Users",new String[]{"user2"});
-        sql.delete("Users",new String[]{"user3"});
-        sql.delete("Users",new String[]{"user4"});
-        sql.delete("Users",new String[]{"user6"});
-        sql.delete("Users",new String[]{"user7"});
-        sql.delete("Users",new String[]{"user8"});
-        sql.delete("Users",new String[]{"user9"});
-        sql.delete("Users",new String[]{"user10"});
-        sql.delete("Users",new String[]{"user11"});
-        sql.delete("Users",new String[]{"user12"});
-        sql.delete("Users",new String[]{"user13"});
-        sql.delete("Users",new String[]{"user14"});
-        sql.delete("Users",new String[]{"user15"});
-        sql.delete("Users",new String[]{"user16"});
-        sql.delete("Users",new String[]{"user17"});
-
-    }
-    private static void testUsers() {
-        sqlConnection sql = new sqlConnection();
-        sql.connect();
-        // Insert Users
-        sql.insert("Users",new String[]{"user1","1","UnifiedSubscription","@"});
-        sql.insert("Users",new String[]{"user2","1","UnifiedSubscription","@"});
-        sql.insert("Users",new String[]{"user3","1","UnifiedSubscription","@"});
-        sql.insert("Users",new String[]{"user4","1","UnifiedSubscription","@"});
-        sql.insert("Users",new String[]{"user6","1","UnifiedSubscription","@"});
-        sql.insert("Users",new String[]{"user7","1","UnifiedSubscription","@"});
-        sql.insert("Users",new String[]{"user8","1","Referee","@"});
-        sql.insert("Users",new String[]{"user9","1","Referee","@"});
-        sql.insert("Users",new String[]{"user10","1","Referee","@"});
-        sql.insert("Users",new String[]{"user11","1","SystemAdministrator","@"});
-        sql.insert("Users",new String[]{"user12","1","SystemAdministrator","@"});
-        sql.insert("Users",new String[]{"user13","1","UnionRepresentative","@"});
-        sql.insert("Users",new String[]{"user14","1","UnifiedSubscription","@"});
-        sql.insert("Users",new String[]{"user15","1","UnifiedSubscription","@"});
-        sql.insert("Users",new String[]{"user16","1","UnifiedSubscription","@"});
-        sql.insert("Users",new String[]{"user17","1","UnifiedSubscription","@"});
-
-        // Insert UsersData
-        sql.insert("UsersData",new String[]{"user1","position","p1"});
-        sql.insert("UsersData",new String[]{"user2","position","p2"});
-        sql.insert("UsersData",new String[]{"user3","qualification","q1"});
-        sql.insert("UsersData",new String[]{"user4","qualification","q2"});
-        sql.insert("UsersData",new String[]{"user8","qualification","q12"});
-        sql.insert("UsersData",new String[]{"user9","qualification","q13"});
-        sql.insert("UsersData",new String[]{"user10","qualification","q14"});
-        sql.insert("UsersData",new String[]{"user14","managerAppointedByTeamOwner","user16"});
-        sql.insert("UsersData",new String[]{"user15","managerAppointedByTeamOwner","user16"});
-        sql.insert("UsersData",new String[]{"user16","ownerAppointedByTeamOwner","TeamOwner",""});
-        sql.insert("UsersData",new String[]{"user17","ownerAppointedByTeamOwner","TeamOwner","user16"});
+    public int update(String table, String[] key, String column, String value) {
+        return sqlConn.update(table, key, column, value);
     }
 
+    public int delete(String table, String[] key) {
+        return sqlConn.delete(table, key);
+    }
 
-    /*
-    public ActionStatus SaveUsersInfo() {
-    }
-    public ActionStatus SaveTeamInfo() {
-    }
-    public ActionStatus SaveGameInfo() {
-    }
-    public ActionStatus SaveLeagueInfo() {
-    }
-     */
 }
+

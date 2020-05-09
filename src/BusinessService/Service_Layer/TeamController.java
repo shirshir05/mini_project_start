@@ -24,9 +24,9 @@ public class TeamController {
         ActionStatus AC;
         Subscription currentUser = DataManagement.getCurrent();
         if (arg_name != null && !arg_name.isEmpty() && isATeamOwner(currentUser)) {
-            HashSet<UnionRepresentative> union = DataManagement.getUnionRepresentatives();
+            HashSet<Subscription> union = DataManagement.getUnionRepresentatives();
             boolean flag = false;
-            for (UnionRepresentative rep : union) {
+            for (Subscription rep : union) {
                 rep.addAlert("teamOwner:" + currentUser.getUserName() + "| Team;" + arg_name);
                 flag = true;
             }
@@ -76,10 +76,10 @@ public class TeamController {
             new_team.changeStatus(2);
             DataManagement.addToListTeam((new_team));
             //add the union representatives to the observers of the budget of the team:
-            HashSet<UnionRepresentative> unionReps = DataManagement.getUnionRepresentatives();
+            HashSet<Subscription> unionReps = DataManagement.getUnionRepresentatives();
             Observable budget = new_team.getBudget();
-            for(UnionRepresentative s: unionReps){
-                budget.addObserver(s);
+            for(Subscription s: unionReps){
+                budget.addObserver((UnionRepresentative)s);
             }
            // AC = new_team.EditTeamOwner((UnifiedSubscription) DataManagement.getCurrent(),1);
             AC  =new ActionStatus(true, "The team wait for approve union representative.");
@@ -135,8 +135,8 @@ public class TeamController {
      */
     void DeleteCreateTeamRequest(String teamName){
         if (teamName!=null) {
-            HashSet<UnionRepresentative> union = DataManagement.getUnionRepresentatives();
-            for (UnionRepresentative u : union) {
+            HashSet<Subscription> union = DataManagement.getUnionRepresentatives();
+            for (Subscription u : union) {
                 for (String alert : u.getAlerts()) {
                     if (alert.contains(teamName)) {
                         u.getAlerts().remove(alert);

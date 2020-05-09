@@ -77,6 +77,9 @@ public class sqlConnection implements interfaceDB {
             if(this.databaseManager == null){
                 connect();
             }
+            if( this.databaseManager.conn==null){
+                connect();
+            }
             if( this.databaseManager.conn.isClosed()){
                 connect();
             }
@@ -187,6 +190,7 @@ public class sqlConnection implements interfaceDB {
         keys.put("Season",new String[]{"leagueName","seasonYear"});
         keys.put("RefereeInSeason",new String[]{"leagueName","seasonYear","refereeName"});
         keys.put("UsersData",new String[]{"userName","dataType"});
+        connect();
 
 
         //ResultSet resultSet = databaseManager.executeQuerySelect("Select * From Users");
@@ -200,14 +204,6 @@ public class sqlConnection implements interfaceDB {
     public ActionStatus closeConnection(){
         databaseManager.closeConnection();
         return new ActionStatus(true, "DB closed");
-    }
-
-    public static void main(String[] args){
-        sqlConnection sql = new sqlConnection();
-        ResultSet resultSet0 = sql.databaseManager.executeQuerySelect("Select * From Users");
-        ResultSetPrinter.printResultSet(resultSet0);
-        ResultSetPrinter.printResultSet(sql.findByKey("Game",new String[]{"1"}));
-
     }
 
 }
