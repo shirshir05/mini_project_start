@@ -121,7 +121,7 @@ public class LogAndExitController{
      * @param role -
      * @return -
      */
-    public ActionStatus haveRole(String role){
+    public ActionStatus hasRole(String role){
         ActionStatus AC;
         Subscription sub = DataManagement.getCurrent();
         if( sub!= null){
