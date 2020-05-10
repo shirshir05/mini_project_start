@@ -33,7 +33,7 @@ public class JavaHTTPServer implements Runnable{
     static final String FILE_NOT_FOUND = "404.html";
     static final String METHOD_NOT_SUPPORTED = "not_supported.html";
     // port to listen connection
-    static final int PORT = 8080;
+    static final int PORT = 8008;
 
     // verbose mode
     static final boolean verbose = true;
@@ -48,7 +48,6 @@ public class JavaHTTPServer implements Runnable{
     }
 
     public static void main(String[] args) {
-        System.out.println(Character.isDigit('0'));
         try {
             ServerSocket serverConnect = new ServerSocket(PORT);
             System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
@@ -110,31 +109,38 @@ public class JavaHTTPServer implements Runnable{
             jsonObject = new JSONObject(payload.toString());
             if(METHOD.equals("POST")){
                 actionStatus = handlePostMethod(controllerMethod);
-                String str = "two";
             }
-
             else if(METHOD.equals("GET")){
-
+                actionStatus = handleGetMethod(controllerMethod);
             }
 
             else if(METHOD.equals("REMOVE")){
-
+                actionStatus = handleDeleteMethod(controllerMethod);
             }
 
-            System.out.println(jsonObject.get("User name"));
-            System.out.println(jsonObject.get("Password"));
-            System.out.println(jsonObject.get("Role"));
-            System.out.println(jsonObject.get("Email"));
             System.out.println("Payload data is: " + payload.toString());
 
+//            out.println("HTTP/1.1 200 OK");
+//            out.println("Server: Java HTTP Server from SSaurel : 1.0");
+//            out.println("Date: " + new Date());
+//            //out.println("Content-type: " );
+//            out.println("Access-Control-Allow-Origin: *");
+//            out.println("Content-length: 12" );
+//            out.println(""); // blank line between headers and content, very important !
+//            out.println("Hello world!");
+//            out.flush(); // flush character output stream buffer
+//            connect.close();
+
+            //JSONObject shir = new JSONObject(actionStatus.toString());
+            JSONObject shir = new JSONObject("{message: check}");
             out.println("HTTP/1.1 200 OK");
             out.println("Server: Java HTTP Server from SSaurel : 1.0");
             out.println("Date: " + new Date());
-            //out.println("Content-type: " );
+            out.println("Content-Type: application/json");
             out.println("Access-Control-Allow-Origin: *");
-            out.println("Content-length: 12" );
+            out.println("Content-length: " + shir.toString().length());
             out.println(""); // blank line between headers and content, very important !
-            out.println("Hello world!");
+            out.println(shir);
             out.flush(); // flush character output stream buffer
             connect.close();
 
@@ -143,100 +149,202 @@ public class JavaHTTPServer implements Runnable{
         }
     }
 
+    private ActionStatus handleDeleteMethod(String controllerMethod) {
+        ActionStatus as = null;
+        try {
+            switch (controllerMethod) {
+                case "removesubscription":
+                    as = StartSystem.getLEc().RemoveSubscription
+                            (jsonObject.getString("username"));
+                    break;
+                default:
+                    as = new ActionStatus(false, "check correct delete function name");
+            }
+        }
+        catch (Exception e){
+            as = new ActionStatus(false, e.getMessage());
+        }
+        return as;
+    }
+
+    private ActionStatus handleGetMethod(String controllerMethod) {
+        ActionStatus as = null;
+//        try {
+//            switch (controllerMethod) {
+//                case "watchgameevent":
+//                    as = StartSystem.getGSc().printGameEvents
+//                            (Integer.parseInt(jsonObject.getString("gameid")));
+//                    break;
+//                default:
+//                    as = new ActionStatus(false, "check correct get function name");
+//            }
+//        }
+//        catch (Exception e){
+//            as = new ActionStatus(false, e.getMessage());
+//        }
+        return as;
+    }
+
     private ActionStatus handlePostMethod(String controllerMethod) {
         ActionStatus as = null;
-        switch(controllerMethod)
-        {
-            case "registration":
-                as = StartSystem.getLEc().Registration
-                        (jsonObject.getString("username"),
-                                jsonObject.getString("password"),
-                                jsonObject.getString("role"),
-                                jsonObject.getString("email"));
-                break;
-            case "login":
-                as = StartSystem.getLEc().Login
-                        (jsonObject.getString("username"),
-                                jsonObject.getString("password"));
-                break;
-            case "logout":
-                as = StartSystem.getLEc().Exit
-                        (jsonObject.getString("username"));
-                break;
+        try {
+            switch (controllerMethod) {
+                case "registration":
+                    as = StartSystem.getLEc().Registration
+                            (jsonObject.getString("username"),
+                                    jsonObject.getString("password"),
+                                    jsonObject.getString("role"),
+                                    jsonObject.getString("email"));
+                    break;
+                case "login":
+                    as = StartSystem.getLEc().Login
+                            (jsonObject.getString("username"),
+                                    jsonObject.getString("password"));
+                    break;
+                case "logout":
+                    as = StartSystem.getLEc().Exit
+                            (jsonObject.getString("username"));
+                    break;
 //            case "answercomplaints":
 //                as = StartSystem.getAc().answerCompliant(
 //                (jsonObject.getString("username"),
 //                        jsonObject.getString("password"));
 //                break;
-            case "onschedulingpolicy":
+                case "changestatusforteam":
+                    as = StartSystem.getTc().ChangeStatusTeam
+                            (jsonObject.getString("nameteam"),
+                                    Integer.parseInt(jsonObject.getString("status")));
+                    break;
+                case "onschedulingpolicy":
                     as = StartSystem.getGSc().schedulingGame
                             (jsonObject.getString("nameleague"),
                                     jsonObject.getString("seasonname"),
                                     Integer.parseInt(jsonObject.getString("policy")));
-                break;
-            case "defineleague":
-                as = StartSystem.getGSc().defineLeague
-                        (jsonObject.getString("nameleague"));
-                break;
-            case "defineseason":
+                    break;
+                case "defineleague":
+                    as = StartSystem.getGSc().defineLeague
+                            (jsonObject.getString("nameleague"));
+                    break;
+                case "defineseason":
                     as = StartSystem.getGSc().defineSeasonToLeague
                             (jsonObject.getString("nameleague"),
                                     jsonObject.getString("year"),
                                     Integer.parseInt(jsonObject.getString("win")),
                                     Integer.parseInt(jsonObject.getString("loss")),
                                     Integer.parseInt(jsonObject.getString("equal")));
-                break;
-            case "updatepointpolicy":
+                    break;
+                case "updatepointpolicy":
                     as = StartSystem.getGSc().updatePointsPolicy
                             (jsonObject.getString("nameleague"),
                                     jsonObject.getString("year"),
                                     Integer.parseInt(jsonObject.getString("win")),
                                     Integer.parseInt(jsonObject.getString("loss")),
                                     Integer.parseInt(jsonObject.getString("equal")));
-                break;
-            case "addteamtoleague":
+                    break;
+                case "addteamtoleague":
                     as = StartSystem.getGSc().addTeamToSeasonInLeague
                             (jsonObject.getString("nameteam"),
                                     jsonObject.getString("nameleague"),
                                     jsonObject.getString("year"));
-                break;
-            case "addreferee": case "removereferee":
+                    break;
+                case "addremovereferee":
                     as = StartSystem.getGSc().addOrDeleteRefereeToSystem
                             (jsonObject.getString("usernamereferee"),
                                     jsonObject.getString("password"),
                                     jsonObject.getString("email"),
                                     Integer.parseInt(jsonObject.getString("onlyweb")));
-                break;
+                    break;
 
-            case "setrefereeonleague":
-                as = StartSystem.getGSc().defineRefereeInLeague
-                        (jsonObject.getString("nameleague"),
-                                jsonObject.getString("usernamereferee"),
-                                jsonObject.getString("year"));
-                break;
-//            case "setrefereeonleague":
-//                as = StartSystem.getGSc().defineRefereeInLeague
-//                        (jsonObject.getString("nameleague"),
-//                                jsonObject.getString("usernamereferee"),
-//                                jsonObject.getString("year"));
-//                break;
-            case "changestatusforteam":
-                    as = StartSystem.getTc().ChangeStatusTeam
-                            (jsonObject.getString("nameteam"),
-                                    Integer.parseInt(jsonObject.getString("status")));
-                break;
-            case "addteamfiled":
-                if(jsonObject.getString("onlyweb").equals("1") ){
+                case "setrefereeonleague":
+                    as = StartSystem.getGSc().defineRefereeInLeague
+                            (jsonObject.getString("nameleague"),
+                                    jsonObject.getString("usernamereferee"),
+                                    jsonObject.getString("year"));
+                    break;
+                case "addrole":
+                    as = StartSystem.getLEc().haveRole
+                            (jsonObject.getString("role"));
+                    break;
+                case "createteam":
+                    as = StartSystem.getTc().RequestCreateTeam
+                            (jsonObject.getString("name"),
+                                    jsonObject.getString("field"));
+                    break;
+                case "addremoveplayer":
+                    as = StartSystem.getTc().AddOrRemovePlayer
+                            (jsonObject.getString("nameteam"), jsonObject.getString("nameuserplayer"),
+                                    Integer.parseInt(jsonObject.getString("onlyweb")));
+                    break;
+                case "addremovecoach":
+                    as = StartSystem.getTc().AddOrRemoveCoach
+                            (jsonObject.getString("nameteam"), jsonObject.getString("nameusercoach"),
+                                    Integer.parseInt(jsonObject.getString("onlyweb")));
+                    break;
+                case "addremoveteamowner":
+                    as = StartSystem.getTc().AddOrRemoveTeamOwner
+                            (jsonObject.getString("nameteam"), jsonObject.getString("nameuserteamowner"),
+                                    Integer.parseInt(jsonObject.getString("onlyweb")));
+                    break;
+                case "addremoveteammanager":
+                    as = StartSystem.getTc().AddOrRemoveTeamManager
+                            (jsonObject.getString("nameteam"), jsonObject.getString("nameuserteammanager"),
+                                    Integer.parseInt(jsonObject.getString("onlyweb")));
+                    break;
+                case "addremoveteamfield":
                     as = StartSystem.getTc().AddOrRemoveTeamsAssets
                             (jsonObject.getString("nameteam"), jsonObject.getString("namefiled"),
                                     Integer.parseInt(jsonObject.getString("onlyweb")));
-                }
-                else {
-                    as = new ActionStatus(false, "error......");
-                }
-                break;
+                    break;
+                case "addpermissiontoteammanger":
+                    as = StartSystem.getESUDc().addPermissionToTeamManager
+                            (jsonObject.getString("nameteammanager"), jsonObject.getString("permission"));
+                    break;
+                case "registertogamealert":
+                    as = StartSystem.getAc().fanRegisterToGameAlerts
+                            (Integer.parseInt(jsonObject.getString("gamenumber")));
+                    break;
+                case "registertopagealert":
+                    as = StartSystem.getAc().fanRegisterToPage
+                            (jsonObject.getString("usernametofollow"));
+                    break;
+                case "sendcomplaint":
+                    as = StartSystem.getAc().addComplaint
+                            (jsonObject.getString("complaintdescription"));
+
+                    break;
+//            case "search":
+//                //complete after pull from master
+//                break;
+
+                case "savegame":
+                    as = StartSystem.getGSc().endGame
+                            (Integer.parseInt(jsonObject.getString("gameid")),
+                                    Integer.parseInt(jsonObject.getString("goalhost")),
+                                    Integer.parseInt(jsonObject.getString("goalguest")),
+                                    jsonObject.getString("year"),
+                                    jsonObject.getString("nameleague"));
+                    break;
+                case "createnewevent":
+                    as = StartSystem.getGSc().refereeCreateNewEvent
+                            (Integer.parseInt(jsonObject.getString("gameid")),
+                                    jsonObject.getString("nameteam"),
+                                    jsonObject.getString("usernameplayer"),
+                                    jsonObject.getString("eventtype"));
+                    break;
+//            case "editgameevent":
+//                as = StartSystem.getGSc().refereeEditGameEvent
+//                        (Integer.parseInt(jsonObject.getString("gameid")),
+//                                jsonObject.getString("nameteam"),
+//                                jsonObject.getString("eventtype"),
+//                                jsonObject.getString("usernameplayer    "),
+//                                jsonObject.getString("localdatetime"));
+//                break;
                 default:
-                System.out.println("no match");
+                    as = new ActionStatus(false, "check correct post function name");
+            }
+        }
+        catch (Exception e){
+            as = new ActionStatus(false, e.getMessage());
         }
         return as;
     }
