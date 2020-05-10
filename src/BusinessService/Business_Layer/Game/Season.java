@@ -7,16 +7,15 @@ import java.util.HashSet;
 public class Season {
     protected String season;
     protected HashSet<Referee> list_referee;
-    protected HashSet<Game> list_game;
     protected ScoreTable scoreTable;
     protected HashSet<Team> list_team;
+    protected String league;
     /**
      * season constructor
      * @param year is the season's year
      */
     public Season(String year) {
         list_referee = new HashSet<>();
-        list_game = new HashSet<>();
         list_team = new HashSet<>();
         season = year;
     }
@@ -53,37 +52,6 @@ public class Season {
         return null;
     }
 
-    public Game getGame(int gameId){
-
-        for (Game g : list_game){
-            if (g.getGameId() == gameId){
-                return g;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * This function is adding a game to the League
-     * @param g is the game
-     */
-    public void addGame(Game g){
-        if(g != null){
-
-            list_game.add(g);
-        }
-    }
-
-    /**
-     * This function is deleting a game from the league
-     * @param g is the game
-     */
-    public void deleteGame(Game g){
-        if(g != null && list_game.contains(g)){
-
-            list_game.remove(g);
-        }
-    }
 
     /**
      * This function gets the season's year
@@ -119,5 +87,13 @@ public class Season {
 
     public HashSet<Referee> getListOfReferees() {
         return list_referee;
+    }
+
+    public String getLeague() {
+        return league;
+    }
+
+    public void setLeague(String league) {
+        this.league = league;
     }
 }

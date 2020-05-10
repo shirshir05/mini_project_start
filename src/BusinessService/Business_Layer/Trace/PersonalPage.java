@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Observable;
 
 
-public class PersonalPage extends Observable {
+public class PersonalPage extends Observable implements java.io.Serializable {
 
     protected String name;
     protected HashSet<String> permissionToEdit;

@@ -19,6 +19,11 @@ public class Fan extends Subscription implements Observer{
         list_complaint = new HashSet<>();
     }
 
+    @Override
+    public String getRole() {
+        return "Fan";
+    }
+
 
     /**
      * Add complaint to fan

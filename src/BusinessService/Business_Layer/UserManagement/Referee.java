@@ -8,13 +8,18 @@ import java.util.Observer;
 public class Referee extends Subscription implements Observer {
 
     protected String qualification;
-    protected HashSet<Game> referee_games;
+    protected HashSet<Integer> referee_games;
 
 
     public Referee(String arg_user_name, String arg_password,String email) {
         super(arg_user_name, arg_password,email);
         permissions.add_default_referee_permission();
         referee_games = new HashSet<>();
+    }
+
+    @Override
+    public String getRole() {
+        return "Referee";
     }
 
     //**********************************************get & set ************************************************************//
@@ -31,7 +36,7 @@ public class Referee extends Subscription implements Observer {
      * adds a game to the game-list the referee participates in
      * @param g
      */
-    public void addGame(Game g){referee_games.add(g);}
+    public void addGame(Game g){referee_games.add(g.getGameId());}
 
     /**
      * a to-string function to the list of games of the referee
@@ -39,12 +44,18 @@ public class Referee extends Subscription implements Observer {
      */
     public String gamesListToString(){
         String return_value = "You are participates in the next games: ";
-        for (Game g:referee_games){
-            return_value+=g.getGameId()+", ";
+        for (Integer g:referee_games){
+            return_value += g +", ";
         }
         return return_value.substring(0,return_value.length()-2);
     }
 
+    public void setGamesList(String list){
+        String[] splitS = list.split(", ");
+        for(String g:splitS){
+            referee_games.add(Integer.parseInt(g));
+        }
+    }
 
     /**
      * Add alert to referee

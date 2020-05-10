@@ -439,9 +439,9 @@ public class GameSettingsController {
         }
         else if ((DataManagement.getCurrent() instanceof Referee) && DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.update_event)){
             // check if the referee is a referee of the team
-            if ((game.getHeadReferee()!=null && game.getHeadReferee().getUserName().equals(DataManagement.getCurrent().getUserName()) )||
-                    game.getLinesman1Referee().getUserName().equals(DataManagement.getCurrent().getUserName()) ||
-                    game.getLinesman2Referee().getUserName().equals(DataManagement.getCurrent().getUserName()) ){
+            if ((game.getHeadReferee()!=null && game.getHeadReferee().equals(DataManagement.getCurrent().getUserName()) )||
+                    game.getLinesman1Referee().equals(DataManagement.getCurrent().getUserName()) ||
+                    game.getLinesman2Referee().equals(DataManagement.getCurrent().getUserName()) ){
                 game.updateNewEvent(team_name,player_name,eventType);
                 ac = new ActionStatus(true, "Event successfully updated.");
             }else{

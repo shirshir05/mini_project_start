@@ -16,6 +16,11 @@ public class SystemAdministrator extends Subscription implements Observer{
         permissions.add_default_admin_permission();
     }
 
+    @Override
+    public String getRole() {
+        return "SystemAdministrator";
+    }
+
     /**
      * add alert
      * @param o

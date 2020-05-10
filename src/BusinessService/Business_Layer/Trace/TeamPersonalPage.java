@@ -3,7 +3,7 @@ import BusinessService.Business_Layer.Game.ScoreTable;
 
 import java.util.Date;
 
-public class TeamPersonalPage extends PersonalPage {
+public class TeamPersonalPage extends PersonalPage implements java.io.Serializable{
 
     protected Date yearOfFoundation;
     protected String presidentName;

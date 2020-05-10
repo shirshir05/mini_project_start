@@ -60,12 +60,14 @@ public abstract class SchedulingGame {
      * @param line1Referee notnull
      * @param line2Referee notnull
      */
-     Game createGameAfterChecks(LocalDate date, String field, String host, String guest, Referee headReferee, Referee line1Referee, Referee line2Referee) {
+     Game createGameAfterChecks(String league, String season, LocalDate date, String field, String host, String guest, Referee headReferee, Referee line1Referee, Referee line2Referee) {
         Game g = new Game(field, date, DataManagement.findTeam(host),DataManagement.findTeam(guest));
         g.setLinesman1Referee(line1Referee);
         g.setLinesman2Referee(line2Referee);
         g.setHeadReferee(headReferee);
-        DataManagement.addGame(g);
+         g.setLeague(league);
+         g.setSeason(season);
+         DataManagement.addGame(g);
         return g;
     }
 
