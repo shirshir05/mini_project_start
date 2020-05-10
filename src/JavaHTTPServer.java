@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.StringTokenizer;
 
-// The tutorial can be found just here on the SSaurel's Blog : 
+// The tutorial can be found just here on the SSaurel's Blog :
 // https://www.ssaurel.com/blog/create-a-simple-http-web-server-in-java
 // Each Client Connection will be managed in a dedicated Thread
 public class JavaHTTPServer implements Runnable{
@@ -119,19 +119,29 @@ public class JavaHTTPServer implements Runnable{
                 connect.close();
             }
 
+            ArrayList array=new ArrayList();
+            array.add("D");
+            array.add("A");
+            array.add("L");
+            JSONArray arr = new JSONArray(array);
 
-            //JSONObject shir = new JSONObject(actionStatus.toString());
-//            JSONObject shir = new JSONObject("{message: check}");
-//            out.println("HTTP/1.1 200 OK");
-//            out.println("Server: Java HTTP Server from SSaurel : 1.0");
-//            out.println("Date: " + new Date());
-//            out.println("Content-Type: application/json");
-//            out.println("Access-Control-Allow-Origin: *");
-//            out.println("Content-length: " + shir.toString().length());
-//            out.println(""); // blank line between headers and content, very important !
-//            out.println(shir);
-//            out.flush(); // flush character output stream buffer
-//            connect.close();
+            JSONObject shir = new JSONObject(payload.toString());
+            out.println("HTTP/1.1 200 OK");
+            out.println("Server: Java HTTP Server from SSaurel : 1.0");
+            out.println("Date: " + new Date());
+            //out.println("Content-type: " );
+            out.println("Content-Type: application/json");
+            out.println("Access-Control-Allow-Origin: *");
+            out.println("Content-length: " + shir.toString().length());
+            out.println(""); // blank line between headers and content, very important !
+            //out.println("Hello world!");
+            out.println(shir);
+            for(int i=0;i<arr.length();i++){
+                out.println(arr.getString(i));
+            }
+            //out.println(shir.toString());
+            out.flush(); // flush character output stream buffer
+            connect.close();
 
         } catch (Exception e) {
 
@@ -527,4 +537,6 @@ public class JavaHTTPServer implements Runnable{
             System.out.println("File " + fileRequested + " not found");
         }
     }
+
+
 }
