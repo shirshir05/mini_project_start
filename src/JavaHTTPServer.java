@@ -128,39 +128,37 @@ public class JavaHTTPServer implements Runnable{
 
             System.out.println("Payload data is: " + payload.toString());
 
-//            if(actionStatus.isActionSuccessful()){
-//                out.println("HTTP/1.1 200 OK");
-//                out.println("Server: Java HTTP Server from SSaurel : 1.0");
-//                out.println("Date: " + new Date());
-//                //out.println("Content-type: " );
-//                out.println("Access-Control-Allow-Origin: *");
-//                out.println("Content-length: " + actionStatus.getDescription().length());
-//                out.println(""); // blank line between headers and content, very important !
-//                out.println(actionStatus.getDescription());
-//                out.flush(); // flush character output stream buffer
-//                connect.close();
-//            }
-
-            ArrayList array=new ArrayList();
-            array.add("D");
-            array.add("A");
-            array.add("L");
-            JSONArray arr = new JSONArray(array);
-
-            JSONObject shir = new JSONObject(payload.toString());
-            out.println("HTTP/1.1 200 OK");
-            out.println("Server: Java HTTP Server from SSaurel : 1.0");
-            out.println("Date: " + new Date());
-            //out.println("Content-type: " );
-            out.println("Content-Type: application/json");
-            out.println("Access-Control-Allow-Origin: *");
-            out.println("Content-length: " + arr.toString().length());
-            out.println(""); // blank line between headers and content, very important !
-            //out.println("Hello world!");
-            //out.println(shir);
-            for(int i=0;i<arr.length();i++){
-                out.println(arr.getString(i));
+            if(METHOD.equals("post")){
+                if(actionStatus.isActionSuccessful()) {
+                    out.println("HTTP/1.1 200 OK");
+                }
+                else {
+                    out.println("HTTP/1.1 202 Accepted");
+                }
+                sendStringData();
             }
+
+            connect.close();
+//            ArrayList array=new ArrayList();
+//            array.add("D");
+//            array.add("A");
+//            array.add("L");
+//            JSONArray arr = new JSONArray(array);
+//
+//            JSONObject shir = new JSONObject(payload.toString());
+//            out.println("HTTP/1.1 200 OK");
+//            out.println("Server: Java HTTP Server from SSaurel : 1.0");
+//            out.println("Date: " + new Date());
+//            //out.println("Content-type: " );
+//            out.println("Content-Type: application/json");
+//            out.println("Access-Control-Allow-Origin: *");
+//            out.println("Content-length: " + arr.toString().length());
+//            out.println(""); // blank line between headers and content, very important !
+//            //out.println("Hello world!");
+//            //out.println(shir);
+//            for(int i=0;i<arr.length();i++){
+//                out.println(arr.getString(i));
+//            }
 
 //            ArrayList array=new ArrayList();
 //            array.add("D");
@@ -211,7 +209,7 @@ public class JavaHTTPServer implements Runnable{
                     if(as.isActionSuccessful()) {
                         String[] arrayOfSearches = as.getDescription().split("\n");
                         JSONArray jsonArray = new JSONArray(arrayOfSearches);
-                        sendData(jsonArray);
+                        sendJsonData(jsonArray);
                     }
                     break;
                 case "isa":
@@ -233,7 +231,7 @@ public class JavaHTTPServer implements Runnable{
         return as;
     }
 
-    private void sendData(JSONArray jsonArray) {
+    private void sendJsonData(JSONArray jsonArray) {
         out.println("HTTP/1.1 200 OK");
         out.println("Server: Java HTTP Server from SSaurel : 1.0");
         out.println("Date: " + new Date());
@@ -246,6 +244,16 @@ public class JavaHTTPServer implements Runnable{
         }
     }
 
+    private void sendStringData() {
+        out.println("Server: Java HTTP Server from SSaurel : 1.0");
+        out.println("Date: " + new Date());
+        //out.println("Content-type: " );
+        out.println("Access-Control-Allow-Origin: *");
+        out.println("Content-length: " + actionStatus.getDescription().length());
+        out.println(""); // blank line between headers and content, very important !
+        out.println(actionStatus.getDescription());
+        out.flush(); // flush character output stream buffer
+    }
     private ActionStatus handlePostMethod(String controllerMethod) {
         ActionStatus as = null;
         try {
