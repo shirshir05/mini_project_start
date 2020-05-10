@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.StringTokenizer;
 
@@ -29,6 +31,7 @@ public class JavaHTTPServer implements Runnable{
     private ActionStatus actionStatus;
     private JSONObject jsonObject;
     private String[] headerSplit;
+    private PrintWriter out;
 
     public JavaHTTPServer(Socket c) {
         connect = c;
@@ -36,32 +39,39 @@ public class JavaHTTPServer implements Runnable{
 
     public static void main(String[] args) {
 
-        //Get /api/approveteam/teamname HTTP/1.1
-        String s = "Get /api/approveteam/teamname HTTP/1.1";
-        String[] array = s.split("[\\s/]+");
-        System.out.println(Arrays.toString(array));
+//        String m = "ronen" + "\n" + "elad" + "\n" + "nirit" + "\n" + "barak" + "\n" + "matan" + "\n";
+//        String[] array = m.split("\n");
+//        System.out.println(Arrays.toString(array));
+//        ArrayList arrayList=new ArrayList();
+//        for (int i = 0; i < array.length; i++){
+//            arrayList.add(array[i]);
+//        }
+//        JSONArray jsonArray = new JSONArray(array);
+//        System.out.println(jsonArray);
+//        System.out.println(jsonArray.get(0));
+//        System.out.println(jsonArray.getJSONObject(0));
         //System.out.println(StartSystem.getSc().showSearchHistory());
 
-//        try {
-//            ServerSocket serverConnect = new ServerSocket(PORT);
-//            System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
-//
-//            // we listen until user halts server execution
-//            while (true) {
-//                JavaHTTPServer myServer = new JavaHTTPServer(serverConnect.accept());
-//
-//                if (verbose) {
-//                    System.out.println("Connecton opened. (" + new Date() + ")");
-//                }
-//
-//                // create dedicated thread to manage the client connection
-//                Thread thread = new Thread(myServer);
-//                thread.start();
-//            }
-//
-//        } catch (IOException e) {
-//            System.err.println("Server Connection error : " + e.getMessage());
-//        }
+        try {
+            ServerSocket serverConnect = new ServerSocket(PORT);
+            System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
+
+            // we listen until user halts server execution
+            while (true) {
+                JavaHTTPServer myServer = new JavaHTTPServer(serverConnect.accept());
+
+                if (verbose) {
+                    System.out.println("Connecton opened. (" + new Date() + ")");
+                }
+
+                // create dedicated thread to manage the client connection
+                Thread thread = new Thread(myServer);
+                thread.start();
+            }
+
+        } catch (IOException e) {
+            System.err.println("Server Connection error : " + e.getMessage());
+        }
     }
 
     @Override
@@ -71,7 +81,6 @@ public class JavaHTTPServer implements Runnable{
         //Get /api/approveteam/teamname HTTP/1.1
         // we manage our particular client connection
         BufferedReader in = null;
-        PrintWriter out = null;
         BufferedOutputStream dataOut = null;
         String fileRequested = null;
         try {
@@ -119,18 +128,18 @@ public class JavaHTTPServer implements Runnable{
 
             System.out.println("Payload data is: " + payload.toString());
 
-            if(actionStatus.isActionSuccessful()){
-                out.println("HTTP/1.1 200 OK");
-                out.println("Server: Java HTTP Server from SSaurel : 1.0");
-                out.println("Date: " + new Date());
-                //out.println("Content-type: " );
-                out.println("Access-Control-Allow-Origin: *");
-                out.println("Content-length: " + actionStatus.getDescription().length());
-                out.println(""); // blank line between headers and content, very important !
-                out.println(actionStatus.getDescription());
-                out.flush(); // flush character output stream buffer
-                connect.close();
-            }
+//            if(actionStatus.isActionSuccessful()){
+//                out.println("HTTP/1.1 200 OK");
+//                out.println("Server: Java HTTP Server from SSaurel : 1.0");
+//                out.println("Date: " + new Date());
+//                //out.println("Content-type: " );
+//                out.println("Access-Control-Allow-Origin: *");
+//                out.println("Content-length: " + actionStatus.getDescription().length());
+//                out.println(""); // blank line between headers and content, very important !
+//                out.println(actionStatus.getDescription());
+//                out.flush(); // flush character output stream buffer
+//                connect.close();
+//            }
 
             ArrayList array=new ArrayList();
             array.add("D");
@@ -145,13 +154,23 @@ public class JavaHTTPServer implements Runnable{
             //out.println("Content-type: " );
             out.println("Content-Type: application/json");
             out.println("Access-Control-Allow-Origin: *");
-            out.println("Content-length: " + shir.toString().length());
+            out.println("Content-length: " + arr.toString().length());
             out.println(""); // blank line between headers and content, very important !
             //out.println("Hello world!");
-            out.println(shir);
+            //out.println(shir);
             for(int i=0;i<arr.length();i++){
                 out.println(arr.getString(i));
             }
+
+//            ArrayList array=new ArrayList();
+//            array.add("D");
+//            array.add("A");
+//            array.add("L");
+//            JSONArray arr = new JSONArray(array); 
+//            out.println("Content-length: " + arr.toString().length()); 
+//            for(int i=0;i<arr.length();i++){
+//                out.println(arr.getString(i));
+//            }
             //out.println(shir.toString());
             out.flush(); // flush character output stream buffer
             connect.close();
@@ -187,17 +206,44 @@ public class JavaHTTPServer implements Runnable{
                     as = StartSystem.getTc().ApproveCreateTeamAlert
                             (jsonObject.getString(headerSplit[3]));
                     break;
-                case "watchgameevent":
-                    StartSystem.getSc().showSearchHistory();
+                case "watchsearchhistory":
+                    as = StartSystem.getSc().showSearchHistory();
+                    if(as.isActionSuccessful()) {
+                        String[] arrayOfSearches = as.getDescription().split("\n");
+                        JSONArray jsonArray = new JSONArray(arrayOfSearches);
+                        sendData(jsonArray);
+                    }
                     break;
-                default:
-                    as = new ActionStatus(false, "check correct get function name");
+                case "isa":
+                    as = StartSystem.getLEc().hasRole(headerSplit[3]);
+                    break;
+//                case "watchgameevent":
+//                    as = StartSystem.getGSc().printGameEvents(Integer.parseInt(headerSplit[3]));
+//                    break;
+//                case "isa":
+//                    as = StartSystem.getGSc().displayScoreTable(headerSplit[3], headerSplit[4]);
+//                    break;
+//                default:
+//                    as = new ActionStatus(false, "check correct get function name");
             }
         }
         catch (Exception e){
             as = new ActionStatus(false, e.getMessage());
         }
         return as;
+    }
+
+    private void sendData(JSONArray jsonArray) {
+        out.println("HTTP/1.1 200 OK");
+        out.println("Server: Java HTTP Server from SSaurel : 1.0");
+        out.println("Date: " + new Date());
+        out.println("Content-Type: application/json");
+        out.println("Access-Control-Allow-Origin: *");
+        out.println("Content-length: " + jsonArray.toString().length());
+        out.println(""); // blank line between headers and content, very important !
+        for(int i=0;i<jsonArray.length();i++){
+            out.println(jsonArray.getString(i));
+        }
     }
 
     private ActionStatus handlePostMethod(String controllerMethod) {
@@ -277,8 +323,8 @@ public class JavaHTTPServer implements Runnable{
                                     jsonObject.getString("year"));
                     break;
                 case "addrole":
-                    as = StartSystem.getLEc().haveRole
-                            (jsonObject.getString("role"));
+                    as = StartSystem.getLEc().addRoleToUser
+                            (jsonObject.getString("role"), jsonObject.getString("password"));
                     break;
                 case "createteam":
                     as = StartSystem.getTc().RequestCreateTeam
