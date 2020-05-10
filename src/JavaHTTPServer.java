@@ -33,7 +33,7 @@ public class JavaHTTPServer implements Runnable{
     static final String FILE_NOT_FOUND = "404.html";
     static final String METHOD_NOT_SUPPORTED = "not_supported.html";
     // port to listen connection
-    static final int PORT = 8080;
+    static final int PORT = 8008;
 
     // verbose mode
     static final boolean verbose = true;
@@ -111,38 +111,41 @@ public class JavaHTTPServer implements Runnable{
                 actionStatus = handlePostMethod(controllerMethod);
             }
             else if(METHOD.equals("GET")){
-                actionStatus = handleGetMethod(controllerMethod);
+                //actionStatus = handleGetMethod(controllerMethod);
             }
 
-//            else if(METHOD.equals("REMOVE")){
-//                actionStatus = handleDeleteMethod(controllerMethod);
-//            }
+            else if(METHOD.equals("REMOVE")){
+                //actionStatus = handleDeleteMethod(controllerMethod);
+            }
 
             System.out.println("Payload data is: " + payload.toString());
 
+            if(actionStatus.isActionSuccessful()){
+                out.println("HTTP/1.1 200 OK");
+                out.println("Server: Java HTTP Server from SSaurel : 1.0");
+                out.println("Date: " + new Date());
+                //out.println("Content-type: " );
+                out.println("Access-Control-Allow-Origin: *");
+                out.println("Content-length: " + actionStatus.getDescription().length());
+                out.println(""); // blank line between headers and content, very important !
+                out.println(actionStatus.getDescription());
+                out.flush(); // flush character output stream buffer
+                connect.close();
+            }
+
+
+            //JSONObject shir = new JSONObject(actionStatus.toString());
+//            JSONObject shir = new JSONObject("{message: check}");
 //            out.println("HTTP/1.1 200 OK");
 //            out.println("Server: Java HTTP Server from SSaurel : 1.0");
 //            out.println("Date: " + new Date());
-//            //out.println("Content-type: " );
+//            out.println("Content-Type: application/json");
 //            out.println("Access-Control-Allow-Origin: *");
-//            out.println("Content-length: 12" );
+//            out.println("Content-length: " + shir.toString().length());
 //            out.println(""); // blank line between headers and content, very important !
-//            out.println("Hello world!");
+//            out.println(shir);
 //            out.flush(); // flush character output stream buffer
 //            connect.close();
-
-            //JSONObject shir = new JSONObject(actionStatus.toString());
-            JSONObject shir = new JSONObject("{message: check}");
-            out.println("HTTP/1.1 200 OK");
-            out.println("Server: Java HTTP Server from SSaurel : 1.0");
-            out.println("Date: " + new Date());
-            out.println("Content-Type: application/json");
-            out.println("Access-Control-Allow-Origin: *");
-            out.println("Content-length: " + shir.toString().length());
-            out.println(""); // blank line between headers and content, very important !
-            out.println(shir);
-            out.flush(); // flush character output stream buffer
-            connect.close();
 
         } catch (Exception e) {
 
