@@ -47,7 +47,7 @@ public class GuestUserMenu implements UserMenu {
                 return new ActionStatus(true, "Login with new user");
             }
             else if(input ==3 ) {
-                LEC.Exit("Guset", "123456");
+                LEC.Exit("Guset");
                 ExitOrChangeUser = true;
                 break;
             }
@@ -92,7 +92,7 @@ public class GuestUserMenu implements UserMenu {
             return new ActionStatus(true,output);
         }
         else if(input == 4) {
-            StartSystem.LEc.Exit("Guset", "123456");
+            StartSystem.LEc.Exit("Guset");
             return new ActionStatus(true,output + " Exit");
         }
         else{
