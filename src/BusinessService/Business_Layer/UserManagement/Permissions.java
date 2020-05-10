@@ -5,7 +5,7 @@ import BusinessService.Enum.PermissionAction;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class Permissions {
+public class Permissions implements java.io.Serializable {
 
     private HashSet<PermissionAction> list_Permissions;
 

@@ -21,6 +21,13 @@ public class sqlConnection implements interfaceDB {
         return ans;
     }
 
+    public int insertBlob(String table,String key, byte[] value){
+        String query = "INSERT INTO "+ table +" ([key],[value]) VALUES ('"+key+"', BulkColumn FROM OPENROWSET (Bulk '"+ value +"', SINGLE_BLOB) AS varBinaryData)";
+        int ans = execute(query);
+        return ans;
+    }
+
+
     @Override
     public int update(String table, String[] key, String column, String value) {
         int i = 1;
@@ -190,6 +197,7 @@ public class sqlConnection implements interfaceDB {
         keys.put("Season",new String[]{"leagueName","seasonYear"});
         keys.put("RefereeInSeason",new String[]{"leagueName","seasonYear","refereeName"});
         keys.put("UsersData",new String[]{"userName","dataType"});
+        keys.put("Blobs",new String[]{"key"});
         connect();
 
 
@@ -204,6 +212,10 @@ public class sqlConnection implements interfaceDB {
     public ActionStatus closeConnection(){
         databaseManager.closeConnection();
         return new ActionStatus(true, "DB closed");
+    }
+
+    public Object getConn(){
+        return this.databaseManager.conn;
     }
 
 }

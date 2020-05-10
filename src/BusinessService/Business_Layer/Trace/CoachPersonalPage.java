@@ -2,7 +2,7 @@ package BusinessService.Business_Layer.Trace;
 
 import java.util.Date;
 
-public class CoachPersonalPage extends PersonalPage {
+public class CoachPersonalPage extends PersonalPage implements java.io.Serializable{
 
     private Date dateOfBirth;
     private String countryOfBirth;

@@ -2,7 +2,7 @@ package BusinessService.Business_Layer.UserManagement;
 
 import java.util.Observable;
 
-public class Complaint extends Observable {
+public class Complaint extends Observable implements java.io.Serializable{
 
 
     private String description;

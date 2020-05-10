@@ -14,8 +14,8 @@ import java.time.temporal.ChronoUnit;
  */
 public class Event {
     private EventType eventType;
-    private UnifiedSubscription player;
-    private Team team;
+    private String player;
+    private String team;
     private LocalDateTime eventTime;
 
     /**
@@ -23,10 +23,10 @@ public class Event {
      * time==null => set the current time
      */
     public Event(Team arg_team, EventType arg_event_type, UnifiedSubscription arg_player, LocalDateTime time){
-        team=arg_team;
+        team=arg_team.getName();
         eventType =arg_event_type;
         if (arg_team.getPlayer(arg_player.getUserName())!=null){
-            player = arg_player;
+            player = arg_player.getName();
         }
         else{
             player=null;
@@ -42,12 +42,19 @@ public class Event {
         }
     }
 
+    public Event(String arg_team, EventType arg_event_type, String arg_player, LocalDateTime time) {
+        team = arg_team;
+        eventType = arg_event_type;
+        player = arg_player;
+        eventTime = time;
+    }
+
     public ActionStatus editEvent(LocalDateTime endOfGameTime, Team arg_team, EventType arg_event_type, UnifiedSubscription arg_player, LocalDateTime time){
         ActionStatus ac = null;
         if(ChronoUnit.MINUTES.between(endOfGameTime,LocalDateTime.now())<=300){
-            this.team = arg_team;
+            this.team = arg_team.getName();
             this.eventType=arg_event_type;
-            this.player = arg_player;
+            this.player = arg_player.getName();
             if (time==null){
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
                 eventTime = LocalDateTime.now();
@@ -64,18 +71,18 @@ public class Event {
     }
 
     public String eventToString(){
-        return eventType +" for player:"+player.getUserName()+" from team:"+ team.getName()+ " time:"+ eventTime.toString();
+        return eventType +" for player:"+player+" from team:"+ team+ " time:"+ eventTime.toString();
     }
 
     public EventType getEventType() {
         return eventType;
     }
 
-    public UnifiedSubscription getPlayer() {
+    public String getPlayer() {
         return player;
     }
 
-    public Team getTeam() {
+    public String getTeam() {
         return team;
     }
 
@@ -85,11 +92,11 @@ public class Event {
     }
 
     public void setPlayer(UnifiedSubscription player) {
-        this.player = player;
+        this.player = player.getName();
     }
 
     public void setTeam(Team team) {
-        this.team = team;
+        this.team = team.getName();
     }
 
     public LocalDateTime getEventTime() {

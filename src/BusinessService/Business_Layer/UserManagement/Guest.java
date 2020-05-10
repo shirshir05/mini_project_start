@@ -7,4 +7,9 @@ public class Guest extends Subscription {
 
     }
 
+    @Override
+    public String getRole() {
+        return "Guest";
+    }
+
 }
