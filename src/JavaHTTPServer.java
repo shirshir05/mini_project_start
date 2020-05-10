@@ -33,7 +33,7 @@ public class JavaHTTPServer implements Runnable{
     static final String FILE_NOT_FOUND = "404.html";
     static final String METHOD_NOT_SUPPORTED = "not_supported.html";
     // port to listen connection
-    static final int PORT = 8008;
+    static final int PORT = 8080;
 
     // verbose mode
     static final boolean verbose = true;
@@ -114,9 +114,9 @@ public class JavaHTTPServer implements Runnable{
                 actionStatus = handleGetMethod(controllerMethod);
             }
 
-            else if(METHOD.equals("REMOVE")){
-                actionStatus = handleDeleteMethod(controllerMethod);
-            }
+//            else if(METHOD.equals("REMOVE")){
+//                actionStatus = handleDeleteMethod(controllerMethod);
+//            }
 
             System.out.println("Payload data is: " + payload.toString());
 
