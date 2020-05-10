@@ -255,7 +255,7 @@ public class JavaHTTPServer implements Runnable{
                             (jsonObject.getString("usernamereferee"),
                                     jsonObject.getString("password"),
                                     jsonObject.getString("email"),
-                                    Integer.parseInt(jsonObject.getString("onlyweb")));
+                                    Integer.parseInt(jsonObject.getString("addremove")));
                     break;
 
                 case "setrefereeonleague":
@@ -276,27 +276,27 @@ public class JavaHTTPServer implements Runnable{
                 case "addremoveplayer":
                     as = StartSystem.getTc().AddOrRemovePlayer
                             (jsonObject.getString("nameteam"), jsonObject.getString("nameuserplayer"),
-                                    Integer.parseInt(jsonObject.getString("onlyweb")));
+                                    Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addremovecoach":
                     as = StartSystem.getTc().AddOrRemoveCoach
                             (jsonObject.getString("nameteam"), jsonObject.getString("nameusercoach"),
-                                    Integer.parseInt(jsonObject.getString("onlyweb")));
+                                    Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addremoveteamowner":
                     as = StartSystem.getTc().AddOrRemoveTeamOwner
                             (jsonObject.getString("nameteam"), jsonObject.getString("nameuserteamowner"),
-                                    Integer.parseInt(jsonObject.getString("onlyweb")));
+                                    Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addremoveteammanager":
                     as = StartSystem.getTc().AddOrRemoveTeamManager
                             (jsonObject.getString("nameteam"), jsonObject.getString("nameuserteammanager"),
-                                    Integer.parseInt(jsonObject.getString("onlyweb")));
+                                    Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addremoveteamfield":
                     as = StartSystem.getTc().AddOrRemoveTeamsAssets
                             (jsonObject.getString("nameteam"), jsonObject.getString("namefiled"),
-                                    Integer.parseInt(jsonObject.getString("onlyweb")));
+                                    Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addpermissiontoteammanger":
                     as = StartSystem.getESUDc().addPermissionToTeamManager
