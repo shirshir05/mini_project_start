@@ -1,6 +1,6 @@
 package BusinessService.Business_Layer.Trace;
 
-public class FootballTeamStatistic {
+public class FootballTeamStatistic implements java.io.Serializable{
 
     private int matchesPlayed;
     private int wins;

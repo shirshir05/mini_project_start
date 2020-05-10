@@ -7,7 +7,7 @@ import BusinessService.Enum.ActionStatus;
  * The budget is initialized to be zero until updated to be otherwise
  */
 
-public class UnionBudget implements IBudget {
+public class UnionBudget implements IBudget, java.io.Serializable {
 
     //region Members
     /**

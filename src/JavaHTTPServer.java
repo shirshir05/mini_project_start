@@ -1,26 +1,12 @@
 import BusinessService.Enum.ActionStatus;
 import Presentation_Layer.StartSystem;
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
-import org.w3c.dom.ls.LSOutput;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Date;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 
 // The tutorial can be found just here on the SSaurel's Blog : 

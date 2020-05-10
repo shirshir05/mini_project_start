@@ -50,24 +50,6 @@ public class SeasonTest {
     }
 
     /**
-     * Test - S4
-     */
-    @Test
-    public void testAddGame() {
-        String year = "2000";
-        season = new Season(year);
-        Game game = new Game("ad", LocalDate.of(2000, 11, 11), new Team("vf", "gdf"), new Team("fsdf", "sdfdsf"));
-        int id = game.getGameId();
-
-        season.addGame(game);
-        assertEquals(game, season.getGame(id));
-
-        season.addGame(null);
-
-        assertEquals(1, season.list_game.size());
-    }
-
-    /**
      * Test - S5
      */
     @Test
@@ -87,44 +69,7 @@ public class SeasonTest {
         assertEquals(null, season.getReferee("a"));
     }
 
-    /**
-     * Test - S6
-     */
-    @Test
-    public void testDeleteGame() {
-        String year = "2000";
-        season = new Season(year);
-        Game game1 = new Game("ad", LocalDate.of(2000, 11, 11), new Team("vf", "gdf"), new Team("fsdf", "sdfdsf"));
-        Game game2 = new Game("adfd", LocalDate.of(2008, 10, 11), new Team("hhf", "gddfgf"), new Team("hh", "sdfdsf"));
 
-        int id1 = game1.getGameId();
-        int id2 = game2.getGameId();
-
-        season.addGame(game1);
-        assertEquals(game1, season.getGame(id1));
-
-        season.deleteGame(game2);
-        assertEquals(game1, season.getGame(id1));
-
-        season.deleteGame(game1);
-        assertEquals(null, season.getGame(id1));
-    }
-
-    /**
-     * Test - S7
-     */
-    @Test
-    public void testGetGame() {
-
-        String year = "2000";
-        season = new Season(year);
-        Game game = new Game("ad", LocalDate.of(2000, 11, 11), new Team("vf", "gdf"), new Team("fsdf", "sdfdsf"));
-        int id = game.getGameId();
-
-        season.addGame(game);
-        assertEquals(game, season.getGame(id));
-
-    }
 
     /**
      * Test - S8

@@ -28,6 +28,8 @@ public abstract class Subscription {
 
     //**********************************************get & set ************************************************************//
 
+    public abstract String getRole();
+
     public String getEmail() {
         return email;
     }
@@ -120,6 +122,7 @@ public abstract class Subscription {
     public HashSet<String> getAlerts(){
         return this.alerts;
     }
+
 
 
 

@@ -10,6 +10,11 @@ public class UnionRepresentative extends Subscription implements Observer {
         permissions.add_default_union_permission();
     }
 
+    @Override
+    public String getRole() {
+        return "UnionRepresentative";
+    }
+
     //**********************************************function************************************************************//
     @Override
     public void update(Observable o, Object arg) {
