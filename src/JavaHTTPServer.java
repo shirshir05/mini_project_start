@@ -42,38 +42,47 @@ public class JavaHTTPServer implements Runnable{
     private Socket connect;
     private ActionStatus actionStatus;
     private JSONObject jsonObject;
+    private String[] headerSplit;
 
     public JavaHTTPServer(Socket c) {
         connect = c;
     }
 
     public static void main(String[] args) {
-        try {
-            ServerSocket serverConnect = new ServerSocket(PORT);
-            System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
 
-            // we listen until user halts server execution
-            while (true) {
-                JavaHTTPServer myServer = new JavaHTTPServer(serverConnect.accept());
+        //Get /api/approveteam/teamname HTTP/1.1
+        String s = "Get /api/approveteam/teamname HTTP/1.1";
+        String[] array = s.split("[\\s/]+");
+        System.out.println(Arrays.toString(array));
+        //System.out.println(StartSystem.getSc().showSearchHistory());
 
-                if (verbose) {
-                    System.out.println("Connecton opened. (" + new Date() + ")");
-                }
-
-                // create dedicated thread to manage the client connection
-                Thread thread = new Thread(myServer);
-                thread.start();
-            }
-
-        } catch (IOException e) {
-            System.err.println("Server Connection error : " + e.getMessage());
-        }
+//        try {
+//            ServerSocket serverConnect = new ServerSocket(PORT);
+//            System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
+//
+//            // we listen until user halts server execution
+//            while (true) {
+//                JavaHTTPServer myServer = new JavaHTTPServer(serverConnect.accept());
+//
+//                if (verbose) {
+//                    System.out.println("Connecton opened. (" + new Date() + ")");
+//                }
+//
+//                // create dedicated thread to manage the client connection
+//                Thread thread = new Thread(myServer);
+//                thread.start();
+//            }
+//
+//        } catch (IOException e) {
+//            System.err.println("Server Connection error : " + e.getMessage());
+//        }
     }
 
     @Override
     public void run() {
         //POST /api/register HTTP/1.1
         //OPTIONS /api/login HTTP/1.1
+        //Get /api/approveteam/teamname HTTP/1.1
         // we manage our particular client connection
         BufferedReader in = null;
         PrintWriter out = null;
@@ -83,6 +92,7 @@ public class JavaHTTPServer implements Runnable{
             // we read characters from the client via input stream on the socket
             in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
             out = new PrintWriter(connect.getOutputStream());
+            // s.split("[\\s/]+");
             String headerLine ;
             StringTokenizer parse;
             String controllerMethod;
@@ -92,10 +102,13 @@ public class JavaHTTPServer implements Runnable{
 
             //code to read and print headers
             headerLine = in.readLine();
+            headerSplit = headerLine.split("[\\s/]+");
             System.out.println(headerLine);
-            parse = new StringTokenizer(headerLine);
-            METHOD = parse.nextToken();
-            controllerMethod = headerLine.substring(headerLine.indexOf("api") + 4, headerLine.lastIndexOf(" "));
+            //parse = new StringTokenizer(headerLine);
+            //METHOD = parse.nextToken();
+            METHOD = headerSplit[0];
+            controllerMethod = headerSplit[2];
+            //controllerMethod = headerLine.substring(headerLine.indexOf("api") + 4, headerLine.lastIndexOf(" "));
             System.out.println("controllerMethod is: " + controllerMethod);
             System.out.println("METHOD is: " + METHOD);
             while ((headerLine = in.readLine()).length() != 0) {
@@ -111,7 +124,7 @@ public class JavaHTTPServer implements Runnable{
                 actionStatus = handlePostMethod(controllerMethod);
             }
             else if(METHOD.equals("GET")){
-                //actionStatus = handleGetMethod(controllerMethod);
+                actionStatus = handleGetMethod(controllerMethod);
             }
 
             else if(METHOD.equals("REMOVE")){
@@ -172,19 +185,22 @@ public class JavaHTTPServer implements Runnable{
 
     private ActionStatus handleGetMethod(String controllerMethod) {
         ActionStatus as = null;
-//        try {
-//            switch (controllerMethod) {
-//                case "watchgameevent":
-//                    as = StartSystem.getGSc().printGameEvents
-//                            (Integer.parseInt(jsonObject.getString("gameid")));
-//                    break;
-//                default:
-//                    as = new ActionStatus(false, "check correct get function name");
-//            }
-//        }
-//        catch (Exception e){
-//            as = new ActionStatus(false, e.getMessage());
-//        }
+        try {
+            switch (controllerMethod) {
+                case "approveteam":
+                    as = StartSystem.getTc().ApproveCreateTeamAlert
+                            (jsonObject.getString(headerSplit[3]));
+                    break;
+                case "watchgameevent":
+                    StartSystem.getSc().showSearchHistory();
+                    break;
+                default:
+                    as = new ActionStatus(false, "check correct get function name");
+            }
+        }
+        catch (Exception e){
+            as = new ActionStatus(false, e.getMessage());
+        }
         return as;
     }
 
