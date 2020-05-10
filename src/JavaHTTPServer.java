@@ -76,10 +76,7 @@ public class JavaHTTPServer implements Runnable{
 
     @Override
     public void run() {
-        //POST /api/register HTTP/1.1
-        //OPTIONS /api/login HTTP/1.1
-        //Get /api/approveteam/teamname HTTP/1.1
-        // we manage our particular client connection
+
         BufferedReader in = null;
         BufferedOutputStream dataOut = null;
         String fileRequested = null;
@@ -87,7 +84,6 @@ public class JavaHTTPServer implements Runnable{
             // we read characters from the client via input stream on the socket
             in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
             out = new PrintWriter(connect.getOutputStream());
-            // s.split("[\\s/]+");
             String headerLine ;
             StringTokenizer parse;
             String controllerMethod;
@@ -109,26 +105,14 @@ public class JavaHTTPServer implements Runnable{
             while ((headerLine = in.readLine()).length() != 0) {
                 System.out.println(headerLine);
             }
-            StringBuilder payload = new StringBuilder();
-            while (in.ready()) {
-                payload.append((char) in.read());
-            }
-            System.out.println("payload is: " + payload);
-            jsonObject = new JSONObject(payload.toString());
             if(METHOD.equals("POST")){
+                StringBuilder payload = new StringBuilder();
+                while (in.ready()) {
+                    payload.append((char) in.read());
+                }
+                System.out.println("payload is: " + payload);
+                jsonObject = new JSONObject(payload.toString());
                 actionStatus = handlePostMethod(controllerMethod);
-            }
-            else if(METHOD.equals("GET")){
-                actionStatus = handleGetMethod(controllerMethod);
-            }
-
-            else if(METHOD.equals("REMOVE")){
-                //actionStatus = handleDeleteMethod(controllerMethod);
-            }
-
-            System.out.println("Payload data is: " + payload.toString());
-
-            if(METHOD.equals("post")){
                 if(actionStatus.isActionSuccessful()) {
                     out.println("HTTP/1.1 200 OK");
                 }
@@ -137,42 +121,14 @@ public class JavaHTTPServer implements Runnable{
                 }
                 sendStringData();
             }
-
-            connect.close();
-//            ArrayList array=new ArrayList();
-//            array.add("D");
-//            array.add("A");
-//            array.add("L");
-//            JSONArray arr = new JSONArray(array);
-//
-//            JSONObject shir = new JSONObject(payload.toString());
-//            out.println("HTTP/1.1 200 OK");
-//            out.println("Server: Java HTTP Server from SSaurel : 1.0");
-//            out.println("Date: " + new Date());
-//            //out.println("Content-type: " );
-//            out.println("Content-Type: application/json");
-//            out.println("Access-Control-Allow-Origin: *");
-//            out.println("Content-length: " + arr.toString().length());
-//            out.println(""); // blank line between headers and content, very important !
-//            //out.println("Hello world!");
-//            //out.println(shir);
-//            for(int i=0;i<arr.length();i++){
-//                out.println(arr.getString(i));
-//            }
-
-//            ArrayList array=new ArrayList();
-//            array.add("D");
-//            array.add("A");
-//            array.add("L");
-//            JSONArray arr = new JSONArray(array); 
-//            out.println("Content-length: " + arr.toString().length()); 
-//            for(int i=0;i<arr.length();i++){
-//                out.println(arr.getString(i));
-//            }
-            //out.println(shir.toString());
+            else if(METHOD.equals("GET")){
+                actionStatus = handleGetMethod(controllerMethod);
+            }
+            else if(METHOD.equals("DELETE")){
+                //actionStatus = handleDeleteMethod(controllerMethod);
+            }
             out.flush(); // flush character output stream buffer
             connect.close();
-
         } catch (Exception e) {
 
         }
@@ -218,11 +174,11 @@ public class JavaHTTPServer implements Runnable{
 //                case "watchgameevent":
 //                    as = StartSystem.getGSc().printGameEvents(Integer.parseInt(headerSplit[3]));
 //                    break;
-//                case "isa":
-//                    as = StartSystem.getGSc().displayScoreTable(headerSplit[3], headerSplit[4]);
-//                    break;
-//                default:
-//                    as = new ActionStatus(false, "check correct get function name");
+                case "watchscoretable":
+                    as = StartSystem.getGSc().displayScoreTable(headerSplit[3], headerSplit[4]);
+                    break;
+                default:
+                    as = new ActionStatus(false, "check correct get function name");
             }
         }
         catch (Exception e){
@@ -453,115 +409,6 @@ public class JavaHTTPServer implements Runnable{
         }
         return albums;
     }
-
-
-//            // we read characters from the client via input stream on the socket
-//            in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
-//            // we get character output stream to client (for headers)
-//            out = new PrintWriter(connect.getOutputStream());
-//            // get binary output stream to client (for requested data)
-//            dataOut = new BufferedOutputStream(connect.getOutputStream());
-//
-//            // get first line of the request from the client
-//            String input = in.readLine();
-//            System.out.println(in.readLine());
-//            // we parse the request with a string tokenizer
-//            StringTokenizer parse = new StringTokenizer(input);
-//            String method = parse.nextToken().toUpperCase(); // we get the HTTP method of the client
-//            // we get file requested
-//            fileRequested = parse.nextToken().toLowerCase();
-//
-//            // we support only GET and HEAD methods, we check
-//            if (!method.equals("GET")  &&  !method.equals("HEAD") &&  !method.equals("OPTIONS")) {
-//                if (verbose) {
-//                    System.out.println("501 Not Implemented : " + method + " method.");
-//                }
-//
-//                // we return the not supported file to the client
-//                File file = new File(WEB_ROOT, METHOD_NOT_SUPPORTED);
-//                int fileLength = (int) file.length();
-//                String contentMimeType = "text/html";
-//                //read content to return to client
-//                byte[] fileData = readFileData(file, fileLength);
-//
-//                // we send HTTP Headers with data to client
-//                out.println("HTTP/1.1 501 Not Implemented");
-//                out.println("Server: Java HTTP Server from SSaurel : 1.0");
-//                out.println("Date: " + new Date());
-//                out.println("Content-type: " + contentMimeType);
-//                out.println("Content-length: " + fileLength);
-//                out.println(); // blank line between headers and content, very important !
-//                out.flush(); // flush character output stream buffer
-//                // file
-//                dataOut.write(fileData, 0, fileLength);
-//                dataOut.flush();
-//
-//            } else {
-//                // GET or HEAD method
-//                if (fileRequested.endsWith("/")) {
-//                    fileRequested += "/"+ DEFAULT_FILE;
-//                }
-//
-//                File file = new File(WEB_ROOT, fileRequested);
-//                int fileLength = (int) file.length();
-//                String content = getContentType(fileRequested);
-//
-//                if (method.equals("GET") || method.equals("OPTIONS")) { // GET method so we return content
-//                    byte[] fileData = readFileData(file, fileLength);
-//
-//                    // send HTTP Headers
-//                    out.println("HTTP/1.1 200 OK");
-//                    out.println("Server: Java HTTP Server from SSaurel : 1.0");
-//                    out.println("Date: " + new Date());
-//                    out.println("Content-type: " + content);
-//                    out.println("Content-length: " + fileLength);
-//                    out.println(); // blank line between headers and content, very important !
-//                    out.flush(); // flush character output stream buffer
-//
-//                    dataOut.write(fileData, 0, fileLength);
-//                    dataOut.flush();
-//                }
-//
-//                if (verbose) {
-//                    System.out.println("File " + fileRequested + " of type " + content + " returned");
-//                }
-//
-//            }
-//
-//        } catch (FileNotFoundException fnfe) {
-//            try {
-//                fileNotFound(out, dataOut, fileRequested);
-//            } catch (IOException ioe) {
-//                System.err.println("Error with file not found exception : " + ioe.getMessage());
-//            }
-//
-//        } catch (IOException ioe) {
-//            System.err.println("Server error : " + ioe);
-//        } finally {
-//            try {
-//                in.close();
-//                out.close();
-//                dataOut.close();
-//                connect.close(); // we close socket connection
-//            } catch (Exception e) {
-//                System.err.println("Error closing stream : " + e.getMessage());
-//            }
-//
-//            if (verbose) {
-//                System.out.println("Connection closed.\n");
-//            }
-//        try(BufferedReader br = new BufferedReader(
-//                new InputStreamReader(connect.getInputStream(), "utf-8"))) {
-//            StringBuilder response = new StringBuilder();
-//            String responseLine = null;
-//            while ((responseLine = br.readLine()) != null) {
-//                response.append(responseLine.trim());
-//            }
-//            System.out.println(response.toString());
-//        }
-//        catch (Exception e){
-//
-//        }
 
     private byte[] readFileData(File file, int fileLength) throws IOException {
         FileInputStream fileIn = null;
