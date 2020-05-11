@@ -384,7 +384,7 @@ public class GameSettingsController {
         Game game = DataManagement.getGame(game_id);
         if(game != null){
             for (Event e : game.getEventList()){
-                eventList.append(e.toString()).append("/n");
+                eventList.append(e.toString()).append("\n");
             }
             AC = new ActionStatus(true,eventList.toString());
         }else{

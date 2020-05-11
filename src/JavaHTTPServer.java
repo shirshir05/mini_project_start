@@ -1,8 +1,8 @@
+
 import BusinessService.Enum.ActionStatus;
 import Presentation_Layer.StartSystem;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
 // The tutorial can be found just here on the SSaurel's Blog :
 // https://www.ssaurel.com/blog/create-a-simple-http-web-server-in-java
 // Each Client Connection will be managed in a dedicated Thread
-public class JavaHTTPServer implements Runnable{
+public class JavaHTTPServer implements Runnable {
 
     static final File WEB_ROOT = new File(".");
     static final String DEFAULT_FILE = "index.html";
@@ -28,6 +28,8 @@ public class JavaHTTPServer implements Runnable{
     private Socket connect;
     private ActionStatus actionStatus;
     private JSONObject jsonObject;
+    private String[] headerSplit;
+    private PrintWriter out;
 
     public JavaHTTPServer(Socket c) {
         connect = c;
@@ -50,7 +52,7 @@ public class JavaHTTPServer implements Runnable{
                 Thread thread = new Thread(myServer);
                 thread.start();
             }
-
+//
         } catch (IOException e) {
             System.err.println("Server Connection error : " + e.getMessage());
         }
@@ -58,130 +60,165 @@ public class JavaHTTPServer implements Runnable{
 
     @Override
     public void run() {
-        //POST /api/register HTTP/1.1
-        //OPTIONS /api/login HTTP/1.1
-        // we manage our particular client connection
+        //parse = new StringTokenizer(headerLine);
+        //METHOD = parse.nextToken();
+        //controllerMethod = headerLine.substring(headerLine.indexOf("api") + 4, headerLine.lastIndexOf(" "))
         BufferedReader in = null;
-        PrintWriter out = null;
-        BufferedOutputStream dataOut = null;
-        String fileRequested = null;
         try {
-            // we read characters from the client via input stream on the socket
-            in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
             out = new PrintWriter(connect.getOutputStream());
-            String headerLine ;
+            in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
+            String headerLine;
             StringTokenizer parse;
             String controllerMethod;
             String METHOD;
-            dataOut = new BufferedOutputStream(connect.getOutputStream());
-            // get first line of the request from the client
-
             //code to read and print headers
             headerLine = in.readLine();
+            headerSplit = headerLine.split("[\\s/]+");
             System.out.println(headerLine);
-            parse = new StringTokenizer(headerLine);
-            METHOD = parse.nextToken();
-            controllerMethod = headerLine.substring(headerLine.indexOf("api") + 4, headerLine.lastIndexOf(" "));
+            METHOD = headerSplit[0];
+            controllerMethod = headerSplit[2];
             System.out.println("controllerMethod is: " + controllerMethod);
             System.out.println("METHOD is: " + METHOD);
             while ((headerLine = in.readLine()).length() != 0) {
                 System.out.println(headerLine);
             }
-            StringBuilder payload = new StringBuilder();
-            while (in.ready()) {
-                payload.append((char) in.read());
-            }
-            System.out.println("payload is: " + payload);
-            jsonObject = new JSONObject(payload.toString());
-            if(METHOD.equals("POST")){
+
+            if (METHOD.equals("POST")) {
+                StringBuilder payload = new StringBuilder();
+                while (in.ready()) {
+                    payload.append((char) in.read());
+                }
+                System.out.println("payload is: " + payload);
+                jsonObject = new JSONObject(payload.toString());
                 actionStatus = handlePostMethod(controllerMethod);
-            }
-            else if(METHOD.equals("GET")){
-                //actionStatus = handleGetMethod(controllerMethod);
-            }
-
-            else if(METHOD.equals("REMOVE")){
-                //actionStatus = handleDeleteMethod(controllerMethod);
-            }
-
-            System.out.println("Payload data is: " + payload.toString());
-
-            if(actionStatus.isActionSuccessful()){
-                out.println("HTTP/1.1 200 OK");
-                out.println("Server: Java HTTP Server from SSaurel : 1.0");
-                out.println("Date: " + new Date());
-                //out.println("Content-type: " );
-                out.println("Access-Control-Allow-Origin: *");
-                out.println("Content-length: " + actionStatus.getDescription().length());
-                out.println(""); // blank line between headers and content, very important !
-                out.println(actionStatus.getDescription());
-                out.flush(); // flush character output stream buffer
-                connect.close();
+                if (actionStatus.isActionSuccessful()) {
+                    out.println("HTTP/1.1 200 OK");
+                } else {
+                    out.println("HTTP/1.1 202 Accepted");
+                }
+                sendStringData();
             }
 
-            ArrayList array=new ArrayList();
-            array.add("D");
-            array.add("A");
-            array.add("L");
-            JSONArray arr = new JSONArray(array);
-
-            JSONObject shir = new JSONObject(payload.toString());
-            out.println("HTTP/1.1 200 OK");
-            out.println("Server: Java HTTP Server from SSaurel : 1.0");
-            out.println("Date: " + new Date());
-            //out.println("Content-type: " );
-            out.println("Content-Type: application/json");
-            out.println("Access-Control-Allow-Origin: *");
-            out.println("Content-length: " + shir.toString().length());
-            out.println(""); // blank line between headers and content, very important !
-            //out.println("Hello world!");
-            out.println(shir);
-            for(int i=0;i<arr.length();i++){
-                out.println(arr.getString(i));
+            else if (METHOD.equals("GET")) {
+               handleGetMethod(controllerMethod);
             }
-            //out.println(shir.toString());
+
+            else if (METHOD.equals("DELETE")) {
+                handleDeleteMethod(controllerMethod);
+                sendStringData();
+            }
+
             out.flush(); // flush character output stream buffer
             connect.close();
-
         } catch (Exception e) {
-
         }
     }
 
-    private ActionStatus handleDeleteMethod(String controllerMethod) {
-        ActionStatus as = null;
+    private void handleDeleteMethod(String controllerMethod) {
         try {
             switch (controllerMethod) {
                 case "removesubscription":
-                    as = StartSystem.getLEc().RemoveSubscription
+                    actionStatus = StartSystem.getLEc().RemoveSubscription
                             (jsonObject.getString("username"));
                     break;
                 default:
-                    as = new ActionStatus(false, "check correct delete function name");
+                    actionStatus = new ActionStatus(false, "check correct delete function name");
             }
+        } catch (Exception e) {
+            actionStatus = new ActionStatus(false, e.getMessage());
         }
-        catch (Exception e){
-            as = new ActionStatus(false, e.getMessage());
-        }
-        return as;
     }
 
-    private ActionStatus handleGetMethod(String controllerMethod) {
-        ActionStatus as = null;
-//        try {
-//            switch (controllerMethod) {
+    private void handleGetMethod(String controllerMethod) {
+        try {
+            switch (controllerMethod) {
+                //watchlogger
+                //break;
+                case "approveteam":
+                    actionStatus = StartSystem.getTc().ApproveCreateTeamAlert
+                            (jsonObject.getString(headerSplit[3]));
+                    sendStringData();
+                    break;
+                case "watchsearchhistory":
+                    actionStatus = StartSystem.getSc().showSearchHistory();
+                    if (actionStatus.isActionSuccessful()) {
+                        String[] arrayOfSearches = actionStatus.getDescription().split("\n");
+                        JSONArray jsonArray = new JSONArray(arrayOfSearches);
+                        sendJsonData(jsonArray);
+                    }
+                    else{
+                        sendStringData();
+                    }
+                    break;
+                case "isa":
+                    actionStatus = StartSystem.getLEc().hasRole(headerSplit[3]);
+                    sendStringData();
+                    break;
 //                case "watchgameevent":
-//                    as = StartSystem.getGSc().printGameEvents
-//                            (Integer.parseInt(jsonObject.getString("gameid")));
+//                    actionStatus = StartSystem.getGSc().printGameEvents(Integer.parseInt(headerSplit[3]));
 //                    break;
-//                default:
-//                    as = new ActionStatus(false, "check correct get function name");
-//            }
-//        }
-//        catch (Exception e){
-//            as = new ActionStatus(false, e.getMessage());
-//        }
-        return as;
+                case "watchscoretable":
+                    actionStatus = StartSystem.getGSc().displayScoreTable(headerSplit[3], headerSplit[4]);
+                    if(actionStatus.isActionSuccessful()){
+                        String[] linesInScoreTable = actionStatus.getDescription().split("\n");
+                        JSONArray jsonArray = buildJsonArray(linesInScoreTable);
+                        sendJsonData(jsonArray);
+                    }
+                    else {
+                        sendStringData();
+                    }
+                    break;
+                default:
+                    actionStatus = new ActionStatus(false, "check correct get function name");
+                    sendStringData();
+            }
+        } catch (Exception e) {
+            actionStatus = new ActionStatus(false, e.getMessage());
+            sendStringData();
+        }
+    }
+
+    private JSONArray buildJsonArray(String[] linesInScoreTable) {
+        JSONArray jsonArray = new JSONArray();
+        int index = 0;
+        for (String line :  linesInScoreTable) {
+            String[] arrayIndex = line.split("[\\s-|]+");
+            //[Team, Barcelona, games, 15, wins, 6, drawns, 4, loses, 2, goalsScores, 3, goalsGet, 4, points, 10]
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(arrayIndex[0], arrayIndex[1]);
+            jsonObject.put(arrayIndex[2], arrayIndex[3]);
+            jsonObject.put(arrayIndex[4], arrayIndex[5]);
+            jsonObject.put(arrayIndex[6], arrayIndex[7]);
+            jsonObject.put(arrayIndex[8], arrayIndex[9]);
+            jsonObject.put(arrayIndex[10], arrayIndex[11]);
+            jsonObject.put(arrayIndex[12], arrayIndex[13]);
+            jsonObject.put(arrayIndex[14], arrayIndex[15]);
+            jsonArray.put(index, jsonObject);
+            index++;
+        }
+        return jsonArray;
+    }
+
+    private void sendJsonData(JSONArray jsonArray) {
+        out.println("HTTP/1.1 200 OK");
+        out.println("Server: Java HTTP Server from SSaurel : 1.0");
+        out.println("Date: " + new Date());
+        out.println("Content-Type: application/json");
+        out.println("Access-Control-Allow-Origin: *");
+        out.println("Content-length: " + jsonArray.toString().getBytes().length);
+        out.println(""); // blank line between headers and content, very important !
+        out.println(jsonArray);
+    }
+
+    private void sendStringData() {
+        out.println("Server: Java HTTP Server from SSaurel : 1.0");
+        out.println("Date: " + new Date());
+        //out.println("Content-type: " );
+        out.println("Access-Control-Allow-Origin: *");
+        out.println("Content-length: " + actionStatus.getDescription().length());
+        out.println(""); // blank line between headers and content, very important !
+        out.println(actionStatus.getDescription());
+        out.flush(); // flush character output stream buffer
     }
 
     private ActionStatus handlePostMethod(String controllerMethod) {
@@ -261,8 +298,8 @@ public class JavaHTTPServer implements Runnable{
                                     jsonObject.getString("year"));
                     break;
                 case "addrole":
-                    as = StartSystem.getLEc().haveRole
-                            (jsonObject.getString("role"));
+                    as = StartSystem.getLEc().addRoleToUser
+                            (jsonObject.getString("role"), jsonObject.getString("password"));
                     break;
                 case "createteam":
                     as = StartSystem.getTc().RequestCreateTeam
@@ -341,15 +378,14 @@ public class JavaHTTPServer implements Runnable{
                 default:
                     as = new ActionStatus(false, "check correct post function name");
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             as = new ActionStatus(false, e.getMessage());
         }
         return as;
     }
 
     private boolean isLegalWinLossEqual(String win, String loss, String equal) {
-        if(isNumeric(win) && isNumeric(loss) && isNumeric(equal)){
+        if (isNumeric(win) && isNumeric(loss) && isNumeric(equal)) {
             return true;
         }
         return false;
@@ -375,123 +411,14 @@ public class JavaHTTPServer implements Runnable{
         return status.equals("-1") || status.equals("0") || status.equals("1");
     }
 
-    public static JSONArray parse(String responseBody){
+    public static JSONArray parse(String responseBody) {
         JSONArray albums = new JSONArray(responseBody);
         JSONObject album = null;
-        for (int i = 0; i < albums.length(); i++){
+        for (int i = 0; i < albums.length(); i++) {
             album = albums.getJSONObject(i);
         }
         return albums;
     }
-
-
-//            // we read characters from the client via input stream on the socket
-//            in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
-//            // we get character output stream to client (for headers)
-//            out = new PrintWriter(connect.getOutputStream());
-//            // get binary output stream to client (for requested data)
-//            dataOut = new BufferedOutputStream(connect.getOutputStream());
-//
-//            // get first line of the request from the client
-//            String input = in.readLine();
-//            System.out.println(in.readLine());
-//            // we parse the request with a string tokenizer
-//            StringTokenizer parse = new StringTokenizer(input);
-//            String method = parse.nextToken().toUpperCase(); // we get the HTTP method of the client
-//            // we get file requested
-//            fileRequested = parse.nextToken().toLowerCase();
-//
-//            // we support only GET and HEAD methods, we check
-//            if (!method.equals("GET")  &&  !method.equals("HEAD") &&  !method.equals("OPTIONS")) {
-//                if (verbose) {
-//                    System.out.println("501 Not Implemented : " + method + " method.");
-//                }
-//
-//                // we return the not supported file to the client
-//                File file = new File(WEB_ROOT, METHOD_NOT_SUPPORTED);
-//                int fileLength = (int) file.length();
-//                String contentMimeType = "text/html";
-//                //read content to return to client
-//                byte[] fileData = readFileData(file, fileLength);
-//
-//                // we send HTTP Headers with data to client
-//                out.println("HTTP/1.1 501 Not Implemented");
-//                out.println("Server: Java HTTP Server from SSaurel : 1.0");
-//                out.println("Date: " + new Date());
-//                out.println("Content-type: " + contentMimeType);
-//                out.println("Content-length: " + fileLength);
-//                out.println(); // blank line between headers and content, very important !
-//                out.flush(); // flush character output stream buffer
-//                // file
-//                dataOut.write(fileData, 0, fileLength);
-//                dataOut.flush();
-//
-//            } else {
-//                // GET or HEAD method
-//                if (fileRequested.endsWith("/")) {
-//                    fileRequested += "/"+ DEFAULT_FILE;
-//                }
-//
-//                File file = new File(WEB_ROOT, fileRequested);
-//                int fileLength = (int) file.length();
-//                String content = getContentType(fileRequested);
-//
-//                if (method.equals("GET") || method.equals("OPTIONS")) { // GET method so we return content
-//                    byte[] fileData = readFileData(file, fileLength);
-//
-//                    // send HTTP Headers
-//                    out.println("HTTP/1.1 200 OK");
-//                    out.println("Server: Java HTTP Server from SSaurel : 1.0");
-//                    out.println("Date: " + new Date());
-//                    out.println("Content-type: " + content);
-//                    out.println("Content-length: " + fileLength);
-//                    out.println(); // blank line between headers and content, very important !
-//                    out.flush(); // flush character output stream buffer
-//
-//                    dataOut.write(fileData, 0, fileLength);
-//                    dataOut.flush();
-//                }
-//
-//                if (verbose) {
-//                    System.out.println("File " + fileRequested + " of type " + content + " returned");
-//                }
-//
-//            }
-//
-//        } catch (FileNotFoundException fnfe) {
-//            try {
-//                fileNotFound(out, dataOut, fileRequested);
-//            } catch (IOException ioe) {
-//                System.err.println("Error with file not found exception : " + ioe.getMessage());
-//            }
-//
-//        } catch (IOException ioe) {
-//            System.err.println("Server error : " + ioe);
-//        } finally {
-//            try {
-//                in.close();
-//                out.close();
-//                dataOut.close();
-//                connect.close(); // we close socket connection
-//            } catch (Exception e) {
-//                System.err.println("Error closing stream : " + e.getMessage());
-//            }
-//
-//            if (verbose) {
-//                System.out.println("Connection closed.\n");
-//            }
-//        try(BufferedReader br = new BufferedReader(
-//                new InputStreamReader(connect.getInputStream(), "utf-8"))) {
-//            StringBuilder response = new StringBuilder();
-//            String responseLine = null;
-//            while ((responseLine = br.readLine()) != null) {
-//                response.append(responseLine.trim());
-//            }
-//            System.out.println(response.toString());
-//        }
-//        catch (Exception e){
-//
-//        }
 
     private byte[] readFileData(File file, int fileLength) throws IOException {
         FileInputStream fileIn = null;
@@ -510,7 +437,7 @@ public class JavaHTTPServer implements Runnable{
 
     // return supported MIME Types
     private String getContentType(String fileRequested) {
-        if (fileRequested.endsWith(".htm")  ||  fileRequested.endsWith(".html"))
+        if (fileRequested.endsWith(".htm") || fileRequested.endsWith(".html"))
             return "text/html";
         else
             return "text/plain";
@@ -529,14 +456,23 @@ public class JavaHTTPServer implements Runnable{
         out.println("Content-length: " + fileLength);
         out.println(); // blank line between headers and content, very important !
         out.flush(); // flush character output stream buffer
-
-
-
-
         if (verbose) {
             System.out.println("File " + fileRequested + " not found");
         }
     }
-
-
 }
+//           sendJsonData(jsonArray);
+//            String[] strings = {"D","A","L"};
+//            ArrayList array=new ArrayList();
+//            array.add("D");
+//            array.add("A");
+//            array.add("L");
+//            JSONArray arr = new JSONArray(strings);
+//            out.println("HTTP/1.1 200 OK");
+//            out.println("Server: Java HTTP Server from SSaurel : 1.0");
+//            out.println("Date: " + new Date());
+//            out.println("Content-Type: application/json");
+//            out.println("Access-Control-Allow-Origin: *");
+//            out.println("Content-length: " + arr.toString().getBytes().length);
+//            out.println(""); // blank line between headers and content, very important !
+//            out.println(arr);
