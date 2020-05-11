@@ -1,20 +1,18 @@
+
 import BusinessService.Enum.ActionStatus;
 import Presentation_Layer.StartSystem;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.StringTokenizer;
 
 // The tutorial can be found just here on the SSaurel's Blog :
 // https://www.ssaurel.com/blog/create-a-simple-http-web-server-in-java
 // Each Client Connection will be managed in a dedicated Thread
-public class JavaHTTPServer implements Runnable{
+public class JavaHTTPServer implements Runnable {
 
     static final File WEB_ROOT = new File(".");
     static final String DEFAULT_FILE = "index.html";
@@ -38,20 +36,6 @@ public class JavaHTTPServer implements Runnable{
     }
 
     public static void main(String[] args) {
-
-//        String m = "ronen" + "\n" + "elad" + "\n" + "nirit" + "\n" + "barak" + "\n" + "matan" + "\n";
-//        String[] array = m.split("\n");
-//        System.out.println(Arrays.toString(array));
-//        ArrayList arrayList=new ArrayList();
-//        for (int i = 0; i < array.length; i++){
-//            arrayList.add(array[i]);
-//        }
-//        JSONArray jsonArray = new JSONArray(array);
-//        System.out.println(jsonArray);
-//        System.out.println(jsonArray.get(0));
-//        System.out.println(jsonArray.getJSONObject(0));
-        //System.out.println(StartSystem.getSc().showSearchHistory());
-
         try {
             ServerSocket serverConnect = new ServerSocket(PORT);
             System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
@@ -68,7 +52,7 @@ public class JavaHTTPServer implements Runnable{
                 Thread thread = new Thread(myServer);
                 thread.start();
             }
-
+//
         } catch (IOException e) {
             System.err.println("Server Connection error : " + e.getMessage());
         }
@@ -76,36 +60,30 @@ public class JavaHTTPServer implements Runnable{
 
     @Override
     public void run() {
-
+        //parse = new StringTokenizer(headerLine);
+        //METHOD = parse.nextToken();
+        //controllerMethod = headerLine.substring(headerLine.indexOf("api") + 4, headerLine.lastIndexOf(" "))
         BufferedReader in = null;
-        BufferedOutputStream dataOut = null;
-        String fileRequested = null;
         try {
-            // we read characters from the client via input stream on the socket
-            in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
             out = new PrintWriter(connect.getOutputStream());
-            String headerLine ;
+            in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
+            String headerLine;
             StringTokenizer parse;
             String controllerMethod;
             String METHOD;
-            dataOut = new BufferedOutputStream(connect.getOutputStream());
-            // get first line of the request from the client
-
             //code to read and print headers
             headerLine = in.readLine();
             headerSplit = headerLine.split("[\\s/]+");
             System.out.println(headerLine);
-            //parse = new StringTokenizer(headerLine);
-            //METHOD = parse.nextToken();
             METHOD = headerSplit[0];
             controllerMethod = headerSplit[2];
-            //controllerMethod = headerLine.substring(headerLine.indexOf("api") + 4, headerLine.lastIndexOf(" "));
             System.out.println("controllerMethod is: " + controllerMethod);
             System.out.println("METHOD is: " + METHOD);
             while ((headerLine = in.readLine()).length() != 0) {
                 System.out.println(headerLine);
             }
-            if(METHOD.equals("POST")){
+
+            if (METHOD.equals("POST")) {
                 StringBuilder payload = new StringBuilder();
                 while (in.ready()) {
                     payload.append((char) in.read());
@@ -113,78 +91,112 @@ public class JavaHTTPServer implements Runnable{
                 System.out.println("payload is: " + payload);
                 jsonObject = new JSONObject(payload.toString());
                 actionStatus = handlePostMethod(controllerMethod);
-                if(actionStatus.isActionSuccessful()) {
+                if (actionStatus.isActionSuccessful()) {
                     out.println("HTTP/1.1 200 OK");
-                }
-                else {
+                } else {
                     out.println("HTTP/1.1 202 Accepted");
                 }
                 sendStringData();
             }
-            else if(METHOD.equals("GET")){
-                actionStatus = handleGetMethod(controllerMethod);
+
+            else if (METHOD.equals("GET")) {
+               handleGetMethod(controllerMethod);
             }
-            else if(METHOD.equals("DELETE")){
-                //actionStatus = handleDeleteMethod(controllerMethod);
+
+            else if (METHOD.equals("DELETE")) {
+                handleDeleteMethod(controllerMethod);
+                sendStringData();
             }
+
             out.flush(); // flush character output stream buffer
             connect.close();
         } catch (Exception e) {
-
         }
     }
 
-    private ActionStatus handleDeleteMethod(String controllerMethod) {
-        ActionStatus as = null;
+    private void handleDeleteMethod(String controllerMethod) {
         try {
             switch (controllerMethod) {
                 case "removesubscription":
-                    as = StartSystem.getLEc().RemoveSubscription
+                    actionStatus = StartSystem.getLEc().RemoveSubscription
                             (jsonObject.getString("username"));
                     break;
                 default:
-                    as = new ActionStatus(false, "check correct delete function name");
+                    actionStatus = new ActionStatus(false, "check correct delete function name");
             }
+        } catch (Exception e) {
+            actionStatus = new ActionStatus(false, e.getMessage());
         }
-        catch (Exception e){
-            as = new ActionStatus(false, e.getMessage());
-        }
-        return as;
     }
 
-    private ActionStatus handleGetMethod(String controllerMethod) {
-        ActionStatus as = null;
+    private void handleGetMethod(String controllerMethod) {
         try {
             switch (controllerMethod) {
+                //watchlogger
+                //break;
                 case "approveteam":
-                    as = StartSystem.getTc().ApproveCreateTeamAlert
+                    actionStatus = StartSystem.getTc().ApproveCreateTeamAlert
                             (jsonObject.getString(headerSplit[3]));
+                    sendStringData();
                     break;
                 case "watchsearchhistory":
-                    as = StartSystem.getSc().showSearchHistory();
-                    if(as.isActionSuccessful()) {
-                        String[] arrayOfSearches = as.getDescription().split("\n");
+                    actionStatus = StartSystem.getSc().showSearchHistory();
+                    if (actionStatus.isActionSuccessful()) {
+                        String[] arrayOfSearches = actionStatus.getDescription().split("\n");
                         JSONArray jsonArray = new JSONArray(arrayOfSearches);
                         sendJsonData(jsonArray);
                     }
+                    else{
+                        sendStringData();
+                    }
                     break;
                 case "isa":
-                    as = StartSystem.getLEc().hasRole(headerSplit[3]);
+                    actionStatus = StartSystem.getLEc().hasRole(headerSplit[3]);
+                    sendStringData();
                     break;
 //                case "watchgameevent":
-//                    as = StartSystem.getGSc().printGameEvents(Integer.parseInt(headerSplit[3]));
+//                    actionStatus = StartSystem.getGSc().printGameEvents(Integer.parseInt(headerSplit[3]));
 //                    break;
                 case "watchscoretable":
-                    as = StartSystem.getGSc().displayScoreTable(headerSplit[3], headerSplit[4]);
+                    actionStatus = StartSystem.getGSc().displayScoreTable(headerSplit[3], headerSplit[4]);
+                    if(actionStatus.isActionSuccessful()){
+                        String[] linesInScoreTable = actionStatus.getDescription().split("\n");
+                        JSONArray jsonArray = buildJsonArray(linesInScoreTable);
+                        sendJsonData(jsonArray);
+                    }
+                    else {
+                        sendStringData();
+                    }
                     break;
                 default:
-                    as = new ActionStatus(false, "check correct get function name");
+                    actionStatus = new ActionStatus(false, "check correct get function name");
+                    sendStringData();
             }
+        } catch (Exception e) {
+            actionStatus = new ActionStatus(false, e.getMessage());
+            sendStringData();
         }
-        catch (Exception e){
-            as = new ActionStatus(false, e.getMessage());
+    }
+
+    private JSONArray buildJsonArray(String[] linesInScoreTable) {
+        JSONArray jsonArray = new JSONArray();
+        int index = 0;
+        for (String line :  linesInScoreTable) {
+            String[] arrayIndex = line.split("[\\s-|]+");
+            //[Team, Barcelona, games, 15, wins, 6, drawns, 4, loses, 2, goalsScores, 3, goalsGet, 4, points, 10]
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(arrayIndex[0], arrayIndex[1]);
+            jsonObject.put(arrayIndex[2], arrayIndex[3]);
+            jsonObject.put(arrayIndex[4], arrayIndex[5]);
+            jsonObject.put(arrayIndex[6], arrayIndex[7]);
+            jsonObject.put(arrayIndex[8], arrayIndex[9]);
+            jsonObject.put(arrayIndex[10], arrayIndex[11]);
+            jsonObject.put(arrayIndex[12], arrayIndex[13]);
+            jsonObject.put(arrayIndex[14], arrayIndex[15]);
+            jsonArray.put(index, jsonObject);
+            index++;
         }
-        return as;
+        return jsonArray;
     }
 
     private void sendJsonData(JSONArray jsonArray) {
@@ -193,11 +205,9 @@ public class JavaHTTPServer implements Runnable{
         out.println("Date: " + new Date());
         out.println("Content-Type: application/json");
         out.println("Access-Control-Allow-Origin: *");
-        out.println("Content-length: " + jsonArray.toString().length());
+        out.println("Content-length: " + jsonArray.toString().getBytes().length);
         out.println(""); // blank line between headers and content, very important !
-        for(int i=0;i<jsonArray.length();i++){
-            out.println(jsonArray.getString(i));
-        }
+        out.println(jsonArray);
     }
 
     private void sendStringData() {
@@ -210,6 +220,7 @@ public class JavaHTTPServer implements Runnable{
         out.println(actionStatus.getDescription());
         out.flush(); // flush character output stream buffer
     }
+
     private ActionStatus handlePostMethod(String controllerMethod) {
         ActionStatus as = null;
         try {
@@ -367,15 +378,14 @@ public class JavaHTTPServer implements Runnable{
                 default:
                     as = new ActionStatus(false, "check correct post function name");
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             as = new ActionStatus(false, e.getMessage());
         }
         return as;
     }
 
     private boolean isLegalWinLossEqual(String win, String loss, String equal) {
-        if(isNumeric(win) && isNumeric(loss) && isNumeric(equal)){
+        if (isNumeric(win) && isNumeric(loss) && isNumeric(equal)) {
             return true;
         }
         return false;
@@ -401,10 +411,10 @@ public class JavaHTTPServer implements Runnable{
         return status.equals("-1") || status.equals("0") || status.equals("1");
     }
 
-    public static JSONArray parse(String responseBody){
+    public static JSONArray parse(String responseBody) {
         JSONArray albums = new JSONArray(responseBody);
         JSONObject album = null;
-        for (int i = 0; i < albums.length(); i++){
+        for (int i = 0; i < albums.length(); i++) {
             album = albums.getJSONObject(i);
         }
         return albums;
@@ -427,7 +437,7 @@ public class JavaHTTPServer implements Runnable{
 
     // return supported MIME Types
     private String getContentType(String fileRequested) {
-        if (fileRequested.endsWith(".htm")  ||  fileRequested.endsWith(".html"))
+        if (fileRequested.endsWith(".htm") || fileRequested.endsWith(".html"))
             return "text/html";
         else
             return "text/plain";
@@ -446,14 +456,23 @@ public class JavaHTTPServer implements Runnable{
         out.println("Content-length: " + fileLength);
         out.println(); // blank line between headers and content, very important !
         out.flush(); // flush character output stream buffer
-
-
-
-
         if (verbose) {
             System.out.println("File " + fileRequested + " not found");
         }
     }
-
-
 }
+//           sendJsonData(jsonArray);
+//            String[] strings = {"D","A","L"};
+//            ArrayList array=new ArrayList();
+//            array.add("D");
+//            array.add("A");
+//            array.add("L");
+//            JSONArray arr = new JSONArray(strings);
+//            out.println("HTTP/1.1 200 OK");
+//            out.println("Server: Java HTTP Server from SSaurel : 1.0");
+//            out.println("Date: " + new Date());
+//            out.println("Content-Type: application/json");
+//            out.println("Access-Control-Allow-Origin: *");
+//            out.println("Content-length: " + arr.toString().getBytes().length);
+//            out.println(""); // blank line between headers and content, very important !
+//            out.println(arr);
