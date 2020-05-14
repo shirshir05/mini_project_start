@@ -198,15 +198,6 @@ public class databaseController {
         return league;
     }
 
-    /*
-    pro
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private Pair<Integer,Integer> score; // Integer[0] = host , Integer[1] = guest
-    private HashSet<Event> eventList;
-    private String league;
-    private String season;
-    */
 
     //init all Games data from DB
     public Game loadGameInfo(int game_id) {
