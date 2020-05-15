@@ -166,7 +166,41 @@ public final class DataManagement {
         sql.insert("Game",new String[]{""+g.getGameId(),g.getField(),""+g.getStartTime().toLocalTime(),""+g.getEndTime().toLocalTime(),g.getHost().getName()
             ,g.getGuest().getName(),g.getLeague(),g.getSeason(),g.getHeadReferee(),g.getLinesman1Referee(),g.getLinesman2Referee()});
     }
+    //sql.insert("Users",new String[]{sub.getUserName(),sub.getPassword(),sub.getRole(),sub.getEmail()});
+    //this.insert("Users",new String[]{unifiedSubscription.getPassword(), unifiedSubscription.get})
+    //sql.insert("UsersData",new String[]{sub.getUserName(),"qualification",((UnifiedSubscription) sub).getQualification()});
 
+        /*
+         if(table.equals("Users")){
+            query += " ([userName], [userPassword],[userRole],[email]) VALUES ('"+values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"')";
+        }
+        else if(table.equals("Team")){
+            query += " ([teamName], [mainFiled] ,[ownerName] ,[teamStatus], [totalScore], [numOfGames], [wins], [drawns], [loses], [goalsScored], [goalesGoten]) VALUES ('"
+                    +values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"','"+values[4]+"','"+values[5]+"','"+values[6]+"','"+
+                    values[7]+"','"+values[8]+"','"+values[9]+"','"+values[10]+"')";
+        }
+        else if(table.equals("AssetsInTeam")){
+            query += " ([teamName], [assetName],[assetRole]) VALUES ('"+values[0]+"','"+values[1]+"','"+values[2]+"')";
+        }
+        else if(table.equals("Game")){
+            query += " ([gameID], [filed] ,[gameDate] ,[homeTeam], [guestTeam], [leagueName], [seasonYear], [headReferee], [linesmanOneReferee], [linesmanTwoReferee]) VALUES ('"
+                    +values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"','"+values[4]+"','"+values[5]+"','"+values[6]+"','"+
+                    values[7]+"','"+values[8]+"','"+values[9]+"')";
+        }
+        else if(table.equals("EventInGame")){
+            query += " ([gameID],  [eventTime], [refereeName], [playerName],  [eventType],) VALUES ('"+
+                    values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"','"+values[3]+"')";
+        }
+        else if(table.equals("League")){
+            query += " ([leagueName]) VALUES ('"+
+                    values[0]+"')";
+        }
+        else if(table.equals("Season")){
+            query += " ([leagueName], [seasonYear]) VALUES ('"+
+                    values[0]+"','"+values[1]+"')";
+
+        }
+         */
     /**
      * This function get game_id and return Game
      * @param game_id -

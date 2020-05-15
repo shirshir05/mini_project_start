@@ -15,7 +15,7 @@ public class sqlConnection implements interfaceDB {
     HashMap<String,String[]> keys;
 
     @Override
-    public int insert(String table,String[] values){
+    public int insert(String table,Object[] values){
         String query = prepQuery(table,values);
         int ans = execute(query);
         return ans;
@@ -140,7 +140,7 @@ public class sqlConnection implements interfaceDB {
         return rowsEdited;
     }
 
-    private String prepQuery(String table,String[] values){
+    private String prepQuery(String table,Object[] values){
         String query = "use FootBallDB INSERT INTO " + "["+table+"]";;
 
         if(table.equals("Users")){
@@ -160,8 +160,8 @@ public class sqlConnection implements interfaceDB {
                     values[7]+"','"+values[8]+"','"+values[9]+"')";
         }
         else if(table.equals("EventInGame")){
-            query += " ([gameID],  [eventTime], [refereeName], [playerName],  [eventType],) VALUES ('"+
-                    values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"','"+values[3]+"')";
+            query += " ([gameID],  [eventTime], [playerName],  [eventType]) VALUES ('"+
+                    values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"')";
         }
         else if(table.equals("League")){
             query += " ([leagueName]) VALUES ('"+

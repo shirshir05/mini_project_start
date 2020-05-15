@@ -258,12 +258,11 @@ public class databaseController {
                 }
             }
         } catch(SQLException e){
-
         }
         return null;
     }
 
-    public int insert(String table, String[] values) {
+    public int insert(String table, Object[] values) {
         return sqlConn.insert(table, values);
     }
 

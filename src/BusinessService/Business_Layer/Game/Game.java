@@ -2,6 +2,7 @@ package BusinessService.Business_Layer.Game;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Observable;
 
@@ -116,7 +117,7 @@ public class Game extends Observable{
         if (host.getName().equals(team_name)) {
            p = host.getPlayer(player_name);
            if(p != null){
-               new_event = new Event(host, event, p, null);
+               new_event = new Event(host, event, p, LocalDateTime.now());
                eventList.add(new_event);
            }else{
                ac = new ActionStatus(false,"Parameter wrong!");
@@ -124,7 +125,7 @@ public class Game extends Observable{
          }else if(guest.getName().equals(team_name)) {
            p= guest.getPlayer(player_name);
             if(p != null) {
-                new_event = new Event(guest, event, p, null);
+                new_event = new Event(guest, event, p, LocalDateTime.now());
                 eventList.add(new_event);
             }else{
                 ac = new ActionStatus(false,"Parameter wrong!");
