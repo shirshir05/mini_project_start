@@ -3,7 +3,9 @@ package DB_Layer;
 import BusinessService.Business_Layer.Game.*;
 import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.TeamManagement.TeamScore;
+import BusinessService.Business_Layer.Trace.CoachPersonalPage;
 import BusinessService.Business_Layer.Trace.PersonalPage;
+import BusinessService.Business_Layer.Trace.PlayerPersonalPage;
 import BusinessService.Business_Layer.Trace.TeamPersonalPage;
 import BusinessService.Business_Layer.UserManagement.*;
 import BusinessService.Enum.ActionStatus;
@@ -25,7 +27,7 @@ import java.util.HashSet;
 
 public class databaseController {
 
-    sqlConnection sqlConn = new sqlConnection();
+    public sqlConnection sqlConn = new sqlConnection();
 
     public ActionStatus startDBConnection() {
         return sqlConn.connect();
@@ -45,14 +47,17 @@ public class databaseController {
                         if (rs2.getString("dataType").equals("position")) {
                             subUn.setNewRole(new Player(thisUserName));
                             subUn.setPosition(rs2.getString("dataValue"));
+                            subUn.setPlayerPersonalPage((PlayerPersonalPage)sqlConn.getBlob(thisUserName+"PlayerPersonalPage"));
                         } else if (rs2.getString("dataType").equals("qualification")) {
                             if (!subUn.isACoach()) {
                                 subUn.setNewRole(new Coach(thisUserName));
+                                subUn.setCoachPersonalPage((CoachPersonalPage)sqlConn.getBlob(thisUserName+"CoachPersonalPage"));
                             }
                             subUn.setQualification(rs2.getString("dataValue"));
                         } else if (rs2.getString("dataType").equals("roleInTeam")) {
                             if (!subUn.isACoach()) {
                                 subUn.setNewRole(new Coach(thisUserName));
+                                subUn.setCoachPersonalPage((CoachPersonalPage)sqlConn.getBlob(thisUserName+"CoachPersonalPage"));
                             }
                             subUn.setRoleInTeam(rs2.getString("dataValue"));
                         } else if (rs2.getString("dataType").equals("ownerAppointedByTeamOwner")) {
@@ -63,14 +68,6 @@ public class databaseController {
                             subUn.teamManager_setAppointedByTeamOwner(rs2.getString("dataValue"));
                         }
                     }
-                    //set user personal page
-                    /*
-                    ResultSet rs3 = sqlConn.findByKey("Blobs", new String[]{userID+"PersonalPage"});
-                    if(rs3.next()){
-                        PersonalPage page = (PersonalPage)deserialize(new ByteArrayInputStream(rs3.getBytes("value")));
-                        //TODO- MAKE UnifiedSubscription one personal page. and save to user.
-                    }
-                    */
 
                 } else if (rs.getString("userRole").equals("Referee")) {
                     ResultSet rs2 = sqlConn.findByKey("UsersData", new String[]{thisUserName});
@@ -84,14 +81,12 @@ public class databaseController {
                     }
                 }
                 //GET PERMISSIONS FROM BLOB
-                ResultSet rs4 = sqlConn.findByKey("Blobs", new String[]{userID+"Permissions"});
-                if(rs4.next()){
-                    sub.permissions = (Permissions)deserialize(new ByteArrayInputStream(rs4.getBytes("value")));
-                }
-
+                sub.permissions = (Permissions)sqlConn.getBlob(userID+"Permissions");
                 return sub;
             }
         } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
         return null;
     }
@@ -103,13 +98,12 @@ public class databaseController {
             ResultSet rs = sqlConn.findByValue("Users", "userRole", role);
             while (rs.next()) {
                 Subscription sub = StartSystem.LEc.createUserByType(rs.getString("userName"), rs.getString("userPassword"), rs.getString("userRole"), rs.getString("email"));
-                ResultSet rs2 = sqlConn.findByKey("Blobs", new String[]{rs.getString("userName")+"Permissions"});
-                if(rs2.next()){
-                    sub.permissions = (Permissions)deserialize(new ByteArrayInputStream(rs2.getBytes("value")));
-                }
+                sub.permissions = (Permissions)sqlConn.getBlob(rs.getString("userName")+"Permissions");
                 set.add(sub);
             }
         } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
         return set;
     }
@@ -150,15 +144,13 @@ public class databaseController {
                     }
                 }
                 //set team personal page
-                ResultSet rs3 = sqlConn.findByKey("Blobs", new String[]{teamName+"TeamPage"});
-                if(rs3.next()){
-                    TeamPersonalPage page = (TeamPersonalPage)deserialize(new ByteArrayInputStream(rs3.getBytes("value")));
-                    team.setPersonalPage(page);
-                }
-
+                Object ob = sqlConn.getBlob(teamName+"TeamPage");
+                team.setPersonalPage((TeamPersonalPage)ob);
                 return team;
             }
         } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
         return null;
     }
@@ -177,7 +169,7 @@ public class databaseController {
                 //load season objects into this league
                 ResultSet rs2 = sqlConn.findByKey("Season", new String[]{leagueName});
                 while (rs2.next()) {
-                    Season season = new Season(rs2.getString("seasonYear"));
+                    Season season = (Season)sqlConn.getBlob("Season"+league.getName()+rs2.getInt("seasonYear"));
                     league.addSeason(season);
                     PointsPolicy pointsPolicy = new PointsPolicy(rs2.getInt("win"), rs2.getInt("lose"), rs2.getInt("equal"));
                     ScoreTable scoreTable = new ScoreTable(pointsPolicy);
@@ -194,6 +186,8 @@ public class databaseController {
 
             }
         } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
         return league;
     }
@@ -201,9 +195,8 @@ public class databaseController {
 
     //init all Games data from DB
     public Game loadGameInfo(int game_id) {
-        ActionStatus ac = null;
         try {
-            //load league objects
+            //load game objects
             ResultSet rs = sqlConn.findByKey("Game", null);
             if (rs.next()) {
                 String leagueName = rs.getString("leagueName");
@@ -230,10 +223,11 @@ public class databaseController {
                     Event event = new Event(rs.getString("team"), EventType.valueOf(rs.getString("eventType")),rs.getString("playerName"),eventTime);
                     game.addEvent(event);
                 }
+                return game;
             }
-            ac = new ActionStatus(true, "loaded successfully");
         } catch (SQLException e) {
-            ac = new ActionStatus(false, "Sql SQLException");
+            e.printStackTrace();
+            return null;
         }
         return null;
     }
@@ -241,23 +235,19 @@ public class databaseController {
 
     //get Complaint data from DB
     public HashSet<Complaint> loadComplaintInfo(boolean onlyUnread) {
-        try {
-            ResultSet rs = sqlConn.findByKey("Blobs", new String[]{"Complaint"});
-            if (rs.next()) {
-                HashSet<Complaint> list_Complaints =  (HashSet<Complaint>)deserialize(new ByteArrayInputStream(rs.getBytes("value")));
-                if(onlyUnread) {
-                    HashSet<Complaint> unanswered =  new HashSet<>();
-                    for (Complaint c : list_Complaints) {
-                        if (!c.isAnswered()) {
-                            unanswered.add(c);
-                        }
+        HashSet<Complaint> list_Complaints= (HashSet<Complaint>)sqlConn.getBlob("Complaint");
+        if(list_Complaints!=null) {
+            if (onlyUnread) {
+                HashSet<Complaint> unanswered = new HashSet<>();
+                for (Complaint c : list_Complaints) {
+                    if (!c.isAnswered()) {
+                        unanswered.add(c);
                     }
-                    return unanswered;
-                }else{
-                    return list_Complaints;
                 }
+                return unanswered;
+            } else {
+                return list_Complaints;
             }
-        } catch(SQLException e){
         }
         return null;
     }
@@ -266,10 +256,9 @@ public class databaseController {
         return sqlConn.insert(table, values);
     }
 
-    public int insertBlob(String table,String key,Object value) {
-        return sqlConn.insertBlob(table,key,serialize(value));
+    public int insertBlob(String key,Object value) {
+        return sqlConn.insertBlob(key,value);
     }
-
 
     public int update(String table, String[] key, String column, String value) {
         return sqlConn.update(table, key, column, value);
@@ -280,55 +269,5 @@ public class databaseController {
     }
 
 
-
-
-    /*-------------------------------------       SQL BLOB FUNCTIONS     --------------------------------------------*/
-
-    private Object deserialize(InputStream stream) {
-        try {
-            ObjectInputStream ois = new ObjectInputStream(stream);
-            try {
-                return ois.readObject();
-            } finally {
-                ois.close();
-            }
-        }catch (Exception e){
-
-        }
-        return null;
-    }
-
-    private byte[] serialize(Object object) {
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(object);
-            oos.close();
-            return baos.toByteArray();
-        }
-        catch (Exception e){
-
-        }
-        return null;
-    }
-
-    private Object getObjectFromBlob(Blob blob){
-        try {
-            return deserialize(blob.getBinaryStream());
-        }catch (Exception e){
-
-        }
-        return null;
-    }
-
-    private Blob getBlob(Object o){
-        try {
-            Blob blob=new SerialBlob(serialize(o));;
-            return blob;
-        }catch (Exception e){
-
-        }
-        return null;
-    }
 }
 

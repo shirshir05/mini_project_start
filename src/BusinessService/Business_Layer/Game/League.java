@@ -6,6 +6,8 @@ public class League {
     protected String name;
     protected HashSet<Season> seasons;
 
+
+
     /**
      * constructor
      * @param arg_name is the league name
@@ -13,6 +15,10 @@ public class League {
     public League(String arg_name){
         name=arg_name;
         seasons = new HashSet<>();
+    }
+
+    public HashSet<Season> getAllSeasons(){
+        return seasons;
     }
 
     /**

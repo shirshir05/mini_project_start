@@ -4,6 +4,7 @@ package BusinessService.Service_Layer;
 import BusinessService.Business_Layer.Game.Event;
 import BusinessService.Business_Layer.Game.Game;
 import BusinessService.Business_Layer.Game.League;
+import BusinessService.Business_Layer.Game.Season;
 import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.UserManagement.*;
 import BusinessService.Enum.ActionStatus;
@@ -161,46 +162,12 @@ public final class DataManagement {
 
         //save game to database
         for(Event e :g.getEventList()){
-            sql.insert("EventInGame",new String[]{""+g.getGameId(),""+e.getEventTime().toLocalTime(),e.getPlayer(),""+e.getEventType(),e.getTeam()});
+            sql.insert("EventInGame",new String[]{""+g.getGameId(),""+e.getEventTime().toLocalTime(),e.getPlayer(),""+e.getEventType()});
         }
         sql.insert("Game",new String[]{""+g.getGameId(),g.getField(),""+g.getStartTime().toLocalTime(),""+g.getEndTime().toLocalTime(),g.getHost().getName()
             ,g.getGuest().getName(),g.getLeague(),g.getSeason(),g.getHeadReferee(),g.getLinesman1Referee(),g.getLinesman2Referee()});
     }
-    //sql.insert("Users",new String[]{sub.getUserName(),sub.getPassword(),sub.getRole(),sub.getEmail()});
-    //this.insert("Users",new String[]{unifiedSubscription.getPassword(), unifiedSubscription.get})
-    //sql.insert("UsersData",new String[]{sub.getUserName(),"qualification",((UnifiedSubscription) sub).getQualification()});
 
-        /*
-         if(table.equals("Users")){
-            query += " ([userName], [userPassword],[userRole],[email]) VALUES ('"+values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"')";
-        }
-        else if(table.equals("Team")){
-            query += " ([teamName], [mainFiled] ,[ownerName] ,[teamStatus], [totalScore], [numOfGames], [wins], [drawns], [loses], [goalsScored], [goalesGoten]) VALUES ('"
-                    +values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"','"+values[4]+"','"+values[5]+"','"+values[6]+"','"+
-                    values[7]+"','"+values[8]+"','"+values[9]+"','"+values[10]+"')";
-        }
-        else if(table.equals("AssetsInTeam")){
-            query += " ([teamName], [assetName],[assetRole]) VALUES ('"+values[0]+"','"+values[1]+"','"+values[2]+"')";
-        }
-        else if(table.equals("Game")){
-            query += " ([gameID], [filed] ,[gameDate] ,[homeTeam], [guestTeam], [leagueName], [seasonYear], [headReferee], [linesmanOneReferee], [linesmanTwoReferee]) VALUES ('"
-                    +values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"','"+values[4]+"','"+values[5]+"','"+values[6]+"','"+
-                    values[7]+"','"+values[8]+"','"+values[9]+"')";
-        }
-        else if(table.equals("EventInGame")){
-            query += " ([gameID],  [eventTime], [refereeName], [playerName],  [eventType],) VALUES ('"+
-                    values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"','"+values[3]+"')";
-        }
-        else if(table.equals("League")){
-            query += " ([leagueName]) VALUES ('"+
-                    values[0]+"')";
-        }
-        else if(table.equals("Season")){
-            query += " ([leagueName], [seasonYear]) VALUES ('"+
-                    values[0]+"','"+values[1]+"')";
-
-        }
-         */
     /**
      * This function get game_id and return Game
      * @param game_id -
@@ -233,12 +200,15 @@ public final class DataManagement {
     public static void setSubscription(Subscription sub){
         Subscription.add(sub);
         sql.insert("Users",new String[]{sub.getUserName(),sub.getPassword(),sub.getRole(),sub.getEmail()});
+        sql.insertBlob(sub.getUserName()+"Permissions",sub.getPermissions());
         if(sub instanceof UnifiedSubscription){
             if(((UnifiedSubscription) sub).isACoach()){
                 sql.insert("UsersData",new String[]{sub.getUserName(),"qualification",((UnifiedSubscription) sub).getQualification()});
                 sql.insert("UsersData",new String[]{sub.getUserName(),"roleInTeam",((UnifiedSubscription) sub).getRoleInTeam()});
+                sql.insertBlob(sub.getUserName()+"CoachPersonalPage",((UnifiedSubscription) sub).getCoachPersonalPage());
             }if(((UnifiedSubscription) sub).isAPlayer()){
                 sql.insert("UsersData",new String[]{sub.getUserName(),"position",((UnifiedSubscription)sub).getPosition()});
+                sql.insertBlob(sub.getUserName()+"PlayerPersonalPage",((UnifiedSubscription) sub).getPlayerPersonalPage());
             }if(((UnifiedSubscription) sub).isATeamManager()){
                 sql.insert("UsersData",new String[]{sub.getUserName(),"managerAppointedByTeamOwner",((UnifiedSubscription)sub).teamManager_getAppointedByTeamOwner()});
             }if(((UnifiedSubscription) sub).isATeamOwner()){
@@ -251,19 +221,10 @@ public final class DataManagement {
         logger.log("DataManagement :new Subscription , name: " + sub.getUserName());
 
     }
-    /*
-    userName varchar(30) primary key,
-    userPassword varchar(20) not null,
-    userRole varchar(20) not null,
-	email varchar(50)
-
-	userName varchar(30) Foreign Key references Users,
-	dataType varchar(80),
-	dataValue varchar(80),
-     */
 
     static void removeSubscription(String user_name){
-        Subscription.remove(containSubscription(user_name));
+        //Subscription.remove(containSubscription(user_name));
+        sql.delete("Users",new String[]{user_name});
         logger.log("DataManagement :remove Subscription , name: " + user_name);
     }
 
@@ -284,11 +245,45 @@ public final class DataManagement {
         for (Subscription s : list) {
             team.addObserver((SystemAdministrator)s);
         }
+        sql.insert("Team", new Object[]{team.getName(), team.getTeamAssets().iterator().next(), team.getListTeamOwner().iterator().next(), team.getStatus(),
+                team.getTeamScore().getPoints(), team.getTeamScore().getNumberOfGames(), team.getTeamScore().getWins(), team.getTeamScore().getDrawn(),
+                team.getTeamScore().getLoses(), String.valueOf(team.getTeamScore().getGoalsScores()), team.getTeamScore().getGoalsGet()});
+        HashSet<UnifiedSubscription> people = team.getListTeamOwner();
+        while(people.iterator().hasNext()){
+            UnifiedSubscription t = people.iterator().next();
+            sql.insert("AssetsInTeam",new Object[]{team.getName(),t.getUserName(),"TeamOwner"});
+        }
+        people = team.getListTeamManager();
+        while(people.iterator().hasNext()){
+            UnifiedSubscription t = people.iterator().next();
+            sql.insert("AssetsInTeam",new Object[]{team.getName(),t.getUserName(),"TeamManager"});
+        }
+        people = team.getTeamPlayers();
+        while(people.iterator().hasNext()){
+            UnifiedSubscription t = people.iterator().next();
+            sql.insert("AssetsInTeam",new Object[]{team.getName(),t.getUserName(),"Player"});
+        }
+        people = team.getTeamCoaches();
+        while(people.iterator().hasNext()){
+            UnifiedSubscription t = people.iterator().next();
+            sql.insert("AssetsInTeam",new Object[]{team.getName(),t.getUserName(),"Coach"});
+        }
+        HashSet<Object> filds = team.getTeamAssets();
+        while(filds.iterator().hasNext()){
+            Object t = filds.iterator().next();
+            sql.insert("AssetsInTeam",new Object[]{team.getName(),t.toString(),"Filed"});
+        }
         logger.log("DataManagement :new team was added, team name: " + team.getName());
     }
 
     public static void addToListLeague(League league){
         list_league.add(league);
+        sql.insert("League", new Object[]{league.getName()});
+        for(Season s:league.getAllSeasons()){
+            sql.insert("Season", new Object[]{league.getName(), s.getYear()});
+            sql.insertBlob("Season"+league.getName()+s.getYear(),s);
+
+        }
         logger.log("DataManagement :new league was added, team name: " + league.getName());
     }
 
@@ -342,21 +337,10 @@ public final class DataManagement {
 
     static HashSet<Complaint> getAllComplaints() {
         return sql.loadComplaintInfo(false);
-        //return list_Complaints;
     }
 
     static HashSet<Complaint> getUnansweredComplaints() {
         return sql.loadComplaintInfo(true);
-        /*
-        HashSet<Complaint> unanswered = new HashSet<>();
-        for (Complaint c : list_Complaints){
-            if (!c.isAnswered()){
-                unanswered.add(c);
-            }
-        }
-        return unanswered;
-
-         */
     }
 
     /**
@@ -365,9 +349,13 @@ public final class DataManagement {
      */
     public static void addComplaint(Complaint complaint) {
         if(complaint!=null){
-            //list_Complaints.add(complaint);
-            //TODO- check what happens if object exists, we need to delete then insert ? ....
-            sql.insertBlob("Blobs","Complaint",list_Complaints);
+            HashSet<Complaint> c = sql.loadComplaintInfo(false);
+            if(c!=null) {
+                list_Complaints = c;
+            }
+            list_Complaints.add(complaint);
+            sql.delete("Blobs",new String[]{"Complaint"});
+            sql.insertBlob("Complaint",list_Complaints);
         }
     }
 }

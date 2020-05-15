@@ -4,13 +4,19 @@ import BusinessService.Business_Layer.Game.League;
 import BusinessService.Business_Layer.Game.Season;
 import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.TeamManagement.TeamScore;
-import BusinessService.Business_Layer.UserManagement.Player;
-import BusinessService.Business_Layer.UserManagement.Referee;
-import BusinessService.Business_Layer.UserManagement.TeamOwner;
-import BusinessService.Business_Layer.UserManagement.UnifiedSubscription;
+import BusinessService.Business_Layer.UserManagement.*;
 import BusinessService.Enum.EventType;
 import BusinessService.Service_Layer.TeamController;
 import DB_Layer.databaseController;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.css.SimpleStyleableObjectProperty;
+
+import javax.xml.soap.SOAPPart;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,7 +26,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        //**********************************************init************************************************************//
+        /**********************************************init**********************************************************
         databaseController databaseController = new databaseController();
         databaseController.startDBConnection();
         UnifiedSubscription unifiedSubscription = new UnifiedSubscription("matanshu", "654321", "matanshu@bgu.ac.il");
@@ -49,8 +55,8 @@ public class Main {
         Game game = new Game("Barnabeo",localDate, team, team1);
         game.setHeadReferee(referee);
         game.updateNewEvent(team.getName(),"meTest", EventType.goal);
-
-        //**********************************************Insert************************************************************//
+ */
+        /**********************************************Insert***********************************************************
         databaseController.insert("Users", new String[]{referee.getUserName(), referee.getPassword(), referee.getRole(),
                 referee.getEmail()});
         databaseController.insert("Users", new String[]{unifiedSubscription.getUserName(), unifiedSubscription.getPassword(),
@@ -70,8 +76,8 @@ public class Main {
                 event.getPlayer(),event.getEventType().toString()});
         databaseController.insert("RefereeInSeason",new Object[]{league.getName(), season.getYear(), referee.getUserName()});
         databaseController.insert("UsersData",new Object[]{"matanshu", "position", "striker"});
-
-        //**********************************************update ************************************************************//
+*/
+        /**********************************************update ***********************************************************
         databaseController.update("Users", new String[]{"null"},"userName","matanshu");
         databaseController.update("Team", new String[]{"Barcelona"},"Wins","20");
         databaseController.update("League", new String[]{"NBA"},"leagueName","first league");
@@ -81,11 +87,29 @@ public class Main {
         databaseController.update("EventInGame", new String[]{"1", "14:45:50.8930000"},"eventType","goal");
         databaseController.update("RefereeInSeason", new String[]{"La Liga", "2020", "shimon"}, "refereeName", "shalom");
         databaseController.update("UsersData", new String[]{"userName"},"dataType","ownerAppointedByTeamOwner");
+*/
 
 
+        //********************************************** BLOB ************************************************************//
 
+        databaseController databaseController = new databaseController();
+        databaseController.startDBConnection();
 
+        Permissions per = new Permissions();
+        per.add_default_fan_permission();
+        Permissions pi = null;
 
+        try {
+            databaseController.sqlConn.insertBlob("perms",per);
+            System.out.println("done1");
+
+            Object oi = databaseController.sqlConn.getBlob("perms");
+            pi = (Permissions)oi;
+            System.out.println("done2");
+            System.out.println(pi.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 //        //StartSystem sys = new StartSystem();
 //        //sys.startFromDB();

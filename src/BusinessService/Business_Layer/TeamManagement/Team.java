@@ -77,6 +77,14 @@ public class Team extends Observable implements Comparable {
         return list_assets;
     }
 
+    public HashSet<UnifiedSubscription> getTeamPlayers(){
+        return list_Player;
+    }
+
+    public HashSet<UnifiedSubscription> getTeamCoaches(){
+        return list_Coach;
+    }
+
     public TeamScore getTeamScore() {
         return teamScore;
     }
@@ -124,7 +132,6 @@ public class Team extends Observable implements Comparable {
 
 
     //**********************************************Edit asset************************************************************//
-
 
     /**
      * A function that allows to add assets like a field for a team
