@@ -1,11 +1,17 @@
 package DB_Layer.JDBC;
 
+import BusinessService.Business_Layer.UserManagement.Permissions;
 import BusinessService.Enum.ActionStatus;
 import DB_Layer.interfaceDB;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 
 public class sqlConnection implements interfaceDB {
@@ -15,26 +21,57 @@ public class sqlConnection implements interfaceDB {
     HashMap<String,String[]> keys;
 
     @Override
-    public int insert(String table,String[] values){
+    public int insert(String table,Object[] values){
         String query = prepQuery(table,values);
         int ans = execute(query);
         return ans;
     }
 
-    public int insertBlob(String table,String key, byte[] value){
-        String query = "INSERT INTO "+ table +" ([key],[value]) VALUES ('"+key+"', BulkColumn FROM OPENROWSET (Bulk '"+ value +"', SINGLE_BLOB) AS varBinaryData)";
-        int ans = execute(query);
-        return ans;
+    public int insertBlob(String key, Object value){
+        try{
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(value);
+            byte[] valueAsBytes = baos.toByteArray();
+            PreparedStatement pstmt = databaseManager.conn.prepareStatement("use FootBallDB INSERT INTO Blobs ([key],[value]) VALUES('"+key +"',?)");
+            ByteArrayInputStream bais = new ByteArrayInputStream(valueAsBytes);
+            pstmt.setBinaryStream(1, bais, valueAsBytes.length);
+            int ans = pstmt.executeUpdate();
+            pstmt.close();
+            return ans;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return -1;
     }
 
+    public Object getBlob(String key){
+        try{
+            Object ans = null;
+            PreparedStatement stmt = databaseManager.conn.prepareStatement("use FootBallDB SELECT * FROM Blobs WHERE [key] = '"+key+"'");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                byte[] st = (byte[]) rs.getObject("value");
+                ByteArrayInputStream baip = new ByteArrayInputStream(st);
+                ObjectInputStream ois = new ObjectInputStream(baip);
+                ans =  ois.readObject();
+            }
+            stmt.close();
+            rs.close();
+            return ans;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public int update(String table, String[] key, String column, String value) {
         int i = 1;
         int length = keys.get(table).length-1;
-        String query =  "use FootBallDB UPDATE "+ table + " SET " + column + " = '" + value +"' WHERE " + keys.get(table)[0] + " = " + "'"+key[0]+"'";
+        String query =  "use FootBallDB UPDATE "+ table + " SET " + column + " = '" + value +"' WHERE [" + keys.get(table)[0] + "] = " + "'"+key[0]+"'";
         for (int k=0; k<length; k++){
-            query += " AND " + keys.get(table)[i] + " = " + "'"+key[i]+"'";
+            query += " AND [" + keys.get(table)[i] + "] = " + "'"+key[i]+"'";
             i++;
         }
         int ans = execute(query);
@@ -46,12 +83,13 @@ public class sqlConnection implements interfaceDB {
 
         String query =  "use FootBallDB SELECT * FROM "+ table;
         if (key != null) {
-            query += " WHERE " + keys.get(table)[0] + " = " + "'"+key[0]+"'";
+            query += " WHERE [" + keys.get(table)[0] + "] = " + "'"+key[0]+"'";
             int length = key.length-1;
             for (int k = 0; k < length ; k++) {
-                query += " AND " + keys.get(table)[k + 1] + " = " + "'" + key[k + 1] + "'";
+                query += " AND [" + keys.get(table)[k + 1] + "] = " + "'" + key[k + 1] + "'";
             }
         }
+        System.out.println(query);
         PreparedStatement sqlStatement = null;
         ResultSet result = null;
         try{
@@ -76,7 +114,7 @@ public class sqlConnection implements interfaceDB {
     @Override
     public ResultSet findByValue(String table, String column,String value) {
 
-        String query =  "use FootBallDB SELECT * FROM "+ table + " WHERE " + column + " = " + "'"+value+"'";
+        String query =  "use FootBallDB SELECT * FROM "+ table + " WHERE [" + column + "] = " + "'"+value+"'";
 
         PreparedStatement sqlStatement = null;
         ResultSet result = null;
@@ -103,9 +141,9 @@ public class sqlConnection implements interfaceDB {
     public int delete(String table, String[] key) {
         int i = 1;
         int length = keys.get(table).length-1;
-        String query =  "use FootBallDB DELETE FROM "+ table + " WHERE " + keys.get(table)[0] + " = " + "'"+key[0]+"'";
+        String query =  "use FootBallDB DELETE FROM "+ table + " WHERE [" + keys.get(table)[0] + "] = " + "'"+key[0]+"'";
         for (int k=0; k<length; k++){
-            query += " AND " + keys.get(table)[i] + " = " + "'"+key[i]+"'";
+            query += " AND [" + keys.get(table)[i] + "] = " + "'"+key[i]+"'";
             i++;
         }
         int ans = execute(query);
@@ -140,7 +178,7 @@ public class sqlConnection implements interfaceDB {
         return rowsEdited;
     }
 
-    private String prepQuery(String table,String[] values){
+    private String prepQuery(String table,Object[] values){
         String query = "use FootBallDB INSERT INTO " + "["+table+"]";;
 
         if(table.equals("Users")){
@@ -160,8 +198,8 @@ public class sqlConnection implements interfaceDB {
                     values[7]+"','"+values[8]+"','"+values[9]+"')";
         }
         else if(table.equals("EventInGame")){
-            query += " ([gameID],  [eventTime], [refereeName], [playerName],  [eventType],) VALUES ('"+
-                    values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"','"+values[3]+"')";
+            query += " ([gameID],  [eventTime], [playerName],  [eventType]) VALUES ('"+
+                    values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"')";
         }
         else if(table.equals("League")){
             query += " ([leagueName]) VALUES ('"+
