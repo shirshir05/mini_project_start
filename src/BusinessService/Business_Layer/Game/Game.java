@@ -11,13 +11,13 @@ import BusinessService.Business_Layer.UserManagement.Player;
 import BusinessService.Business_Layer.UserManagement.Referee;
 import BusinessService.Business_Layer.UserManagement.UnifiedSubscription;
 import BusinessService.Enum.ActionStatus;
+import BusinessService.Enum.Configurations;
 import BusinessService.Enum.EventType;
 import DB_Layer.logger;
 import javafx.util.Pair;
 
 
 public class Game extends Observable{
-    public static int game_id=0;
     protected  int id;
     private String field;
     protected LocalDate date;
@@ -34,8 +34,8 @@ public class Game extends Observable{
     private String season;
 
     public Game(String f, LocalDate d, Team h, Team g){
-        game_id++;
-        id = game_id;
+        id = Configurations.getNumberOfGames();
+        Configurations.setPropValues("NumberOfGames",id++);
         this.field=f;
         this.date=d;
         this.host=h;
@@ -43,6 +43,14 @@ public class Game extends Observable{
         eventList = new HashSet<>();
     }
 
+    /**
+     * for DB
+     * @param f  -
+     * @param d-
+     * @param h-
+     * @param g-
+     * @param gameId-
+     */
     public Game(String f, LocalDate d, Team h, Team g,int gameId){
         id = gameId;
         this.field=f;

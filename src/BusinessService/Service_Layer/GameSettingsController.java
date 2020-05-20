@@ -316,10 +316,10 @@ public class GameSettingsController {
      * @param arg_team -
      * @param arg_event_type -
      * @param arg_player -
-     * @param eventTime -
      * @return ActionStatus
      */
-    public ActionStatus refereeEditGameEvent(int game_id, String arg_team, String arg_event_type, String arg_player, LocalDateTime eventTime){
+    public ActionStatus refereeEditGameEvent(int game_id, String arg_team, String arg_event_type, String arg_player,
+                                             int year, int month, int day,int hour, int minute , int second){
         ActionStatus AC = new ActionStatus(false, "one of details incorrect."); ;
         Game game = DataManagement.getGame(game_id);
         Team team = DataManagement.findTeam(arg_team);
@@ -328,13 +328,13 @@ public class GameSettingsController {
         EventType eventType = getEventFromString(arg_event_type) ;
         Subscription player = DataManagement.containSubscription(arg_player);
         if(player instanceof UnifiedSubscription){
-            if(((UnifiedSubscription) player).isAPlayer()){
+            if(((UnifiedSubscription) player).isAPlayer() && !(year > 2022 || month <=0 || month > 12|| day< 0 || day>31)){
                 flag_player = true;
             }
         }
-        if ( flag_player  && eventType != null && game != null && game.getHeadReferee() != null && game.getHeadReferee().equals(DataManagement.getCurrent())){
+        if ( flag_player  &&  eventType != null && game != null && game.getHeadReferee() != null && game.getHeadReferee().equals(DataManagement.getCurrent().getUserName())){
             for (Event currentEvent : game.getEventList()){
-                if (currentEvent.getEventTime().equals(eventTime)){
+                if (currentEvent.getEventTime().equals(LocalDateTime.of(year,month,day,hour,minute,second))){
                     if (game.getHost().equals(team)){
                         if (arg_player!=null && game.getHost().getPlayer(player.getUserName()).equals(player)){
                             currentEvent.setPlayer((UnifiedSubscription)player);

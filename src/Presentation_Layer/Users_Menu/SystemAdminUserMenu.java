@@ -71,24 +71,10 @@ public class SystemAdminUserMenu implements UserMenu {
             output += "choose action: \n1:watch all complaints \n2:watch and answer unanswered complaints\nuser input- " + args[1] + "\n";
             int choice = Integer.parseInt(args[1]);
             if(choice == 1){
-                HashSet<Complaint> comp =  StartSystem.Ac.getAllComplaints();
-                if(comp != null) {
-                    for (Complaint c : comp) {
-                        output += c.toString();
-                    }
-                }
-                return new ActionStatus(comp!=null,output);
+                output += StartSystem.Ac.getAllComplaints().getDescription();
+                return new ActionStatus(true,output);
             }else if(choice == 2){
-                HashSet<Complaint> comp =  StartSystem.Ac.getUnansweredComplaints();
-                if(comp != null) {
-                    for (Complaint c : comp) {
-                        output += c.toString();
-                        output += "insert answer:\nuser input- "+ args[2]+ "\n";
-                        StartSystem.Ac.answerCompliant(c,args[2]);
-                        output += c.toString();
-                    }
-                }
-                return new ActionStatus(comp!=null,output);
+              
             }
         }
         else if(input == 4) {

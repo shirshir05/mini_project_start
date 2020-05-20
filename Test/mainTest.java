@@ -23,16 +23,16 @@ public class mainTest {
         test(AlertControllerTest.class);
         test(TeamOwnerTest.class);
         Thread.sleep(1000);
-        Game.game_id = 0;
+
         //BudgetManagement
         test(BudgetRegulationsTest.class);
         test(TeamBudgetTest.class);
         test(UnionBudgetTest.class);
         //Game
         test(EventTest.class);
-        Game.game_id = 0;
+
         test(GameTest.class);
-        Game.game_id = 0;
+
         test(LeagueTest.class);
         test(SeasonTest.class);
         //Team Management
