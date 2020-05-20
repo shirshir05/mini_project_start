@@ -5,6 +5,7 @@ import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.UserManagement.Player;
 import BusinessService.Business_Layer.UserManagement.Referee;
 import BusinessService.Business_Layer.UserManagement.UnifiedSubscription;
+import BusinessService.Enum.Configurations;
 import BusinessService.Enum.EventType;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -177,7 +178,6 @@ public class GameSettingsControllerTest {
         }
         @Test
         public void refereeWatchGamesTest() {
-            Game.game_id = 0;
             DataManagement.cleanAllData();
             GameSettingsController gm = new GameSettingsController();
             LogAndExitController lg = new LogAndExitController();
@@ -226,7 +226,6 @@ public class GameSettingsControllerTest {
         }
         @Test
         public void refereeCreateNewEventTest() {
-            Game.game_id = 0;
             DataManagement.cleanAllData();
             GameSettingsController gm = new GameSettingsController();
             LogAndExitController lg = new LogAndExitController();

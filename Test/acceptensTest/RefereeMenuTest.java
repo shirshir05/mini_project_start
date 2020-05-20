@@ -90,7 +90,6 @@ public class RefereeMenuTest {
         @Test
         public void  RefereeMenu1(){
             StartSystem.cleanSystem();
-            Game.game_id =0;
             GameSettingsController g = new GameSettingsController();
             Referee ref = new Referee("Raz","1234","raz@post.bgu.ac.il");
             DataManagement.setCurrent(ref);

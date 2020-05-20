@@ -5,6 +5,7 @@ import BusinessService.Business_Layer.TeamManagement.Team;
 import BusinessService.Business_Layer.Trace.PersonalPage;
 import BusinessService.Business_Layer.UserManagement.*;
 import BusinessService.Enum.ActionStatus;
+import BusinessService.Enum.Configurations;
 import BusinessService.Enum.PermissionAction;
 import DB_Layer.logger;
 import com.sun.xml.internal.stream.buffer.AbstractCreator;
@@ -94,7 +95,9 @@ public class AlertController {
         }
         else {
             Fan f = (Fan)DataManagement.getCurrent();
-            Complaint c = new Complaint(complaintDescription);
+            int NumberComplain =  Configurations.getNumberOfComplaint();
+            Complaint c = new Complaint("(ID: " +NumberComplain + ")" +complaintDescription);
+            Configurations.setPropValues("NumberOfComplaint",++NumberComplain);
             f.addComplaint(c);
             DataManagement.addComplaint(c);
             AC = new ActionStatus(true, "Complaint added successfully");
@@ -107,25 +110,40 @@ public class AlertController {
      * for the use of the system manager, to read all the complaints in the system
      * @return a hash set of all the complaints
      */
-    public HashSet<Complaint> getAllComplaints() {
-        if(DataManagement.getCurrent()!= null && DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints))
-            return DataManagement.getAllComplaints();
-        return null;
+    public ActionStatus getAllComplaints() {
+        StringBuilder returnValue = new StringBuilder("");
+        if(DataManagement.getCurrent()!= null && DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints)) {
+            HashSet<Complaint> set = DataManagement.getAllComplaints();
+            for (Complaint comp:set) {
+                returnValue.append(comp.getDescription() + " is answer: " + comp.isAnswered()).append("!!!");
+            }
+        }
+        return new ActionStatus(true, returnValue.toString());
     }
 
     /**
-     * for the use of the system manager, to read only the unanswered complaints in the system
+     * answer compliant
+     * @param numberComplaint -
+     * @param answer -
+     * @return -
      */
-    public HashSet<Complaint> getUnansweredComplaints() {
-        if(DataManagement.getCurrent()!= null && DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints))
-            return DataManagement.getUnansweredComplaints();
-        return null;
-    }
-
-    public ActionStatus answerCompliant(Complaint complaint, String answer){
+    public ActionStatus answerCompliant(int numberComplaint, String answer){
         ActionStatus AC;
+        HashSet<Complaint> set = DataManagement.getAllComplaints();
+        Complaint complaint = null;
+        for (Complaint comp:set) {
+            String description = comp.getDescription();
+            String numberCom = description.substring(description.indexOf("(ID: ") + 5,description.indexOf(")"));
+            int number = Integer.parseInt(numberCom);
+            if(number == numberComplaint){
+                complaint = comp;
+            }
+        }
         if(DataManagement.getCurrent()== null || !DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints)) {
             AC = new ActionStatus(false, "You do not have the required permissions to answer complaints");
+        }
+        else if(complaint == null){
+            AC = new ActionStatus(false, "No id complaint");
         }
         else if(complaint.isAnswered()){
             AC = new ActionStatus(false, "Complaint has been answered already");

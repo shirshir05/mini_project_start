@@ -201,7 +201,7 @@ public class RefereeTest {
         }
         @Test
         public void gamesListToStringTest() {
-            Game.game_id =0;
+
             Referee referee = new Referee(userName,password,email);
             referee.addGame(new Game("f",null, null, null));
             assertEquals(referee.gamesListToString(),this.ans);

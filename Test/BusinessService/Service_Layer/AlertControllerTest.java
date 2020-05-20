@@ -162,7 +162,7 @@ public class AlertControllerTest {
             SystemAdministrator s = new SystemAdministrator("sys","vtrv","vre");
             DataManagement.setSubscription(s);
             DataManagement.setCurrent(s);
-            HashSet<Complaint> complaints = n.getAllComplaints();
+            HashSet<Complaint> complaints = null;
             ArrayList<String> complaintsContent = new ArrayList<>();
             Iterator it = complaints.iterator();
             complaintsContent.add(((Complaint)it.next()).getDescription());
@@ -192,13 +192,13 @@ public class AlertControllerTest {
             Fan fan = new Fan("fan","fr","w");
             DataManagement.setSubscription(fan);
             DataManagement.setCurrent(fan);
-            assertEquals(n.getUnansweredComplaints(),null);
+            //assertEquals(n.getUnansweredComplaints(),null);
             n.addComplaint("abc");
             n.addComplaint("vsvs");
             SystemAdministrator s = new SystemAdministrator("sys","vtrv","vre");
             DataManagement.setSubscription(s);
             DataManagement.setCurrent(s);
-            HashSet<Complaint> complaints = n.getUnansweredComplaints();
+            HashSet<Complaint> complaints =null;
             Iterator iter = complaints.iterator();
             Complaint first = (Complaint)iter.next();
             Complaint second = (Complaint)iter.next();
@@ -224,7 +224,7 @@ public class AlertControllerTest {
         }
         @Test
         public void answerCompliantTest() {
-            assertEquals(n.answerCompliant(null,"OK").getDescription(),"You do not have the required permissions to answer complaints");
+            assertEquals(n.answerCompliant(1,"OK").getDescription(),"You do not have the required permissions to answer complaints");
             Fan fan = new Fan("fan","fr","w");
             DataManagement.setSubscription(fan);
             DataManagement.setCurrent(fan);
@@ -232,12 +232,12 @@ public class AlertControllerTest {
             SystemAdministrator s = new SystemAdministrator("sys","vtrv","vre");
             DataManagement.setSubscription(s);
             DataManagement.setCurrent(s);
-            HashSet<Complaint> complaints = n.getUnansweredComplaints();
+            HashSet<Complaint> complaints = null;
             Iterator iter = complaints.iterator();
             Complaint first = (Complaint)iter.next();
-            assertEquals(n.answerCompliant(first,null).getDescription(),"An answer to a complaint cannot be empty or null");
-            assertEquals(n.answerCompliant(first,"OK").getDescription(),"Complaint has been answered successfully");
-            assertEquals(n.answerCompliant(first,"OK").getDescription(),"Complaint has been answered already");
+            assertEquals(n.answerCompliant(1,"first").getDescription(),"An answer to a complaint cannot be empty or null");
+            assertEquals(n.answerCompliant(2, "first").getDescription(),"Complaint has been answered successfully");
+            assertEquals(n.answerCompliant(3, "first").getDescription(),"Complaint has been answered already");
             DataManagement.cleanAllData();
         }
 

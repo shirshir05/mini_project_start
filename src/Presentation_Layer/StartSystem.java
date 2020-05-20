@@ -3,6 +3,7 @@ package Presentation_Layer;
 import BusinessService.Business_Layer.BudgetManagement.BudgetRegulations;
 import BusinessService.Business_Layer.Game.Game;
 import BusinessService.Enum.ActionStatus;
+import BusinessService.Enum.Configurations;
 import BusinessService.Service_Layer.*;
 import DB_Layer.databaseController;
 import DB_Layer.myFirstDB;
@@ -87,7 +88,7 @@ public class StartSystem {
     public void startFromDB(){
         DataManagement.cleanAllData();
         String ans = "";
-        Game.game_id =0;
+        Configurations.setPropValues("NumberOfGames",1);
         //ans += db.loadUserInfo().getDescription() +"\n";
         //ans += db.loadTeamInfo().getDescription() +"\n";
         //ans += db.loadLeagueInfo().getDescription() +"\n";

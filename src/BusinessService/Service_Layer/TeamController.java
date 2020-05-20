@@ -13,6 +13,30 @@ import java.util.Observable;
 public class TeamController {
 
 
+
+
+    /**
+     * This function return name of team that need approve to create them
+     * @return ActionStatus
+     *
+     */
+    public ActionStatus AllTeamApprove(){
+        StringBuilder returnValue = new StringBuilder("");
+        HashSet<Subscription> union = DataManagement.getUnionRepresentatives();
+        for (Subscription rep : union) {
+            HashSet<String> alerts = rep.getAlerts();
+            for (String alert:alerts) {
+                //message in this type: rep.addAlert("teamOwner:" + currentUser.getUserName() + "| Team;" + arg_name);
+                if (alert.contains("teamOwner:") && alert.contains("| Team;") ) {
+                    String teamName = alert.substring(alert.indexOf(';')+1);
+                    returnValue.append(teamName).append(",");
+                }
+            }
+        }
+        return new ActionStatus(true, returnValue.toString());
+    }
+
+
     /**
      * The function is managed by the team owner . The team owner sends an alert to all Union Representatives
      *  to request their permission to open a team. The team opens with a status 2
