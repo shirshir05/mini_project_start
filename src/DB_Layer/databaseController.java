@@ -1,24 +1,18 @@
 package DB_Layer;
 
-import BusinessService.Business_Layer.Game.*;
-import BusinessService.Business_Layer.TeamManagement.Team;
-import BusinessService.Business_Layer.TeamManagement.TeamScore;
-import BusinessService.Business_Layer.Trace.CoachPersonalPage;
-import BusinessService.Business_Layer.Trace.PersonalPage;
-import BusinessService.Business_Layer.Trace.PlayerPersonalPage;
-import BusinessService.Business_Layer.Trace.TeamPersonalPage;
-import BusinessService.Business_Layer.UserManagement.*;
-import BusinessService.Enum.ActionStatus;
-import BusinessService.Enum.EventType;
-import BusinessService.Service_Layer.DataManagement;
+import Business_Layer.Business_Items.Game.*;
+import Business_Layer.Business_Items.TeamManagement.Team;
+import Business_Layer.Business_Items.TeamManagement.TeamScore;
+import Business_Layer.Business_Items.Trace.CoachPersonalPage;
+import Business_Layer.Business_Items.Trace.PlayerPersonalPage;
+import Business_Layer.Business_Items.Trace.TeamPersonalPage;
+import Business_Layer.Business_Items.UserManagement.*;
+import Business_Layer.Enum.ActionStatus;
+import Business_Layer.Enum.EventType;
+import Business_Layer.Business_Control.DataManagement;
 import DB_Layer.JDBC.sqlConnection;
-import Presentation_Layer.StartSystem;
-import com.microsoft.sqlserver.jdbc.SQLServerBlob;
-import com.microsoft.sqlserver.jdbc.SQLServerConnection;
+import Service_Layer.StartSystem;
 
-import javax.sql.rowset.serial.SerialBlob;
-import java.io.*;
-import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
