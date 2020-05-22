@@ -1,6 +1,6 @@
 package DB_Layer.JDBC;
 
-import BusinessService.Enum.ActionStatus;
+import Business_Layer.Enum.ActionStatus;
 
 import java.sql.*;
 

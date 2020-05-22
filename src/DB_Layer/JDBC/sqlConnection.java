@@ -1,7 +1,6 @@
 package DB_Layer.JDBC;
 
-import BusinessService.Business_Layer.UserManagement.Permissions;
-import BusinessService.Enum.ActionStatus;
+import Business_Layer.Enum.ActionStatus;
 import DB_Layer.interfaceDB;
 
 import java.io.ByteArrayInputStream;
@@ -11,7 +10,6 @@ import java.io.ObjectOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 
 public class sqlConnection implements interfaceDB {
@@ -243,6 +241,7 @@ public class sqlConnection implements interfaceDB {
         //ResultSetPrinter.printResultSet(resultSet);
     }
 
+    @Override
     public ActionStatus connect(){
         return databaseManager.startConnection();
     }

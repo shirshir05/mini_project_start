@@ -1,19 +1,13 @@
 package DB_Layer;
-import BusinessService.Business_Layer.UserManagement.Subscription;
-import BusinessService.Enum.ActionStatus;
-import BusinessService.Service_Layer.DataManagement;
+import Business_Layer.Business_Items.UserManagement.Subscription;
 import DB_Layer.JDBC.sqlConnection;
-import Presentation_Layer.StartSystem;
-import Presentation_Layer.Users_Menu.FanUserMenu;
 import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

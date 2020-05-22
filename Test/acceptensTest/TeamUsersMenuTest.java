@@ -1,9 +1,9 @@
 package acceptensTest;
 
-import BusinessService.Enum.ActionStatus;
-import BusinessService.Service_Layer.DataManagement;
-import Presentation_Layer.StartSystem;
-import Presentation_Layer.Users_Menu.TeamUsersMenu;
+import Business_Layer.Enum.ActionStatus;
+import Business_Layer.Business_Control.DataManagement;
+import Service_Layer.StartSystem;
+import Users.Users_Menu.TeamUsersMenu;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
