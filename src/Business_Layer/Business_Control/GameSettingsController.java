@@ -159,7 +159,7 @@ public class GameSettingsController {
                 ScoreTable scoreTable = new ScoreTable(pointsPolicy);
                 addSeason.setScoreTable(scoreTable);
                 Spelling.updateDictionary("season: " + league_name);
-                AC = new ActionStatus(false, "The season has been set successfully in the league.");
+                AC = new ActionStatus(true, "The season has been set successfully in the league.");
             }else{
                 AC = new ActionStatus(false, "The year must be less than 2022 and greater than 1900.");
 
@@ -309,6 +309,45 @@ public class GameSettingsController {
     }
 
 
+    private static LocalDateTime parserTime(String date){
+        //time = Sat May 16 2020 11:50:26 GMT+0300 (Israel Daylight Time)
+        try {
+            String[] parser = date.split(" ");
+            String[]  time= parser[4].split(":");
+            int month = 1;
+            if(parser[1].equals("Jan")){
+                month = 1;
+            }else if(parser[1].equals("Feb")){
+                month = 2;
+            }else if(parser[1].equals("Mar")){
+                month = 3;
+            }else if(parser[1].equals("Apr")){
+                month = 4;
+            }else if(parser[1].equals("May")){
+                month = 5;
+            }else if(parser[1].equals("Jun")){
+                month = 6;
+            }else if(parser[1].equals("Jul")){
+                month = 7;
+            }else if(parser[1].equals("Aug")){
+                month = 8;
+            }else if(parser[1].equals("Sep")){
+                month = 9;
+            }else if(parser[1].equals("Oct")){
+                month = 10;
+            }else if(parser[1].equals("Nov")){
+                month = 11;
+            }else if(parser[1].equals("Dec")){
+                month = 12;
+            }
+            return LocalDateTime.of(Integer.parseInt(parser[3]),month, Integer.parseInt(parser[2]),
+                    Integer.parseInt(time[0]),Integer.parseInt(time[1]),Integer.parseInt(time[2]));
+        }catch (Exception e){
+            return LocalDateTime.now();
+        }
+    }
+
+
     /**
      * A referee can add and edit events that happened in the game
      * @param game_id  -
@@ -318,7 +357,7 @@ public class GameSettingsController {
      * @return ActionStatus
      */
     public ActionStatus refereeEditGameEvent(int game_id, String arg_team, String arg_event_type, String arg_player,
-                                             int year, int month, int day,int hour, int minute , int second){
+                                            String time){
         ActionStatus AC = new ActionStatus(false, "one of details incorrect."); ;
         Game game = DataManagement.getGame(game_id);
         Team team = DataManagement.findTeam(arg_team);
@@ -327,13 +366,13 @@ public class GameSettingsController {
         EventType eventType = getEventFromString(arg_event_type) ;
         Subscription player = DataManagement.containSubscription(arg_player);
         if(player instanceof UnifiedSubscription){
-            if(((UnifiedSubscription) player).isAPlayer() && !(year > 2022 || month <=0 || month > 12|| day< 0 || day>31)){
+            if(((UnifiedSubscription) player).isAPlayer()){
                 flag_player = true;
             }
         }
         if ( flag_player  &&  eventType != null && game != null && game.getHeadReferee() != null && game.getHeadReferee().equals(DataManagement.getCurrent().getUserName())){
             for (Event currentEvent : game.getEventList()){
-                if (currentEvent.getEventTime().equals(LocalDateTime.of(year,month,day,hour,minute,second))){
+                if (currentEvent.getEventTime().equals(parserTime(time))){
                     if (game.getHost().equals(team)){
                         if (arg_player!=null && game.getHost().getPlayer(player.getUserName()).equals(player)){
                             currentEvent.setPlayer((UnifiedSubscription)player);
