@@ -44,7 +44,6 @@ public class JavaHTTPServer implements Runnable {
             // we listen until user halts server execution
             while (true) {
                 JavaHTTPServer myServer = new JavaHTTPServer(serverConnect.accept());
-
                 if (verbose) {
                     System.out.println("Connecton opened. (" + new Date() + ")");
                 }
