@@ -113,10 +113,15 @@ public class AlertController {
         if(DataManagement.getCurrent()!= null && DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints)) {
             HashSet<Complaint> set = DataManagement.getAllComplaints();
             for (Complaint comp:set) {
-                returnValue.append(comp.getDescription() + " is answer: " + comp.isAnswered()).append("!!!");
+                returnValue.append(comp.getDescription() + " is answer: " + comp.isAnswered()).append("~!#%"); //seperator between complaints
             }
         }
-        return new ActionStatus(true, returnValue.toString());
+        if(!returnValue.equals("")) {
+            return new ActionStatus(true, returnValue.toString());
+        }
+        else {
+            return new ActionStatus(false, "no complaints");
+        }
     }
 
     /**

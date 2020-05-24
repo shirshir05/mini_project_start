@@ -1,14 +1,12 @@
 import Business_Layer.Business_Items.UserManagement.*;
 
+import java.time.LocalDateTime;
+
 
 public class Main {
 
     public static void main(String[] args) {
-        int NumberComplain = 1;
-        Complaint c = new Complaint("(ID: " +NumberComplain + ")" +"hii");
-        System.out.println(c.getDescription().substring(c.getDescription().indexOf("(ID: ") + 5,c.getDescription().indexOf(")")));
-
-
+        System.out.println(parserTime("Sat May 16 2020 11:50:26 GMT+0300 (Israel Daylight Time)"));
 
 
 
@@ -120,5 +118,6 @@ public class Main {
 //        sys.startFromDB(); //first option
 //        sys.ResetToFactory(); //second option
     }
+
 
 }
