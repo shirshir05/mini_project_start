@@ -2,6 +2,7 @@ package Service_Layer;
 
 import Business_Layer.Business_Control.LogAndExitController;
 import Business_Layer.Enum.ActionStatus;
+import org.json.Cookie;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.*;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.StringTokenizer;
 
 public class JavaHTTPServer implements Runnable {
+    Cookie cookie = new Cookie();
 
     static final File WEB_ROOT = new File(".");
     static final String DEFAULT_FILE = "index.html";
@@ -148,6 +150,16 @@ public class JavaHTTPServer implements Runnable {
                     actionStatus = StartSystem.getSc().watchLogger(headerSplit[3]);
                     sendStringData();
                     break;
+                case "teamsforapproval":
+                    actionStatus = StartSystem.getTc().AllTeamApprove();
+                    if (actionStatus.isActionSuccessful()) {
+                        String[] array = actionStatus.getDescription().split(",");
+                        JSONArray jsonArray = new JSONArray(array);
+                        sendJsonData(jsonArray);
+                    } else {
+                        sendStringData();
+                    }
+                    break;
                 case "approveteam":
                     actionStatus = st.getTc().ApproveCreateTeamAlert
                             (jsonObject.getString(headerSplit[3]));
@@ -251,6 +263,7 @@ public class JavaHTTPServer implements Runnable {
         out.println("Server: Java HTTP Server from SSaurel : 1.0");
         out.println("Date: " + new Date());
         //out.println("Content-type: " );
+        out.println("Cookie: " + "matan");
         out.println("Access-Control-Allow-Origin: *");
         out.println("Content-length: " + actionStatus.getDescription().length());
         out.println(""); // blank line between headers and content, very important !
@@ -419,6 +432,5 @@ public class JavaHTTPServer implements Runnable {
             as = new ActionStatus(false, e.getMessage());
         }
         return as;
-        //return new ActionStatus(true, "default test message");
     }
 }
