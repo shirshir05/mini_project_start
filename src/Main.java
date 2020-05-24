@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println(parserTime("Sat May 16 2020 11:50:26 GMT+0300 (Israel Daylight Time)"));
+        //System.out.println(parserTime("Sat May 16 2020 11:50:26 GMT+0300 (Israel Daylight Time)"));
 
 
 
