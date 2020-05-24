@@ -58,6 +58,24 @@ public class sqlConnection implements interfaceDB {
         return null;
     }
 
+    public int updateBlob(String table, String key, Object value) {
+        try{
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(value);
+            byte[] valueAsBytes = baos.toByteArray();
+            PreparedStatement pstmt = databaseManager.conn.prepareStatement("use FootBallDB UPDATE "+table+" WHERE [key] = '"+key+"' SET ([value]) VALUES(?)");
+            ByteArrayInputStream bais = new ByteArrayInputStream(valueAsBytes);
+            pstmt.setBinaryStream(1, bais, valueAsBytes.length);
+            int ans = pstmt.executeUpdate();
+            pstmt.close();
+            return ans;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     @Override
     public int update(String table, String[] key, String column, String value) {
         int i = 1;
@@ -220,7 +238,7 @@ public class sqlConnection implements interfaceDB {
 
         keys = new HashMap<>();
         keys.put("Users", new String[]{"userName"});
-        keys.put("Team",new String[]{"teamName"});
+        keys.put("Team",new String[]{"key"});
         keys.put("AssetsInTeam",new String[]{"teamName","assetName"});
         keys.put("Game",new String[]{"gameID"});
         keys.put("EventInGame",new String[]{"gameID","eventTime"});

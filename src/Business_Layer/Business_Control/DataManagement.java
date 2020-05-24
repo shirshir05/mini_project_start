@@ -194,6 +194,8 @@ public final class DataManagement {
         Subscription.add(sub);
         sql.insert("Users",new String[]{sub.getUserName(),sub.getPassword(),sub.getRole(),sub.getEmail()});
         sql.insertBlob(sub.getUserName()+"Permissions",sub.getPermissions());
+        sql.insertBlob(sub.getUserName()+"Alerts",sub.getAlerts());
+        sql.insertBlob(sub.getUserName()+"searchHistory",sub.getSearch());
         if(sub instanceof UnifiedSubscription){
             if(((UnifiedSubscription) sub).isACoach()){
                 sql.insert("UsersData",new String[]{sub.getUserName(),"qualification",((UnifiedSubscription) sub).getQualification()});
@@ -233,8 +235,7 @@ public final class DataManagement {
     }
 
     public static void updateTeam(Team team){
-        sql.delete("Blobs",new String[]{});
-        sql.insertBlob(team.getName(),team);
+        sql.updateBlob("Team", team.getName(), team);
     }
 
     public static void addToListTeam(Team team){
@@ -244,37 +245,6 @@ public final class DataManagement {
             team.addObserver((SystemAdministrator)s);
         }
         sql.insertBlob(team.getName(),team);
-        /*
-        String asset = (String)team.getTeamAssets().iterator().next();
-        sql.insert("Team", new Object[]{team.getName(), asset, team.getListTeamOwner().iterator().next(), team.getStatus(),
-                team.getTeamScore().getPoints(), team.getTeamScore().getNumberOfGames(), team.getTeamScore().getWins(), team.getTeamScore().getDrawn(),
-                team.getTeamScore().getLoses(), String.valueOf(team.getTeamScore().getGoalsScores()), team.getTeamScore().getGoalsGet()});
-        HashSet<UnifiedSubscription> people = team.getListTeamOwner();
-        while(people.iterator().hasNext()){
-            UnifiedSubscription t = people.iterator().next();
-            sql.insert("AssetsInTeam",new Object[]{team.getName(),t.getUserName(),"TeamOwner"});
-        }
-        people = team.getListTeamManager();
-        while(people.iterator().hasNext()){
-            UnifiedSubscription t = people.iterator().next();
-            sql.insert("AssetsInTeam",new Object[]{team.getName(),t.getUserName(),"TeamManager"});
-        }
-        people = team.getTeamPlayers();
-        while(people.iterator().hasNext()){
-            UnifiedSubscription t = people.iterator().next();
-            sql.insert("AssetsInTeam",new Object[]{team.getName(),t.getUserName(),"Player"});
-        }
-        people = team.getTeamCoaches();
-        while(people.iterator().hasNext()){
-            UnifiedSubscription t = people.iterator().next();
-            sql.insert("AssetsInTeam",new Object[]{team.getName(),t.getUserName(),"Coach"});
-        }
-        HashSet<Object> filds = team.getTeamAssets();
-        while(filds.iterator().hasNext()){
-            Object t = filds.iterator().next();
-            sql.insert("AssetsInTeam",new Object[]{team.getName(),t.toString(),"Filed"});
-        }
-        */
         logger.log("DataManagement :new team was added, team name: " + team.getName());
     }
 
@@ -293,8 +263,7 @@ public final class DataManagement {
     }
 
     public static void updateSeason(String league,Season season) {
-        sql.delete("Blobs",new String[]{"Season"+league+season});
-        sql.insertBlob("Season"+league+season.getYear(),season);
+        sql.updateBlob("Blobs", "Season"+league+season.getYear(),season);
     }
 
     /**

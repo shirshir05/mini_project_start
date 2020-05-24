@@ -51,6 +51,7 @@ public class GameSettingsController {
                     }else{
                         policyCreateGame.algorithm(teamsInSeason, season);
                         AC = new ActionStatus(true, "The games were created according to the policy set.");
+                        DataManagement.updateSeason(leagueParameter,season);
                     }
                 }
             }
@@ -104,7 +105,9 @@ public class GameSettingsController {
                     AC = new ActionStatus(false,"The season has already begun You are not allowed to change policies.");
                 }
                 else if(league.getSeason(year)!=null){
-                    league.getSeason(year).setScoreTable(new ScoreTable(new PointsPolicy(win,lose,equal)));
+                    Season season = league.getSeason(year);
+                    season.setScoreTable(new ScoreTable(new PointsPolicy(win,lose,equal)));
+                    DataManagement.updateSeason(league_name,season);
                     AC = new ActionStatus(true,"The policy has been changed successfully.");
                 }else{
                     AC = new ActionStatus(false,"No season exists in the league.");

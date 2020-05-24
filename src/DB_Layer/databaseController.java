@@ -77,6 +77,8 @@ public class databaseController {
                 }
                 //GET PERMISSIONS FROM BLOB
                 sub.permissions = (Permissions)sqlConn.getBlob("Blobs",userID+"Permissions");
+                sub.setAllAlerts((HashSet<String>) sqlConn.getBlob("Blobs",sub.getUserName()+"Alerts"));
+                sub.setAllHistory((HashSet<String>) sqlConn.getBlob("Blobs",sub.getUserName()+"searchHistory"));
                 return sub;
             }
         } catch (SQLException e) {
@@ -95,6 +97,8 @@ public class databaseController {
                 Subscription sub = StartSystem.LEc.createUserByType(rs.getString("userName"), rs.getString("userPassword"), rs.getString("userRole"), rs.getString("email"));
                 sub.resetPass(rs.getString("userPassword"));
                 sub.permissions = (Permissions)sqlConn.getBlob("Blobs",rs.getString("userName")+"Permissions");
+                sub.setAllAlerts((HashSet<String>) sqlConn.getBlob("Blobs",sub.getUserName()+"Alerts"));
+                sub.setAllHistory((HashSet<String>) sqlConn.getBlob("Blobs",sub.getUserName()+"searchHistory"));
                 set.add(sub);
             }
         } catch (SQLException e) {
@@ -221,6 +225,10 @@ public class databaseController {
         else{
             return sqlConn.insertBlob("Blobs", key, value);
         }
+    }
+
+    public int updateBlob(String table, String key, Object value){
+        return sqlConn.updateBlob(table, key, value);
     }
 
     public int update(String table, String[] key, String column, String value) {
