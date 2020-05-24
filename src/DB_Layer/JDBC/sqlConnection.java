@@ -20,13 +20,13 @@ public class sqlConnection implements interfaceDB {
         return ans;
     }
 
-    public int insertBlob(String key, Object value){
+    public int insertBlob(String table,String key, Object value){
         try{
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(value);
             byte[] valueAsBytes = baos.toByteArray();
-            PreparedStatement pstmt = databaseManager.conn.prepareStatement("use FootBallDB INSERT INTO Blobs ([key],[value]) VALUES('"+key +"',?)");
+            PreparedStatement pstmt = databaseManager.conn.prepareStatement("use FootBallDB INSERT INTO "+table+" ([key],[value]) VALUES('"+key +"',?)");
             ByteArrayInputStream bais = new ByteArrayInputStream(valueAsBytes);
             pstmt.setBinaryStream(1, bais, valueAsBytes.length);
             int ans = pstmt.executeUpdate();
@@ -37,30 +37,11 @@ public class sqlConnection implements interfaceDB {
         }
         return -1;
     }
-/*
-    public int updateBlob(String key, Object value){
-        try{
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(value);
-            byte[] valueAsBytes = baos.toByteArray();
-           // UPDATE "+ table + " SET " + column + " = '" + value +"' WHERE [" + keys.get(table)[0] + "] = " + "'"+key[0]+"'"
-            PreparedStatement pstmt = databaseManager.conn.prepareStatement("use FootBallDB UPDATE Blobs SET [value] = '"++"' VALUES('"+key +"',?)");
-            ByteArrayInputStream bais = new ByteArrayInputStream(valueAsBytes);
-            pstmt.setBinaryStream(1, bais, valueAsBytes.length);
-            int ans = pstmt.executeUpdate();
-            pstmt.close();
-            return ans;
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return -1;
-    }
-*/
-    public Object getBlob(String key){
+
+    public Object getBlob(String table,String key){
         try{
             Object ans = null;
-            PreparedStatement stmt = databaseManager.conn.prepareStatement("use FootBallDB SELECT * FROM Blobs WHERE [key] = '"+key+"'");
+            PreparedStatement stmt = databaseManager.conn.prepareStatement("use FootBallDB SELECT * FROM "+table+" WHERE [key] = '"+key+"'");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 byte[] st = (byte[]) rs.getObject("value");

@@ -232,12 +232,19 @@ public final class DataManagement {
         return current;
     }
 
+    public static void updateTeam(Team team){
+        sql.delete("Blobs",new String[]{});
+        sql.insertBlob(team.getName(),team);
+    }
+
     public static void addToListTeam(Team team){
         list_team.add(team);
         HashSet<Subscription> list = getSystemAdministratorsList();
         for (Subscription s : list) {
             team.addObserver((SystemAdministrator)s);
         }
+        sql.insertBlob(team.getName(),team);
+        /*
         String asset = (String)team.getTeamAssets().iterator().next();
         sql.insert("Team", new Object[]{team.getName(), asset, team.getListTeamOwner().iterator().next(), team.getStatus(),
                 team.getTeamScore().getPoints(), team.getTeamScore().getNumberOfGames(), team.getTeamScore().getWins(), team.getTeamScore().getDrawn(),
@@ -267,6 +274,7 @@ public final class DataManagement {
             Object t = filds.iterator().next();
             sql.insert("AssetsInTeam",new Object[]{team.getName(),t.toString(),"Filed"});
         }
+        */
         logger.log("DataManagement :new team was added, team name: " + team.getName());
     }
 

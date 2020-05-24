@@ -67,7 +67,6 @@ public class LogAndExitController{
      */
     public ActionStatus Login(String arg_user_name, String arg_password) {
         ActionStatus AC;
-        //System.out.println("halllaaaa");
         Subscription toLogin = DataManagement.containSubscription(arg_user_name);
         //Another subscription is connected to the system
         if (DataManagement.getCurrent() != null) {

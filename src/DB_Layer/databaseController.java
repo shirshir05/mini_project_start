@@ -42,17 +42,17 @@ public class databaseController {
                         if (rs2.getString("dataType").equals("position")) {
                             subUn.setNewRole(new Player(thisUserName));
                             subUn.setPosition(rs2.getString("dataValue"));
-                            subUn.setPlayerPersonalPage((PlayerPersonalPage)sqlConn.getBlob(thisUserName+"PlayerPersonalPage"));
+                            subUn.setPlayerPersonalPage((PlayerPersonalPage)sqlConn.getBlob("Blobs",thisUserName+"PlayerPersonalPage"));
                         } else if (rs2.getString("dataType").equals("qualification")) {
                             if (!subUn.isACoach()) {
                                 subUn.setNewRole(new Coach(thisUserName));
-                                subUn.setCoachPersonalPage((CoachPersonalPage)sqlConn.getBlob(thisUserName+"CoachPersonalPage"));
+                                subUn.setCoachPersonalPage((CoachPersonalPage)sqlConn.getBlob("Blobs",thisUserName+"CoachPersonalPage"));
                             }
                             subUn.setQualification(rs2.getString("dataValue"));
                         } else if (rs2.getString("dataType").equals("roleInTeam")) {
                             if (!subUn.isACoach()) {
                                 subUn.setNewRole(new Coach(thisUserName));
-                                subUn.setCoachPersonalPage((CoachPersonalPage)sqlConn.getBlob(thisUserName+"CoachPersonalPage"));
+                                subUn.setCoachPersonalPage((CoachPersonalPage)sqlConn.getBlob("Blobs",thisUserName+"CoachPersonalPage"));
                             }
                             subUn.setRoleInTeam(rs2.getString("dataValue"));
                         } else if (rs2.getString("dataType").equals("ownerAppointedByTeamOwner")) {
@@ -76,7 +76,7 @@ public class databaseController {
                     }
                 }
                 //GET PERMISSIONS FROM BLOB
-                sub.permissions = (Permissions)sqlConn.getBlob(userID+"Permissions");
+                sub.permissions = (Permissions)sqlConn.getBlob("Blobs",userID+"Permissions");
                 return sub;
             }
         } catch (SQLException e) {
@@ -94,7 +94,7 @@ public class databaseController {
             while (rs.next()) {
                 Subscription sub = StartSystem.LEc.createUserByType(rs.getString("userName"), rs.getString("userPassword"), rs.getString("userRole"), rs.getString("email"));
                 sub.resetPass(rs.getString("userPassword"));
-                sub.permissions = (Permissions)sqlConn.getBlob(rs.getString("userName")+"Permissions");
+                sub.permissions = (Permissions)sqlConn.getBlob("Blobs",rs.getString("userName")+"Permissions");
                 set.add(sub);
             }
         } catch (SQLException e) {
@@ -106,47 +106,13 @@ public class databaseController {
 
     //Get team data by team name from DB
     public Team loadTeamInfo(String team_name) {
-        try {
-            ResultSet rs = sqlConn.findByKey("Team", new String[]{team_name});
-            if (rs.next()) {
-                String teamName = rs.getString("teamName");
-                Team team = new Team(teamName, rs.getString("mainFiled"));
-                //  ?? DataManagement.addToListTeam(team)
-                // TODO - ?? team budget ??
-                team.changeStatus(rs.getInt("teamStatus"));
-                //team.EditTeamOwner((UnifiedSubscription) loadUserByName(rs.getString("mainFiled")), 1);
-                TeamScore score = new TeamScore(teamName);
-                score.setWins(rs.getInt("wins"));
-                score.setDrawn(rs.getInt("drawns"));
-                score.setLoses(rs.getInt("loses"));
-                score.setPoints(rs.getInt("totalScore"));
-                score.setNumberOfGames(rs.getInt("numOfGames"));
-                score.setGoalsGet(rs.getInt("goalesGoten")); //todo- fix name in table
-                score.setGoalsScores(rs.getInt("goalsScored")); //todo- fix name in table
-                team.setTeamScore(score);
-                //get all users connected to team
-                ResultSet rs2 = sqlConn.findByKey("AssetsInTeam", new String[]{teamName});
-                while (rs2.next()) {
-                    if (rs2.getString("assetRole").equals("TeamOwner")) {
-                        team.EditTeamOwner((UnifiedSubscription) loadUserByName(rs2.getString("assetName")), 1);
-                    } else if (rs2.getString("assetRole").equals("Coach")) {
-                        team.AddOrRemoveCoach((UnifiedSubscription) loadUserByName(rs2.getString("assetName")), 1);
-                    } else if (rs2.getString("assetRole").equals("TeamManager")) {
-                        team.EditTeamManager((UnifiedSubscription) loadUserByName(rs2.getString("assetName")), 1);
-                    } else if (rs2.getString("assetRole").equals("Player")) {
-                        team.addOrRemovePlayer((UnifiedSubscription) loadUserByName(rs2.getString("assetName")), 1);
-                    } else if (rs2.getString("assetRole").equals("Filed")) {
-                        team.setAsset(rs2.getString("assetName"));
-                    }
-                }
-                //set team personal page
-                Object ob = sqlConn.getBlob(teamName+"TeamPage");
-                team.setPersonalPage((TeamPersonalPage)ob);
-                return team;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+        Team team = (Team)sqlConn.getBlob("Team", team_name);
+
+        if(team!=null) {
+            //set team personal page
+            Object ob = sqlConn.getBlob("Blobs", team.getName() + "TeamPage");
+            team.setPersonalPage((TeamPersonalPage) ob);
+            return team;
         }
         return null;
     }
@@ -164,7 +130,7 @@ public class databaseController {
                 //load season objects into this league
                 ResultSet rs2 = sqlConn.findByKey("Season", new String[]{leagueName});
                 while (rs2.next()) {
-                    Season season = (Season)sqlConn.getBlob("Season"+league.getName()+rs2.getInt("seasonYear"));
+                    Season season = (Season)sqlConn.getBlob("Blobs","Season"+league.getName()+rs2.getInt("seasonYear"));
                     league.addSeason(season);
                 }
 
@@ -227,7 +193,7 @@ public class databaseController {
 
     //get Complaint data from DB
     public HashSet<Complaint> loadComplaintInfo(boolean onlyUnread) {
-        HashSet<Complaint> list_Complaints= (HashSet<Complaint>)sqlConn.getBlob("Complaint");
+        HashSet<Complaint> list_Complaints= (HashSet<Complaint>)sqlConn.getBlob("Blobs","Complaint");
         if(list_Complaints!=null) {
             if (onlyUnread) {
                 HashSet<Complaint> unanswered = new HashSet<>();
@@ -249,7 +215,12 @@ public class databaseController {
     }
 
     public int insertBlob(String key,Object value) {
-        return sqlConn.insertBlob(key,value);
+        if(value instanceof Team) {
+            return sqlConn.insertBlob("Team", key, value);
+        }
+        else{
+            return sqlConn.insertBlob("Blobs", key, value);
+        }
     }
 
     public int update(String table, String[] key, String column, String value) {
