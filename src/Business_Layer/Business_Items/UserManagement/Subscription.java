@@ -14,7 +14,6 @@ public abstract class Subscription {
     protected String name;
     protected HashSet<String> searchHistory;
 
-
     protected HashSet<String> alerts;
 
     public Subscription(String argUserName, String argPassword,String email){
@@ -24,6 +23,10 @@ public abstract class Subscription {
         this.email = email;
         searchHistory =new HashSet<>();
         alerts = new HashSet<>();
+    }
+
+    public void resetPass(String hasedPass){
+        password = hasedPass;
     }
 
     //**********************************************get & set ************************************************************//
@@ -65,6 +68,15 @@ public abstract class Subscription {
     public void setUserName(String name) {
         this.userName = name;
     }
+
+    public void setAllAlerts(HashSet<String> alerts) {
+        this.alerts = alerts;
+    }
+
+    public void setAllHistory(HashSet<String> history) {
+        this.searchHistory = history;
+    }
+
 
     /**
      * return hash search

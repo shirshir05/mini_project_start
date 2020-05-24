@@ -8,6 +8,8 @@ import Business_Layer.Business_Items.TeamManagement.Team;
 import Business_Layer.Enum.PermissionAction;
 import Business_Layer.Enum.Role;
 import DB_Layer.logger;
+
+import javax.swing.*;
 import java.util.HashSet;
 
 // to function that remove all Subscription
@@ -49,7 +51,6 @@ public class LogAndExitController{
             else {
                 Subscription newSub = factory.Create(arg_user_name, arg_password, role_enum, email);
                 DataManagement.setSubscription(newSub);
-                DataManagement.setCurrent(newSub);
                 AC = new ActionStatus(true, "Subscription successfully added!");
             }
         }
@@ -77,6 +78,8 @@ public class LogAndExitController{
         }
         //The password is incorrect
         else if (!toLogin.getPassword().equals(Subscription.getHash(arg_password))) {
+            System.out.println("currentHash: "+Subscription.getHash(arg_password));
+            System.out.println("Hash from DB: "+toLogin.getPassword());
             AC = new ActionStatus(false, "The password is incorrect.");
         }
         //Login successful

@@ -39,9 +39,10 @@ public class StartSystem {
         //create general Guest user
         ActionStatus str1 = LEc.Registration("Guest", "123456", "Guest","Guestmail@mail.com");
 
+        DataManagement.cleanAllData();
+        //db.resetDateBase();
 
         //create first SystemAdministrator user
-        //TODO - change this should be in userDisplay class.
         ActionStatus str2 = new ActionStatus(false,"");
         String name = "";
         String password = "";
@@ -56,11 +57,10 @@ public class StartSystem {
         }
 
         //start connection to external systems.
-        /*
-        cli.presentOnly("connection to external systems");
-        cli.presentOnly("Finance system connection stable: "+DataManagement.getExternalConnStatus("finance").isActionSuccessful());
-        cli.presentOnly("Tax system connection stable: "+DataManagement.getExternalConnStatus("tax").isActionSuccessful());
-         */
+        System.out.println("connection to external systems");
+        System.out.println("Finance system connection stable: "+DataManagement.getExternalConnStatus("finance").isActionSuccessful());
+        System.out.println("Tax system connection stable: "+DataManagement.getExternalConnStatus("tax").isActionSuccessful());
+
 
         //choose user to log in with to the system;
         boolean chosen = false;
@@ -88,17 +88,11 @@ public class StartSystem {
 
     public void startFromDB(){
         DataManagement.cleanAllData();
-        String ans = "";
+        //db.startLastDateBase();
         Configurations.setPropValues("NumberOfGames",1);
-        //ans += db.loadUserInfo().getDescription() +"\n";
-        //ans += db.loadTeamInfo().getDescription() +"\n";
-        //ans += db.loadLeagueInfo().getDescription() +"\n";
-        //ans += db.loadGameInfo().getDescription();
-        //cli.presentOnly(ans);
         DataManagement.setCurrent(null);
         //cli.presentOnly(LEc.Login("Guest", "123456").getDescription());
         //cli.presentOnly("hello Guest");
-        //todo - send to correct user presentation to show user options menu;
     }
 
 

@@ -136,6 +136,7 @@ public class TeamController {
                     }
                     else{
                         team.changeStatus(1);
+                        DataManagement.updateTeam(team);
                         AC = new ActionStatus(true,"Team status successfully changed to 1." );
                     }
                     flag = true;
@@ -194,6 +195,9 @@ public class TeamController {
         }
         else if(team != null){
             AC =  team.addOrRemovePlayer((UnifiedSubscription) DataManagement.containSubscription(user_name), add_or_remove);
+            if(AC.isActionSuccessful()){
+                DataManagement.updateTeam(team);
+            }
         }
         else {
             AC = new ActionStatus(false, "Cannot find team");
@@ -223,6 +227,9 @@ public class TeamController {
         }
         else if(team != null){
             AC = team.AddOrRemoveCoach((UnifiedSubscription) DataManagement.containSubscription(coach_add), add_or_remove);
+            if(AC.isActionSuccessful()){
+                DataManagement.updateTeam(team);
+            }
         }
         else {
             AC = new ActionStatus(false, "Cannot find team");
@@ -261,6 +268,9 @@ public class TeamController {
             }else{
                 ((UnifiedSubscription) requestedTeamOwnerToAdd).teamOwner_setAppointedByTeamOwner(DataManagement.getCurrent().getName());
                 AC = team.EditTeamOwner((UnifiedSubscription) requestedTeamOwnerToAdd, add_or_remove);
+                if(AC.isActionSuccessful()){
+                    DataManagement.updateTeam(team);
+                }
             }
         }
         else if (add_or_remove == 0) {   // remove teamOwner from team
@@ -274,11 +284,17 @@ public class TeamController {
                 } else{
                     ((UnifiedSubscription) requestedTeamOwnerToAdd).teamOwner_setAppointedByTeamOwner(null);
                     AC = team.EditTeamOwner((UnifiedSubscription) requestedTeamOwnerToAdd, add_or_remove);
+                    if(AC.isActionSuccessful()){
+                        DataManagement.updateTeam(team);
+                    }
                 }
             } else{
                 //removing the team owner, whoever appointed the owner is not in the system anymore
                 ((UnifiedSubscription) requestedTeamOwnerToAdd).teamOwner_setAppointedByTeamOwner(null);
                 AC = team.EditTeamOwner((UnifiedSubscription) requestedTeamOwnerToAdd, add_or_remove);
+                if(AC.isActionSuccessful()){
+                    DataManagement.updateTeam(team);
+                }
             }
         }
         else{
@@ -318,6 +334,9 @@ public class TeamController {
             else{
                 ((UnifiedSubscription) requestedTeamManagerToAdd).teamManager_setAppointedByTeamOwner(DataManagement.getCurrent().getName());
                 AC = team.EditTeamManager((UnifiedSubscription) requestedTeamManagerToAdd, add_or_remove);
+                if(AC.isActionSuccessful()){
+                    DataManagement.updateTeam(team);
+                }
             }
 
         }
@@ -333,11 +352,17 @@ public class TeamController {
                 else{
                     ((UnifiedSubscription) requestedTeamManagerToAdd).teamManager_setAppointedByTeamOwner(null);
                     AC = team.EditTeamManager((UnifiedSubscription) requestedTeamManagerToAdd, add_or_remove);
+                    if(AC.isActionSuccessful()){
+                        DataManagement.updateTeam(team);
+                    }
                 }
 
             }else{
                 ((UnifiedSubscription) requestedTeamManagerToAdd).teamManager_setAppointedByTeamOwner(null);
                 AC = team.EditTeamManager((UnifiedSubscription) requestedTeamManagerToAdd, add_or_remove);
+                if(AC.isActionSuccessful()){
+                    DataManagement.updateTeam(team);
+                }
             }
         }
         else{
@@ -401,18 +426,30 @@ public class TeamController {
                 AC = new ActionStatus(false, "You are not allowed to close a team.");
             }
             else {
-                AC = DataManagement.findTeam(name_team).changeStatus(status);
+                Team team = DataManagement.findTeam(name_team);
+                AC = team.changeStatus(status);
+                if(AC.isActionSuccessful()){
+                    DataManagement.updateTeam(team);
+                }
             }
         }
         else if(status == -1) {
             if (!(DataManagement.getCurrent() instanceof SystemAdministrator)) {
                 AC = new ActionStatus(false, "You are not authorized to perform this action.");
             } else {
-                    AC = DataManagement.findTeam(name_team).changeStatus(status);
+                Team team = DataManagement.findTeam(name_team);
+                AC = team.changeStatus(status);
+                if(AC.isActionSuccessful()){
+                    DataManagement.updateTeam(team);
+                }
             }
         }
         else{
-            AC = DataManagement.findTeam(name_team).changeStatus(status);
+            Team team = DataManagement.findTeam(name_team);
+            AC = team.changeStatus(status);
+            if(AC.isActionSuccessful()){
+                DataManagement.updateTeam(team);
+            }
         }
 
         logger.log("Change Status to Team: "+name_team+"-"+AC.getDescription());
@@ -438,6 +475,7 @@ public class TeamController {
             if (add_or_remove==1) {
                 team.setAsset(TeamAsset);
                 AC = new ActionStatus(true, "The asset was added to the team");
+                DataManagement.updateTeam(team);
             }
             else{
                 if (!team.getTeamAssets().contains(TeamAsset)){
@@ -446,6 +484,7 @@ public class TeamController {
                 else{
                     team.removeTeamAssets(TeamAsset);
                     AC = new ActionStatus(true, "The asset was deleted from the team");
+                    DataManagement.updateTeam(team);
                 }
             }
         }

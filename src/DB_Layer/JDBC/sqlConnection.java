@@ -3,13 +3,8 @@ package DB_Layer.JDBC;
 import Business_Layer.Enum.ActionStatus;
 import DB_Layer.interfaceDB;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.*;
+import java.sql.*;
 import java.util.HashMap;
 
 public class sqlConnection implements interfaceDB {
@@ -25,13 +20,13 @@ public class sqlConnection implements interfaceDB {
         return ans;
     }
 
-    public int insertBlob(String key, Object value){
+    public int insertBlob(String table,String key, Object value){
         try{
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(value);
             byte[] valueAsBytes = baos.toByteArray();
-            PreparedStatement pstmt = databaseManager.conn.prepareStatement("use FootBallDB INSERT INTO Blobs ([key],[value]) VALUES('"+key +"',?)");
+            PreparedStatement pstmt = databaseManager.conn.prepareStatement("use FootBallDB INSERT INTO "+table+" ([key],[value]) VALUES('"+key +"',?)");
             ByteArrayInputStream bais = new ByteArrayInputStream(valueAsBytes);
             pstmt.setBinaryStream(1, bais, valueAsBytes.length);
             int ans = pstmt.executeUpdate();
@@ -43,10 +38,10 @@ public class sqlConnection implements interfaceDB {
         return -1;
     }
 
-    public Object getBlob(String key){
+    public Object getBlob(String table,String key){
         try{
             Object ans = null;
-            PreparedStatement stmt = databaseManager.conn.prepareStatement("use FootBallDB SELECT * FROM Blobs WHERE [key] = '"+key+"'");
+            PreparedStatement stmt = databaseManager.conn.prepareStatement("use FootBallDB SELECT * FROM "+table+" WHERE [key] = '"+key+"'");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 byte[] st = (byte[]) rs.getObject("value");
@@ -61,6 +56,24 @@ public class sqlConnection implements interfaceDB {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public int updateBlob(String table, String key, Object value) {
+        try{
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(value);
+            byte[] valueAsBytes = baos.toByteArray();
+            PreparedStatement pstmt = databaseManager.conn.prepareStatement("use FootBallDB UPDATE "+table+" WHERE [key] = '"+key+"' SET ([value]) VALUES(?)");
+            ByteArrayInputStream bais = new ByteArrayInputStream(valueAsBytes);
+            pstmt.setBinaryStream(1, bais, valueAsBytes.length);
+            int ans = pstmt.executeUpdate();
+            pstmt.close();
+            return ans;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     @Override
@@ -225,7 +238,7 @@ public class sqlConnection implements interfaceDB {
 
         keys = new HashMap<>();
         keys.put("Users", new String[]{"userName"});
-        keys.put("Team",new String[]{"teamName"});
+        keys.put("Team",new String[]{"key"});
         keys.put("AssetsInTeam",new String[]{"teamName","assetName"});
         keys.put("Game",new String[]{"gameID"});
         keys.put("EventInGame",new String[]{"gameID","eventTime"});
@@ -255,4 +268,78 @@ public class sqlConnection implements interfaceDB {
         return this.databaseManager.conn;
     }
 
+    public void resetDB(){
+        String s = "";
+        String all = "";
+        try
+        {
+            FileReader fr = new FileReader(new File("lib/DBwithObj.sql"));
+            BufferedReader br = new BufferedReader(fr);
+            while((s = br.readLine()) != null) {
+                all += s;
+            }
+            br.close();
+            all = all.trim();
+            Statement st = databaseManager.conn.createStatement();
+            st.executeUpdate(all);
+            System.out.println(all);
+            /*
+            for(int i = 0; i<inst.length; i++)
+            {
+                // we ensure that there is no spaces before or after the request string
+                // in order to not execute empty statements
+                if(!inst[i].trim().equals(""))
+                {
+
+                }
+            }
+
+             */
+        }
+        catch(Exception e)
+        {
+            System.out.println("*** Error : "+e.toString());
+            System.out.println("*** ");
+            System.out.println("*** Error : ");
+            e.printStackTrace();
+            System.out.println("################################################");
+            System.out.println(all);
+        }
+    }
+
+    public void startLastDB(){
+        String s = null;
+        StringBuffer sb = new StringBuffer();
+        try
+        {
+            FileReader fr = new FileReader(new File("lib/scriptOB.sql"));
+            BufferedReader br = new BufferedReader(fr);
+            while((s = br.readLine()) != null) {
+                sb.append(s);
+            }
+            br.close();
+
+            String[] inst = sb.toString().split("[/]\\*.+\\*[/]");
+            Statement st = databaseManager.conn.createStatement();
+            for(int i = 0; i<inst.length; i++)
+            {
+                // we ensure that there is no spaces before or after the request string
+                // in order to not execute empty statements
+                if(!inst[i].trim().equals(""))
+                {
+                    st.executeUpdate(inst[i]);
+                    System.out.println(">>"+inst[i]);
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println("*** Error : "+e.toString());
+            System.out.println("*** ");
+            System.out.println("*** Error : ");
+            e.printStackTrace();
+            System.out.println("################################################");
+            System.out.println(sb.toString());
+        }
+    }
 }
