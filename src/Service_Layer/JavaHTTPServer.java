@@ -1,5 +1,6 @@
 package Service_Layer;
 
+import Business_Layer.Business_Control.LogAndExitController;
 import Business_Layer.Enum.ActionStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,6 +21,7 @@ public class JavaHTTPServer implements Runnable {
     static final String METHOD_NOT_SUPPORTED = "not_supported.html";
     // port to listen connection
     static final int PORT = 8008;
+    StartSystem st = new StartSystem();
 
     // verbose mode
     static final boolean verbose = true;
@@ -82,6 +84,9 @@ public class JavaHTTPServer implements Runnable {
             System.out.println("METHOD is: " + METHOD);
             while ((headerLine = in.readLine()).length() != 0) {
                 System.out.println(headerLine);
+                if(headerLine.contains("Access-Control-Request-Method")){
+                    METHOD = headerLine.split(": ")[1];
+                }
             }
 
             if (METHOD.equals("POST")) {
@@ -119,7 +124,7 @@ public class JavaHTTPServer implements Runnable {
         try {
             switch (controllerMethod) {
                 case "removesubscription":
-                    actionStatus = StartSystem.getLEc().RemoveSubscription
+                    actionStatus = st.getLEc().RemoveSubscription
                             (jsonObject.getString("username"));
                     break;
                 default:
@@ -136,12 +141,12 @@ public class JavaHTTPServer implements Runnable {
                 //watchlogger
                 //break;
                 case "approveteam":
-                    actionStatus = StartSystem.getTc().ApproveCreateTeamAlert
+                    actionStatus = st.getTc().ApproveCreateTeamAlert
                             (jsonObject.getString(headerSplit[3]));
                     sendStringData();
                     break;
                 case "watchsearchhistory":
-                    actionStatus = StartSystem.getSc().showSearchHistory();
+                    actionStatus = st.getSc().showSearchHistory();
                     if (actionStatus.isActionSuccessful()) {
                         String[] arrayOfSearches = actionStatus.getDescription().split("\n");
                         JSONArray jsonArray = new JSONArray(arrayOfSearches);
@@ -152,14 +157,14 @@ public class JavaHTTPServer implements Runnable {
                     }
                     break;
                 case "isa":
-                    actionStatus = StartSystem.getLEc().hasRole(headerSplit[3]);
+                    actionStatus = st.getLEc().hasRole(headerSplit[3]);
                     sendStringData();
                     break;
 //                case "watchgameevent":
-//                    actionStatus = StartSystem.getGSc().printGameEvents(Integer.parseInt(headerSplit[3]));
+//                    actionStatus = st.getGSc().printGameEvents(Integer.parseInt(headerSplit[3]));
 //                    break;
                 case "watchscoretable":
-                    actionStatus = StartSystem.getGSc().displayScoreTable(headerSplit[3], headerSplit[4]);
+                    actionStatus = st.getGSc().displayScoreTable(headerSplit[3], headerSplit[4]);
                     if(actionStatus.isActionSuccessful()){
                         String[] linesInScoreTable = actionStatus.getDescription().split("\n");
                         JSONArray jsonArray = buildJsonArray(linesInScoreTable);
@@ -227,43 +232,42 @@ public class JavaHTTPServer implements Runnable {
         try {
             switch (controllerMethod) {
                 case "registration":
-                    as = StartSystem.getLEc().Registration
+                    as = st.getLEc().Registration
                             (jsonObject.getString("username"),
                                     jsonObject.getString("password"),
                                     jsonObject.getString("role"),
                                     jsonObject.getString("email"));
                     break;
                 case "login":
-                    as = StartSystem.getLEc().Login
-                            (jsonObject.getString("username"),
-                                    jsonObject.getString("password"));
+                    LogAndExitController lc = st.getLEc();
+                    String a = jsonObject.getString("username");
+                    String b = jsonObject.getString("password");
+                    as = lc.Login(a, b);
                     break;
                 case "logout":
-                    as = StartSystem.getLEc().Exit
-                            (jsonObject.getString("username"));
+                    as = st.getLEc().Exit(jsonObject.getString("username"));
                     break;
 //            case "answercomplaints":
-//                as = StartSystem.getAc().answerCompliant(
+//                as = st.getAc().answerCompliant(
 //                (jsonObject.getString("username"),
 //                        jsonObject.getString("password"));
 //                break;
                 case "changestatusforteam":
-                    as = StartSystem.getTc().ChangeStatusTeam
+                    as = st.getTc().ChangeStatusTeam
                             (jsonObject.getString("nameteam"),
                                     Integer.parseInt(jsonObject.getString("status")));
                     break;
                 case "onschedulingpolicy":
-                    as = StartSystem.getGSc().schedulingGame
+                    as = st.getGSc().schedulingGame
                             (jsonObject.getString("nameleague"),
                                     jsonObject.getString("seasonname"),
                                     Integer.parseInt(jsonObject.getString("policy")));
                     break;
                 case "defineleague":
-                    as = StartSystem.getGSc().defineLeague
-                            (jsonObject.getString("nameleague"));
+                    as = st.getGSc().defineLeague(jsonObject.getString("name"));
                     break;
                 case "defineseason":
-                    as = StartSystem.getGSc().defineSeasonToLeague
+                    as = st.getGSc().defineSeasonToLeague
                             (jsonObject.getString("nameleague"),
                                     jsonObject.getString("year"),
                                     Integer.parseInt(jsonObject.getString("win")),
@@ -271,7 +275,7 @@ public class JavaHTTPServer implements Runnable {
                                     Integer.parseInt(jsonObject.getString("equal")));
                     break;
                 case "updatepointpolicy":
-                    as = StartSystem.getGSc().updatePointsPolicy
+                    as = st.getGSc().updatePointsPolicy
                             (jsonObject.getString("nameleague"),
                                     jsonObject.getString("year"),
                                     Integer.parseInt(jsonObject.getString("win")),
@@ -279,13 +283,13 @@ public class JavaHTTPServer implements Runnable {
                                     Integer.parseInt(jsonObject.getString("equal")));
                     break;
                 case "addteamtoleague":
-                    as = StartSystem.getGSc().addTeamToSeasonInLeague
+                    as = st.getGSc().addTeamToSeasonInLeague
                             (jsonObject.getString("nameteam"),
                                     jsonObject.getString("nameleague"),
                                     jsonObject.getString("year"));
                     break;
                 case "addremovereferee":
-                    as = StartSystem.getGSc().addOrDeleteRefereeToSystem
+                    as = st.getGSc().addOrDeleteRefereeToSystem
                             (jsonObject.getString("usernamereferee"),
                                     jsonObject.getString("password"),
                                     jsonObject.getString("email"),
@@ -293,59 +297,59 @@ public class JavaHTTPServer implements Runnable {
                     break;
 
                 case "setrefereeonleague":
-                    as = StartSystem.getGSc().defineRefereeInLeague
+                    as = st.getGSc().defineRefereeInLeague
                             (jsonObject.getString("nameleague"),
                                     jsonObject.getString("usernamereferee"),
                                     jsonObject.getString("year"));
                     break;
                 case "addrole":
-                    as = StartSystem.getLEc().addRoleToUser
+                    as = st.getLEc().addRoleToUser
                             (jsonObject.getString("role"), jsonObject.getString("password"));
                     break;
-                case "createteam":
-                    as = StartSystem.getTc().RequestCreateTeam
+                case "addteam":
+                    as = st.getTc().RequestCreateTeam
                             (jsonObject.getString("name"),
                                     jsonObject.getString("field"));
                     break;
                 case "addremoveplayer":
-                    as = StartSystem.getTc().AddOrRemovePlayer
+                    as = st.getTc().AddOrRemovePlayer
                             (jsonObject.getString("nameteam"), jsonObject.getString("nameuserplayer"),
                                     Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addremovecoach":
-                    as = StartSystem.getTc().AddOrRemoveCoach
+                    as = st.getTc().AddOrRemoveCoach
                             (jsonObject.getString("nameteam"), jsonObject.getString("nameusercoach"),
                                     Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addremoveteamowner":
-                    as = StartSystem.getTc().AddOrRemoveTeamOwner
+                    as = st.getTc().AddOrRemoveTeamOwner
                             (jsonObject.getString("nameteam"), jsonObject.getString("nameuserteamowner"),
                                     Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addremoveteammanager":
-                    as = StartSystem.getTc().AddOrRemoveTeamManager
+                    as = st.getTc().AddOrRemoveTeamManager
                             (jsonObject.getString("nameteam"), jsonObject.getString("nameuserteammanager"),
                                     Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addremoveteamfield":
-                    as = StartSystem.getTc().AddOrRemoveTeamsAssets
+                    as = st.getTc().AddOrRemoveTeamsAssets
                             (jsonObject.getString("nameteam"), jsonObject.getString("namefiled"),
                                     Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addpermissiontoteammanger":
-                    as = StartSystem.getESUDc().addPermissionToTeamManager
+                    as = st.getESUDc().addPermissionToTeamManager
                             (jsonObject.getString("nameteammanager"), jsonObject.getString("permission"));
                     break;
                 case "registertogamealert":
-                    as = StartSystem.getAc().fanRegisterToGameAlerts
+                    as = st.getAc().fanRegisterToGameAlerts
                             (Integer.parseInt(jsonObject.getString("gamenumber")));
                     break;
                 case "registertopagealert":
-                    as = StartSystem.getAc().fanRegisterToPage
+                    as = st.getAc().fanRegisterToPage
                             (jsonObject.getString("usernametofollow"));
                     break;
                 case "sendcomplaint":
-                    as = StartSystem.getAc().addComplaint
+                    as = st.getAc().addComplaint
                             (jsonObject.getString("complaintdescription"));
 
                     break;
@@ -354,7 +358,7 @@ public class JavaHTTPServer implements Runnable {
 //                break;
 
                 case "savegame":
-                    as = StartSystem.getGSc().endGame
+                    as = st.getGSc().endGame
                             (Integer.parseInt(jsonObject.getString("gameid")),
                                     Integer.parseInt(jsonObject.getString("goalhost")),
                                     Integer.parseInt(jsonObject.getString("goalguest")),
@@ -362,14 +366,14 @@ public class JavaHTTPServer implements Runnable {
                                     jsonObject.getString("nameleague"));
                     break;
                 case "createnewevent":
-                    as = StartSystem.getGSc().refereeCreateNewEvent
+                    as = st.getGSc().refereeCreateNewEvent
                             (Integer.parseInt(jsonObject.getString("gameid")),
                                     jsonObject.getString("nameteam"),
                                     jsonObject.getString("usernameplayer"),
                                     jsonObject.getString("eventtype"));
                     break;
 //            case "editgameevent":
-//                as = StartSystem.getGSc().refereeEditGameEvent
+//                as = st.getGSc().refereeEditGameEvent
 //                        (Integer.parseInt(jsonObject.getString("gameid")),
 //                                jsonObject.getString("nameteam"),
 //                                jsonObject.getString("eventtype"),
@@ -380,6 +384,7 @@ public class JavaHTTPServer implements Runnable {
                     as = new ActionStatus(false, "check correct post function name");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             as = new ActionStatus(false, e.getMessage());
         }
         return as;

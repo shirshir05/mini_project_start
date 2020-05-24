@@ -43,7 +43,7 @@ public class Referee extends Subscription implements Observer {
      * @return
      */
     public String gamesListToString(){
-        String return_value = "You are participates in the next games: ";
+        String return_value = "You are participating in the next games: ";
         for (Integer g:referee_games){
             return_value += g +", ";
         }
@@ -51,9 +51,12 @@ public class Referee extends Subscription implements Observer {
     }
 
     public void setGamesList(String list){
-        String[] splitS = list.split(", ");
-        for(String g:splitS){
-            referee_games.add(Integer.parseInt(g));
+        String[] splitOne = list.split(": ");
+        if(splitOne.length>1) {
+            String[] splitTwo = splitOne[1].split(", ");
+            for (String g : splitTwo) {
+                referee_games.add(Integer.parseInt(g));
+            }
         }
     }
 

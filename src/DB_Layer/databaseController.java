@@ -34,6 +34,7 @@ public class databaseController {
             if (rs.next()) {
                 String thisUserName = rs.getString("userName");
                 Subscription sub = StartSystem.LEc.createUserByType(thisUserName, rs.getString("userPassword"), rs.getString("userRole"), rs.getString("email"));
+                sub.resetPass(rs.getString("userPassword"));
                 if (rs.getString("userRole").equals("UnifiedSubscription")) {
                     ResultSet rs2 = sqlConn.findByKey("UsersData", new String[]{thisUserName});
                     UnifiedSubscription subUn = (UnifiedSubscription) sub;
@@ -92,6 +93,7 @@ public class databaseController {
             ResultSet rs = sqlConn.findByValue("Users", "userRole", role);
             while (rs.next()) {
                 Subscription sub = StartSystem.LEc.createUserByType(rs.getString("userName"), rs.getString("userPassword"), rs.getString("userRole"), rs.getString("email"));
+                sub.resetPass(rs.getString("userPassword"));
                 sub.permissions = (Permissions)sqlConn.getBlob(rs.getString("userName")+"Permissions");
                 set.add(sub);
             }
@@ -112,7 +114,7 @@ public class databaseController {
                 //  ?? DataManagement.addToListTeam(team)
                 // TODO - ?? team budget ??
                 team.changeStatus(rs.getInt("teamStatus"));
-                team.EditTeamOwner((UnifiedSubscription) loadUserByName(rs.getString("mainFiled")), 1);
+                //team.EditTeamOwner((UnifiedSubscription) loadUserByName(rs.getString("mainFiled")), 1);
                 TeamScore score = new TeamScore(teamName);
                 score.setWins(rs.getInt("wins"));
                 score.setDrawn(rs.getInt("drawns"));
@@ -158,16 +160,12 @@ public class databaseController {
             while (rs.next()) {
                 String leagueName = rs.getString("leagueName");
                 league = new League(leagueName);
-                DataManagement.addToListLeague(league); // ???
 
                 //load season objects into this league
                 ResultSet rs2 = sqlConn.findByKey("Season", new String[]{leagueName});
                 while (rs2.next()) {
                     Season season = (Season)sqlConn.getBlob("Season"+league.getName()+rs2.getInt("seasonYear"));
                     league.addSeason(season);
-                    PointsPolicy pointsPolicy = new PointsPolicy(rs2.getInt("win"), rs2.getInt("lose"), rs2.getInt("equal"));
-                    ScoreTable scoreTable = new ScoreTable(pointsPolicy);
-                    season.setScoreTable(scoreTable);
                 }
 
                 //load Referee objects into this league for each season
@@ -262,6 +260,14 @@ public class databaseController {
         return sqlConn.delete(table, key);
     }
 
+
+    public void resetDateBase(){
+        sqlConn.resetDB();
+    }
+
+    public void startLastDateBase(){
+        sqlConn.startLastDB();
+    }
 
 }
 

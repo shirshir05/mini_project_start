@@ -6,6 +6,7 @@ import Business_Layer.Business_Items.UserManagement.*;
 import Business_Layer.Enum.ActionStatus;
 import Business_Layer.Enum.EventType;
 import Business_Layer.Enum.PermissionAction;
+import DB_Layer.JDBC.DatabaseManager;
 import DB_Layer.logger;
 import Service_Layer.Spelling;
 import Service_Layer.StartSystem;
@@ -158,8 +159,9 @@ public class GameSettingsController {
                 PointsPolicy pointsPolicy = new PointsPolicy(win,lose,equal);
                 ScoreTable scoreTable = new ScoreTable(pointsPolicy);
                 addSeason.setScoreTable(scoreTable);
+                DataManagement.addNewSeason(league_name,addSeason,pointsPolicy);
                 Spelling.updateDictionary("season: " + league_name);
-                AC = new ActionStatus(false, "The season has been set successfully in the league.");
+                AC = new ActionStatus(true, "The season has been set successfully in the league.");
             }else{
                 AC = new ActionStatus(false, "The year must be less than 2022 and greater than 1900.");
 
@@ -191,6 +193,7 @@ public class GameSettingsController {
                 //check permissions
                 if (DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.add_team_to_season)) {
                     season.addTeam(team);
+                    DataManagement.updateSeason(leagueName,season);
                     AC = new ActionStatus(true,"Team added successfully");
                 } else {
                     AC = new ActionStatus(false, "You do not have permissions to perform this action");
@@ -295,6 +298,7 @@ public class GameSettingsController {
             Season season = league.getSeason(season_year);
             if (season!=null){
                 season.addReferee((Referee)referee);
+                DataManagement.updateSeason(league_name,season);
                 ac = new ActionStatus(true, "set successfully");
             }
             else{

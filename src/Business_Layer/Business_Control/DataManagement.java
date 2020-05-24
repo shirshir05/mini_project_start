@@ -1,10 +1,7 @@
 package Business_Layer.Business_Control;
 // all Subscription in system
 
-import Business_Layer.Business_Items.Game.Event;
-import Business_Layer.Business_Items.Game.Game;
-import Business_Layer.Business_Items.Game.League;
-import Business_Layer.Business_Items.Game.Season;
+import Business_Layer.Business_Items.Game.*;
 import Business_Layer.Business_Items.TeamManagement.Team;
 import Business_Layer.Business_Items.UserManagement.*;
 import Business_Layer.Enum.ActionStatus;
@@ -241,7 +238,8 @@ public final class DataManagement {
         for (Subscription s : list) {
             team.addObserver((SystemAdministrator)s);
         }
-        sql.insert("Team", new Object[]{team.getName(), team.getTeamAssets().iterator().next(), team.getListTeamOwner().iterator().next(), team.getStatus(),
+        String asset = (String)team.getTeamAssets().iterator().next();
+        sql.insert("Team", new Object[]{team.getName(), asset, team.getListTeamOwner().iterator().next(), team.getStatus(),
                 team.getTeamScore().getPoints(), team.getTeamScore().getNumberOfGames(), team.getTeamScore().getWins(), team.getTeamScore().getDrawn(),
                 team.getTeamScore().getLoses(), String.valueOf(team.getTeamScore().getGoalsScores()), team.getTeamScore().getGoalsGet()});
         HashSet<UnifiedSubscription> people = team.getListTeamOwner();
@@ -276,11 +274,19 @@ public final class DataManagement {
         list_league.add(league);
         sql.insert("League", new Object[]{league.getName()});
         for(Season s:league.getAllSeasons()){
-            sql.insert("Season", new Object[]{league.getName(), s.getYear()});
             sql.insertBlob("Season"+league.getName()+s.getYear(),s);
-
         }
         logger.log("DataManagement :new league was added, team name: " + league.getName());
+    }
+
+    public static void addNewSeason(String league,Season season,PointsPolicy point){
+        sql.insertBlob("Season"+league+season.getYear(),season);
+        sql.insert("Season", new Object[]{league, Integer.parseInt(season.getYear())});
+    }
+
+    public static void updateSeason(String league,Season season) {
+        sql.delete("Blobs",new String[]{"Season"+league+season});
+        sql.insertBlob("Season"+league+season.getYear(),season);
     }
 
     /**
@@ -288,7 +294,7 @@ public final class DataManagement {
      * @return -
      */
     static HashSet<Subscription> getSystemAdministratorsList(){
-        return sql.loadUsersByRole("UnionRepresentative");
+        return sql.loadUsersByRole("SystemAdministrator");
     }
 
     /**

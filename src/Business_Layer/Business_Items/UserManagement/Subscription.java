@@ -26,6 +26,10 @@ public abstract class Subscription {
         alerts = new HashSet<>();
     }
 
+    public void resetPass(String hasedPass){
+        password = hasedPass;
+    }
+
     //**********************************************get & set ************************************************************//
 
     public abstract String getRole();
