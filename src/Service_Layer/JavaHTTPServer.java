@@ -132,12 +132,36 @@ public class JavaHTTPServer implements Runnable {
     private void handleGetMethod(String controllerMethod) {
         try {
             switch (controllerMethod) {
-                //watchlogger
-                //break;
+                case "watchcomplaints":
+                    actionStatus = StartSystem.getAc().getAllComplaints();
+                    if(actionStatus.isActionSuccessful()){
+                        String[] arrayComplaints = actionStatus.getDescription().split("~!#%");
+                        JSONArray jsonArray = new JSONArray(arrayComplaints);
+                        sendJsonData(jsonArray);
+                    }
+                    else{
+                        sendStringData();
+                    }
+                    break;
+                case "watchlogger":
+                    actionStatus = StartSystem.getSc().watchLogger(headerSplit[3]);
+                    sendStringData();
+                    break;
                 case "approveteam":
                     actionStatus = StartSystem.getTc().ApproveCreateTeamAlert
                             (jsonObject.getString(headerSplit[3]));
                     sendStringData();
+                    break;
+                case "search":
+                    actionStatus = StartSystem.getSc().findData(headerSplit[3]);
+                    if(actionStatus.isActionSuccessful()){
+                        String[] arrayOfSearches = actionStatus.getDescription().split("\n");
+                        JSONArray jsonArray = new JSONArray(arrayOfSearches);
+                        sendJsonData(jsonArray);
+                    }
+                    else{
+                        sendStringData();
+                    }
                     break;
                 case "watchsearchhistory":
                     actionStatus = StartSystem.getSc().showSearchHistory();
@@ -154,9 +178,17 @@ public class JavaHTTPServer implements Runnable {
                     actionStatus = StartSystem.getLEc().hasRole(headerSplit[3]);
                     sendStringData();
                     break;
-//                case "watchgameevent":
-//                    actionStatus = StartSystem.getGSc().printGameEvents(Integer.parseInt(headerSplit[3]));
-//                    break;
+                case "watchgameevent":
+                    actionStatus = StartSystem.getGSc().printGameEvents(Integer.parseInt(headerSplit[3]));
+                    if(actionStatus.isActionSuccessful()){
+                        String[] linesInGameEvent = actionStatus.getDescription().split("\n");
+                        JSONArray jsonArray = buildJsonArray(linesInGameEvent);
+                        sendJsonData(jsonArray);
+                    }
+                    else {
+                        sendStringData();
+                    }
+                    break;
                 case "watchscoretable":
                     actionStatus = StartSystem.getGSc().displayScoreTable(headerSplit[3], headerSplit[4]);
                     if(actionStatus.isActionSuccessful()){
@@ -168,6 +200,11 @@ public class JavaHTTPServer implements Runnable {
                         sendStringData();
                     }
                     break;
+                case "watchgame":
+                    actionStatus = StartSystem.getGSc().refereeWatchGames();
+                    sendStringData();
+                    break;
+
                 default:
                     actionStatus = new ActionStatus(false, "check correct get function name");
                     sendStringData();
@@ -241,11 +278,11 @@ public class JavaHTTPServer implements Runnable {
                     as = StartSystem.getLEc().Exit
                             (jsonObject.getString("username"));
                     break;
-//            case "answercomplaints":
-//                as = StartSystem.getAc().answerCompliant(
-//                (jsonObject.getString("username"),
-//                        jsonObject.getString("password"));
-//                break;
+            case "answercomplaints":
+                as = StartSystem.getAc().answerCompliant(
+                (Integer.parseInt(jsonObject.getString("id"))),
+                        jsonObject.getString("answer"));
+                break;
                 case "changestatusforteam":
                     as = StartSystem.getTc().ChangeStatusTeam
                             (jsonObject.getString("nameteam"),
@@ -333,7 +370,7 @@ public class JavaHTTPServer implements Runnable {
                     break;
                 case "addpermissiontoteammanger":
                     as = StartSystem.getESUDc().addPermissionToTeamManager
-                            (jsonObject.getString("nameteammanager"), jsonObject.getString("permission"));
+                            (jsonObject.getString("username"), jsonObject.getString("permissions"));
                     break;
                 case "registertogamealert":
                     as = StartSystem.getAc().fanRegisterToGameAlerts
@@ -348,10 +385,6 @@ public class JavaHTTPServer implements Runnable {
                             (jsonObject.getString("complaintdescription"));
 
                     break;
-//            case "search":
-//                //complete after pull from master
-//                break;
-
                 case "savegame":
                     as = StartSystem.getGSc().endGame
                             (Integer.parseInt(jsonObject.getString("gameid")),
@@ -367,14 +400,14 @@ public class JavaHTTPServer implements Runnable {
                                     jsonObject.getString("usernameplayer"),
                                     jsonObject.getString("eventtype"));
                     break;
-//            case "editgameevent":
-//                as = StartSystem.getGSc().refereeEditGameEvent
-//                        (Integer.parseInt(jsonObject.getString("gameid")),
-//                                jsonObject.getString("nameteam"),
-//                                jsonObject.getString("eventtype"),
-//                                jsonObject.getString("usernameplayer    "),
-//                                jsonObject.getString("localdatetime"));
-//                break;
+            case "editgameevent":
+                as = StartSystem.getGSc().refereeEditGameEvent
+                        (Integer.parseInt(jsonObject.getString("gameid")),
+                                jsonObject.getString("nameteam"),
+                                jsonObject.getString("eventtype"),
+                                jsonObject.getString("nameuser"),
+                                jsonObject.getString("datetime"));
+                break;
                 default:
                     as = new ActionStatus(false, "check correct post function name");
             }
@@ -382,42 +415,6 @@ public class JavaHTTPServer implements Runnable {
             as = new ActionStatus(false, e.getMessage());
         }
         return as;
-    }
-
-    private boolean isLegalWinLossEqual(String win, String loss, String equal) {
-        if (isNumeric(win) && isNumeric(loss) && isNumeric(equal)) {
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean isNumeric(String strNum) {
-        if (strNum == null) {
-            return false;
-        }
-        try {
-            double d = Double.parseDouble(strNum);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
-    }
-
-    private boolean isPolicyValidDigit(String policy) {
-        return policy.equals("1") || policy.equals("2");
-    }
-
-    private boolean isStatusValidDigit(String status) {
-        return status.equals("-1") || status.equals("0") || status.equals("1");
-    }
-
-    public static JSONArray parse(String responseBody) {
-        JSONArray albums = new JSONArray(responseBody);
-        JSONObject album = null;
-        for (int i = 0; i < albums.length(); i++) {
-            album = albums.getJSONObject(i);
-        }
-        return albums;
     }
 
     private byte[] readFileData(File file, int fileLength) throws IOException {
