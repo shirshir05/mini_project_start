@@ -1,23 +1,10 @@
 package DB_Layer;
 
-public class stateTaxSystem implements apiConnections {
-    @Override
-    public boolean initConnection() {
-        return true;
+public class stateTaxSystem implements stateTaxSystemInterface {
+    public stateTaxSystem(String URL){
+        // connect tax system
     }
-
-    @Override
-    public boolean checkConnection() {
-        return true;
-    }
-
-    @Override
-    public String getUpdatedData() {
-        return "";
-    }
-
-    @Override
-    public boolean setNewData(Object data) {
+    public boolean addPayment(String teamName, String date, double amount){
         return true;
     }
 }
