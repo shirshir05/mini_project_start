@@ -1,23 +1,12 @@
 package DB_Layer;
 
-public class unionFinanceSystem implements apiConnections {
-    @Override
-    public boolean initConnection() {
-        return true;
+public class unionFinanceSystem implements unionFinanceSystemInterface {
+    public unionFinanceSystem(String URL){
+        // connect URL
     }
 
-    @Override
-    public boolean checkConnection() {
-        return true;
+    public double getTaxRate (double revenueAmount){
+        return 0;
     }
 
-    @Override
-    public String getUpdatedData() {
-        return "";
-    }
-
-    @Override
-    public boolean setNewData(Object data) {
-        return true;
-    }
 }
