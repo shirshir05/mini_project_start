@@ -59,6 +59,9 @@ public class sqlConnection implements interfaceDB {
     }
 
     public int updateBlob(String table, String key, Object value) {
+        delete(table,new String[]{key});
+        return insertBlob(table,key,value);
+        /*
         try{
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -74,6 +77,7 @@ public class sqlConnection implements interfaceDB {
             e.printStackTrace();
         }
         return -1;
+         */
     }
 
     @Override
@@ -228,6 +232,8 @@ public class sqlConnection implements interfaceDB {
         else if(table.equals("UsersData")){
             query += " ([userName], [dataType], [dataValue]) VALUES ('"+
                     values[0]+"','"+values[1]+"','"+values[2]+"')";
+        }else if(table.equals("logs")){
+            query += " ([key]) VALUES ('"+values[0]+"')";
         }
         return query;
     }

@@ -7,13 +7,14 @@ import Business_Layer.Business_Items.BudgetManagement.TeamBudget;
 import Business_Layer.Business_Items.Trace.TeamPersonalPage;
 import Business_Layer.Business_Items.UserManagement.*;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Observable;
 
 /**
  * A class which represents a team
  */
-public class Team extends Observable implements Comparable {
+public class Team extends Observable implements Comparable, Serializable {
 
     private String Name;
     private HashSet<UnifiedSubscription> list_Player;

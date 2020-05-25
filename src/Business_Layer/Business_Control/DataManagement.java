@@ -217,10 +217,16 @@ public final class DataManagement {
 
     }
 
-    static void removeSubscription(String user_name){
+    public static void removeSubscription(String user_name){
         //Subscription.remove(containSubscription(user_name));
         sql.delete("Users",new String[]{user_name});
         logger.log("DataManagement :remove Subscription , name: " + user_name);
+    }
+
+    public  static void updateGeneralsOfSubscription(Subscription sub) {
+        sql.updateBlob("Blobs",sub.getUserName()+"Permissions",sub.getPermissions());
+        sql.updateBlob("Blobs",sub.getUserName()+"Alerts",sub.getAlerts());
+        sql.updateBlob("Blobs",sub.getUserName()+"searchHistory",sub.getSearch());
     }
 
     public static void setCurrent(Subscription sub){
@@ -333,8 +339,7 @@ public final class DataManagement {
                 list_Complaints = c;
             }
             list_Complaints.add(complaint);
-            sql.delete("Blobs",new String[]{"Complaint"});
-            sql.insertBlob("Complaint",list_Complaints);
+            sql.updateBlob("Complaint","Complaint",list_Complaints);
         }
     }
 }
