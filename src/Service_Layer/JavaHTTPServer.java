@@ -1,5 +1,6 @@
 package Service_Layer;
 
+import Business_Layer.Business_Control.DataManagement;
 import Business_Layer.Business_Control.LogAndExitController;
 import Business_Layer.Enum.ActionStatus;
 import org.json.Cookie;
@@ -263,7 +264,7 @@ public class JavaHTTPServer implements Runnable {
         out.println("Server: Java HTTP Server from SSaurel : 1.0");
         out.println("Date: " + new Date());
         //out.println("Content-type: " );
-        out.println("Cookie: " + "matan");
+        //out.println("Cookie: " + "matan");
         out.println("Access-Control-Allow-Origin: *");
         out.println("Content-length: " + actionStatus.getDescription().length());
         out.println(""); // blank line between headers and content, very important !
@@ -283,6 +284,7 @@ public class JavaHTTPServer implements Runnable {
                                     jsonObject.getString("email"));
                     break;
                 case "login":
+                    DataManagement.setCurrent(null);
                     LogAndExitController lc = st.getLEc();
                     String a = jsonObject.getString("username");
                     String b = jsonObject.getString("password");

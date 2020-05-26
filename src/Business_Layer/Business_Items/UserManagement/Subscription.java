@@ -78,11 +78,14 @@ public abstract class Subscription {
     }
 
     public void setAllAlerts(HashSet<String> alerts) {
-        this.alerts = alerts;
+        if(alerts!=null) {
+            this.alerts = alerts;}
     }
 
     public void setAllHistory(HashSet<String> history) {
-        this.searchHistory = history;
+        if(history!=null) {
+            this.searchHistory = history;
+        }
     }
 
 
@@ -97,7 +100,7 @@ public abstract class Subscription {
 
     //**********************************************function ************************************************************//
 
-    public void addAlert(String s){alerts.add(s);}
+    public void addAlert(String s){ alerts.add(s);}
 
     public String sendEMail(String mailto, String mail){
         return "Send to: "+mailto+" From: "+this.email+" Mail: "+mail;
