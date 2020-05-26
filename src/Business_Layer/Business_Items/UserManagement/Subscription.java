@@ -13,8 +13,8 @@ public abstract class Subscription {
     public String email;
     protected String name;
     protected HashSet<String> searchHistory;
-
     protected HashSet<String> alerts;
+    protected int numberAlerts;
 
     public Subscription(String argUserName, String argPassword,String email){
         userName=argUserName;
@@ -23,6 +23,7 @@ public abstract class Subscription {
         this.email = email;
         searchHistory =new HashSet<>();
         alerts = new HashSet<>();
+        numberAlerts =  0;
     }
 
     public void resetPass(String hasedPass){
@@ -30,6 +31,13 @@ public abstract class Subscription {
     }
 
     //**********************************************get & set ************************************************************//
+    public int getNumberAlerts() {
+        return numberAlerts;
+    }
+
+    public void setNumberAlerts(int numberAlerts) {
+        this.numberAlerts = numberAlerts;
+    }
 
     public abstract String getRole();
 
