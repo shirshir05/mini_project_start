@@ -214,9 +214,10 @@ public final class DataManagement {
             sql.insert("UsersData",new String[]{sub.getUserName(),"refereeGames",((Referee) sub).gamesListToString()});
         }
         logger.log("DataManagement :new Subscription , name: " + sub.getUserName());
+
     }
 
-    static void removeSubscription(String user_name){
+    public static void removeSubscription(String user_name){
         //Subscription.remove(containSubscription(user_name));
         sql.delete("Users",new String[]{user_name});
         logger.log("DataManagement :remove Subscription , name: " + user_name);
