@@ -81,7 +81,7 @@ public class sqlConnection implements interfaceDB {
     }
 
     @Override
-    public int update(String table, String[] key, String column, String value) {
+    public int update(String table, String[] key, String column, Object value) {
         int i = 1;
         int length = keys.get(table).length-1;
         String query =  "use FootBallDB UPDATE "+ table + " SET " + column + " = '" + value +"' WHERE [" + keys.get(table)[0] + "] = " + "'"+key[0]+"'";
@@ -197,7 +197,7 @@ public class sqlConnection implements interfaceDB {
         String query = "use FootBallDB INSERT INTO " + "["+table+"]";;
 
         if(table.equals("Users")){
-            query += " ([userName], [userPassword],[userRole],[email]) VALUES ('"+values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"')";
+            query += " ([userName], [userPassword],[userRole],[email],[alerts]) VALUES ('"+values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"','"+values[4]+"')";
         }
         else if(table.equals("Team")){
             query += " ([teamName], [mainFiled] ,[ownerName] ,[teamStatus], [totalScore], [numOfGames], [wins], [drawns], [loses], [goalsScored], [goalesGoten]) VALUES ('"

@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 
-public abstract class Subscription {
+public abstract class Subscription implements java.io.Serializable {
     protected String userName;
     private String password;
     public Permissions permissions;

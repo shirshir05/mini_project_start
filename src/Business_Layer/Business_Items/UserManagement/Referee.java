@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Referee extends Subscription implements Observer {
+public class Referee extends Subscription implements Observer, java.io.Serializable {
 
     protected String qualification;
     protected HashSet<Integer> referee_games;

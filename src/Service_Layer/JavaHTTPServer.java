@@ -163,7 +163,7 @@ public class JavaHTTPServer implements Runnable {
                     break;
                 case "approveteam":
                     actionStatus = st.getTc().ApproveCreateTeamAlert
-                            (jsonObject.getString(headerSplit[3]));
+                            (headerSplit[3]);
                     sendStringData();
                     break;
                 case "search":
@@ -253,8 +253,9 @@ public class JavaHTTPServer implements Runnable {
         out.println("HTTP/1.1 200 OK");
         out.println("Server: Java HTTP Server from SSaurel : 1.0");
         out.println("Date: " + new Date());
+        out.println("Access-Control-Allow-Origin: https://shirshir05.github.io");
+        out.println("Access-Control-Allow-Credentials: true");
         out.println("Content-Type: application/json");
-        out.println("Access-Control-Allow-Origin: *");
         out.println("Content-length: " + jsonArray.toString().getBytes().length);
         out.println(""); // blank line between headers and content, very important !
         out.println(jsonArray);
@@ -263,9 +264,8 @@ public class JavaHTTPServer implements Runnable {
     private void sendStringData() {
         out.println("Server: Java HTTP Server from SSaurel : 1.0");
         out.println("Date: " + new Date());
-        //out.println("Content-type: " );
-        //out.println("Cookie: " + "matan");
-        out.println("Access-Control-Allow-Origin: *");
+        out.println("Access-Control-Allow-Origin: https://shirshir05.github.io");
+        out.println("Access-Control-Allow-Credentials: true");
         out.println("Content-length: " + actionStatus.getDescription().length());
         out.println(""); // blank line between headers and content, very important !
         out.println(actionStatus.getDescription());
@@ -359,27 +359,27 @@ public class JavaHTTPServer implements Runnable {
                     break;
                 case "addremoveplayer":
                     as = st.getTc().AddOrRemovePlayer
-                            (jsonObject.getString("nameteam"), jsonObject.getString("nameuserplayer"),
+                            (jsonObject.getString("teamname"), jsonObject.getString("objectname"),
                                     Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addremovecoach":
                     as = st.getTc().AddOrRemoveCoach
-                            (jsonObject.getString("nameteam"), jsonObject.getString("nameusercoach"),
+                            (jsonObject.getString("teamname"), jsonObject.getString("objectname"),
                                     Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addremoveteamowner":
                     as = st.getTc().AddOrRemoveTeamOwner
-                            (jsonObject.getString("nameteam"), jsonObject.getString("nameuserteamowner"),
+                            (jsonObject.getString("teamname"), jsonObject.getString("objectname"),
                                     Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addremoveteammanager":
                     as = st.getTc().AddOrRemoveTeamManager
-                            (jsonObject.getString("nameteam"), jsonObject.getString("nameuserteammanager"),
+                            (jsonObject.getString("teamname"), jsonObject.getString("objectname"),
                                     Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addremoveteamfield":
                     as = st.getTc().AddOrRemoveTeamsAssets
-                            (jsonObject.getString("nameteam"), jsonObject.getString("namefiled"),
+                            (jsonObject.getString("teamname"), jsonObject.getString("objectname"),
                                     Integer.parseInt(jsonObject.getString("addremove")));
                     break;
                 case "addpermissiontoteammanger":

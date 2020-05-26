@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Fan extends Subscription implements Observer{
+public class Fan extends Subscription implements Observer,java.io.Serializable{
 
     protected HashSet<Complaint> list_complaint;
 

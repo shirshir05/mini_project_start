@@ -9,7 +9,7 @@ import java.util.Observer;
 /**
  * This class allows a subscription to be multiple roles in the system
  */
-public class UnifiedSubscription extends Subscription implements Observer {
+public class UnifiedSubscription extends Subscription implements Observer, java.io.Serializable {
 
     Player player;
     TeamOwner teamOwner;

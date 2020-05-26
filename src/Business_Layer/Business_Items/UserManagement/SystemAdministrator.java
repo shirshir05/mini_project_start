@@ -3,7 +3,7 @@ package Business_Layer.Business_Items.UserManagement;
 import java.util.Observable;
 import java.util.Observer;
 
-public class SystemAdministrator extends Subscription implements Observer{
+public class SystemAdministrator extends Subscription implements Observer, java.io.Serializable{
 
     /**
      * constructor

@@ -9,7 +9,7 @@ public interface interfaceDB {
 
     public int insert(String table,Object[] values);
 
-    public int update(String table,String[] key,String fieldName, String value);
+    public int update(String table,String[] key,String fieldName, Object value);
 
     public ResultSet findByKey(String table,String[] key);
 
