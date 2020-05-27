@@ -54,18 +54,18 @@ public final class DataManagement {
     private void createLogicManagement(){
         //initialize system and connections
         financeSys = new unionFinanceSystem();
-        boolean checkSystem1 = financeSys.initConnection();
+       // boolean checkSystem1 = financeSys.initConnection();
         taxSys = new stateTaxSystem();
-        boolean checkSystem2 = taxSys.initConnection();
+        //boolean checkSystem2 = taxSys.initConnection();
     }
 
     public static ActionStatus getExternalConnStatus(String system){
         ActionStatus ac = null;
         switch (system) {
             case "finance":
-                ac = new ActionStatus(financeSys.checkConnection(),"finance system status");
+                //ac = new ActionStatus(financeSys.checkConnection(),"finance system status");
             case "tax":
-                ac = new ActionStatus(taxSys.checkConnection(),"tax system status");
+                //ac = new ActionStatus(taxSys.checkConnection(),"tax system status");
         }
         return ac;
     }
@@ -217,11 +217,19 @@ public final class DataManagement {
 
     }
 
-    static void removeSubscription(String user_name){
+    public static void removeSubscription(String user_name){
         //Subscription.remove(containSubscription(user_name));
         sql.delete("Users",new String[]{user_name});
         logger.log("DataManagement :remove Subscription , name: " + user_name);
     }
+
+
+    public  static void updateGeneralsOfSubscription(Subscription sub) {
+        sql.updateBlob("Blobs",sub.getUserName()+"Permissions",sub.getPermissions());
+        sql.updateBlob("Blobs",sub.getUserName()+"Alerts",sub.getAlerts());
+        sql.updateBlob("Blobs",sub.getUserName()+"searchHistory",sub.getSearch());
+    }
+
 
     public static void setCurrent(Subscription sub){
         current = sub;
@@ -333,8 +341,7 @@ public final class DataManagement {
                 list_Complaints = c;
             }
             list_Complaints.add(complaint);
-            sql.delete("Blobs",new String[]{"Complaint"});
-            sql.insertBlob("Complaint",list_Complaints);
+            sql.updateBlob("Complaint","Complaint",list_Complaints);
         }
     }
 }

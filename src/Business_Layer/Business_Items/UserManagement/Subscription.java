@@ -13,8 +13,8 @@ public abstract class Subscription {
     public String email;
     protected String name;
     protected HashSet<String> searchHistory;
-
     protected HashSet<String> alerts;
+    protected int numberAlerts;
 
     public Subscription(String argUserName, String argPassword,String email){
         userName=argUserName;
@@ -23,6 +23,7 @@ public abstract class Subscription {
         this.email = email;
         searchHistory =new HashSet<>();
         alerts = new HashSet<>();
+        numberAlerts =  0;
     }
 
     public void resetPass(String hasedPass){
@@ -30,6 +31,13 @@ public abstract class Subscription {
     }
 
     //**********************************************get & set ************************************************************//
+    public int getNumberAlerts() {
+        return numberAlerts;
+    }
+
+    public void setNumberAlerts(int numberAlerts) {
+        this.numberAlerts = numberAlerts;
+    }
 
     public abstract String getRole();
 
@@ -70,11 +78,14 @@ public abstract class Subscription {
     }
 
     public void setAllAlerts(HashSet<String> alerts) {
-        this.alerts = alerts;
+        if(alerts!=null) {
+            this.alerts = alerts;}
     }
 
     public void setAllHistory(HashSet<String> history) {
-        this.searchHistory = history;
+        if(history!=null) {
+            this.searchHistory = history;
+        }
     }
 
 
@@ -89,7 +100,7 @@ public abstract class Subscription {
 
     //**********************************************function ************************************************************//
 
-    public void addAlert(String s){alerts.add(s);}
+    public void addAlert(String s){ alerts.add(s);}
 
     public String sendEMail(String mailto, String mail){
         return "Send to: "+mailto+" From: "+this.email+" Mail: "+mail;

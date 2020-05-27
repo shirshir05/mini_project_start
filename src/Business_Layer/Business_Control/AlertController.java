@@ -10,9 +10,33 @@ import Business_Layer.Enum.PermissionAction;
 import DB_Layer.logger;
 
 
+import javax.xml.crypto.Data;
 import java.util.HashSet;
 
 public class AlertController {
+
+
+    public ActionStatus readAllAlerts(){
+        ActionStatus AC;
+        Subscription sub = DataManagement.getCurrent();
+        if(sub == null){
+            AC = new ActionStatus(false,"No user in system");
+        }else{
+            HashSet<String> alertList = sub.getAlerts();
+            StringBuilder ans = new StringBuilder("");
+            for (String alert :alertList) {
+                ans.append(alert).append("!@#");
+            }
+            if(alertList.size() > sub.getNumberAlerts()){
+                AC = new ActionStatus(true,ans.toString());
+                sub.setNumberAlerts(alertList.size());
+            }else{
+                AC = new ActionStatus(false,ans.toString());
+            }
+        }
+        return AC;
+    }
+
 
     /**
      *  This function register the fan to alerts of a game he choose.

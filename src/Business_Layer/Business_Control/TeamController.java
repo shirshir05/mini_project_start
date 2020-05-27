@@ -52,6 +52,7 @@ public class TeamController {
             boolean flag = false;
             for (Subscription rep : union) {
                 rep.addAlert("teamOwner:" + currentUser.getUserName() + "| Team;" + arg_name);
+                DataManagement.updateGeneralsOfSubscription(rep);
                 flag = true;
             }
             if (flag){
@@ -99,6 +100,9 @@ public class TeamController {
             new_team.getPersonalPage().addPermissionToEdit(DataManagement.getCurrent().getUserName());
             new_team.changeStatus(2);
             DataManagement.addToListTeam((new_team));
+            Subscription sub = DataManagement.getCurrent();
+            sub.getPermissions().add_default_owner_permission();
+            DataManagement.updateGeneralsOfSubscription(sub);
             //add the union representatives to the observers of the budget of the team:
             HashSet<Subscription> unionReps = DataManagement.getUnionRepresentatives();
             Observable budget = new_team.getBudget();

@@ -104,6 +104,8 @@ public class LogAndExitController{
             return "referee";
         } else if (toLogin instanceof UnionRepresentative) {
             return "unionrepresentative";
+        }else if (toLogin instanceof SystemAdministrator) {
+                return "systemadministrator";
         } else if (toLogin instanceof UnifiedSubscription) {
             if (((UnifiedSubscription) toLogin).isAPlayer()) {
                 return "player";
