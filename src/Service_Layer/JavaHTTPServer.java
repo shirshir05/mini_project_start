@@ -216,8 +216,14 @@ public class JavaHTTPServer implements Runnable {
                     sendStringData();
                     break;
                 case "readallalrets":
-                    //actionStatus = st.getAc();
-                    sendStringData();
+                    actionStatus = st.getAc().readAllAlerts();
+                    if(actionStatus.isActionSuccessful()){
+                        String[] lines = actionStatus.getDescription().split("!@#");
+                        JSONArray jsonArray = buildJsonArray(lines);
+                        sendJsonData(jsonArray);
+                    } else {
+                        sendStringData();
+                    }
                     break;
                 default:
                     actionStatus = new ActionStatus(false, "check correct get function name");
