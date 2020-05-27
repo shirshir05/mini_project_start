@@ -2,23 +2,19 @@ package Service_Layer;
 
 import Business_Layer.Business_Control.DataManagement;
 import Business_Layer.Business_Control.LogAndExitController;
+import Business_Layer.Business_Items.UserManagement.Subscription;
 import Business_Layer.Enum.ActionStatus;
-import org.json.Cookie;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.StringTokenizer;
 
 public class JavaHTTPServer implements Runnable {
-    Cookie cookie = new Cookie();
 
-    static final File WEB_ROOT = new File(".");
-    static final String DEFAULT_FILE = "index.html";
-    static final String FILE_NOT_FOUND = "404.html";
-    static final String METHOD_NOT_SUPPORTED = "not_supported.html";
     // port to listen connection
     static final int PORT = 8008;
     StartSystem st = new StartSystem();
@@ -68,15 +64,20 @@ public class JavaHTTPServer implements Runnable {
             out = new PrintWriter(connect.getOutputStream());
             in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
             String headerLine;
-            StringTokenizer parse;
             String controllerMethod;
             String METHOD;
+            String username;
             //code to read and print headers
             headerLine = in.readLine();
             headerSplit = headerLine.split("[\\s/]+");
             System.out.println(headerLine);
             METHOD = headerSplit[0];
-            controllerMethod = headerSplit[2];
+            controllerMethod = headerSplit[3];
+            username = headerSplit[2];
+            DataManagement.setCurrent(null);
+            if(!METHOD.equals("registration")){
+                DataManagement.setCurrent(DataManagement.containSubscription(username));
+            }
             System.out.println("controllerMethod is: " + controllerMethod);
             System.out.println("METHOD is: " + METHOD);
             while ((headerLine = in.readLine()).length() != 0) {
@@ -148,7 +149,7 @@ public class JavaHTTPServer implements Runnable {
                     }
                     break;
                 case "watchlogger":
-                    actionStatus = StartSystem.getSc().watchLogger(headerSplit[3]);
+                    actionStatus = StartSystem.getSc().watchLogger(headerSplit[4]);
                     sendStringData();
                     break;
                 case "teamsforapproval":
@@ -163,11 +164,11 @@ public class JavaHTTPServer implements Runnable {
                     break;
                 case "approveteam":
                     actionStatus = st.getTc().ApproveCreateTeamAlert
-                            (jsonObject.getString(headerSplit[3]));
+                            (jsonObject.getString(headerSplit[4]));
                     sendStringData();
                     break;
                 case "search":
-                    actionStatus = st.getSc().findData(headerSplit[3]);
+                    actionStatus = st.getSc().findData(headerSplit[4]);
                     if (actionStatus.isActionSuccessful()) {
                         String[] arrayOfSearches = actionStatus.getDescription().split("\n");
                         JSONArray jsonArray = new JSONArray(arrayOfSearches);
@@ -187,14 +188,11 @@ public class JavaHTTPServer implements Runnable {
                     }
                     break;
                 case "isa":
-                    actionStatus = st.getLEc().hasRole(headerSplit[3]);
+                    actionStatus = st.getLEc().hasRole(headerSplit[4]);
                     sendStringData();
                     break;
-//                case "watchgameevent":
-//                    actionStatus = st.getGSc().printGameEvents(Integer.parseInt(headerSplit[3]));
-//                    break;
                 case "watchgameevent":
-                    actionStatus = st.getGSc().printGameEvents(Integer.parseInt(headerSplit[3]));
+                    actionStatus = st.getGSc().printGameEvents(Integer.parseInt(headerSplit[4]));
                     if (actionStatus.isActionSuccessful()) {
                         String[] linesInGameEvent = actionStatus.getDescription().split("\n");
                         JSONArray jsonArray = buildJsonArray(linesInGameEvent);
@@ -204,7 +202,7 @@ public class JavaHTTPServer implements Runnable {
                     }
                     break;
                 case "watchscoretable":
-                    actionStatus = st.getGSc().displayScoreTable(headerSplit[3], headerSplit[4]);
+                    actionStatus = st.getGSc().displayScoreTable(headerSplit[4], headerSplit[5]);
                     if(actionStatus.isActionSuccessful()){
                         String[] linesInScoreTable = actionStatus.getDescription().split("\n");
                         JSONArray jsonArray = buildJsonArray(linesInScoreTable);
@@ -217,7 +215,16 @@ public class JavaHTTPServer implements Runnable {
                     actionStatus = st.getGSc().refereeWatchGames();
                     sendStringData();
                     break;
-
+                case "readallalrets":
+                    actionStatus = st.getAc().readAllAlerts();
+                    if(actionStatus.isActionSuccessful()){
+                        String[] lines = actionStatus.getDescription().split("!@#");
+                        JSONArray jsonArray = buildJsonArray(lines);
+                        sendJsonData(jsonArray);
+                    } else {
+                        sendStringData();
+                    }
+                    break;
                 default:
                     actionStatus = new ActionStatus(false, "check correct get function name");
                     sendStringData();
@@ -273,7 +280,7 @@ public class JavaHTTPServer implements Runnable {
     }
 
     private ActionStatus handlePostMethod(String controllerMethod) {
-        ActionStatus as = null;
+        ActionStatus as;
         try {
             switch (controllerMethod) {
                 case "registration":
