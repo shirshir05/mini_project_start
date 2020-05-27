@@ -4,7 +4,7 @@ import Business_Layer.Business_Items.UserManagement.Referee;
 
 import java.util.HashSet;
 
-public class Season {
+public class Season implements java.io.Serializable {
     protected String season;
     protected HashSet<Referee> list_referee;
     protected ScoreTable scoreTable;

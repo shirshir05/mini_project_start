@@ -8,7 +8,7 @@ import Business_Layer.Business_Items.TeamManagement.Team;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ScoreTable {
+public class ScoreTable implements java.io.Serializable {
 
     private ArrayList<Team> teams;
     private PointsPolicy pointsPolicy;

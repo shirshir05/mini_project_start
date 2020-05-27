@@ -6,7 +6,7 @@ import Business_Layer.Business_Items.Trace.PlayerPersonalPage;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Player/* extends Subscription */implements Observer {
+public class Player/* extends Subscription */implements Observer ,java.io.Serializable{
 
     protected PlayerPersonalPage PersonalPage;
     protected String position;

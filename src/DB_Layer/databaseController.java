@@ -35,6 +35,7 @@ public class databaseController {
                 String thisUserName = rs.getString("userName");
                 Subscription sub = StartSystem.LEc.createUserByType(thisUserName, rs.getString("userPassword"), rs.getString("userRole"), rs.getString("email"));
                 sub.resetPass(rs.getString("userPassword"));
+                sub.setNumberAlerts( rs.getInt("alerts"));
                 if (rs.getString("userRole").equals("UnifiedSubscription")) {
                     ResultSet rs2 = sqlConn.findByKey("UsersData", new String[]{thisUserName});
                     UnifiedSubscription subUn = (UnifiedSubscription) sub;
@@ -96,6 +97,7 @@ public class databaseController {
             while (rs.next()) {
                 Subscription sub = StartSystem.LEc.createUserByType(rs.getString("userName"), rs.getString("userPassword"), rs.getString("userRole"), rs.getString("email"));
                 sub.resetPass(rs.getString("userPassword"));
+                sub.setNumberAlerts(rs.getInt("alerts"));
                 sub.permissions = (Permissions)sqlConn.getBlob("Blobs",rs.getString("userName")+"Permissions");
                 sub.setAllAlerts((HashSet<String>) sqlConn.getBlob("Blobs",sub.getUserName()+"Alerts"));
                 sub.setAllHistory((HashSet<String>) sqlConn.getBlob("Blobs",sub.getUserName()+"searchHistory"));
@@ -231,7 +233,7 @@ public class databaseController {
         return sqlConn.updateBlob(table, key, value);
     }
 
-    public int update(String table, String[] key, String column, String value) {
+    public int update(String table, String[] key, String column, Object value) {
         return sqlConn.update(table, key, column, value);
     }
 

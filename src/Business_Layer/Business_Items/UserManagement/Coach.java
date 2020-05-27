@@ -2,7 +2,7 @@ package Business_Layer.Business_Items.UserManagement;
 
 import Business_Layer.Business_Items.Trace.CoachPersonalPage;
 
-public class Coach /*extends Subscription*/ {
+public class Coach implements java.io.Serializable/*extends Subscription*/ {
 
     protected CoachPersonalPage PersonalPage;
     protected String qualification;

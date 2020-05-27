@@ -292,6 +292,7 @@ public class LogAndExitController{
                 //the user is a subscription with allowed parallel roles:
                 if (sub instanceof UnifiedSubscription) {
                     factory.addRoleToUnifiedSubscription((UnifiedSubscription) sub, desiredRole);
+                    DataManagement.addInfo(sub,role);
                     AC = new ActionStatus(true, "The role " + role + " was added successfully to your account");
                 } else { // NOT one of the four roles who are allowed to be parallel users
                     AC = new ActionStatus(false, "You are not authorized to perform this action.");
