@@ -2,23 +2,19 @@ package Service_Layer;
 
 import Business_Layer.Business_Control.DataManagement;
 import Business_Layer.Business_Control.LogAndExitController;
+import Business_Layer.Business_Items.UserManagement.Subscription;
 import Business_Layer.Enum.ActionStatus;
-import org.json.Cookie;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.StringTokenizer;
 
 public class JavaHTTPServer implements Runnable {
-    Cookie cookie = new Cookie();
 
-    static final File WEB_ROOT = new File(".");
-    static final String DEFAULT_FILE = "index.html";
-    static final String FILE_NOT_FOUND = "404.html";
-    static final String METHOD_NOT_SUPPORTED = "not_supported.html";
     // port to listen connection
     static final int PORT = 8008;
     StartSystem st = new StartSystem();
@@ -168,8 +164,9 @@ public class JavaHTTPServer implements Runnable {
                     }
                     break;
                 case "approveteam":
-                    actionStatus = st.getTc().ApproveCreateTeamAlert
-                            (headerSplit[4]);
+                    actionStatus = st.getTc().ApproveCreateTeamAlert (jsonObject.getString(headerSplit[4]));
+                      //(headerSplit[3]);
+
                     sendStringData();
                     break;
                 case "search":
@@ -220,9 +217,15 @@ public class JavaHTTPServer implements Runnable {
                     actionStatus = st.getGSc().refereeWatchGames();
                     sendStringData();
                     break;
-                case "logout":
-                    actionStatus = st.getLEc().Exit(DataManagement.getCurrent().getUserName());
-                    sendStringData();
+                case "readallalrets":
+                    actionStatus = st.getAc().readAllAlerts();
+                    if(actionStatus.isActionSuccessful()){
+                        String[] lines = actionStatus.getDescription().split("!@#");
+                        JSONArray jsonArray = buildJsonArray(lines);
+                        sendJsonData(jsonArray);
+                    } else {
+                        sendStringData();
+                    }
                     break;
                 default:
                     actionStatus = new ActionStatus(false, "check correct get function name");
@@ -280,7 +283,7 @@ public class JavaHTTPServer implements Runnable {
     }
 
     private ActionStatus handlePostMethod(String controllerMethod) {
-        ActionStatus as = null;
+        ActionStatus as;
         try {
             switch (controllerMethod) {
                 case "registration":
