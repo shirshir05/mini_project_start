@@ -65,6 +65,9 @@ public class JavaHTTPServer implements Runnable {
 
         BufferedReader in = null;
         try {
+            //System.out.println(DataManagement.findTeam("teamTest").getStatus());
+            //DataManagement.setCurrent(DataManagement.containSubscription("ownerTest"));
+            DataManagement.setCurrent(DataManagement.containSubscription("teamManagerTest"));
             out = new PrintWriter(connect.getOutputStream());
             in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
             String headerLine;
@@ -131,6 +134,7 @@ public class JavaHTTPServer implements Runnable {
             }
         } catch (Exception e) {
             actionStatus = new ActionStatus(false, e.getMessage());
+            DataManagement.saveError("class httpServer delete function: "+e.getMessage());
         }
     }
 
@@ -217,13 +221,17 @@ public class JavaHTTPServer implements Runnable {
                     actionStatus = st.getGSc().refereeWatchGames();
                     sendStringData();
                     break;
-
+                case "logout":
+                    actionStatus = st.getLEc().Exit(DataManagement.getCurrent().getUserName());
+                    sendStringData();
+                    break;
                 default:
                     actionStatus = new ActionStatus(false, "check correct get function name");
                     sendStringData();
             }
         } catch (Exception e) {
             actionStatus = new ActionStatus(false, e.getMessage());
+            DataManagement.saveError("class httpServer get function: "+e.getMessage());
             sendStringData();
         }
     }
@@ -432,6 +440,7 @@ public class JavaHTTPServer implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
             as = new ActionStatus(false, e.getMessage());
+            DataManagement.saveError("class httpServer post function: "+e.getMessage());
         }
         return as;
     }

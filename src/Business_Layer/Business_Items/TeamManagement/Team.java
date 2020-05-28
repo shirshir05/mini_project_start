@@ -106,11 +106,22 @@ public class Team extends Observable implements Comparable, Serializable {
     public boolean checkIfObjectInTeam(Subscription object){
         boolean ans = false;
         if(list_TeamManager != null ){
-            ans = list_TeamManager.contains(object);
+            //ans = list_TeamManager.contains(object);
+            ans = contains(list_TeamManager,object);
         }if(list_TeamOwner != null){
-            ans = ans || list_TeamOwner.contains(object) ;
+            ans = ans || contains(list_TeamOwner,object) ;
         }
         return ans;
+    }
+
+    private boolean contains(HashSet <UnifiedSubscription> unifiedSubscriptions, Subscription subscription){
+        for (UnifiedSubscription us : unifiedSubscriptions)
+        {
+            if(us.equals(subscription)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

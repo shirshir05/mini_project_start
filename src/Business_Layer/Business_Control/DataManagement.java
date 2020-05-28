@@ -359,4 +359,8 @@ public final class DataManagement {
             sql.insertBlob("Complaint",list_Complaints);
         }
     }
+
+    public static void saveError(String trace) {
+        sql.insert("errors",new Object[]{trace});
+    }
 }

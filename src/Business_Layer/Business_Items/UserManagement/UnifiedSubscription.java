@@ -234,6 +234,17 @@ public class UnifiedSubscription extends Subscription implements Observer, java.
         this.alerts.add((String)arg);
     }
 
+
+//    /**
+//     * This function equal UnifiedSubscription by user_name
+//     * @param o
+//     * @return
+//     */
+//    @Override
+//    public boolean equals(Object o) {
+//        return super.equals(o);
+//    }
+
     @Override
     public String toString() {
         String result =
