@@ -65,21 +65,23 @@ public class JavaHTTPServer implements Runnable {
 
         BufferedReader in = null;
         try {
-            //System.out.println(DataManagement.findTeam("teamTest").getStatus());
-            //DataManagement.setCurrent(DataManagement.containSubscription("ownerTest"));
-            DataManagement.setCurrent(DataManagement.containSubscription("teamManagerTest"));
             out = new PrintWriter(connect.getOutputStream());
             in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
             String headerLine;
-            StringTokenizer parse;
             String controllerMethod;
             String METHOD;
+            String username;
             //code to read and print headers
             headerLine = in.readLine();
             headerSplit = headerLine.split("[\\s/]+");
             System.out.println(headerLine);
             METHOD = headerSplit[0];
-            controllerMethod = headerSplit[2];
+            controllerMethod = headerSplit[3];
+            username = headerSplit[2];
+            DataManagement.setCurrent(null);
+            if(!METHOD.equals("registration")){
+                DataManagement.setCurrent(DataManagement.containSubscription(username));
+            }
             System.out.println("controllerMethod is: " + controllerMethod);
             System.out.println("METHOD is: " + METHOD);
             while ((headerLine = in.readLine()).length() != 0) {
@@ -152,7 +154,7 @@ public class JavaHTTPServer implements Runnable {
                     }
                     break;
                 case "watchlogger":
-                    actionStatus = StartSystem.getSc().watchLogger(headerSplit[3]);
+                    actionStatus = StartSystem.getSc().watchLogger(headerSplit[4]);
                     sendStringData();
                     break;
                 case "teamsforapproval":
@@ -167,11 +169,11 @@ public class JavaHTTPServer implements Runnable {
                     break;
                 case "approveteam":
                     actionStatus = st.getTc().ApproveCreateTeamAlert
-                            (headerSplit[3]);
+                            (headerSplit[4]);
                     sendStringData();
                     break;
                 case "search":
-                    actionStatus = st.getSc().findData(headerSplit[3]);
+                    actionStatus = st.getSc().findData(headerSplit[4]);
                     if (actionStatus.isActionSuccessful()) {
                         String[] arrayOfSearches = actionStatus.getDescription().split("\n");
                         JSONArray jsonArray = new JSONArray(arrayOfSearches);
@@ -191,14 +193,11 @@ public class JavaHTTPServer implements Runnable {
                     }
                     break;
                 case "isa":
-                    actionStatus = st.getLEc().hasRole(headerSplit[3]);
+                    actionStatus = st.getLEc().hasRole(headerSplit[4]);
                     sendStringData();
                     break;
-//                case "watchgameevent":
-//                    actionStatus = st.getGSc().printGameEvents(Integer.parseInt(headerSplit[3]));
-//                    break;
                 case "watchgameevent":
-                    actionStatus = st.getGSc().printGameEvents(Integer.parseInt(headerSplit[3]));
+                    actionStatus = st.getGSc().printGameEvents(Integer.parseInt(headerSplit[4]));
                     if (actionStatus.isActionSuccessful()) {
                         String[] linesInGameEvent = actionStatus.getDescription().split("\n");
                         JSONArray jsonArray = buildJsonArray(linesInGameEvent);
@@ -208,7 +207,7 @@ public class JavaHTTPServer implements Runnable {
                     }
                     break;
                 case "watchscoretable":
-                    actionStatus = st.getGSc().displayScoreTable(headerSplit[3], headerSplit[4]);
+                    actionStatus = st.getGSc().displayScoreTable(headerSplit[4], headerSplit[5]);
                     if(actionStatus.isActionSuccessful()){
                         String[] linesInScoreTable = actionStatus.getDescription().split("\n");
                         JSONArray jsonArray = buildJsonArray(linesInScoreTable);
