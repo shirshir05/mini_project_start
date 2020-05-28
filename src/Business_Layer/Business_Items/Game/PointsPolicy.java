@@ -1,6 +1,6 @@
 package Business_Layer.Business_Items.Game;
 
-public class PointsPolicy {
+public class PointsPolicy implements java.io.Serializable {
 
     private int win;
     private int lose;

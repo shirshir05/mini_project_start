@@ -12,7 +12,7 @@ import java.time.temporal.ChronoUnit;
 /**
  * A class that represents an event in the game
  */
-public class Event {
+public class Event implements java.io.Serializable{
     private EventType eventType;
     private String player;
     private String team;

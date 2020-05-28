@@ -1,7 +1,7 @@
 package Business_Layer.Business_Items.TeamManagement;
 import Business_Layer.Business_Items.Game.PointsPolicy;
 
-public class TeamScore {
+public class TeamScore implements java.io.Serializable {
 
     String teamName;
     private int numberOfGames;

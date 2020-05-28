@@ -49,10 +49,11 @@ public class EditAndShowUserDetails {
             PermissionAction perm = Permissions.getPermissionActionFromString(permission);
             if(manager!=null && perm!=null){
                 manager.getPermissions().add_permissions(perm);
+                DataManagement.updateGeneralsOfSubscription(manager);
                 ac = new ActionStatus(true,"permission added successfully");
             }
             else{
-                ac = new ActionStatus(false,"user mane or permission action invalid");
+                ac = new ActionStatus(false,"user name or permission action invalid");
             }
         }
         else{

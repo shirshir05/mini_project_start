@@ -1,7 +1,7 @@
 package Business_Layer.Business_Items.Game;
 import java.util.HashSet;
 
-public class League {
+public class League implements java.io.Serializable{
 
     protected String name;
     protected HashSet<Season> seasons;

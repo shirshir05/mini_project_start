@@ -53,9 +53,9 @@ public final class DataManagement {
      */
     private void createLogicManagement(){
         //initialize system and connections
-        financeSys = new unionFinanceSystem();
+        //financeSys = new unionFinanceSystem();
        // boolean checkSystem1 = financeSys.initConnection();
-        taxSys = new stateTaxSystem();
+        //taxSys = new stateTaxSystem();
         //boolean checkSystem2 = taxSys.initConnection();
     }
 
@@ -192,7 +192,7 @@ public final class DataManagement {
 
     public static void setSubscription(Subscription sub){
         Subscription.add(sub);
-        sql.insert("Users",new String[]{sub.getUserName(),sub.getPassword(),sub.getRole(),sub.getEmail()});
+        sql.insert("Users",new Object[]{sub.getUserName(),sub.getPassword(),sub.getRole(),sub.getEmail(),sub.getNumberAlerts()});
         sql.insertBlob(sub.getUserName()+"Permissions",sub.getPermissions());
         sql.insertBlob(sub.getUserName()+"Alerts",sub.getAlerts());
         sql.insertBlob(sub.getUserName()+"searchHistory",sub.getSearch());
@@ -223,13 +223,27 @@ public final class DataManagement {
         logger.log("DataManagement :remove Subscription , name: " + user_name);
     }
 
-
     public  static void updateGeneralsOfSubscription(Subscription sub) {
+        sql.update("Users",new String[]{sub.getUserName()},"alerts",sub.getNumberAlerts());
         sql.updateBlob("Blobs",sub.getUserName()+"Permissions",sub.getPermissions());
         sql.updateBlob("Blobs",sub.getUserName()+"Alerts",sub.getAlerts());
         sql.updateBlob("Blobs",sub.getUserName()+"searchHistory",sub.getSearch());
     }
 
+    public static void addInfo(Subscription sub,String role){
+        if(role.equals("Coach")){
+            sql.insert("UsersData",new String[]{sub.getUserName(),"qualification",((UnifiedSubscription) sub).getQualification()});
+            sql.insert("UsersData",new String[]{sub.getUserName(),"roleInTeam",((UnifiedSubscription) sub).getRoleInTeam()});
+            sql.insertBlob(sub.getUserName()+"CoachPersonalPage",((UnifiedSubscription) sub).getCoachPersonalPage());
+        }if(role.equals("Player")){
+            sql.insert("UsersData",new String[]{sub.getUserName(),"position",((UnifiedSubscription)sub).getPosition()});
+            sql.insertBlob(sub.getUserName()+"PlayerPersonalPage",((UnifiedSubscription) sub).getPlayerPersonalPage());
+        }if(role.equals("TeamManager")){
+            sql.insert("UsersData",new String[]{sub.getUserName(),"managerAppointedByTeamOwner",((UnifiedSubscription)sub).teamManager_getAppointedByTeamOwner()});
+        }if(role.equals("TeamOwner")){
+            sql.insert("UsersData",new String[]{sub.getUserName(),"ownerAppointedByTeamOwner",((UnifiedSubscription)sub).teamOwner_getAppointedByTeamOwner()});
+        }
+    }
 
     public static void setCurrent(Subscription sub){
         current = sub;
@@ -341,7 +355,8 @@ public final class DataManagement {
                 list_Complaints = c;
             }
             list_Complaints.add(complaint);
-            sql.updateBlob("Complaint","Complaint",list_Complaints);
+            sql.delete("Blobs",new String[]{"Complaint"});
+            sql.insertBlob("Complaint",list_Complaints);
         }
     }
 }

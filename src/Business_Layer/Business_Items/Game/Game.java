@@ -15,7 +15,7 @@ import DB_Layer.logger;
 import javafx.util.Pair;
 
 
-public class Game extends Observable{
+public class Game extends Observable implements java.io.Serializable{
     protected  int id;
     private String field;
     protected LocalDate date;

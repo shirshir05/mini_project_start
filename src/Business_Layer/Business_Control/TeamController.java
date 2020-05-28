@@ -29,9 +29,11 @@ public class TeamController {
                 //message in this type: rep.addAlert("teamOwner:" + currentUser.getUserName() + "| Team;" + arg_name);
                 if (alert.contains("teamOwner:") && alert.contains("| Team;") ) {
                     String teamName = alert.substring(alert.indexOf(';')+1);
+
                     returnValue.append(teamName).append(",");
                 }
             }
+            break;
         }
         return new ActionStatus(true, returnValue.toString());
     }
@@ -99,9 +101,10 @@ public class TeamController {
             Team new_team = new Team(arg_name, arg_field);
             new_team.getPersonalPage().addPermissionToEdit(DataManagement.getCurrent().getUserName());
             new_team.changeStatus(2);
-            DataManagement.addToListTeam((new_team));
             Subscription sub = DataManagement.getCurrent();
             sub.getPermissions().add_default_owner_permission();
+            new_team.EditTeamOwner((UnifiedSubscription) sub, 1);
+            DataManagement.addToListTeam((new_team));
             DataManagement.updateGeneralsOfSubscription(sub);
             //add the union representatives to the observers of the budget of the team:
             HashSet<Subscription> unionReps = DataManagement.getUnionRepresentatives();
@@ -131,8 +134,9 @@ public class TeamController {
         ActionStatus AC = new ActionStatus(false,"The action was not performed." );
         if (currentUser instanceof UnionRepresentative) {
             boolean flag = false;
-            for (String alert : currentUser.getAlerts()) {
-                if (alert.equals(theAlert)) {
+            HashSet<String> alerts = currentUser.getAlerts();
+            for (String alert : alerts) {
+                if (alert.contains(theAlert)) {
                     String teamName = theAlert.substring(theAlert.indexOf(';')+1);
                     Team team = DataManagement.findTeam(teamName);
                     if (team == null){
@@ -171,9 +175,9 @@ public class TeamController {
                         u.getAlerts().remove(alert);
                     }
                 }
+                DataManagement.updateGeneralsOfSubscription(u);
             }
         }
-
     }
 
 

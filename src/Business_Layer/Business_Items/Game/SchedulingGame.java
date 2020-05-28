@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
 
-public abstract class SchedulingGame {
+public abstract class SchedulingGame implements java.io.Serializable{
 
 
     /**
