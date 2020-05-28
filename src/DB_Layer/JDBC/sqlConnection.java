@@ -234,6 +234,8 @@ public class sqlConnection implements interfaceDB {
                     values[0]+"','"+values[1]+"','"+values[2]+"')";
         }else if(table.equals("logs")){
             query += " ([key]) VALUES ('"+values[0]+"')";
+        }else if(table.equals("errors")){
+            query += " ([key]) VALUES ('"+values[0]+"')";
         }
         return query;
     }

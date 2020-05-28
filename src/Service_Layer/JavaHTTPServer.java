@@ -132,6 +132,7 @@ public class JavaHTTPServer implements Runnable {
             }
         } catch (Exception e) {
             actionStatus = new ActionStatus(false, e.getMessage());
+            DataManagement.saveError("class httpServer delete function: "+e.getMessage());
         }
     }
 
@@ -165,7 +166,7 @@ public class JavaHTTPServer implements Runnable {
                 case "approveteam":
                     actionStatus = st.getTc().ApproveCreateTeamAlert (jsonObject.getString(headerSplit[4]));
                       //(headerSplit[3]);
-                    
+
                     sendStringData();
                     break;
                 case "search":
@@ -232,6 +233,7 @@ public class JavaHTTPServer implements Runnable {
             }
         } catch (Exception e) {
             actionStatus = new ActionStatus(false, e.getMessage());
+            DataManagement.saveError("class httpServer get function: "+e.getMessage());
             sendStringData();
         }
     }
@@ -440,6 +442,7 @@ public class JavaHTTPServer implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
             as = new ActionStatus(false, e.getMessage());
+            DataManagement.saveError("class httpServer post function: "+e.getMessage());
         }
         return as;
     }

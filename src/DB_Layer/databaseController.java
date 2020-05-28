@@ -60,7 +60,7 @@ public class databaseController {
                             subUn.setNewRole(new TeamOwner());
                             subUn.teamOwner_setAppointedByTeamOwner(rs2.getString("dataValue"));
                         } else if (rs2.getString("dataType").equals("managerAppointedByTeamOwner")) {
-                            subUn.setNewRole(new TeamOwner());
+                            subUn.setNewRole(new TeamManager());
                             subUn.teamManager_setAppointedByTeamOwner(rs2.getString("dataValue"));
                         }
                     }
