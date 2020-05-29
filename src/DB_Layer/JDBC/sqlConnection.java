@@ -2,6 +2,7 @@ package DB_Layer.JDBC;
 
 import Business_Layer.Enum.ActionStatus;
 import DB_Layer.interfaceDB;
+import DB_Layer.logger;
 
 import java.io.*;
 import java.sql.*;
@@ -277,41 +278,21 @@ public class sqlConnection implements interfaceDB {
     }
 
     public void resetDB(){
-        String s = "";
-        String all = "";
-        try
-        {
-            FileReader fr = new FileReader(new File("lib/DBwithObj.sql"));
-            BufferedReader br = new BufferedReader(fr);
-            while((s = br.readLine()) != null) {
-                all += s;
+        PreparedStatement sqlStatement = null;
+        int rowsEdited = -1;
+        try{
+            if(this.databaseManager == null){
+                connect();
             }
-            br.close();
-            all = all.trim();
-            Statement st = databaseManager.conn.createStatement();
-            st.executeUpdate(all);
-            System.out.println(all);
-            /*
-            for(int i = 0; i<inst.length; i++)
-            {
-                // we ensure that there is no spaces before or after the request string
-                // in order to not execute empty statements
-                if(!inst[i].trim().equals(""))
-                {
-
-                }
+            if( this.databaseManager.conn.isClosed()){
+                connect();
             }
-
-             */
+            sqlStatement = databaseManager.conn.prepareStatement("use master drop database");
+            rowsEdited = sqlStatement.executeUpdate();
         }
         catch(Exception e)
         {
-            System.out.println("*** Error : "+e.toString());
-            System.out.println("*** ");
-            System.out.println("*** Error : ");
             e.printStackTrace();
-            System.out.println("################################################");
-            System.out.println(all);
         }
     }
 
@@ -349,5 +330,33 @@ public class sqlConnection implements interfaceDB {
             System.out.println("################################################");
             System.out.println(sb.toString());
         }
+    }
+
+    public boolean checkExistingDB(){
+        try {
+            if (this.databaseManager == null) {
+                connect();
+            }
+            if (this.databaseManager.conn.isClosed()) {
+                connect();
+            }
+            PreparedStatement sqlStatement = databaseManager.conn.prepareStatement("SELECT name FROM master.sys.databases WHERE name = 'FootBallDB'");
+            ResultSet rs = sqlStatement.executeQuery();
+            if (rs.next()) {
+                return true;
+            }else{
+                return false;
+            }
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+
+    public static void main(String[] args) {
+        sqlConnection sc = new sqlConnection();
+        boolean bol = sc.checkExistingDB();
+        logger.log("this is me ahahahahahhahaha");
+        System.out.println(bol);
     }
 }

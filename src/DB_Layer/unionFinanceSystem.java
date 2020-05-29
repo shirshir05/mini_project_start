@@ -1,6 +1,7 @@
 package DB_Layer;
 
 public class unionFinanceSystem implements unionFinanceSystemInterface {
+
     public unionFinanceSystem(String URL){
         // connect URL
     }

@@ -6,6 +6,7 @@ import Business_Layer.Enum.Configurations;
 import Business_Layer.Business_Control.*;
 import DB_Layer.databaseController;
 
+
 import java.io.File;
 
 public class StartSystem {
@@ -24,12 +25,19 @@ public class StartSystem {
         DataManagement.cleanAllData();
         BudgetRegulations.resetRegulationsToDefault();
         try {
-            File f = new File("lib/spellingDict.txt");
+            File f = new File("./lib/spellingDict.txt");
             if (f.exists()) {
                 f.delete();
             }
+            File dir = new File("./logs");
+            for(File file: dir.listFiles()) {
+                if (!file.isDirectory()) {
+                    file.delete();
+                }
+            }
+
         }catch (Exception e){
-            System.err.println("ERROR: function cleanSystem while creating new spellingDict File");
+            System.err.println("ERROR: function cleanSystem while cleaning files");
         }
     }
 

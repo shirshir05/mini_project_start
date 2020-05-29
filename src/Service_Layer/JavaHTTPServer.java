@@ -17,7 +17,7 @@ public class JavaHTTPServer implements Runnable {
 
     // port to listen connection
     static final int PORT = 8008;
-    StartSystem st = new StartSystem();
+
 
     // verbose mode
     static final boolean verbose = true;
@@ -28,15 +28,17 @@ public class JavaHTTPServer implements Runnable {
     private JSONObject jsonObject;
     private String[] headerSplit;
     private PrintWriter out;
+    private static boolean systemIsInitialized;
+    private static StartSystem st = new StartSystem();
 
     public JavaHTTPServer(Socket c) {
         connect = c;
-        StartSystem startSystem = new StartSystem();
     }
 
     public static void main(String[] args) {
         try {
             // TODO - text system connect successfully - system administrator
+            systemIsInitialized = false;
             ServerSocket serverConnect = new ServerSocket(PORT);
             System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
 
