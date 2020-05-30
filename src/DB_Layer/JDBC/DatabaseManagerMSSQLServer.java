@@ -6,6 +6,7 @@ public class DatabaseManagerMSSQLServer extends DatabaseManager {
 
     public DatabaseManagerMSSQLServer(String databaseName) {
         super("jdbc:sqlserver://132.72.65.66;", databaseName, "sa", "123456789");
+        //super("jdbc:sqlserver://localhost;Instance=ISE-STR10;integratedSecurity=true", databaseName, "", "");
         //super("jdbc:sqlserver://localhost;integratedSecurity=true", databaseName, "", "");
     }
 
