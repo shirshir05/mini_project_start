@@ -161,7 +161,7 @@ public abstract class Subscription implements java.io.Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Subscription that = (Subscription) o;
-        return Objects.equals(userName, that.userName);
+        return userName.equals(that.userName);
     }
 
 
