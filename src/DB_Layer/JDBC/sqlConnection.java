@@ -2,6 +2,7 @@ package DB_Layer.JDBC;
 
 import Business_Layer.Enum.ActionStatus;
 import DB_Layer.interfaceDB;
+import DB_Layer.logger;
 
 import java.io.*;
 import java.sql.*;
@@ -171,6 +172,9 @@ public class sqlConnection implements interfaceDB {
         int rowsEdited = -1;
         try{
             if(this.databaseManager == null){
+                connect();
+            }
+            if(this.databaseManager.conn == null){
                 connect();
             }
             if( this.databaseManager.conn.isClosed()){
@@ -349,5 +353,32 @@ public class sqlConnection implements interfaceDB {
             System.out.println("################################################");
             System.out.println(sb.toString());
         }
+    }
+    public boolean checkExistingDB(){
+        try {
+            if (this.databaseManager == null) {
+                connect();
+            }
+            if (this.databaseManager.conn.isClosed()) {
+                connect();
+            }
+            PreparedStatement sqlStatement = databaseManager.conn.prepareStatement("SELECT name FROM master.sys.databases WHERE name = 'FootBallDB'");
+            ResultSet rs = sqlStatement.executeQuery();
+            if (rs.next()) {
+                return true;
+            }else{
+                return false;
+            }
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+
+    public static void main(String[] args) {
+        sqlConnection sc = new sqlConnection();
+        boolean bol = sc.checkExistingDB();
+        logger.getInstance().log("this is me ahahahahahhahaha");
+        System.out.println(bol);
     }
 }
