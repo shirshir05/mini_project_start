@@ -1,8 +1,6 @@
 package Service_Layer;
 
 import Business_Layer.Business_Items.BudgetManagement.BudgetRegulations;
-import Business_Layer.Enum.ActionStatus;
-import Business_Layer.Enum.Configurations;
 import Business_Layer.Business_Control.*;
 import DB_Layer.databaseController;
 
@@ -34,65 +32,24 @@ public class StartSystem {
     }
 
     public static void ResetToFactory(){
-        cleanSystem();
-
-        //create general Guest user
-        ActionStatus str1 = LEc.Registration("Guest", "123456", "Guest","Guestmail@mail.com");
-
+        //clean old data in system
         DataManagement.cleanAllData();
-        //db.resetDateBase();
-
-        //create first SystemAdministrator user
-        ActionStatus str2 = new ActionStatus(false,"");
-        String name = "";
-        String password = "";
-        while(!str2.isActionSuccessful()) {
-            /*
-            name = cli.presentAndGetString("insert admin's User name");
-            password = cli.presentAndGetString("insert admin's password");
-            String email = cli.presentAndGetString("insert admin's email");
-            str2 = LEc.Registration(name, password, "SystemAdministrator", email);
-            cli.presentOnly(str2.getDescription());
-             */
-        }
-
-        //start connection to external systems.
-        System.out.println("connection to external systems");
-        System.out.println("Finance system connection stable: "+DataManagement.getExternalConnStatus("finance").isActionSuccessful());
-        System.out.println("Tax system connection stable: "+DataManagement.getExternalConnStatus("tax").isActionSuccessful());
-
-
-        //choose user to log in with to the system;
-        boolean chosen = false;
-        while(!chosen) {
-            //int i = cli.presentAndGetInt("would you like to poesied as SystemAdministrator or as guest?\npress 0 to SystemAdministrator\npress 1 to Guest");
-            switch (0) {
-                case 0:
-                    //admin menu;
-                    LEc.Login(name, password);
-                    chosen = true;
-                    break;
-                case 1:
-                    //guest menu;
-                    LEc.Login("Guest", "123456");
-                    chosen = true;
-                    break;
-                default:
-                    //cli.presentOnly("invalid choice.");
-                    break;
+        db.resetDateBase();
+        BudgetRegulations.resetRegulationsToDefault();
+        try {
+            File f = new File("lib/spellingDict.txt");
+            if (f.exists()) {
+                f.delete();
             }
+        }catch (Exception e){
+            System.err.println("ERROR: function cleanSystem while creating new spellingDict File");
         }
-        //cli.presentOnly("thank you and goodbye");
-        //todo - send to correct user presentation to show user options menu;
     }
 
     public void startFromDB(){
-        DataManagement.cleanAllData();
-        //db.startLastDateBase();
-        Configurations.setPropValues("NumberOfGames",1);
-        DataManagement.setCurrent(null);
-        //cli.presentOnly(LEc.Login("Guest", "123456").getDescription());
-        //cli.presentOnly("hello Guest");
+        if(!db.dbExist()){
+            db.resetDateBase();
+        }
     }
 
 

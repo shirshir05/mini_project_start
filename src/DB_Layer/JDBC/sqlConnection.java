@@ -278,13 +278,23 @@ public class sqlConnection implements interfaceDB {
 
     public void resetDB(){
         try{
-            if(this.databaseManager == null){
-                connect();
+            PreparedStatement sqlStatement;
+            if( checkExistingDB() ) {
+                sqlStatement = databaseManager.conn.prepareStatement("use master alter database FootBallDB set single_user with rollback immediate drop DATABASE FootBallDB;");
+                sqlStatement.execute();
             }
-            if( this.databaseManager.conn.isClosed()){
-                connect();
+
+            sqlStatement = databaseManager.conn.prepareStatement("CREATE DATABASE FootBallDB;");
+            sqlStatement.execute();
+
+            BufferedReader br = new BufferedReader(new FileReader(new File("./lib/tables.txt")));
+            String query = "";
+            String line = br.readLine();
+            while(line != null){
+                query += " "+ line;
+                line = br.readLine();
             }
-            PreparedStatement sqlStatement = databaseManager.conn.prepareStatement("use master alter database FootBallDB set single_user with rollback immediate drop DATABASE FootBallDB;");
+            sqlStatement = databaseManager.conn.prepareStatement(query);
             sqlStatement.execute();
         }
         catch(Exception e)
@@ -293,33 +303,24 @@ public class sqlConnection implements interfaceDB {
         }
     }
 
-
-    public void startLastDB() {
-        String line = null;
-        String query = "";
+    public boolean checkExistingDB(){
         try {
-            BufferedReader br = new BufferedReader(new FileReader(new File("lib/dataNew.txt")));
-            while ((line = br.readLine()) != null) {
-                query += " "+ line;
-            }
-            br.close();
             if (this.databaseManager == null) {
                 connect();
             }
             if (this.databaseManager.conn.isClosed()) {
                 connect();
             }
-            PreparedStatement sqlStatement = databaseManager.conn.prepareStatement(query);
-            sqlStatement.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
+            PreparedStatement sqlStatement = databaseManager.conn.prepareStatement("SELECT name FROM master.sys.databases WHERE name = 'FootBallDB'");
+            ResultSet rs = sqlStatement.executeQuery();
+            if (rs.next()) {
+                return true;
+            }else{
+                return false;
+            }
+        }catch (Exception e){
+            return false;
         }
-    }
-
-
-    public static void main(String[] args) {
-        sqlConnection sq = new sqlConnection();
-        sq.startLastDB();
     }
 }
 
