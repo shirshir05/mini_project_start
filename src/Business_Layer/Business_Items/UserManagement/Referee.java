@@ -46,7 +46,7 @@ public class Referee extends Subscription implements Observer, java.io.Serializa
      * @return
      */
     public String gamesListToString(){
-        String return_value = "You are participating in the next games: ";
+        String return_value = "";
         for (Integer g:referee_games){
             return_value += g +", ";
         }
