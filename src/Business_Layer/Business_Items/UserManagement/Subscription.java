@@ -1,5 +1,7 @@
 package Business_Layer.Business_Items.UserManagement;
 
+import Business_Layer.Business_Control.DataManagement;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.HashSet;
@@ -112,6 +114,7 @@ public abstract class Subscription implements java.io.Serializable {
      */
     public void addSearch(String word){
         searchHistory.add(word);
+        DataManagement.updateGeneralsOfSubscription(this);
     }
 
 

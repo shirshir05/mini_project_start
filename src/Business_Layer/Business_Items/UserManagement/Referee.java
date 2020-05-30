@@ -39,6 +39,7 @@ public class Referee extends Subscription implements Observer, java.io.Serializa
      */
     public void addGame(Game g){
         referee_games.add(g.getGameId());
+        DataManagement.updateGeneralsOfSubscription(this);
     }
 
     /**

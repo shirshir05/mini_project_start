@@ -10,6 +10,7 @@ import DB_Layer.JDBC.DatabaseManager;
 import DB_Layer.logger;
 import Service_Layer.Spelling;
 import Service_Layer.StartSystem;
+import org.omg.PortableInterceptor.SUCCESSFUL;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -518,8 +519,9 @@ public class GameSettingsController {
      * @return - ActionStatus
      */
     public ActionStatus refereeWatchGames(){
-        if (DataManagement.getCurrent() instanceof Referee){
-            Referee current = (Referee)DataManagement.getCurrent();
+        Subscription sub =DataManagement.getCurrent();
+        if ( sub instanceof Referee){
+            Referee current = (Referee)sub;
             return new ActionStatus(true,current.gamesListToString());
         }
         return new ActionStatus(false,"You are not a referee!");
