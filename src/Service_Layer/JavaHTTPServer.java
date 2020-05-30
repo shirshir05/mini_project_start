@@ -61,6 +61,7 @@ public class JavaHTTPServer implements Runnable {
 
         BufferedReader in = null;
         try {
+            //DataManagement.setCurrent(DataManagement.containSubscription("union"));
             out = new PrintWriter(connect.getOutputStream());
             in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
             String headerLine;
@@ -80,6 +81,7 @@ public class JavaHTTPServer implements Runnable {
             }
             System.out.println("controllerMethod is: " + controllerMethod);
             System.out.println("METHOD is: " + METHOD);
+            System.out.println("username is: " + username);
             while ((headerLine = in.readLine()).length() != 0) {
                 System.out.println(headerLine);
                 if(headerLine.contains("Access-Control-Request-Method")){
@@ -92,7 +94,7 @@ public class JavaHTTPServer implements Runnable {
                 while (in.ready()) {
                     payload.append((char) in.read());
                 }
-                System.out.println("payload is: " + payload);
+                //System.out.println("payload is: " + payload);
                 jsonObject = new JSONObject(payload.toString());
                 actionStatus = handlePostMethod(controllerMethod);
                 if (actionStatus.isActionSuccessful()) {
@@ -164,7 +166,7 @@ public class JavaHTTPServer implements Runnable {
                     }
                     break;
                 case "approveteam":
-                    actionStatus = st.getTc().ApproveCreateTeamAlert (jsonObject.getString(headerSplit[4]));
+                    actionStatus = st.getTc().ApproveCreateTeamAlert (headerSplit[4]);
                       //(headerSplit[3]);
 
                     sendStringData();
@@ -272,6 +274,17 @@ public class JavaHTTPServer implements Runnable {
     }
 
     private void sendStringData() {
+
+        System.out.println("Server: Java HTTP Server from SSaurel : 1.0");
+        System.out.println("Date: " + new Date());
+        System.out.println("Access-Control-Allow-Origin: https://shirshir05.github.io");
+        System.out.println("Access-Control-Allow-Credentials: true");
+        System.out.println("Content-length: " + actionStatus.getDescription().length());
+        System.out.println(""); // blank line between headers and content, very important !
+        System.out.println(actionStatus.getDescription());
+        System.out.flush(); // flush character output stream buffer
+
+        System.out.println();
         out.println("Server: Java HTTP Server from SSaurel : 1.0");
         out.println("Date: " + new Date());
         out.println("Access-Control-Allow-Origin: https://shirshir05.github.io");
