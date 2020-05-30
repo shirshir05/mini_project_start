@@ -14,7 +14,7 @@ public class DisplayManager {
 
         int input = cli.presentAndGetInt("choose options \n1: reset to factory\n2: init from DB\n3: nothing");
         if(input == 1){
-            sys.ResetToFactory();
+            sys.ResetToFactory("a","b");
         }
         else if(input == 2){
             sys.startFromDB();
