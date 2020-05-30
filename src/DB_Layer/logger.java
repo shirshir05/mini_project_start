@@ -70,7 +70,7 @@ public final class logger {
     public static void log(String message) {
         try {
             FileWriter out = new FileWriter(logger.logFile, true);
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss.SSS");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
             String savelog = dtf.format(now) +" : "+ message + "\n";
             dbc.insert("logs",new Object[]{savelog});

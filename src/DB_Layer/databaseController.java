@@ -246,7 +246,5 @@ public class databaseController {
         sqlConn.resetDB();
     }
 
-    public boolean dbExist(){return sqlConn.checkExistingDB();}
-
 }
 

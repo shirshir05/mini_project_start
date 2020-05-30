@@ -224,7 +224,7 @@ public class Team extends Observable implements Comparable, Serializable {
      * @return
      */
     public ActionStatus EditTeamOwner(UnifiedSubscription TeamOwner, int add_or_remove){
-        if(status == -1 || status == 0 || status==2){
+        if(status == -1 || status == 0 /*|| status==2*/){
             //if the status is 2 then the team was just created
             return new ActionStatus(false, "The team is inactive so no activity can be performed on it");
         }
@@ -249,9 +249,9 @@ public class Team extends Observable implements Comparable, Serializable {
 
     /**
      * The function allows to add and remove Team Manager from the team.
-     * @param teamManager -
-     * @param add_or_remove -
-     * @return -
+     * @param teamManager
+     * @param add_or_remove
+     * @return
      */
     public ActionStatus EditTeamManager(UnifiedSubscription teamManager, int add_or_remove){
         if(status == -1 || status == 0 || status==2){

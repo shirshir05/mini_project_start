@@ -132,29 +132,13 @@ public class LogAndExitController{
         if( sub!= null){
             if (sub instanceof UnifiedSubscription){
                 if(role.equals("player")){
-                    if(((UnifiedSubscription) sub).isAPlayer()){
-                        AC = new ActionStatus(true, "");
-                    }else{
-                        AC = new ActionStatus(false, "You are not set as an player");
-                    }
+                    AC = new ActionStatus(((UnifiedSubscription) sub).isAPlayer(), "");
                 }else if(role.equals("coach")){
-                    if(((UnifiedSubscription) sub).isACoach()){
-                        AC = new ActionStatus(true, "");
-                    }else{
-                        AC = new ActionStatus(false, "You are not set as an coach");
-                    }
+                    AC = new ActionStatus(((UnifiedSubscription) sub).isACoach(), "");
                 }else if(role.equals("teammanager")){
-                    if(((UnifiedSubscription) sub).isATeamManager()){
-                        AC = new ActionStatus(true, "");
-                    }else{
-                        AC = new ActionStatus(false, "You are not set as an team manger");
-                    }
+                    AC = new ActionStatus(((UnifiedSubscription) sub).isATeamManager(), "");
                 }else if(role.equals("teamowner")){
-                    if(((UnifiedSubscription) sub).isATeamOwner()){
-                        AC = new ActionStatus(true, "");
-                    }else{
-                        AC = new ActionStatus(false, "You are not set as an team owner");
-                    }
+                    AC = new ActionStatus(((UnifiedSubscription) sub).isATeamOwner(), "");
                 }else{
                     AC = new ActionStatus(false, "One of the details you entered is incorrect.");
                 }

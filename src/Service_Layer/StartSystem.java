@@ -1,10 +1,16 @@
 package Service_Layer;
 
 import Business_Layer.Business_Items.BudgetManagement.BudgetRegulations;
+import Business_Layer.Enum.ActionStatus;
+import Business_Layer.Enum.Configurations;
 import Business_Layer.Business_Control.*;
 import DB_Layer.databaseController;
+import DB_Layer.stateTaxSystem;
+import DB_Layer.unionFinanceSystem;
+
 
 import java.io.File;
+import java.io.FileWriter;
 
 public class StartSystem {
 
@@ -22,34 +28,59 @@ public class StartSystem {
         DataManagement.cleanAllData();
         BudgetRegulations.resetRegulationsToDefault();
         try {
-            File f = new File("lib/spellingDict.txt");
+            File f = new File("./lib/spellingDict.txt");
             if (f.exists()) {
                 f.delete();
             }
+            File dir = new File("./logs");
+            for(File file: dir.listFiles()) {
+                if (!file.isDirectory()) {
+                    file.delete();
+                }
+            }
+            FileWriter config = new FileWriter(new File("./Resources/config"),false);
+            config.write("NumberOfGames=1\nNumberOfComplaint=1");
+            config.flush();
+            config.close();
+
+
         }catch (Exception e){
-            System.err.println("ERROR: function cleanSystem while creating new spellingDict File");
+            System.err.println("ERROR: function cleanSystem while cleaning files");
         }
     }
 
-    public static void ResetToFactory(){
-        //clean old data in system
-        DataManagement.cleanAllData();
+    public static ActionStatus ResetToFactory(String tax,String finance){
+        cleanSystem();
+
+        //redet db and check connection
         db.resetDateBase();
-        BudgetRegulations.resetRegulationsToDefault();
-        try {
-            File f = new File("lib/spellingDict.txt");
-            if (f.exists()) {
-                f.delete();
-            }
-        }catch (Exception e){
-            System.err.println("ERROR: function cleanSystem while creating new spellingDict File");
-        }
+        Boolean dbStart = db.sqlConn.checkExistingDB();
+
+        //create first SystemAdministrator user
+        ActionStatus userStart = LEc.Registration("admin", "admin", "SystemAdministrator", "admin@admin.com");
+
+        //start connection to external systems.
+        stateTaxSystem stT = new stateTaxSystem(tax);
+        unionFinanceSystem unF = new unionFinanceSystem(finance);
+        Boolean external = unF.checkConnection() && stT.checkConnection();
+
+        String resultS = "Database upload successfully: "+ dbStart+" ,admin default user created: "+ userStart.isActionSuccessful() +" ,external connections made successfully: "+ external;
+        Boolean resultB = dbStart && userStart.isActionSuccessful() && external;
+        return new ActionStatus(resultB,resultS);
     }
 
-    public void startFromDB(){
-        if(!db.dbExist()){
-            db.resetDateBase();
+    public static ActionStatus startFromDB(){
+        DataManagement.cleanAllData();
+        //Configurations.setPropValues("NumberOfGames",1);
+        DataManagement.setCurrent(null);
+        Boolean dbStart = db.sqlConn.checkExistingDB();
+        String ans = "";
+        if(dbStart){
+            ans = "The system is up and running";
+        }else {
+            ans = "Connectivity problem, Please try again in a few minutes or contact your system administrator";
         }
+        return new ActionStatus(dbStart,ans);
     }
 
 
@@ -80,4 +111,5 @@ public class StartSystem {
     public static TeamController getTc() {
         return Tc;
     }
+
 }

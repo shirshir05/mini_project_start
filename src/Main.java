@@ -6,14 +6,6 @@ import java.time.LocalDateTime;
 public class Main {
 
     public static void main(String[] args) {
-
-
-        String ss = "berr%20sasl";
-        ss = ss.replaceAll("%20"," ");
-        System.out.println(ss);
-        ss = ss.replaceAll("%20"," ");
-        System.out.println(ss);
-
         //System.out.println(parserTime("Sat May 16 2020 11:50:26 GMT+0300 (Israel Daylight Time)"));
 
 

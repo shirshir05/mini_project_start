@@ -2,6 +2,7 @@ package DB_Layer.JDBC;
 
 import Business_Layer.Enum.ActionStatus;
 import DB_Layer.interfaceDB;
+import DB_Layer.logger;
 
 import java.io.*;
 import java.sql.*;
@@ -277,7 +278,7 @@ public class sqlConnection implements interfaceDB {
     }
 
     public void resetDB(){
-        try{
+   try{
             PreparedStatement sqlStatement;
             if( checkExistingDB() ) {
                 sqlStatement = databaseManager.conn.prepareStatement("use master alter database FootBallDB set single_user with rollback immediate drop DATABASE FootBallDB;");
@@ -303,6 +304,29 @@ public class sqlConnection implements interfaceDB {
         }
     }
 
+
+    public void startLastDB() {
+        String line = null;
+        String query = "";
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File("lib/dataNew.txt")));
+            while ((line = br.readLine()) != null) {
+                query += " "+ line;
+            }
+            br.close();
+            if (this.databaseManager == null) {
+                connect();
+            }
+            if (this.databaseManager.conn.isClosed()) {
+                connect();
+            }
+            PreparedStatement sqlStatement = databaseManager.conn.prepareStatement(query);
+            sqlStatement.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean checkExistingDB(){
         try {
             if (this.databaseManager == null) {
@@ -322,5 +346,7 @@ public class sqlConnection implements interfaceDB {
             return false;
         }
     }
+
+
 }
 
