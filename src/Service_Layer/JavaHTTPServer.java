@@ -2,7 +2,6 @@ package Service_Layer;
 
 import Business_Layer.Business_Control.DataManagement;
 import Business_Layer.Business_Control.LogAndExitController;
-import Business_Layer.Business_Items.UserManagement.Subscription;
 import Business_Layer.Enum.ActionStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,7 +39,6 @@ public class JavaHTTPServer implements Runnable {
         try {
             // TODO - text system connect successfully - system administrator
             systemIsInitialized = false;
-            systemInternalError = false;
             ServerSocket serverConnect = new ServerSocket(PORT);
             System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
 
@@ -143,28 +141,6 @@ public class JavaHTTPServer implements Runnable {
     private void handleGetMethod(String controllerMethod) {
         try {
             switch (controllerMethod) {
-                case "startfromscratch":
-                    if (systemIsInitialized) {
-                        actionStatus = new ActionStatus(true, "system is up and running");
-                    } else {
-                        actionStatus = new ActionStatus(false, "system is not initialized");
-                    }
-                    sendStringData();
-                    break;
-                case "startclean":
-                    actionStatus = st.ResetToFactory("taxURL", "financeURL");
-                    if (actionStatus.isActionSuccessful()) {
-                        systemIsInitialized = true;
-                    }
-                    sendStringData();
-                    break;
-                case "startdb":
-                    actionStatus = st.startFromDB();
-                    if (actionStatus.isActionSuccessful()) {
-                        systemIsInitialized = true;
-                    }
-                    sendStringData();
-                    break;
                 case "watchcomplaints":
                     actionStatus = st.getAc().getAllComplaints();
                     if (actionStatus.isActionSuccessful()) {
@@ -190,8 +166,8 @@ public class JavaHTTPServer implements Runnable {
                     }
                     break;
                 case "approveteam":
-                    actionStatus = st.getTc().ApproveCreateTeamAlert(jsonObject.getString(headerSplit[4]));
-                    //(headerSplit[3]);
+                    actionStatus = st.getTc().ApproveCreateTeamAlert (jsonObject.getString(headerSplit[4]));
+                      //(headerSplit[3]);
 
                     sendStringData();
                     break;
@@ -231,7 +207,7 @@ public class JavaHTTPServer implements Runnable {
                     break;
                 case "watchscoretable":
                     actionStatus = st.getGSc().displayScoreTable(headerSplit[4], headerSplit[5]);
-                    if (actionStatus.isActionSuccessful()) {
+                    if(actionStatus.isActionSuccessful()){
                         String[] linesInScoreTable = actionStatus.getDescription().split("\n");
                         JSONArray jsonArray = buildJsonArray(linesInScoreTable);
                         sendJsonData(jsonArray);
@@ -245,7 +221,7 @@ public class JavaHTTPServer implements Runnable {
                     break;
                 case "readallalrets":
                     actionStatus = st.getAc().readAllAlerts();
-                    if (actionStatus.isActionSuccessful()) {
+                    if(actionStatus.isActionSuccessful()){
                         String[] lines = actionStatus.getDescription().split("!@#");
                         JSONArray jsonArray = buildJsonArray(lines);
                         sendJsonData(jsonArray);
@@ -260,15 +236,6 @@ public class JavaHTTPServer implements Runnable {
         } catch (Exception e) {
             actionStatus = new ActionStatus(false, e.getMessage());
             DataManagement.saveError("class httpServer get function: "+e.getMessage());
-            sendStringData();
-        }
-        if(systemInternalError){
-            if(st.startFromDB().isActionSuccessful()){
-                actionStatus = new ActionStatus(false, "system internal problem has occurred and fixed, please try again in a minute");
-                systemInternalError = false;
-            }else {
-                actionStatus = new ActionStatus(false, "system fetal error! please contact your system administrator");
-            }
             sendStringData();
         }
     }
@@ -478,14 +445,6 @@ public class JavaHTTPServer implements Runnable {
             e.printStackTrace();
             as = new ActionStatus(false, e.getMessage());
             DataManagement.saveError("class httpServer post function: "+e.getMessage());
-        }
-        if(systemInternalError) {
-            if (st.startFromDB().isActionSuccessful()) {
-                as = new ActionStatus(false, "system internal problem has occurred and fixed, please try again in a minute");
-                systemInternalError = false;
-            } else {
-                as = new ActionStatus(false, "system fetal error! please contact your system administrator");
-            }
         }
         return as;
     }

@@ -210,9 +210,9 @@ public class sqlConnection implements interfaceDB {
             query += " ([teamName], [assetName],[assetRole]) VALUES ('"+values[0]+"','"+values[1]+"','"+values[2]+"')";
         }
         else if(table.equals("Game")){
-            query += " ([gameID], [filed] ,[gameDate] ,[homeTeam], [guestTeam], [leagueName], [seasonYear], [headReferee], [linesmanOneReferee], [linesmanTwoReferee]) VALUES ('"
+            query += " ([gameID], [filed] ,[gameDate] ,[gameStartTime],[gameEndTime] ,[homeTeam],[guestTeam], [leagueName], [seasonYear], [headReferee], [linesmanOneReferee], [linesmanTwoReferee]) VALUES ('"
                     +values[0]+"','"+values[1]+"','"+values[2]+"','"+values[3]+"','"+values[4]+"','"+values[5]+"','"+values[6]+"','"+
-                    values[7]+"','"+values[8]+"','"+values[9]+"')";
+                    values[7]+"','"+values[8]+"','"+values[9]+ "','" + values[10] + "','"+ values[11]+"')";
         }
         else if(table.equals("EventInGame")){
             query += " ([gameID],  [eventTime], [playerName],  [eventType]) VALUES ('"+
@@ -284,17 +284,25 @@ public class sqlConnection implements interfaceDB {
     }
 
     public void resetDB(){
-        PreparedStatement sqlStatement = null;
-        int rowsEdited = -1;
-        try{
-            if(this.databaseManager == null){
-                connect();
+   try{
+            PreparedStatement sqlStatement;
+            if( checkExistingDB() ) {
+                sqlStatement = databaseManager.conn.prepareStatement("use master alter database FootBallDB set single_user with rollback immediate drop DATABASE FootBallDB;");
+                sqlStatement.execute();
             }
-            if( this.databaseManager.conn.isClosed()){
-                connect();
+
+            sqlStatement = databaseManager.conn.prepareStatement("CREATE DATABASE FootBallDB;");
+            sqlStatement.execute();
+
+            BufferedReader br = new BufferedReader(new FileReader(new File("./lib/tables.txt")));
+            String query = "";
+            String line = br.readLine();
+            while(line != null){
+                query += " "+ line;
+                line = br.readLine();
             }
-            sqlStatement = databaseManager.conn.prepareStatement("use master drop database");
-            rowsEdited = sqlStatement.executeUpdate();
+            sqlStatement = databaseManager.conn.prepareStatement(query);
+            sqlStatement.execute();
         }
         catch(Exception e)
         {
@@ -302,39 +310,26 @@ public class sqlConnection implements interfaceDB {
         }
     }
 
-    public void startLastDB(){
-        String s = null;
-        StringBuffer sb = new StringBuffer();
-        try
-        {
-            FileReader fr = new FileReader(new File("lib/scriptOB.sql"));
-            BufferedReader br = new BufferedReader(fr);
-            while((s = br.readLine()) != null) {
-                sb.append(s);
+
+    public void startLastDB() {
+        String line = null;
+        String query = "";
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File("lib/dataNew.txt")));
+            while ((line = br.readLine()) != null) {
+                query += " "+ line;
             }
             br.close();
-
-            String[] inst = sb.toString().split("[/]\\*.+\\*[/]");
-            Statement st = databaseManager.conn.createStatement();
-            for(int i = 0; i<inst.length; i++)
-            {
-                // we ensure that there is no spaces before or after the request string
-                // in order to not execute empty statements
-                if(!inst[i].trim().equals(""))
-                {
-                    st.executeUpdate(inst[i]);
-                    System.out.println(">>"+inst[i]);
-                }
+            if (this.databaseManager == null) {
+                connect();
             }
-        }
-        catch(Exception e)
-        {
-            System.out.println("*** Error : "+e.toString());
-            System.out.println("*** ");
-            System.out.println("*** Error : ");
+            if (this.databaseManager.conn.isClosed()) {
+                connect();
+            }
+            PreparedStatement sqlStatement = databaseManager.conn.prepareStatement(query);
+            sqlStatement.execute();
+        } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("################################################");
-            System.out.println(sb.toString());
         }
     }
 
@@ -359,10 +354,5 @@ public class sqlConnection implements interfaceDB {
     }
 
 
-    public static void main(String[] args) {
-        sqlConnection sc = new sqlConnection();
-        boolean bol = sc.checkExistingDB();
-        logger.log("this is me ahahahahahhahaha");
-        System.out.println(bol);
-    }
 }
+
