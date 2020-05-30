@@ -298,7 +298,7 @@ public class LogAndExitController{
         }
         //continue the rest of the method only if the password is correct:
         else {
-            Role desiredRole = DataManagement.returnEnum(role);
+            Role desiredRole = checkrole(role);//
             if (desiredRole == null) {
                 AC = new ActionStatus(false, "The role does not exist in the system.");
             } else if (desiredRole != Role.Coach && desiredRole != Role.Player && desiredRole != Role.TeamManager && desiredRole != Role.TeamOwner) {
@@ -308,7 +308,7 @@ public class LogAndExitController{
                 //the user is a subscription with allowed parallel roles:
                 if (sub instanceof UnifiedSubscription) {
                     factory.addRoleToUnifiedSubscription((UnifiedSubscription) sub, desiredRole);
-                    DataManagement.addInfo(sub,role);
+                    DataManagement.addInfo(sub,desiredRole.toString());
                     AC = new ActionStatus(true, "The role " + role + " was added successfully to your account");
                 } else { // NOT one of the four roles who are allowed to be parallel users
                     AC = new ActionStatus(false, "You are not authorized to perform this action.");
@@ -322,5 +322,20 @@ public class LogAndExitController{
 
     public Subscription createUserByType(String arg_user_name,String arg_password,String role_enum,String email){
         return factory.Create(arg_user_name, arg_password, DataManagement.returnEnum(role_enum), email, false);
+    }
+
+    private static Role checkrole(String role){
+
+        if(role.equals("player")){
+            return Role.Player;
+        }else if(role.equals("coach")){
+            return Role.Coach;
+        }else if(role.equals("teammanager")){
+            return Role.TeamManager;
+        }else if(role.equals("teamowner")){
+            return Role.TeamOwner;
+        }
+        return null;
+
     }
 }

@@ -39,6 +39,7 @@ public class Referee extends Subscription implements Observer, java.io.Serializa
      */
     public void addGame(Game g){
         referee_games.add(g.getGameId());
+        DataManagement.updateGeneralsOfSubscription(this);
     }
 
     /**
@@ -49,6 +50,9 @@ public class Referee extends Subscription implements Observer, java.io.Serializa
         String return_value = "";
         for (Integer g:referee_games){
             return_value += g +", ";
+        }
+        if(return_value.equals("")){
+            return return_value;
         }
         return return_value.substring(0,return_value.length()-2);
     }
