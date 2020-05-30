@@ -46,7 +46,7 @@ public class AlertController {
         ActionStatus AC;
         Subscription sub = DataManagement.getCurrent();
         if(sub == null){
-            AC = new ActionStatus(false,"No user in system");
+               AC = new ActionStatus(true,"No user in system");
         }else{
             HashSet<String> alertList = sub.getAlerts();
             if(alertList.size() > sub.getNumberAlerts()){
