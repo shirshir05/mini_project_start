@@ -123,8 +123,8 @@ public class JavaHTTPServer implements Runnable {
         try {
             switch (controllerMethod) {
                 case "removesubscription":
-                    actionStatus = st.getLEc().RemoveSubscription
-                            (jsonObject.getString("username"));
+                    String param = jsonObject.getString("username").replaceAll("%20"," ");
+                    actionStatus = st.getLEc().RemoveSubscription(param);
                     break;
                 default:
                     actionStatus = new ActionStatus(false, "check correct delete function name");
@@ -332,106 +332,7 @@ public class JavaHTTPServer implements Runnable {
         ActionStatus as;
         try {
             switch (controllerMethod) {
-                case "registration":
-                    String pram1 = jsonObject.getString("username").replaceAll("%20"," ");
-                    String pram2 =  jsonObject.getString("password").replaceAll("%20"," ");
-                    String pram3 =  jsonObject.getString("role").replaceAll("%20"," ");
-                    String pram4 =  jsonObject.getString("email").replaceAll("%20"," ");
-                    as = st.getLEc().Registration
-                            (pram1,pram2,pram3,pram4);
-                    break;
-                case "login":
-                    DataManagement.setCurrent(null);
-                    LogAndExitController lc = st.getLEc();
-                    String a = jsonObject.getString("username").replaceAll("%20"," ");
-                    String b = jsonObject.getString("password").replaceAll("%20"," ");
-                    as = lc.Login(a, b);
-                    break;
-                case "logout":
-                    String logout_pram1 =jsonObject.getString("username").replaceAll("%20"," ");
-                    as = st.getLEc().Exit(logout_pram1);
-                    break;
-                case "answercomplaints":
-                    String answercomplaints_pram1 = jsonObject.getString("answer").replaceAll("%20"," ");
-                    as = st.getAc().answerCompliant(
-                            (Integer.parseInt(jsonObject.getString("id"))),answercomplaints_pram1
-                            );
-                    break;
-                case "changestatusforteam":
-                    String changestatusforteam_pram1 = jsonObject.getString("nameteam").replaceAll("%20"," ");
-                    as = st.getTc().ChangeStatusTeam
-                            (changestatusforteam_pram1,
-                                    Integer.parseInt(jsonObject.getString("status")));
-                    break;
-                case "onschedulingpolicy":
-                    String onschedulingpolicy_pram1 = jsonObject.getString("nameleague").replaceAll("%20"," ");
-                    String onschedulingpolicy_pram2 = jsonObject.getString("seasonname").replaceAll("%20"," ");
-                    as = st.getGSc().schedulingGame
-                            (onschedulingpolicy_pram1,onschedulingpolicy_pram2
-                                    ,
-                                    Integer.parseInt(jsonObject.getString("policy")));
-                    break;
-                case "defineleague":
-                    String defineleague_pram1 = jsonObject.getString("name").replaceAll("%20"," ");
-                    as = st.getGSc().defineLeague(defineleague_pram1);
-                    break;
-                case "defineseason":
-                    String defineseason_pram1 = jsonObject.getString("nameleague").replaceAll("%20"," ");
-                    String defineseason_pram2 = jsonObject.getString("year").replaceAll("%20"," ");
-
-                    as = st.getGSc().defineSeasonToLeague
-                            (defineseason_pram1,defineseason_pram2
-                                    ,
-                                    Integer.parseInt(jsonObject.getString("win")),
-                                    Integer.parseInt(jsonObject.getString("loss")),
-                                    Integer.parseInt(jsonObject.getString("equal")));
-                    break;
-                case "updatepointpolicy":
-                    String updatepointpolicypram1 = jsonObject.getString("nameleague").replaceAll("%20"," ");
-                    String updatepointpolicypram2 = jsonObject.getString("year").replaceAll("%20"," ");
-                    as = st.getGSc().updatePointsPolicy
-                            (updatepointpolicypram1,
-                                    updatepointpolicypram2,
-                                    Integer.parseInt(jsonObject.getString("win")),
-                                    Integer.parseInt(jsonObject.getString("loss")),
-                                    Integer.parseInt(jsonObject.getString("equal")));
-                    break;
-                case "addteamtoleague":
-                    String addteamtoleaguey_pram1 = jsonObject.getString("nameteam").replaceAll("%20"," ");
-                    String addteamtoleaguey_pram2 = jsonObject.getString("nameleague").replaceAll("%20"," ");
-                    String addteamtoleaguey_pram3 = jsonObject.getString("year").replaceAll("%20"," ");
-                    as = st.getGSc().addTeamToSeasonInLeague
-                            (addteamtoleaguey_pram1,
-                                    addteamtoleaguey_pram2,
-                                    addteamtoleaguey_pram3);
-                    break;
-                case "addremovereferee":
-                    String addremovereferee_pram1 = jsonObject.getString("usernamereferee").replaceAll("%20"," ");
-                    String addremovereferee_pram2 = jsonObject.getString("password").replaceAll("%20"," ");
-                    String addremovereferee_pram3 = jsonObject.getString("email").replaceAll("%20"," ");
-                    as = st.getGSc().addOrDeleteRefereeToSystem
-                            (addremovereferee_pram1,
-                                    addremovereferee_pram2,
-                                    addremovereferee_pram3,
-                                    Integer.parseInt(jsonObject.getString("addremove")));
-                    break;
-
-                case "setrefereeonleague":
-                    String setrefereeonleague_pram1 = jsonObject.getString("nameleague").replaceAll("%20"," ");
-                    String setrefereeonleague_pram2 = jsonObject.getString("usernamereferee").replaceAll("%20"," ");
-                    String setrefereeonleague_pram3 = jsonObject.getString("year").replaceAll("%20"," ");
-                    as = st.getGSc().defineRefereeInLeague
-                            (setrefereeonleague_pram1,
-                                    setrefereeonleague_pram2,
-                                    setrefereeonleague_pram3);
-                    break;
-                case "addrole":
-                    String addrole_pram1 = jsonObject.getString("role").replaceAll("%20"," ");
-                    String addrole_pram2 = jsonObject.getString("password").replaceAll("%20"," ");
-                    as = st.getLEc().addRoleToUser
-                            (addrole_pram1, addrole_pram2);
-                    break;
-                case "addteam":
+                case "createteam":
                     String addteam_pram1 = jsonObject.getString("name").replaceAll("%20"," ");
                     String addteam_pram2 = jsonObject.getString("field").replaceAll("%20"," ");
                     as = st.getTc().RequestCreateTeam
@@ -466,6 +367,12 @@ public class JavaHTTPServer implements Runnable {
                             (parm10,parm20,
                                     Integer.parseInt(jsonObject.getString("addremove")));
                     break;
+                case "changestatusforteam":
+                    String changestatusforteam_pram1 = jsonObject.getString("nameteam").replaceAll("%20"," ");
+                    as = st.getTc().ChangeStatusTeam
+                            (changestatusforteam_pram1,
+                                    Integer.parseInt(jsonObject.getString("status")));
+                    break;
                 case "addremoveteamfield":
                     String parm111 = jsonObject.getString("teamname").replaceAll("%20"," ");
                     String parm222 = jsonObject.getString("objectname").replaceAll("%20"," ");
@@ -473,51 +380,134 @@ public class JavaHTTPServer implements Runnable {
                             (parm111, parm222,
                                     Integer.parseInt(jsonObject.getString("addremove")));
                     break;
+                case "registration":
+                    String pram1 = jsonObject.getString("username").replaceAll("%20"," ");
+                    String pram2 =  jsonObject.getString("password").replaceAll("%20"," ");
+                    String pram3 =  jsonObject.getString("role").replaceAll("%20"," ");
+                    String pram4 =  jsonObject.getString("email").replaceAll("%20"," ");
+                    as = st.getLEc().Registration
+                            (pram1,pram2,pram3,pram4);
+                    break;
+                case "login":
+                    DataManagement.setCurrent(null);
+                    LogAndExitController lc = st.getLEc();
+                    String a = jsonObject.getString("username").replaceAll("%20"," ");
+                    String b = jsonObject.getString("password").replaceAll("%20"," ");
+                    as = lc.Login(a, b);
+                    break;
+                case "logout":
+                    String logout_pram1 =jsonObject.getString("username").replaceAll("%20"," ");
+                    as = st.getLEc().Exit(logout_pram1);
+                    break;
+                case "addrole":
+                    String addrole_pram1 = jsonObject.getString("role").replaceAll("%20"," ");
+                    String addrole_pram2 = jsonObject.getString("password").replaceAll("%20"," ");
+                    as = st.getLEc().addRoleToUser
+                            (addrole_pram1, addrole_pram2);
+                    break;
+                case "onschedulingpolicy":
+                    String onschedulingpolicy_pram1 = jsonObject.getString("nameleague").replaceAll("%20"," ");
+                    String onschedulingpolicy_pram2 = jsonObject.getString("seasonname").replaceAll("%20"," ");
+                    as = st.getGSc().schedulingGame(onschedulingpolicy_pram1,onschedulingpolicy_pram2,
+                            Integer.parseInt(jsonObject.getString("policy")));
+                    break;
+                case "defineleague":
+                    String defineleague_pram1 = jsonObject.getString("nameleague").replaceAll("%20"," ");
+                    as = st.getGSc().defineLeague(defineleague_pram1);
+                    break;
+                case "defineseason":
+                    String defineseason_pram1 = jsonObject.getString("nameleague").replaceAll("%20"," ");
+                    String defineseason_pram2 = jsonObject.getString("year").replaceAll("%20"," ");
+                    as = st.getGSc().defineSeasonToLeague(defineseason_pram1,defineseason_pram2,
+                                    Integer.parseInt(jsonObject.getString("win")),
+                                    Integer.parseInt(jsonObject.getString("loss")),
+                                    Integer.parseInt(jsonObject.getString("equal")));
+                    break;
+                case "updatepointpolicy":
+                    String updatepointpolicypram1 = jsonObject.getString("nameleague").replaceAll("%20"," ");
+                    String updatepointpolicypram2 = jsonObject.getString("year").replaceAll("%20"," ");
+                    as = st.getGSc().updatePointsPolicy
+                            (updatepointpolicypram1, updatepointpolicypram2,
+                                    Integer.parseInt(jsonObject.getString("win")),
+                                    Integer.parseInt(jsonObject.getString("loss")),
+                                    Integer.parseInt(jsonObject.getString("equal")));
+                    break;
+                case "addteamtoleague":
+                    String addteamtoleaguey_pram1 = jsonObject.getString("nameteam").replaceAll("%20"," ");
+                    String addteamtoleaguey_pram2 = jsonObject.getString("nameleague").replaceAll("%20"," ");
+                    String addteamtoleaguey_pram3 = jsonObject.getString("year").replaceAll("%20"," ");
+                    as = st.getGSc().addTeamToSeasonInLeague
+                            (addteamtoleaguey_pram1,
+                                    addteamtoleaguey_pram2,
+                                    addteamtoleaguey_pram3);
+                    break;
+                case "savegame":
+                    String param4 = jsonObject.getString("gameid").replaceAll("%20"," ");
+                    String param5 = jsonObject.getString("goalhost").replaceAll("%20"," ");
+                    String param6 = jsonObject.getString("goalguest").replaceAll("%20"," ");
+                    String param7 = jsonObject.getString("year").replaceAll("%20"," ");
+                    String param8 = jsonObject.getString("nameleague").replaceAll("%20"," ");
+                    as = st.getGSc().endGame(Integer.parseInt(param4), Integer.parseInt(param5),
+                            Integer.parseInt(param6), param7, param8);
+                    break;
+                case "addremovereferee":
+                    String addremovereferee_pram1 = jsonObject.getString("usernamereferee").replaceAll("%20"," ");
+                    String addremovereferee_pram2 = jsonObject.getString("password").replaceAll("%20"," ");
+                    String addremovereferee_pram3 = jsonObject.getString("email").replaceAll("%20"," ");
+                    as = st.getGSc().addOrDeleteRefereeToSystem
+                            (addremovereferee_pram1,
+                                    addremovereferee_pram2,
+                                    addremovereferee_pram3,
+                                    Integer.parseInt(jsonObject.getString("addremove")));
+                    break;
+                case "setrefereeonleague":
+                    String setrefereeonleague_pram1 = jsonObject.getString("nameleague").replaceAll("%20"," ");
+                    String setrefereeonleague_pram2 = jsonObject.getString("usernamereferee").replaceAll("%20"," ");
+                    String setrefereeonleague_pram3 = jsonObject.getString("year").replaceAll("%20"," ");
+                    as = st.getGSc().defineRefereeInLeague
+                            (setrefereeonleague_pram1,
+                                    setrefereeonleague_pram2,
+                                    setrefereeonleague_pram3);
+                    break;
+                case "editgameevent":
+                    String param13 = jsonObject.getString("gameid").replaceAll("%20"," ");
+                    String param14 = jsonObject.getString("nameteam").replaceAll("%20"," ");
+                    String param15 = jsonObject.getString("eventtype").replaceAll("%20"," ");
+                    String param16 = jsonObject.getString("nameuser").replaceAll("%20"," ");
+                    String param17 = jsonObject.getString("datetime").replaceAll("%20"," ");
+                    as = st.getGSc().refereeEditGameEvent
+                            (Integer.parseInt(param13), param14, param15, param16, param17);
+                    break;
+                case "createnewevent":
+                    String param9 = jsonObject.getString("gameid").replaceAll("%20"," ");
+                    String param10 = jsonObject.getString("nameteam").replaceAll("%20"," ");
+                    String param11 = jsonObject.getString("usernameplayer").replaceAll("%20"," ");
+                    String param12 = jsonObject.getString("eventtype").replaceAll("%20"," ");
+                    as = st.getGSc().refereeCreateNewEvent(Integer.parseInt(param9), param10, param11, param12);
+                    break;
+                case "registertogamealert":
+                    String param1 = jsonObject.getString("gamenumber").replaceAll("%20"," ");
+                    as = st.getAc().fanRegisterToGameAlerts(Integer.parseInt(param1));
+                    break;
+                case "registertopagealert":
+                    String param2 = jsonObject.getString("usernametofollow").replaceAll("%20"," ");
+                    as = st.getAc().fanRegisterToPage(param2);
+                    break;
+                case "sendcomplaint":
+                    String param3 = jsonObject.getString("complaintdescription").replaceAll("%20"," ");
+                    as = st.getAc().addComplaint(param3);
+                    break;
+                case "answercomplaints":
+                    String answercomplaints_pram1 = jsonObject.getString("answer").replaceAll("%20"," ");
+                    as = st.getAc().answerCompliant(
+                            (Integer.parseInt(jsonObject.getString("id"))),answercomplaints_pram1
+                            );
+                    break;
                 case "addpermissiontoteammanger":
                     String addpermissiontoteammanger_1 = jsonObject.getString("username").replaceAll("%20"," ");
                     String addpermissiontoteammanger_2 = jsonObject.getString("permissions").replaceAll("%20"," ");
                     as = st.getESUDc().addPermissionToTeamManager
                             (addpermissiontoteammanger_1, addpermissiontoteammanger_2);
-                    break;
-                case "registertogamealert":
-                    as = st.getAc().fanRegisterToGameAlerts
-                            (Integer.parseInt(jsonObject.getString("gamenumber")));
-                    break;
-                case "registertopagealert":
-                    as = st.getAc().fanRegisterToPage
-                            (jsonObject.getString("usernametofollow"));
-                    break;
-                case "sendcomplaint":
-                    as = st.getAc().addComplaint
-                            (jsonObject.getString("complaintdescription"));
-
-                    break;
-//            case "search":
-//                //complete after pull from master
-//                break;
-
-                case "savegame":
-                    as = st.getGSc().endGame
-                            (Integer.parseInt(jsonObject.getString("gameid")),
-                                    Integer.parseInt(jsonObject.getString("goalhost")),
-                                    Integer.parseInt(jsonObject.getString("goalguest")),
-                                    jsonObject.getString("year"),
-                                    jsonObject.getString("nameleague"));
-                    break;
-                case "createnewevent":
-                    as = st.getGSc().refereeCreateNewEvent
-                            (Integer.parseInt(jsonObject.getString("gameid")),
-                                    jsonObject.getString("nameteam"),
-                                    jsonObject.getString("usernameplayer"),
-                                    jsonObject.getString("eventtype"));
-                    break;
-                case "editgameevent":
-                    as = st.getGSc().refereeEditGameEvent
-                            (Integer.parseInt(jsonObject.getString("gameid")),
-                                    jsonObject.getString("nameteam"),
-                                    jsonObject.getString("eventtype"),
-                                    jsonObject.getString("nameuser"),
-                                    jsonObject.getString("datetime"));
                     break;
                 default:
                     as = new ActionStatus(false, "check correct post function name");

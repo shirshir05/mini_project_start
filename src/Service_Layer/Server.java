@@ -4,7 +4,6 @@ import Business_Layer.Business_Control.DataManagement;
 import Business_Layer.Enum.ActionStatus;
 
 public class Server {
-
     private StartSystem st;
     public Server(){
         st = new StartSystem();

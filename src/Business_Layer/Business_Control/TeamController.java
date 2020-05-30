@@ -102,7 +102,6 @@ public class TeamController {
             Team new_team = new Team(arg_name, arg_field);
             new_team.getPersonalPage().addPermissionToEdit(DataManagement.getCurrent().getUserName());
             new_team.changeStatus(2);
-            new_team.addObserver((UnifiedSubscription)DataManagement.getCurrent());
             Subscription sub = DataManagement.getCurrent();
             sub.getPermissions().add_default_owner_permission();
             new_team.EditTeamOwner((UnifiedSubscription) sub, 1);
@@ -428,8 +427,6 @@ public class TeamController {
         }
         else if (DataManagement.findTeam(name_team).getStatus() == -1) {
             AC = new ActionStatus(false,  "The team is permanently closed.");
-        } else if (DataManagement.findTeam(name_team).getStatus() == 2) {
-            AC = new ActionStatus(false,  "The team wait for approve.");
         }
         else if (status == 0){
             if (!(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Close_team))) {
