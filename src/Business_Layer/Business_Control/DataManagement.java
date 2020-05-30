@@ -42,7 +42,6 @@ public final class DataManagement {
     private DataManagement() {
         if (instance == null) {
             //Prevent Reflection
-            //throw new IllegalStateException("Cannot instantiate a new singleton instance of logic management");
             this.createLogicManagement();
             logger.log("DataManagement :the system is initialized");
         }
@@ -52,11 +51,11 @@ public final class DataManagement {
      * singleton initialize the parameters
      */
     private void createLogicManagement(){
-        //initialize system and connections
-        //financeSys = new unionFinanceSystem();
-       // boolean checkSystem1 = financeSys.initConnection();
-        //taxSys = new stateTaxSystem();
-        //boolean checkSystem2 = taxSys.initConnection();
+        // initialize system and connections
+        financeSys = new unionFinanceSystem("www.finances.gov");
+        boolean checkSystem1 = financeSys.getTaxRate(0) == 0;
+        taxSys = new stateTaxSystem("www.taxes.gov");
+        boolean checkSystem2 = financeSys.getTaxRate(0) == 0;
     }
 
     public static ActionStatus getExternalConnStatus(String system){
