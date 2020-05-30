@@ -3,6 +3,7 @@ package DB_Layer.JDBC;
 import Business_Layer.Enum.ActionStatus;
 import DB_Layer.interfaceDB;
 import DB_Layer.logger;
+import Service_Layer.JavaHTTPServer;
 
 import java.io.*;
 import java.sql.*;
@@ -259,13 +260,18 @@ public class sqlConnection implements interfaceDB {
         connect();
 
 
+
         //ResultSet resultSet = databaseManager.executeQuerySelect("Select * From Users");
         //ResultSetPrinter.printResultSet(resultSet);
     }
 
     @Override
     public ActionStatus connect(){
-        return databaseManager.startConnection();
+        ActionStatus ac = databaseManager.startConnection();
+        if(!ac.isActionSuccessful()){
+            JavaHTTPServer.systemInternalError = true;
+        }
+        return ac;
     }
 
     public ActionStatus closeConnection(){
