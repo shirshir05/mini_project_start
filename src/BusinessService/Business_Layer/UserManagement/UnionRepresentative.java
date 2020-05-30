@@ -3,7 +3,7 @@ package BusinessService.Business_Layer.UserManagement;
 import java.util.Observable;
 import java.util.Observer;
 
-public class UnionRepresentative extends Subscription implements Observer {
+public class  UnionRepresentative extends Subscription implements Observer {
 
     public UnionRepresentative(String arg_user_name, String arg_password,String email) {
         super(arg_user_name, arg_password,email);
