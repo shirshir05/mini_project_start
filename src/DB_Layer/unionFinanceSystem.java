@@ -10,4 +10,9 @@ public class unionFinanceSystem implements unionFinanceSystemInterface {
         return 0;
     }
 
+    @Override
+    public boolean checkConnection() {
+        return true;
+    }
+
 }

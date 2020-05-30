@@ -5,9 +5,12 @@ import Business_Layer.Enum.ActionStatus;
 import Business_Layer.Enum.Configurations;
 import Business_Layer.Business_Control.*;
 import DB_Layer.databaseController;
+import DB_Layer.stateTaxSystem;
+import DB_Layer.unionFinanceSystem;
 
 
 import java.io.File;
+import java.io.FileWriter;
 
 public class StartSystem {
 
@@ -35,72 +38,49 @@ public class StartSystem {
                     file.delete();
                 }
             }
+            FileWriter config = new FileWriter(new File("./Resources/config"),false);
+            config.write("NumberOfGames=1\nNumberOfComplaint=1");
+            config.flush();
+            config.close();
+
 
         }catch (Exception e){
             System.err.println("ERROR: function cleanSystem while cleaning files");
         }
     }
 
-    public static void ResetToFactory(){
+    public static ActionStatus ResetToFactory(String tax,String finance){
         cleanSystem();
 
-        //create general Guest user
-        ActionStatus str1 = LEc.Registration("Guest", "123456", "Guest","Guestmail@mail.com");
-
-        DataManagement.cleanAllData();
-        //db.resetDateBase();
+        //redet db and check connection
+        db.resetDateBase();
+        Boolean dbStart = db.sqlConn.checkExistingDB();
 
         //create first SystemAdministrator user
-        ActionStatus str2 = new ActionStatus(false,"");
-        String name = "";
-        String password = "";
-        while(!str2.isActionSuccessful()) {
-            /*
-            name = cli.presentAndGetString("insert admin's User name");
-            password = cli.presentAndGetString("insert admin's password");
-            String email = cli.presentAndGetString("insert admin's email");
-            str2 = LEc.Registration(name, password, "SystemAdministrator", email);
-            cli.presentOnly(str2.getDescription());
-             */
-        }
+        ActionStatus userStart = LEc.Registration("admin", "admin", "SystemAdministrator", "admin@admin.com");
 
         //start connection to external systems.
-        System.out.println("connection to external systems");
-        System.out.println("Finance system connection stable: "+DataManagement.getExternalConnStatus("finance").isActionSuccessful());
-        System.out.println("Tax system connection stable: "+DataManagement.getExternalConnStatus("tax").isActionSuccessful());
+        stateTaxSystem stT = new stateTaxSystem(tax);
+        unionFinanceSystem unF = new unionFinanceSystem(finance);
+        Boolean external = unF.checkConnection() && stT.checkConnection();
 
-
-        //choose user to log in with to the system;
-        boolean chosen = false;
-        while(!chosen) {
-            //int i = cli.presentAndGetInt("would you like to poesied as SystemAdministrator or as guest?\npress 0 to SystemAdministrator\npress 1 to Guest");
-            switch (0) {
-                case 0:
-                    //admin menu;
-                    LEc.Login(name, password);
-                    chosen = true;
-                    break;
-                case 1:
-                    //guest menu;
-                    LEc.Login("Guest", "123456");
-                    chosen = true;
-                    break;
-                default:
-                    //cli.presentOnly("invalid choice.");
-                    break;
-            }
-        }
-        //cli.presentOnly("thank you and goodbye");
-        //todo - send to correct user presentation to show user options menu;
+        String resultS = "Database upload successfully: "+ dbStart+" ,admin default user created: "+ userStart.isActionSuccessful() +" ,external connections made successfully: "+ external;
+        Boolean resultB = dbStart && userStart.isActionSuccessful() && external;
+        return new ActionStatus(resultB,resultS);
     }
 
-    public void startFromDB(){
+    public static ActionStatus startFromDB(){
         DataManagement.cleanAllData();
-        //db.startLastDateBase();
-        Configurations.setPropValues("NumberOfGames",1);
+        //Configurations.setPropValues("NumberOfGames",1);
         DataManagement.setCurrent(null);
-        //cli.presentOnly(LEc.Login("Guest", "123456").getDescription());
-        //cli.presentOnly("hello Guest");
+        Boolean dbStart = db.sqlConn.checkExistingDB();
+        String ans = "";
+        if(dbStart){
+            ans = "The system is up and running";
+        }else {
+            ans = "Connectivity problem, Please try again in a few minutes or contact your system administrator";
+        }
+        return new ActionStatus(dbStart,ans);
     }
 
 
@@ -131,4 +111,5 @@ public class StartSystem {
     public static TeamController getTc() {
         return Tc;
     }
+
 }

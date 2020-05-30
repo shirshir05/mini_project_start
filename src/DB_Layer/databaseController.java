@@ -246,9 +246,5 @@ public class databaseController {
         sqlConn.resetDB();
     }
 
-    public void startLastDateBase(){
-        sqlConn.startLastDB();
-    }
-
 }
 
