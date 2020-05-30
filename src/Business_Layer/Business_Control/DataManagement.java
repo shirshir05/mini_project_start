@@ -230,7 +230,7 @@ public final class DataManagement {
         sql.updateBlob("Blobs",sub.getUserName()+"Alerts",sub.getAlerts());
         sql.updateBlob("Blobs",sub.getUserName()+"searchHistory",sub.getSearch());
         if(sub instanceof Referee){
-            sql.update("UsersData",new String[]{sub.getUserName()},"dataValue",((Referee) sub).gamesListToString());
+            sql.update("UsersData",new String[]{sub.getUserName(),"refereeGames"},"dataValue",((Referee) sub).gamesListToString());
         }
     }
 
