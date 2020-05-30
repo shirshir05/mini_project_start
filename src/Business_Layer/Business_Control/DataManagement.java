@@ -235,16 +235,16 @@ public final class DataManagement {
     }
 
     public static void addInfo(Subscription sub,String role){
-        if(role.equals("Coach")){
+        if(role.equals("Coach") || role.equals("coach") ){
             sql.insert("UsersData",new String[]{sub.getUserName(),"qualification",((UnifiedSubscription) sub).getQualification()});
             sql.insert("UsersData",new String[]{sub.getUserName(),"roleInTeam",((UnifiedSubscription) sub).getRoleInTeam()});
             sql.insertBlob(sub.getUserName()+"CoachPersonalPage",((UnifiedSubscription) sub).getCoachPersonalPage());
-        }if(role.equals("Player")){
+        }if(role.equals("Player") || role.equals("player") ){
             sql.insert("UsersData",new String[]{sub.getUserName(),"position",((UnifiedSubscription)sub).getPosition()});
             sql.insertBlob(sub.getUserName()+"PlayerPersonalPage",((UnifiedSubscription) sub).getPlayerPersonalPage());
-        }if(role.equals("TeamManager")){
+        }if(role.equals("TeamManager") || role.equals("teammanager")){
             sql.insert("UsersData",new String[]{sub.getUserName(),"managerAppointedByTeamOwner",((UnifiedSubscription)sub).teamManager_getAppointedByTeamOwner()});
-        }if(role.equals("TeamOwner")){
+        }if(role.equals("TeamOwner")|| role.equals("teamowner") ){
             sql.insert("UsersData",new String[]{sub.getUserName(),"ownerAppointedByTeamOwner",((UnifiedSubscription)sub).teamOwner_getAppointedByTeamOwner()});
         }
     }
