@@ -39,6 +39,27 @@ public class AlertController {
 
 
     /**
+     * if has new alert return true
+     * @return -
+     */
+    public ActionStatus hasAlertNew(){
+        ActionStatus AC;
+        Subscription sub = DataManagement.getCurrent();
+        if(sub == null){
+            AC = new ActionStatus(false,"No user in system");
+        }else{
+            HashSet<String> alertList = sub.getAlerts();
+            if(alertList.size() > sub.getNumberAlerts()){
+                AC = new ActionStatus(true,"");
+            }else{
+                AC = new ActionStatus(false,"");
+            }
+        }
+        return AC;
+    }
+
+
+    /**
      *  This function register the fan to alerts of a game he choose.
      */
     public ActionStatus fanRegisterToGameAlerts(int game_number){

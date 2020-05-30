@@ -246,9 +246,7 @@ public class databaseController {
         sqlConn.resetDB();
     }
 
-    public void startLastDateBase(){
-        sqlConn.startLastDB();
-    }
+    public boolean dbExist(){return sqlConn.checkExistingDB();}
 
 }
 
