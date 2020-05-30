@@ -1,9 +1,9 @@
 package DB_Layer.JDBC;
 
+import Business_Layer.Business_Items.UserManagement.SystemAdministrator;
 import Business_Layer.Enum.ActionStatus;
 import DB_Layer.interfaceDB;
 import DB_Layer.logger;
-import Service_Layer.JavaHTTPServer;
 
 import java.io.*;
 import java.sql.*;
@@ -23,6 +23,7 @@ public class sqlConnection implements interfaceDB {
     }
 
     public int insertBlob(String table,String key, Object value){
+        PreparedStatement stmt = null;
         try{
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -36,14 +37,23 @@ public class sqlConnection implements interfaceDB {
             return ans;
         }catch(Exception e){
             e.printStackTrace();
+        }finally{
+            try{
+                if(stmt != null){
+                    stmt.close();
+                }
+            }catch (SQLException e3) {
+                e3.printStackTrace();
+            }
         }
         return -1;
     }
 
     public Object getBlob(String table,String key){
+        PreparedStatement stmt = null;
         try{
             Object ans = null;
-            PreparedStatement stmt = databaseManager.conn.prepareStatement("use FootBallDB SELECT * FROM "+table+" WHERE [key] = '"+key+"'");
+            stmt = databaseManager.conn.prepareStatement("use FootBallDB SELECT * FROM "+table+" WHERE [key] = '"+key+"'");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 byte[] st = (byte[]) rs.getObject("value");
@@ -90,19 +100,19 @@ public class sqlConnection implements interfaceDB {
             }
         }
         System.out.println(query);
-        PreparedStatement sqlStatement = null;
+
         ResultSet result = null;
         try{
             if(this.databaseManager == null){
                 connect();
             }
-            if (this.databaseManager.conn==null){
+            if( this.databaseManager.conn == null){
                 connect();
             }
-            if( this.databaseManager.conn.isClosed()){
+            else if(this.databaseManager.conn.isClosed()){
                 connect();
             }
-            sqlStatement = databaseManager.conn.prepareStatement(query);
+            PreparedStatement sqlStatement = databaseManager.conn.prepareStatement(query);
             result = sqlStatement.executeQuery();
 
         }catch (SQLException e) {
@@ -116,19 +126,18 @@ public class sqlConnection implements interfaceDB {
 
         String query =  "use FootBallDB SELECT * FROM "+ table + " WHERE [" + column + "] = " + "'"+value+"'";
 
-        PreparedStatement sqlStatement = null;
         ResultSet result = null;
         try{
             if(this.databaseManager == null){
                 connect();
             }
-            if( this.databaseManager.conn==null){
+            if( this.databaseManager.conn == null){
                 connect();
             }
-            if( this.databaseManager.conn.isClosed()){
+            else if(this.databaseManager.conn.isClosed()){
                 connect();
             }
-            sqlStatement = databaseManager.conn.prepareStatement(query);
+            PreparedStatement sqlStatement = databaseManager.conn.prepareStatement(query);
             result = sqlStatement.executeQuery();
 
         }catch (SQLException e) {
@@ -158,7 +167,10 @@ public class sqlConnection implements interfaceDB {
             if(this.databaseManager == null){
                 connect();
             }
-            if( this.databaseManager.conn.isClosed()){
+            if( this.databaseManager.conn == null){
+                connect();
+            }
+            else if(this.databaseManager.conn.isClosed()){
                 connect();
             }
             sqlStatement = databaseManager.conn.prepareStatement(query);
@@ -251,9 +263,13 @@ public class sqlConnection implements interfaceDB {
     @Override
     public ActionStatus connect(){
         ActionStatus ac = databaseManager.startConnection();
+
+
         if(!ac.isActionSuccessful()){
-            JavaHTTPServer.systemInternalError = true;
+            //JavaHTTPServer.systemInternalError = true;
+            System.out.println("***************problem*******************");
         }
+        System.out.println("***************new connection to sql*******************" + ac.getDescription());
         return ac;
     }
 
@@ -265,15 +281,40 @@ public class sqlConnection implements interfaceDB {
     public Object getConn(){
         return this.databaseManager.conn;
     }
+/*
+    public static void main(String[] args){
 
-    public void resetDB(){
-   try{
-            PreparedStatement sqlStatement;
+        sqlConnection sql = new sqlConnection();
+        sql.findByValue("Users","userName","admin");
+    }
+*/
+    public void resetDBdelete(){
+        PreparedStatement sqlStatement = null;
+        try{
             if( checkExistingDB() ) {
                 sqlStatement = databaseManager.conn.prepareStatement("use master alter database FootBallDB set single_user with rollback immediate drop DATABASE FootBallDB;");
                 sqlStatement.execute();
             }
+            closeConnection();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
+    public void ResetDBstart(){
+        PreparedStatement sqlStatement = null;
+        try{
+            if(this.databaseManager == null){
+                connect();
+            }
+            if( this.databaseManager.conn == null){
+                connect();
+            }
+            else if(this.databaseManager.conn.isClosed()){
+                connect();
+            }
             sqlStatement = databaseManager.conn.prepareStatement("CREATE DATABASE FootBallDB;");
             sqlStatement.execute();
 
@@ -286,6 +327,8 @@ public class sqlConnection implements interfaceDB {
             }
             sqlStatement = databaseManager.conn.prepareStatement(query);
             sqlStatement.execute();
+            sqlStatement.close();
+            closeConnection();
         }
         catch(Exception e)
         {
@@ -294,46 +337,38 @@ public class sqlConnection implements interfaceDB {
     }
 
 
-    public void startLastDB() {
-        String line = null;
-        String query = "";
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(new File("lib/dataNew.txt")));
-            while ((line = br.readLine()) != null) {
-                query += " "+ line;
-            }
-            br.close();
-            if (this.databaseManager == null) {
-                connect();
-            }
-            if (this.databaseManager.conn.isClosed()) {
-                connect();
-            }
-            PreparedStatement sqlStatement = databaseManager.conn.prepareStatement(query);
-            sqlStatement.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public boolean checkExistingDB(){
+        PreparedStatement sqlStatement = null;
+        boolean ans = false;
         try {
             if (this.databaseManager == null) {
                 connect();
             }
-            if (this.databaseManager.conn.isClosed()) {
+            if( this.databaseManager.conn == null){
                 connect();
             }
-            PreparedStatement sqlStatement = databaseManager.conn.prepareStatement("SELECT name FROM master.sys.databases WHERE name = 'FootBallDB'");
+            else if(this.databaseManager.conn.isClosed()){
+                connect();
+            }
+            sqlStatement = databaseManager.conn.prepareStatement("SELECT name FROM master.sys.databases WHERE name = 'FootBallDB'");
             ResultSet rs = sqlStatement.executeQuery();
             if (rs.next()) {
-                return true;
+                ans =  true;
             }else{
-                return false;
+                ans = false;
             }
         }catch (Exception e){
-            return false;
+            ans = false;
+        }finally{
+            try{
+                if(sqlStatement != null){
+                    sqlStatement.close();
+                }
+            }catch (SQLException e3) {
+                e3.printStackTrace();
+            }
         }
+        return ans;
     }
 
 

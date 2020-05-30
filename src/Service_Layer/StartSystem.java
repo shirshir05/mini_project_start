@@ -11,6 +11,9 @@ import DB_Layer.unionFinanceSystem;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.security.acl.LastOwnerException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class StartSystem {
 
@@ -52,10 +55,25 @@ public class StartSystem {
     public static ActionStatus ResetToFactory(String tax,String finance){
         cleanSystem();
 
-        //redet db and check connection
-        db.resetDateBase();
-        Boolean dbStart = db.sqlConn.checkExistingDB();
+        //reset db and check connection
+        db.resetDateBaseDel();
+        LocalDateTime index = LocalDateTime.now();
+        long number = 0;
+        // todo 5 minutes !!!  - MUST
+        //while(number < 60*5){
+        while(number < 60*2){
+            number= Duration.between(index,LocalDateTime.now()).getSeconds();
+        }
+        System.out.println("hiiiiiiiiiiiiiiiiii ");
+        db.resetDateBaseStart();
 
+        Boolean dbStart = db.checkConn();
+
+        LocalDateTime index1 = LocalDateTime.now();
+        long number1 = 0;
+        while(number1 < 60*2){
+            number1= Duration.between(index1,LocalDateTime.now()).getSeconds();
+        }
         //create first SystemAdministrator user
         ActionStatus userStart = LEc.Registration("admin", "admin", "SystemAdministrator", "admin@admin.com");
 
@@ -66,7 +84,7 @@ public class StartSystem {
 
         String resultS = "Database upload successfully: "+ dbStart+" ,admin default user created: "+ userStart.isActionSuccessful() +" ,external connections made successfully: "+ external;
         Boolean resultB = dbStart && userStart.isActionSuccessful() && external;
-        return new ActionStatus(resultB,resultS);
+        return new ActionStatus(resultB ,resultS);
     }
 
     public static ActionStatus startFromDB(){
