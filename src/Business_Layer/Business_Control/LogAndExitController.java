@@ -49,7 +49,7 @@ public class LogAndExitController{
             }
             // Subscription successfully added!
             else {
-                Subscription newSub = factory.Create(arg_user_name, arg_password, role_enum, email);
+                Subscription newSub = factory.Create(arg_user_name, arg_password, role_enum, email, true);
                 DataManagement.setSubscription(newSub);
                 AC = new ActionStatus(true, "Subscription successfully added!");
             }
@@ -321,6 +321,6 @@ public class LogAndExitController{
     }
 
     public Subscription createUserByType(String arg_user_name,String arg_password,String role_enum,String email){
-        return factory.Create(arg_user_name, arg_password, DataManagement.returnEnum(role_enum), email);
+        return factory.Create(arg_user_name, arg_password, DataManagement.returnEnum(role_enum), email, false);
     }
 }
