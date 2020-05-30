@@ -8,6 +8,7 @@ import DB_Layer.logger;
 import Service_Layer.Spelling;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Observable;
 
 public class TeamController {
@@ -173,15 +174,13 @@ public class TeamController {
                 for (String alert : u.getAlerts()) {
                     if (alert.contains(teamName)) {
                         u.getAlerts().remove(alert);
+                        break;
                     }
                 }
                 DataManagement.updateGeneralsOfSubscription(u);
             }
         }
     }
-
-
-
 
     /**
      * The function allows a player to be added to a team or to remove a player from the team

@@ -33,7 +33,7 @@ public class Game extends Observable implements java.io.Serializable{
 
     public Game(String f, LocalDate d, Team h, Team g){
         id = Configurations.getNumberOfGames();
-        Configurations.setPropValues("NumberOfGames",id++);
+        Configurations.setPropValues("NumberOfGames",++id);
         this.field=f;
         this.date=d;
         this.host=h;

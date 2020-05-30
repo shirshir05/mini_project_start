@@ -227,6 +227,9 @@ public final class DataManagement {
         sql.updateBlob("Blobs",sub.getUserName()+"Permissions",sub.getPermissions());
         sql.updateBlob("Blobs",sub.getUserName()+"Alerts",sub.getAlerts());
         sql.updateBlob("Blobs",sub.getUserName()+"searchHistory",sub.getSearch());
+        if(sub instanceof Referee){
+            sql.update("UsersData",new String[]{sub.getUserName()},"dataValue",((Referee) sub).gamesListToString());
+        }
     }
 
     public static void addInfo(Subscription sub,String role){
