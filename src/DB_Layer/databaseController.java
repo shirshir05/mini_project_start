@@ -242,12 +242,15 @@ public class databaseController {
     }
 
 
-    public void resetDateBase(){
-        sqlConn.resetDB();
+    public void resetDateBaseDel(){
+        sqlConn.resetDBdelete();
+    }
+    public void resetDateBaseStart(){
+        sqlConn.ResetDBstart();
     }
 
-    public void startLastDateBase(){
-        sqlConn.startLastDB();
+    public boolean checkConn(){
+        return sqlConn.checkExistingDB();
     }
 
 }

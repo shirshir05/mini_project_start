@@ -1,4 +1,5 @@
 package Business_Layer.Business_Items.UserManagement;
+import Business_Layer.Business_Control.DataManagement;
 import Business_Layer.Business_Items.Game.Game;
 
 import java.util.HashSet;
@@ -36,14 +37,16 @@ public class Referee extends Subscription implements Observer, java.io.Serializa
      * adds a game to the game-list the referee participates in
      * @param g
      */
-    public void addGame(Game g){referee_games.add(g.getGameId());}
+    public void addGame(Game g){
+        referee_games.add(g.getGameId());
+    }
 
     /**
      * a to-string function to the list of games of the referee
      * @return
      */
     public String gamesListToString(){
-        String return_value = "You are participating in the next games: ";
+        String return_value = "";
         for (Integer g:referee_games){
             return_value += g +", ";
         }

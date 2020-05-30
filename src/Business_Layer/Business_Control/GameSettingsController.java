@@ -41,7 +41,7 @@ public class GameSettingsController {
                 HashSet<Team> teamsInSeason = season.getListOfTeams();
                 if(teamsInSeason.size() < 2){
                     AC = new ActionStatus(false, "Error - The number of teams in league less than 2.");
-                }else if(getRefereesFromSeason(season)){
+                }else if(!getRefereesFromSeason(season)){
                     AC = new ActionStatus(false, "Error - The number of referees in league less than 3.");
                 }else{
                     FactoryPolicyScheduling factoryPolicyScheduling = new FactoryPolicyScheduling();
@@ -105,8 +105,10 @@ public class GameSettingsController {
                     AC = new ActionStatus(false,"The season has already begun You are not allowed to change policies.");
                 }
                 else if(league.getSeason(year)!=null){
+                    // TODO - STOP - SHOW Anatoly step 1 - PointsPolicy before
                     Season season = league.getSeason(year);
                     season.setScoreTable(new ScoreTable(new PointsPolicy(win,lose,equal)));
+                    // TODO - STOP - SHOW Anatoly step 2 - PointsPolicy after
                     DataManagement.updateSeason(league_name,season);
                     AC = new ActionStatus(true,"The policy has been changed successfully.");
                 }else{
@@ -156,17 +158,22 @@ public class GameSettingsController {
         League league =  DataManagement.findLeague(league_name);
         if (year!=null && league_name!=null && DataManagement.getCurrent() instanceof UnionRepresentative && league!=null) {
             int intFormatYear= Integer.parseInt(year);
-            if (intFormatYear>1900 && intFormatYear<2022){
-                Season addSeason =new Season(year);
-                league.addSeason(addSeason);
-                PointsPolicy pointsPolicy = new PointsPolicy(win,lose,equal);
-                ScoreTable scoreTable = new ScoreTable(pointsPolicy);
-                addSeason.setScoreTable(scoreTable);
-                DataManagement.addNewSeason(league_name,addSeason,pointsPolicy);
-                Spelling.updateDictionary("season: " + league_name);
-                AC = new ActionStatus(true, "The season has been set successfully in the league.");
+            if(league.getSeason(year)!= null){
+                AC = new ActionStatus(false, "The season define in system.");
             }else{
-                AC = new ActionStatus(false, "The year must be less than 2022 and greater than 1900.");
+                if (intFormatYear>1900 && intFormatYear<2022){
+                    Season addSeason =new Season(year);
+                    league.addSeason(addSeason);
+                    PointsPolicy pointsPolicy = new PointsPolicy(win,lose,equal);
+                    ScoreTable scoreTable = new ScoreTable(pointsPolicy);
+                    addSeason.setScoreTable(scoreTable);
+                    DataManagement.addNewSeason(league_name,addSeason,pointsPolicy);
+                    Spelling.updateDictionary("season: " + league_name);
+                    AC = new ActionStatus(true, "The season has been set successfully in the league.");
+                }else{
+                    AC = new ActionStatus(false, "The year must be less than 2022 and greater than 1900.");
+
+                }
 
             }
 
@@ -260,12 +267,18 @@ public class GameSettingsController {
         if (DataManagement.getCurrent() instanceof UnionRepresentative) {
             if (referee_user_name != null && referee_password != null) {
                 Subscription current_referee = DataManagement.containSubscription(referee_user_name);
-                if (add_or_remove == 0 && current_referee == null) { //add
+                if (add_or_remove == 1 && current_referee == null) { //add
                     ac = StartSystem.LEc.Registration(referee_user_name, referee_password,"Referee", mail);
                     String mail_content= "Hello! you were invited to our system! your username: "+referee_user_name+" and you password: "+referee_password;
-                    //TODO RAZ - no mail????
-                    DataManagement.containSubscription(referee_user_name).sendEMail(mail,mail_content);
-                } else if (add_or_remove == 1) { //remove
+                    //DataManagement.containSubscription(referee_user_name).sendEMail(mail,mail_content);
+                    Subscription ref = DataManagement.containSubscription(referee_user_name);
+                    if(ref!= null){
+                        ref.addAlert(mail_content);
+                        DataManagement.updateGeneralsOfSubscription(ref);
+                    }else{
+                        ac = new ActionStatus(false,"illegal parameter");
+                    }
+                } else if (add_or_remove == 0) { //remove
                     if (current_referee != null) {
                         ac = StartSystem.LEc.RemoveSubscription(referee_user_name);
                     }else{
@@ -487,8 +500,8 @@ public class GameSettingsController {
             if ((game.getHeadReferee()!=null && game.getHeadReferee().equals(DataManagement.getCurrent().getUserName()) )||
                     game.getLinesman1Referee().equals(DataManagement.getCurrent().getUserName()) ||
                     game.getLinesman2Referee().equals(DataManagement.getCurrent().getUserName()) ){
-                game.updateNewEvent(team_name,player_name,eventType);
-                ac = new ActionStatus(true, "Event successfully updated.");
+
+                ac = game.updateNewEvent(team_name,player_name,eventType);
             }else{
                 ac = new ActionStatus(false,"You are not a judge of the current game.");
             }

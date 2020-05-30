@@ -11,6 +11,8 @@ import DB_Layer.logger;
 import DB_Layer.stateTaxSystem;
 import DB_Layer.unionFinanceSystem;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.regex.Pattern;
@@ -42,7 +44,6 @@ public final class DataManagement {
     private DataManagement() {
         if (instance == null) {
             //Prevent Reflection
-            //throw new IllegalStateException("Cannot instantiate a new singleton instance of logic management");
             this.createLogicManagement();
             logger.log("DataManagement :the system is initialized");
         }
@@ -52,11 +53,11 @@ public final class DataManagement {
      * singleton initialize the parameters
      */
     private void createLogicManagement(){
-        //initialize system and connections
-        //financeSys = new unionFinanceSystem();
-       // boolean checkSystem1 = financeSys.initConnection();
-        //taxSys = new stateTaxSystem();
-        //boolean checkSystem2 = taxSys.initConnection();
+        // initialize system and connections
+        financeSys = new unionFinanceSystem("www.finances.gov");
+        boolean checkSystem1 = financeSys.getTaxRate(0) == 0;
+        taxSys = new stateTaxSystem("www.taxes.gov");
+        boolean checkSystem2 = financeSys.getTaxRate(0) == 0;
     }
 
     public static ActionStatus getExternalConnStatus(String system){
@@ -155,9 +156,9 @@ public final class DataManagement {
 
         //save game to database
         for(Event e :g.getEventList()){
-            sql.insert("EventInGame",new String[]{""+g.getGameId(),""+e.getEventTime().toLocalTime(),e.getPlayer(),""+e.getEventType()});
+            sql.insert("EventInGame",new Object[]{g.getGameId(),e.getEventTime().toLocalTime(),e.getPlayer(),e.getEventType()});
         }
-        sql.insert("Game",new String[]{""+g.getGameId(),g.getField(),""+g.getStartTime().toLocalTime(),""+g.getEndTime().toLocalTime(),g.getHost().getName()
+        sql.insert("Game",new Object[]{g.getGameId(),g.getField(),g.getDate(),g.getStartTime().toLocalTime(),g.getEndTime().toLocalTime(),g.getHost().getName()
             ,g.getGuest().getName(),g.getLeague(),g.getSeason(),g.getHeadReferee(),g.getLinesman1Referee(),g.getLinesman2Referee()});
     }
 
@@ -228,6 +229,9 @@ public final class DataManagement {
         sql.updateBlob("Blobs",sub.getUserName()+"Permissions",sub.getPermissions());
         sql.updateBlob("Blobs",sub.getUserName()+"Alerts",sub.getAlerts());
         sql.updateBlob("Blobs",sub.getUserName()+"searchHistory",sub.getSearch());
+        if(sub instanceof Referee){
+            sql.update("UsersData",new String[]{sub.getUserName()},"dataValue",((Referee) sub).gamesListToString());
+        }
     }
 
     public static void addInfo(Subscription sub,String role){
@@ -361,6 +365,9 @@ public final class DataManagement {
     }
 
     public static void saveError(String trace) {
-        sql.insert("errors",new Object[]{trace});
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss.SSS");
+        LocalDateTime now = LocalDateTime.now();
+        String savelog = dtf.format(now) +" : "+ trace;
+        sql.insert("errors",new Object[]{savelog});
     }
 }
