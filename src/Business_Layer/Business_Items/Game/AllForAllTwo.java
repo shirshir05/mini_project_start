@@ -40,6 +40,9 @@ public class AllForAllTwo extends SchedulingGame {
                     if(day > 28){
                         day = 1;
                         month ++;
+                    }if(month == 13){
+                        month = 1;
+                        day = 2;
                     }
                 } //host != guest
             }
