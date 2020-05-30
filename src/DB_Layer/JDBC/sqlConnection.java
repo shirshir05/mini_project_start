@@ -3,6 +3,7 @@ package DB_Layer.JDBC;
 import Business_Layer.Enum.ActionStatus;
 import DB_Layer.interfaceDB;
 import DB_Layer.logger;
+import Service_Layer.JavaHTTPServer;
 
 import java.io.*;
 import java.sql.*;
@@ -62,23 +63,6 @@ public class sqlConnection implements interfaceDB {
     public int updateBlob(String table, String key, Object value) {
         delete(table,new String[]{key});
         return insertBlob(table,key,value);
-        /*
-        try{
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(value);
-            byte[] valueAsBytes = baos.toByteArray();
-            PreparedStatement pstmt = databaseManager.conn.prepareStatement("use FootBallDB UPDATE "+table+" WHERE [key] = '"+key+"' SET ([value]) VALUES(?)");
-            ByteArrayInputStream bais = new ByteArrayInputStream(valueAsBytes);
-            pstmt.setBinaryStream(1, bais, valueAsBytes.length);
-            int ans = pstmt.executeUpdate();
-            pstmt.close();
-            return ans;
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return -1;
-         */
     }
 
     @Override
@@ -259,13 +243,18 @@ public class sqlConnection implements interfaceDB {
         connect();
 
 
+
         //ResultSet resultSet = databaseManager.executeQuerySelect("Select * From Users");
         //ResultSetPrinter.printResultSet(resultSet);
     }
 
     @Override
     public ActionStatus connect(){
-        return databaseManager.startConnection();
+        ActionStatus ac = databaseManager.startConnection();
+        if(!ac.isActionSuccessful()){
+            JavaHTTPServer.systemInternalError = true;
+        }
+        return ac;
     }
 
     public ActionStatus closeConnection(){
