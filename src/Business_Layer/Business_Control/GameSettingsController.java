@@ -272,6 +272,7 @@ public class GameSettingsController {
                     String mail_content= "Hello! you were invited to our system! your username: "+referee_user_name+" and you password: "+referee_password;
                     //DataManagement.containSubscription(referee_user_name).sendEMail(mail,mail_content);
                     Subscription ref = DataManagement.containSubscription(referee_user_name);
+                    Spelling.updateDictionary("referee: " + referee_user_name);
                     if(ref!= null){
                         ref.addAlert(mail_content);
                         DataManagement.updateGeneralsOfSubscription(ref);
@@ -312,13 +313,13 @@ public class GameSettingsController {
         Subscription referee = DataManagement.containSubscription(referee_user_name);
         if (league != null && referee instanceof Referee) {
             Season season = league.getSeason(season_year);
-            if (season!=null){
+            if (season!=null && season.getReferee(referee_user_name)!= null){
                 season.addReferee((Referee)referee);
                 DataManagement.updateSeason(league_name,season);
                 ac = new ActionStatus(true, "set successfully");
             }
             else{
-                ac = new ActionStatus(false, "season not exists");
+                ac = new ActionStatus(false, "season not exists or referee already in this season");
             }
         }
         else{

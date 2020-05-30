@@ -50,6 +50,9 @@ public class Referee extends Subscription implements Observer, java.io.Serializa
         for (Integer g:referee_games){
             return_value += g +", ";
         }
+        if(return_value.equals("")){
+            return return_value;
+        }
         return return_value.substring(0,return_value.length()-2);
     }
 
