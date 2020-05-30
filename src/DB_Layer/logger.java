@@ -19,6 +19,7 @@ public final class logger {
     public String logname = "systemLog";
     protected String env = ".";
     private static File logFile;
+    private static databaseController dbc = new databaseController();
 
     public static logger getInstance() {
         return instance;
@@ -72,18 +73,11 @@ public final class logger {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
             String savelog = dtf.format(now) +" : "+ message + "\n";
+            dbc.insert("logs",new Object[]{savelog});
             out.write(savelog.toCharArray());
             out.close();
         } catch (IOException e) {
             System.err.println("ERROR: Could not write to log file");
         }
     }
-
-/*
-//log use example
-    public static void main(String[] args) {
-        logger.log("This is my message");
-        logger.log("is this working?");
-    }
-*/
 }

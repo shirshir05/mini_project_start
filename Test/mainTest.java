@@ -1,13 +1,13 @@
-import BusinessService.Business_Layer.BudgetManagement.BudgetRegulationsTest;
-import BusinessService.Business_Layer.BudgetManagement.TeamBudgetTest;
-import BusinessService.Business_Layer.BudgetManagement.UnionBudgetTest;
-import BusinessService.Business_Layer.Game.*;
-import BusinessService.Business_Layer.TeamManagement.TeamScoreTest;
-import BusinessService.Business_Layer.TeamManagement.TeamTest;
-import BusinessService.Business_Layer.Trace.*;
-import BusinessService.Business_Layer.UserManagement.*;
-import BusinessService.Service_Layer.*;
-import Presentation_Layer.StartSystem;
+import Business_Layer.Business_Items.BudgetManagement.BudgetRegulationsTest;
+import Business_Layer.Business_Items.BudgetManagement.TeamBudgetTest;
+import Business_Layer.Business_Items.BudgetManagement.UnionBudgetTest;
+import Business_Layer.Business_Items.Game.*;
+import Business_Layer.Business_Items.TeamManagement.TeamScoreTest;
+import Business_Layer.Business_Items.TeamManagement.TeamTest;
+import Business_Layer.Business_Items.Trace.*;
+import Business_Layer.Business_Items.UserManagement.*;
+import Business_Layer.Business_Control.*;
+import Service_Layer.StartSystem;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -23,16 +23,16 @@ public class mainTest {
         test(AlertControllerTest.class);
         test(TeamOwnerTest.class);
         Thread.sleep(1000);
-        Game.game_id = 0;
+
         //BudgetManagement
         test(BudgetRegulationsTest.class);
         test(TeamBudgetTest.class);
         test(UnionBudgetTest.class);
         //Game
         test(EventTest.class);
-        Game.game_id = 0;
+
         test(GameTest.class);
-        Game.game_id = 0;
+
         test(LeagueTest.class);
         test(SeasonTest.class);
         //Team Management

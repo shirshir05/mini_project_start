@@ -1,22 +1,19 @@
 package acceptensTest;
 
-import BusinessService.Business_Layer.Game.Game;
-import BusinessService.Business_Layer.TeamManagement.Team;
-import BusinessService.Business_Layer.UserManagement.Player;
-import BusinessService.Business_Layer.UserManagement.Referee;
-import BusinessService.Business_Layer.UserManagement.SystemAdministrator;
-import BusinessService.Business_Layer.UserManagement.UnifiedSubscription;
-import BusinessService.Enum.ActionStatus;
-import BusinessService.Service_Layer.DataManagement;
-import BusinessService.Service_Layer.GameSettingsController;
-import Presentation_Layer.StartSystem;
-import Presentation_Layer.Users_Menu.RefereeUserMenu;
+import Business_Layer.Business_Items.TeamManagement.Team;
+import Business_Layer.Business_Items.UserManagement.Player;
+import Business_Layer.Business_Items.UserManagement.Referee;
+import Business_Layer.Business_Items.UserManagement.SystemAdministrator;
+import Business_Layer.Business_Items.UserManagement.UnifiedSubscription;
+import Business_Layer.Enum.ActionStatus;
+import Business_Layer.Business_Control.DataManagement;
+import Business_Layer.Business_Control.GameSettingsController;
+import Service_Layer.StartSystem;
+import Users.Users_Menu.RefereeUserMenu;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
-import java.time.LocalDate;
 
 
 import static org.junit.Assert.*;
@@ -90,7 +87,6 @@ public class RefereeMenuTest {
         @Test
         public void  RefereeMenu1(){
             StartSystem.cleanSystem();
-            Game.game_id =0;
             GameSettingsController g = new GameSettingsController();
             Referee ref = new Referee("Raz","1234","raz@post.bgu.ac.il");
             DataManagement.setCurrent(ref);

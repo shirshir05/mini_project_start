@@ -1,5 +1,7 @@
 package DB_Layer.JDBC;
 
+import Business_Layer.Enum.ActionStatus;
+
 import java.sql.*;
 
 public class DatabaseManager {
@@ -52,15 +54,20 @@ public class DatabaseManager {
     //</editor-fold>
 
     //<editor-fold desc="Connection Methods">
-    public void startConnection() {
+    public ActionStatus startConnection() {
+        ActionStatus ac = null;
         try {
             conn = DriverManager.getConnection(connectionString, username, password);
-            System.out.println(String.format("Connection established to: '%s'", connectionString));
+            //System.out.println(String.format("Connection established to: '%s'", connectionString));
             selectDatabase(this.databaseName);
+            ac = new ActionStatus(true,String.format("Connection established to: '%s'", connectionString));
         } catch (Exception e) {
-            System.out.println(String.format("Cannot start connection to: %s", connectionString));
-            System.out.println(e.getMessage());
+            //System.out.println(String.format("Cannot start connection to: %s", connectionString));
+            //System.out.println(e.getMessage());
+            ac = new ActionStatus(false,String.format("Cannot start connection to: '%s'", connectionString));
+
         }
+        return ac;
     }
 
     /**
