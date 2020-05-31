@@ -13,7 +13,7 @@ public class SubscriptionFactory {
      * @param role
      * @return
      */
-    public Subscription Create(String userName, String password, Role role, String email){
+    public Subscription Create(String userName, String password, Role role, String email, boolean add){
         if(userName==null || password==null || role==null || userName.equals("") || password.equals("")) {
             return null;
         }
@@ -28,7 +28,7 @@ public class SubscriptionFactory {
             return unified;
         }
         else if (role == Role.Fan){
-            Spelling.updateDictionary("fan: " + userName);
+            if (add) {Spelling.updateDictionary("fan: " + userName);}
             return new Fan(userName,password, email);
         }
         else if (role == Role.Guest){
@@ -39,11 +39,11 @@ public class SubscriptionFactory {
             return new Player(userName,password, email);
         }*/
         else if (role == Role.Referee){
-            Spelling.updateDictionary("referee: " + userName);
+            if (add) {Spelling.updateDictionary("referee: " + userName);}
             return new Referee(userName,password, email);
         }
         else if (role == Role.SystemAdministrator){
-            Spelling.updateDictionary("systemAdministrator: " + userName);
+            if (add) {Spelling.updateDictionary("systemAdministrator: " + userName);}
             return new SystemAdministrator(userName,password, email);
         }
         /*else if (role == Role.TeamManager){
@@ -60,7 +60,7 @@ public class SubscriptionFactory {
         }*/
         //else if (role == Role.UnionRepresentative){
        // }
-        Spelling.updateDictionary("unionRepresentative: " + userName);
+        if (add) {Spelling.updateDictionary("unionRepresentative: " + userName);}
         return new UnionRepresentative(userName,password, email);
     }
 

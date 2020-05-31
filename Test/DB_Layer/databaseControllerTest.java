@@ -1,26 +1,38 @@
 package DB_Layer;
+import Business_Layer.Business_Control.DataManagement;
+import Business_Layer.Business_Items.Game.Game;
+import Business_Layer.Business_Items.Game.League;
+import Business_Layer.Business_Items.Game.PointsPolicy;
+import Business_Layer.Business_Items.Game.Season;
+import Business_Layer.Business_Items.TeamManagement.Team;
+import Business_Layer.Business_Items.UserManagement.Fan;
+import Business_Layer.Business_Items.UserManagement.Referee;
 import Business_Layer.Business_Items.UserManagement.Subscription;
+import Business_Layer.Enum.EventType;
 import DB_Layer.JDBC.sqlConnection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import javax.xml.crypto.Data;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class databaseControllerTest {
     public static sqlConnection sql = new sqlConnection();
     public static databaseController data = new databaseController();
 
     /**
-     * Test - FM1
+     * Test - UC1+2- Register and Login
      */
     @RunWith(Parameterized.class)
-    public static class databaseTests {
+    public static class registerAndLoginUCTest {
         @Parameterized.Parameters
         public static Collection<Object[]> data() {
             return Arrays.asList(new Object[][]{
@@ -28,195 +40,158 @@ public class databaseControllerTest {
             });
         }
 
-        public databaseTests() {
+        public registerAndLoginUCTest() {
         }
 
         @Test
+        /*
+         TEST INSERTION AND OF NEW USERS, AND GETTING USER BY NAME
+         */
         public void insertUserTest() {
-            cleanDatabase();
-            insertDatabase();
-            assertEquals(data.loadUserByName("user1").getUserName(), "user1");
+            Fan newFan = new Fan("raz","123","123@post.bgu.ac.il");
+            DataManagement.setSubscription(newFan);
+            assertEquals("raz",DataManagement.containSubscription("raz").getUserName());
         }
+
         @Test
+        /*
+         TEST DELETE OF NEW USERS, AND GETTING USER BY NAME
+         */
+        public void deleteUserTest() {
+            DataManagement.removeSubscription("raz");
+            assertNull(DataManagement.containSubscription("raz"));
+        }
+
+        @Test
+        /*
+         TEST GETTING USER BY ROLE
+         */
         public void insertUserUnionTest() {
-            cleanDatabase();
-            insertDatabase();
-            String[] names = new String[2];
+            Fan newFan = new Fan("raz","123","123@post.bgu.ac.il");
+            DataManagement.setSubscription(newFan);
+            HashSet<Subscription> list = data.loadUsersByRole("Fan");
             int i=0;
-            HashSet<Subscription> list = data.loadUsersByRole("SystemAdministrator");
-            for (Subscription s : list){
-                names[i]=s.getUserName();
+            String name="";
+            for (Subscription s : list) {
+                if (i==0){
+                    name=s.getUserName();
+                }
+                else{
+                    break;
+                }
                 i++;
             }
-            assertEquals(names[0],"user12");
-            assertEquals(names[1],"user11");
+            assertEquals(name,"raz");
+            DataManagement.removeSubscription("raz");
         }
+    }
+
+    /**
+     * Test - UC3- create team test
+     */
+    @RunWith(Parameterized.class)
+    public static class CreateTeamTest {
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {}
+            });
+        }
+
+        public CreateTeamTest() {
+        }
+
         @Test
-        public void insertTeamTest() {
-            cleanDatabase();
-            insertDatabase();
-            assertEquals(data.loadTeamInfo("MaccabiTLV").getName(), "MaccabiTLV");
-        }
-        @Test
-        public void insertLeagueTest() {
-            cleanDatabase();
-            insertDatabase();
-            assertEquals(data.loadLeagueInfo("A").getName(), "A");
-            assertEquals(data.loadLeagueInfo("A").getSeason("2020").getYear(), "2020");
-        }
-
-
-    }
-
-    private static void cleanDatabase() {
-        deleteTestLeagues();
-        deleteTestTeams();
-        deleteTestUsers();
-    }
-    private static void insertDatabase() {
-        testUsers();
-        testTeams();
-        testLeagues();
-    }
-
-    private static void deleteTestUsers() {
-        // Delete UsersData
-        sql.delete("UsersData",new String[]{"user1","position"});
-        sql.delete("UsersData",new String[]{"user2","position"});
-        sql.delete("UsersData",new String[]{"user1a","position"});
-        sql.delete("UsersData",new String[]{"user2a","position"});
-        sql.delete("UsersData",new String[]{"user3","qualification"});
-        sql.delete("UsersData",new String[]{"user4","qualification"});
-        sql.delete("UsersData",new String[]{"user8","qualification"});
-        sql.delete("UsersData",new String[]{"user9","qualification"});
-        sql.delete("UsersData",new String[]{"user10","qualification"});
-        sql.delete("UsersData",new String[]{"user14","managerAppointedByTeamOwner"});
-        sql.delete("UsersData",new String[]{"user15","managerAppointedByTeamOwner"});
-        sql.delete("UsersData",new String[]{"user16","ownerAppointedByTeamOwner"});
-        sql.delete("UsersData",new String[]{"user17","ownerAppointedByTeamOwner"});
-
-        // Delete Users
-        sql.delete("Users",new String[]{"user1"});
-        sql.delete("Users",new String[]{"user2"});
-        sql.delete("Users",new String[]{"user1a"});
-        sql.delete("Users",new String[]{"user2a"});
-        sql.delete("Users",new String[]{"user3"});
-        sql.delete("Users",new String[]{"user4"});
-        sql.delete("Users",new String[]{"user8"});
-        sql.delete("Users",new String[]{"user9"});
-        sql.delete("Users",new String[]{"user10"});
-        sql.delete("Users",new String[]{"user11"});
-        sql.delete("Users",new String[]{"user12"});
-        sql.delete("Users",new String[]{"user13"});
-        sql.delete("Users",new String[]{"user14"});
-        sql.delete("Users",new String[]{"user15"});
-        sql.delete("Users",new String[]{"user16"});
-        sql.delete("Users",new String[]{"user17"});
-
-    }
-    private static void testUsers() {
-        // Insert Users
-        sql.insert("Users",new String[]{"user1","1","UnifiedSubscription","@"}); //Player
-        sql.insert("Users",new String[]{"user2","1","UnifiedSubscription","@"}); //Player
-        sql.insert("Users",new String[]{"user1a","1","UnifiedSubscription","@"}); //Player
-        sql.insert("Users",new String[]{"user2a","1","UnifiedSubscription","@"}); //Player
-        sql.insert("Users",new String[]{"user3","1","UnifiedSubscription","@"}); //Coach
-        sql.insert("Users",new String[]{"user4","1","UnifiedSubscription","@"}); //Coach
-        sql.insert("Users",new String[]{"user8","1","Referee","@"});
-        sql.insert("Users",new String[]{"user9","1","Referee","@"});
-        sql.insert("Users",new String[]{"user10","1","Referee","@"});
-        sql.insert("Users",new String[]{"user11","1","SystemAdministrator","@"});
-        sql.insert("Users",new String[]{"user12","1","SystemAdministrator","@"});
-        sql.insert("Users",new String[]{"user13","1","UnionRepresentative","@"});
-        sql.insert("Users",new String[]{"user14","1","UnifiedSubscription","@"}); //TeamManager
-        sql.insert("Users",new String[]{"user15","1","UnifiedSubscription","@"}); //TeamManager
-        sql.insert("Users",new String[]{"user16","1","UnifiedSubscription","@"}); //TeamOwner
-        sql.insert("Users",new String[]{"user17","1","UnifiedSubscription","@"}); //TeamOwner
-
-        // Insert UsersData
-        sql.insert("UsersData",new String[]{"user1","position","p1"});
-        sql.insert("UsersData",new String[]{"user2","position","p2"});
-        sql.insert("UsersData",new String[]{"user1a","position","p1a"});
-        sql.insert("UsersData",new String[]{"user2a","position","p2a"});
-        sql.insert("UsersData",new String[]{"user3","qualification","q1"});
-        sql.insert("UsersData",new String[]{"user4","qualification","q2"});
-        sql.insert("UsersData",new String[]{"user8","qualification","q12"});
-        sql.insert("UsersData",new String[]{"user9","qualification","q13"});
-        sql.insert("UsersData",new String[]{"user10","qualification","q14"});
-        sql.insert("UsersData",new String[]{"user14","managerAppointedByTeamOwner","user16"});
-        sql.insert("UsersData",new String[]{"user15","managerAppointedByTeamOwner","user16"});
-        sql.insert("UsersData",new String[]{"user16","ownerAppointedByTeamOwner","TeamOwner",""});
-        sql.insert("UsersData",new String[]{"user17","ownerAppointedByTeamOwner","TeamOwner","user16"});
-    }
-
-    private static void testTeams() {
-        sql.insert("Team",new String[]{"MaccabiTLV","Teddi","user16","1","0","0","0","0","0","0","0"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiTLV","user17","TeamOwner"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiTLV","user3","Coach"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiTLV","user14","TeamManager"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiTLV","user1","Player"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiTLV","user2","Player"});
-
-        sql.insert("Team",new String[]{"MaccabiHaifa","Sami","user17","1","0","0","0","0","0","0","0"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiHaifa","user4","Coach"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiHaifa","user15","TeamManager"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiHaifa","user1a","Player"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiHaifa","user2a","Player"});
-    }
-
-    private static void deleteTestTeams() {
-        sql.delete("AssetsInTeam",new String[]{"MaccabiHaifa","user4"});
-        sql.delete("AssetsInTeam",new String[]{"MaccabiHaifa","user15"});
-        sql.delete("AssetsInTeam",new String[]{"MaccabiHaifa","user1a"});
-        sql.delete("AssetsInTeam",new String[]{"MaccabiHaifa","user2a"});
-
-        sql.delete("AssetsInTeam",new String[]{"MaccabiTLV","user17"});
-        sql.delete("AssetsInTeam",new String[]{"MaccabiTLV","user3"});
-        sql.delete("AssetsInTeam",new String[]{"MaccabiTLV","user14"});
-        sql.delete("AssetsInTeam",new String[]{"MaccabiTLV","user1"});
-        sql.delete("AssetsInTeam",new String[]{"MaccabiTLV","user2"});
-
-        sql.delete("Team",new String[]{"MaccabiHaifa"});
-        sql.delete("Team",new String[]{"MaccabiTLV"});
-
-    }
-
-    private static void testLeagues() {
-        sql.insert("League",new String[]{"A"});
-        sql.insert("Season",new String[]{"A","2020"});
-        sql.insert("RefereeInSeason",new String[]{"A","2020","user8"});
-        sql.insert("RefereeInSeason",new String[]{"A","2020","user9"});
-        sql.insert("League",new String[]{"B"});
-        sql.insert("Season",new String[]{"B","2020"});
-        sql.insert("RefereeInSeason",new String[]{"B","2020","user9"});
-    }
-    private static void deleteTestLeagues() {
-        sql.delete("RefereeInSeason",new String[]{"A","2020","user8"});
-        sql.delete("RefereeInSeason",new String[]{"A","2020","user9"});
-        sql.delete("Season",new String[]{"A","2020"});
-        sql.delete("League",new String[]{"A"});
-        sql.delete("RefereeInSeason",new String[]{"B","2020","user9"});
-        sql.delete("Season",new String[]{"B","2020"});
-        sql.delete("League",new String[]{"B"});
-    }
-
-    private static void testGames() {
         /*
-        sql.insert("Game",new String[]{"MaccabiTLV","Teddi","user16","1","0","0","0","0","0","0","0"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiTLV","user17","TeamOwner"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiTLV","user3","Coach"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiTLV","user14","TeamManager"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiTLV","user1","Player"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiTLV","user2","Player"});
-
-        sql.insert("Team",new String[]{"MaccabiHaifa","Sami","user17","1","0","0","0","0","0","0","0"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiHaifa","user4","Coach"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiHaifa","user15","TeamManager"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiHaifa","user1a","Player"});
-        sql.insert("AssetsInTeam",new String[]{"MaccabiHaifa","user2a","Player"});s
+         TEST INSERTION AND DELETE OF NEW TEAM
          */
+        public void insertTeamTest() {
+            Team t = new Team("Maccabi","Teddi");
+            DataManagement.addToListTeam(t);
+            assertEquals(DataManagement.findTeam("Maccabi").getName(),"Maccabi");
+        }
+
+
+        @Test
+        public void deleteTeamTest() {
+            Team t = new Team("Maccabi","Teddi");
+            sql.delete("Team", new String[]{"Maccabi"});
+            assertNull(DataManagement.findTeam("Maccabi"));
+        }
     }
 
+    /**
+     * Test - UC4- alerts test
+     */
+    @RunWith(Parameterized.class)
+    public static class alertsTest {
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {}
+            });
+        }
 
+        public alertsTest() {
+        }
+        @Test
+        public void testAlertToUser() {
+            String checkEqualsTo = "newAlert";
+            DataManagement.removeSubscription("raz");
+            HashSet<String> alerts = new HashSet<>();
+            alerts.add("newAlert");
+            Fan newFan = new Fan("raz","123","123@post.bgu.ac.il");
+            checkEqualsTo="";
+            newFan.setAllAlerts(alerts);
+            DataManagement.setSubscription(newFan);
+            assertEquals(checkEqualsTo,DataManagement.containSubscription("raz").returnAlerts());
+            DataManagement.removeSubscription("raz");
+        }
+    }
+
+    /**
+     * Test - UC5+6+7+8- Game tests
+     */
+    @RunWith(Parameterized.class)
+    public static class gameTests {
+        @Parameterized.Parameters
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {}
+            });
+        }
+
+        public gameTests() {
+        }
+        @Test
+        public void testCreateGameWithPoliciesAndEvents() {
+            Team t1 = new Team("Maccabi1","Teddi");
+            DataManagement.addToListTeam(t1);
+            Team t2 = new Team("Maccabi2","Teddi");
+            DataManagement.addToListTeam(t2);
+            Referee ref1 = new Referee("ref1","123","123@post.bgu.ac.il");
+            Referee ref2 = new Referee("ref2","123","123@post.bgu.ac.il");
+            Referee ref3 = new Referee("ref3","123","123@post.bgu.ac.il");
+            DataManagement.setSubscription(ref1);
+            DataManagement.setSubscription(ref2);
+            DataManagement.setSubscription(ref3);
+            League leg1 = new League("A");
+            Season ses1 = new Season("2019");
+            DataManagement.addToListLeague(leg1);
+            PointsPolicy policy = new PointsPolicy(2,1,0);
+            DataManagement.addNewSeason("A",ses1,policy);
+            Game g = new Game("Teddi",LocalDate.now(),t1,t2,1);
+            g.setLinesman1Referee(ref1);
+            g.setHeadReferee(ref2);
+            g.setLinesman2Referee(ref3);
+            g.setLeague("A");
+            g.setSeason("2019");
+            g.updateNewEvent("Maccabi1","raz", EventType.goal);
+            g.setStartAndEndTime(LocalDateTime.of(2017, 2, 13, 15, 56),LocalDateTime.of(2017, 2, 13, 15, 57));
+            DataManagement.addGame(g);
+            assertEquals(DataManagement.getGame(1).getField(),"Teddi");
+            assertEquals(DataManagement.getGame(1).getEventList().size(),0);
+        }
+    }
 
 }

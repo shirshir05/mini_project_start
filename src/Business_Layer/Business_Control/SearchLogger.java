@@ -31,6 +31,7 @@ public class SearchLogger {
             String line;
             while((line=br.readLine())!=null)
             {
+                line=line.toLowerCase();
                 if (line.contains(keyWord) || line.contains(keyword2)){
                     sb.append(line);
                     sb.append("\n");
