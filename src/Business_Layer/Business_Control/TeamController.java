@@ -59,10 +59,11 @@ public class TeamController {
                 flag = true;
             }
             if (flag){
-                if(CreateTeam(arg_name,arg_field).isActionSuccessful()){
+                ActionStatus createTeamCreat = CreateTeam(arg_name,arg_field);
+                if(createTeamCreat.isActionSuccessful()){
                    AC =new ActionStatus(true, "The team wait for approve union representative.");
                 }else{
-                    AC =new ActionStatus(false, "The operation was not performed.");
+                    AC =new ActionStatus(false, createTeamCreat.getDescription());
                 }
             }
             else{
@@ -92,7 +93,7 @@ public class TeamController {
         if (arg_name==null || arg_name.isEmpty() ||arg_field==null || arg_field.isEmpty() ){
             AC = new ActionStatus(false, "One of the parameters is null");
         }
-        else if (!(DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Edit_team))) && !isATeamOwner(DataManagement.getCurrent())) {
+        else if (!isATeamOwner(DataManagement.getCurrent())) {
             AC=  new ActionStatus(false,"You are not allowed to perform actions on the team.");
         }
         else if(DataManagement.findTeam(arg_name) != null){
@@ -114,6 +115,7 @@ public class TeamController {
             for(Subscription s: unionReps){
                 budget.addObserver((UnionRepresentative)s);
             }
+            DataManagement.updateTeam(new_team);
            // AC = new_team.EditTeamOwner((UnifiedSubscription) DataManagement.getCurrent(),1);
             AC  =new ActionStatus(true, "The team wait for approve union representative.");
             Spelling.updateDictionary("team: " + arg_name);
@@ -192,7 +194,7 @@ public class TeamController {
      */
     public ActionStatus AddOrRemovePlayer(String name_team, String user_name, int add_or_remove) {
         ActionStatus AC;
-        String ans = CheckInputEditTeam(name_team, user_name);
+        String ans = CheckInputEditTeam(name_team, DataManagement.getCurrent().getUserName());
         Subscription requestedPlayerToAdd = DataManagement.containSubscription(user_name);
         Team team = DataManagement.findTeam(name_team);
         if (ans != null) {
@@ -390,9 +392,13 @@ public class TeamController {
      */
     String CheckInputEditTeam(String name_team, String user_name) {
         String value=null;
-        if (name_team==null ||name_team.isEmpty() || user_name==null || user_name.isEmpty()){
+        Subscription sub = DataManagement.containSubscription(user_name);
+        if(sub != null){
+            DataManagement.setCurrent(sub);
+        }
+         if (name_team==null ||name_team.isEmpty() || user_name==null || user_name.isEmpty()){
             value= "One of the parameters is empty";
-        } else if ((!DataManagement.getCurrent().getPermissions().check_permissions((PermissionAction.Edit_team)))) {
+        } else if ((!sub.getPermissions().check_permissions((PermissionAction.Edit_team)))) {
             value= "You are not allowed to perform actions on the team.";
         } else if (DataManagement.findTeam(name_team) == null) {
             value= "The Team does not exist in the system.";
@@ -428,6 +434,8 @@ public class TeamController {
         }
         else if (DataManagement.findTeam(name_team).getStatus() == -1) {
             AC = new ActionStatus(false,  "The team is permanently closed.");
+        } else if (DataManagement.findTeam(name_team).getStatus() == 2) {
+            AC = new ActionStatus(false,  "The team wait for approve.");
         }
         else if (status == 0){
             if (!(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Close_team))) {

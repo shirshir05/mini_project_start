@@ -78,7 +78,9 @@ public class databaseController {
                 }
                 //GET PERMISSIONS FROM BLOB
                 sub.permissions = (Permissions)sqlConn.getBlob("Blobs",userID+"Permissions");
-                sub.setAllAlerts((HashSet<String>) sqlConn.getBlob("Blobs",sub.getUserName()+"Alerts"));
+                Object obj = sqlConn.getBlob("Blobs",sub.getUserName()+"Alerts");
+
+                sub.setAllAlerts((HashSet<String>)obj );
                 sub.setAllHistory((HashSet<String>) sqlConn.getBlob("Blobs",sub.getUserName()+"searchHistory"));
                 return sub;
             }

@@ -70,10 +70,34 @@ public class sqlConnection implements interfaceDB {
         return null;
     }
 
+
     public int updateBlob(String table, String key, Object value) {
-        delete(table,new String[]{key});
-        return insertBlob(table,key,value);
+        PreparedStatement stmt = null;
+        try{
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(value);
+            byte[] valueAsBytes = baos.toByteArray();
+            PreparedStatement pstmt = databaseManager.conn.prepareStatement("use FootBallDB UPDATE "+table+" SET [value] = ? where [key] = '"+key +"'");
+            ByteArrayInputStream bais = new ByteArrayInputStream(valueAsBytes);
+            pstmt.setBinaryStream(1, bais, valueAsBytes.length);
+            int ans = pstmt.executeUpdate();
+            pstmt.close();
+            return ans;
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally{
+            try{
+                if(stmt != null){
+                    stmt.close();
+                }
+            }catch (SQLException e3) {
+                e3.printStackTrace();
+            }
+        }
+        return -1;
     }
+
 
     @Override
     public int update(String table, String[] key, String column, Object value) {

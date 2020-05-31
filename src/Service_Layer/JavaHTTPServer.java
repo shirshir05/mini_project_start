@@ -36,7 +36,8 @@ public class JavaHTTPServer implements Runnable {
     public static void main(String[] args) {
         try {
             // TODO - systemIsInitialized == false!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            systemIsInitialized = false;
+            /// TODO ???????????? set time one!
+            systemIsInitialized = true;
             systemInternalError = false;
             ServerSocket serverConnect = new ServerSocket(PORT);
             System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
@@ -156,12 +157,10 @@ public class JavaHTTPServer implements Runnable {
                 case "startclean":
                     actionStatus = st.ResetToFactory("taxURL", "financeURL");
                     if (actionStatus.isActionSuccessful()) {
-                        systemIsInitialized = true;
+                        systemIsInitialized =true;
                         out.println("HTTP/1.1 200 OK");
-
                     }else{
                         out.println("HTTP/1.1 202 Accepted");
-
                     }
                     sendStringData();
                     break;
@@ -437,8 +436,7 @@ public class JavaHTTPServer implements Runnable {
                             (pram1,pram2,pram3,pram4);
                     break;
                 case "login":
-                    DataManagement.setCurrent(null);
-                    LogAndExitController lc = st.getLEc();
+                   LogAndExitController lc = st.getLEc();
                     String a = jsonObject.getString("username").replaceAll("%20"," ");
                     String b = jsonObject.getString("password").replaceAll("%20"," ");
                     as = lc.Login(a, b);
@@ -529,8 +527,8 @@ public class JavaHTTPServer implements Runnable {
                 case "createnewevent":
                     String param9 = jsonObject.getString("gameid").replaceAll("%20"," ");
                     String param10 = jsonObject.getString("nameteam").replaceAll("%20"," ");
-                    String param11 = jsonObject.getString("usernameplayer").replaceAll("%20"," ");
-                    String param12 = jsonObject.getString("eventtype").replaceAll("%20"," ");
+                    String param11 = jsonObject.getString("nameuserplayer").replaceAll("%20"," ");
+                    String param12 = jsonObject.getString("eventype").replaceAll("%20"," ");
                     as = st.getGSc().refereeCreateNewEvent(Integer.parseInt(param9), param10, param11, param12);
                     break;
                 case "registertogamealert":
@@ -548,7 +546,7 @@ public class JavaHTTPServer implements Runnable {
                 case "answercomplaints":
                     String answercomplaints_pram1 = jsonObject.getString("answer").replaceAll("%20"," ");
                     as = st.getAc().answerCompliant(
-                            (Integer.parseInt(jsonObject.getString("id"))),answercomplaints_pram1
+                            (Integer.parseInt(jsonObject.getString("ID"))),answercomplaints_pram1
                     );
                     break;
                 case "addpermissiontoteammanger":
@@ -571,6 +569,7 @@ public class JavaHTTPServer implements Runnable {
             }else {
                 as = new ActionStatus(false, "system fetal error! please contact your system administrator");
             }
+            out.println("HTTP/1.1 202 Accepted");
             sendStringData();
         }
         return as;

@@ -2,6 +2,7 @@ package Business_Layer.Business_Items.UserManagement;
 
 import Business_Layer.Business_Control.DataManagement;
 
+import javax.xml.crypto.Data;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.HashSet;
@@ -39,6 +40,7 @@ public abstract class Subscription implements java.io.Serializable {
 
     public void setNumberAlerts(int numberAlerts) {
         this.numberAlerts = numberAlerts;
+        DataManagement.updateGeneralsOfSubscription(this);
     }
 
     public abstract String getRole();

@@ -35,7 +35,7 @@ public class Team extends Observable implements Comparable, Serializable {
     public Team(String arg_name, String arg_main_field ){
         this.Name =arg_name;
         list_Player = new HashSet<>();
-        budget =  null;
+        budget =  new TeamBudget(arg_name);
         list_Coach = new HashSet<>() ;
         list_TeamManager = new HashSet<>();
         list_TeamOwner = new HashSet<>();
