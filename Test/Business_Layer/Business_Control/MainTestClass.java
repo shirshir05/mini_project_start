@@ -132,7 +132,7 @@ public class MainTestClass {
             this.role = "Coach";
 
             //Register and login user manually
-            DataManagement.setCurrent(factory.Create(name,password, Role.Coach,email));
+            DataManagement.setCurrent(factory.Create(name,password, Role.Coach,email,false));
             DataManagement.setSubscription(DataManagement.getCurrent());
 
             //check exit wrong user name

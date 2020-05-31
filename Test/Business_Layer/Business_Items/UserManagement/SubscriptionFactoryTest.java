@@ -67,7 +67,7 @@ public class SubscriptionFactoryTest {
         @Test
         public void CreateTest() {
             SubscriptionFactory factory = new SubscriptionFactory();
-            assertEquals(factory.Create(userName,password,role,email),ans);
+            assertEquals(factory.Create(userName,password,role,email,false),ans);
             if(!userName.equals("guest") && !userName.equals("")){
                 assertEquals(Spelling.getCorrectWord(userName),userName);
             }
