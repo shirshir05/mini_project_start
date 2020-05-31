@@ -36,6 +36,7 @@ public class JavaHTTPServer implements Runnable {
     public static void main(String[] args) {
         try {
             // TODO - systemIsInitialized == false!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            /// TODO ???????????? set time one!
             systemIsInitialized = true;
             systemInternalError = false;
             ServerSocket serverConnect = new ServerSocket(PORT);
@@ -77,7 +78,7 @@ public class JavaHTTPServer implements Runnable {
             controllerMethod = headerSplit[3];
             username = headerSplit[2];
             if(!controllerMethod.equals("registration") && systemIsInitialized){
-                DataManagement.setCurrent(null);
+                //DataManagement.setCurrent(null);
                 DataManagement.setCurrent(DataManagement.containSubscription(username));
             }
             System.out.println("controllerMethod is: " + controllerMethod);
@@ -156,12 +157,10 @@ public class JavaHTTPServer implements Runnable {
                 case "startclean":
                     actionStatus = st.ResetToFactory("taxURL", "financeURL");
                     if (actionStatus.isActionSuccessful()) {
-                        systemIsInitialized = true;
+                        systemIsInitialized =true;
                         out.println("HTTP/1.1 200 OK");
-
                     }else{
                         out.println("HTTP/1.1 202 Accepted");
-
                     }
                     sendStringData();
                     break;
@@ -251,8 +250,8 @@ public class JavaHTTPServer implements Runnable {
                 case "watchgameevent":
                     actionStatus = st.getGSc().printGameEvents(Integer.parseInt(headerSplit[4]));
                     if (actionStatus.isActionSuccessful()) {
-                        String[] linesInGameEvent = actionStatus.getDescription().split("\n");
-                        JSONArray jsonArray = buildJsonArray(linesInGameEvent);
+                        String[] linesInGameEvent = actionStatus.getDescription().split("!!!!");
+                        JSONArray jsonArray = buildJsonArrayAlert(linesInGameEvent);
                         sendJsonData(jsonArray);
                     } else {
                         out.println("HTTP/1.1 202 Accepted");
@@ -273,11 +272,14 @@ public class JavaHTTPServer implements Runnable {
                 case "watchgame":
                     actionStatus = st.getGSc().refereeWatchGames();
                     if(actionStatus.isActionSuccessful()){
+                        String[] lines = actionStatus.getDescription().split(", ");
+                        JSONArray jsonArray = buildJsonArrayAlert(lines);
+                        sendJsonData(jsonArray);
                         out.println("HTTP/1.1 200 OK");
                     }else{
                         out.println("HTTP/1.1 202 Accepted");
+                        sendStringData();
                     }
-                    sendStringData();
                     break;
                 case "readallalrets":
                     actionStatus = st.getAc().readAllAlerts();
@@ -291,6 +293,7 @@ public class JavaHTTPServer implements Runnable {
                     }
                     break;
                 case "alertnew":
+                    actionStatus = st.getAc().hasAlertNew();
                     actionStatus = st.getAc().hasAlertNew();
                     if(actionStatus.isActionSuccessful()){
                         out.println("HTTP/1.1 200 OK");
@@ -434,8 +437,7 @@ public class JavaHTTPServer implements Runnable {
                             (pram1,pram2,pram3,pram4);
                     break;
                 case "login":
-                    DataManagement.setCurrent(null);
-                    LogAndExitController lc = st.getLEc();
+                   LogAndExitController lc = st.getLEc();
                     String a = jsonObject.getString("username").replaceAll("%20"," ");
                     String b = jsonObject.getString("password").replaceAll("%20"," ");
                     as = lc.Login(a, b);
@@ -526,13 +528,13 @@ public class JavaHTTPServer implements Runnable {
                 case "createnewevent":
                     String param9 = jsonObject.getString("gameid").replaceAll("%20"," ");
                     String param10 = jsonObject.getString("nameteam").replaceAll("%20"," ");
-                    String param11 = jsonObject.getString("usernameplayer").replaceAll("%20"," ");
-                    String param12 = jsonObject.getString("eventtype").replaceAll("%20"," ");
+                    String param11 = jsonObject.getString("nameuserplayer").replaceAll("%20"," ");
+                    String param12 = jsonObject.getString("eventype").replaceAll("%20"," ");
                     as = st.getGSc().refereeCreateNewEvent(Integer.parseInt(param9), param10, param11, param12);
                     break;
                 case "registertogamealert":
-                    String param1 = jsonObject.getString("gamenumber").replaceAll("%20"," ");
-                    as = st.getAc().fanRegisterToGameAlerts(Integer.parseInt(param1));
+                    int param1 = jsonObject.getInt("gamenumber");
+                    as = st.getAc().fanRegisterToGameAlerts(param1);
                     break;
                 case "registertopagealert":
                     String param2 = jsonObject.getString("usernametofollow").replaceAll("%20"," ");
@@ -545,7 +547,7 @@ public class JavaHTTPServer implements Runnable {
                 case "answercomplaints":
                     String answercomplaints_pram1 = jsonObject.getString("answer").replaceAll("%20"," ");
                     as = st.getAc().answerCompliant(
-                            (Integer.parseInt(jsonObject.getString("id"))),answercomplaints_pram1
+                            (Integer.parseInt(jsonObject.getString("ID"))),answercomplaints_pram1
                     );
                     break;
                 case "addpermissiontoteammanger":
@@ -568,6 +570,7 @@ public class JavaHTTPServer implements Runnable {
             }else {
                 as = new ActionStatus(false, "system fetal error! please contact your system administrator");
             }
+            out.println("HTTP/1.1 202 Accepted");
             sendStringData();
         }
         return as;

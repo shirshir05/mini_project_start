@@ -40,7 +40,6 @@ public abstract class Subscription implements java.io.Serializable {
 
     public void setNumberAlerts(int numberAlerts) {
         this.numberAlerts = numberAlerts;
-        DataManagement.updateGeneralsOfSubscription(this);
     }
 
     public abstract String getRole();

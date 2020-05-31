@@ -26,7 +26,7 @@ public class Event implements java.io.Serializable{
         team=arg_team.getName();
         eventType =arg_event_type;
         if (arg_team.getPlayer(arg_player.getUserName())!=null){
-            player = arg_player.getName();
+            player = arg_player.getUserName();
         }
         else{
             player=null;
@@ -93,6 +93,16 @@ public class Event implements java.io.Serializable{
 
     public void setPlayer(UnifiedSubscription player) {
         this.player = player.getName();
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "eventType=" + eventType +
+                ", player='" + player + '\'' +
+                ", team='" + team + '\'' +
+                ", eventTime=" + eventTime +
+                '}';
     }
 
     public void setTeam(Team team) {

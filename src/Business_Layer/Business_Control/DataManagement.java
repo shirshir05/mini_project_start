@@ -162,6 +162,16 @@ public final class DataManagement {
             ,g.getGuest().getName(),g.getLeague(),g.getSeason(),g.getHeadReferee(),g.getLinesman1Referee(),g.getLinesman2Referee()});
     }
 
+    public static void updateEventGame(Event e, int gameid){
+        //save game to database
+            sql.insert("EventInGame",new Object[]{gameid,e.getEventTime().toLocalTime(),e.getPlayer(),e.getEventType()});
+    }
+
+    public static void updateObserverGame(Event e, int gameid){
+        //save game to database
+        sql.insert("EventInGame",new Object[]{gameid,e.getEventTime().toLocalTime(),e.getPlayer(),e.getEventType()});
+    }
+
     /**
      * This function get game_id and return Game
      * @param game_id -

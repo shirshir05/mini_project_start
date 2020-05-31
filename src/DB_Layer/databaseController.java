@@ -78,7 +78,9 @@ public class databaseController {
                 }
                 //GET PERMISSIONS FROM BLOB
                 sub.permissions = (Permissions)sqlConn.getBlob("Blobs",userID+"Permissions");
-                sub.setAllAlerts((HashSet<String>) sqlConn.getBlob("Blobs",sub.getUserName()+"Alerts"));
+                Object obj = sqlConn.getBlob("Blobs",sub.getUserName()+"Alerts");
+
+                sub.setAllAlerts((HashSet<String>)obj );
                 sub.setAllHistory((HashSet<String>) sqlConn.getBlob("Blobs",sub.getUserName()+"searchHistory"));
                 return sub;
             }
@@ -183,8 +185,14 @@ public class databaseController {
                 //load event objects into game
                 ResultSet rs2 = sqlConn.findByKey("EventInGame", new String[]{"" + rs.getInt("gameID")});
                 while (rs2.next()) {
-                    LocalDateTime eventTime = LocalDateTime.of(ld,rs.getTime("eventTime").toLocalTime());
-                    Event event = new Event(rs.getString("team"), EventType.valueOf(rs.getString("eventType")),rs.getString("playerName"),eventTime);
+                    //LocalDateTime g = rs2.getTime("eventTime");
+                   ;
+                    LocalDateTime eventTime = LocalDateTime.of(game.getStartTime().getYear(),game.getStartTime().getMonth(),
+                            game.getStartTime().getDayOfMonth(), rs2.getTime("eventTime").toLocalTime().getHour(),
+                            rs2.getTime("eventTime").toLocalTime().getMinute(), rs2.getTime("eventTime").toLocalTime().getSecond(),
+                            rs2.getTime("eventTime").toLocalTime().getNano());
+
+                    Event event = new Event(rs.getString("homeTeam"), EventType.valueOf(rs2.getString("eventType")),rs2.getString("playerName"),eventTime);
                     game.addEvent(event);
                 }
                 return game;

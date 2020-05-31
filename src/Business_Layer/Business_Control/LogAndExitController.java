@@ -68,12 +68,8 @@ public class LogAndExitController{
     public ActionStatus Login(String arg_user_name, String arg_password) {
         ActionStatus AC;
         Subscription toLogin = DataManagement.containSubscription(arg_user_name);
-        //Another subscription is connected to the system
-        if (DataManagement.getCurrent() != null) {
-            AC = new ActionStatus(false, "Another subscription is connected to the system.");
-        }
         //does not exist in the system
-        else if (toLogin == null) {
+         if (toLogin == null) {
             AC = new ActionStatus(false, "The user " + arg_user_name + " does not exist in the system.");
         }
         //The password is incorrect

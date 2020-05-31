@@ -23,15 +23,18 @@ public class AlertController {
             AC = new ActionStatus(false,"No user in system");
         }else{
             HashSet<String> alertList = sub.getAlerts();
+            sub.setNumberAlerts(alertList.size());
             StringBuilder ans = new StringBuilder("");
+            DataManagement.updateGeneralsOfSubscription(sub);
+
             for (String alert :alertList) {
                 ans.append(alert).append("!@#");
             }
-            if(alertList.size() > sub.getNumberAlerts()){
-                AC = new ActionStatus(true,ans.toString());
-                sub.setNumberAlerts(alertList.size());
-            }else{
+            if(ans.equals("")){
                 AC = new ActionStatus(false,ans.toString());
+
+            }else{
+                AC = new ActionStatus(true,ans.toString());
             }
         }
         return AC;
@@ -73,6 +76,8 @@ public class AlertController {
         }
         else{
             game.addObserver((Fan) DataManagement.getCurrent());
+
+            //TODO MICHAL ADD UPDATE OBSERVER
             AC = new ActionStatus(true,"You were registered successfully to the game alerts");
         }
         return AC;
@@ -158,10 +163,10 @@ public class AlertController {
         if(DataManagement.getCurrent()!= null && DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Respond_to_complaints)) {
             HashSet<Complaint> set = DataManagement.getAllComplaints();
             for (Complaint comp:set) {
-                returnValue.append(comp.getDescription() + " is answer: " + comp.isAnswered()).append("~!#%"); //seperator between complaints
+                returnValue.append(comp.getDescription()).append(" is answer: ").append(comp.isAnswered()).append("~!#%"); //seperator between complaints
             }
         }
-        if(!returnValue.equals("")) {
+        if(!returnValue.toString().equals("")) {
             return new ActionStatus(true, returnValue.toString());
         }
         else {

@@ -73,7 +73,7 @@ public final class logger {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss:SSS");
             LocalDateTime now = LocalDateTime.now();
             String savelog = dtf.format(now) +" : "+ message + "\n";
-            dbc.insert("logs",new Object[]{savelog});
+            //dbc.insert("logs",new Object[]{savelog});
             out.write(savelog.toCharArray());
             out.close();
         } catch (IOException e) {

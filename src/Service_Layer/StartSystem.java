@@ -56,16 +56,24 @@ public class StartSystem {
         cleanSystem();
 
         //reset db and check connection
-        db.resetDateBaseDel();
-        LocalDateTime index = LocalDateTime.now();
-        long number = 0;
+        //db.resetDateBaseDel();
+        //LocalDateTime index = LocalDateTime.now();
+        //long number = 0;
         // todo 5 minutes !!!  - MUST
         //while(number < 60*5){
+        //while(number < 60*2){
+        //    number= Duration.between(index,LocalDateTime.now()).getSeconds();
+        // }
+        //System.out.println("hiiiiiiiiiiiiiiiiii ");
+
+        db.resetDateBaseStart();
+
+        //whit to create DB
+        LocalDateTime index = LocalDateTime.now();
+        long number = 0;
         while(number < 60*2){
             number= Duration.between(index,LocalDateTime.now()).getSeconds();
-        }
-        System.out.println("hiiiiiiiiiiiiiiiiii ");
-        db.resetDateBaseStart();
+         }
 
         Boolean dbStart = db.checkConn();
 
