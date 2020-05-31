@@ -25,6 +25,8 @@ public class AlertController {
             HashSet<String> alertList = sub.getAlerts();
             sub.setNumberAlerts(alertList.size());
             StringBuilder ans = new StringBuilder("");
+            DataManagement.updateGeneralsOfSubscription(sub);
+
             for (String alert :alertList) {
                 ans.append(alert).append("!@#");
             }
@@ -74,6 +76,8 @@ public class AlertController {
         }
         else{
             game.addObserver((Fan) DataManagement.getCurrent());
+
+            //TODO MICHAL ADD UPDATE OBSERVER
             AC = new ActionStatus(true,"You were registered successfully to the game alerts");
         }
         return AC;

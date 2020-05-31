@@ -444,8 +444,10 @@ public class GameSettingsController {
         StringBuilder eventList= new StringBuilder("");
         Game game = DataManagement.getGame(game_id);
         if(game != null){
-            for (Event e : game.getEventList()){
-                eventList.append(e.toString()).append("\n");
+            HashSet<Event> events = game.getEventList();
+            for (Event e : events ){
+                String eventString = e.toString();
+                eventList.append(eventString).append("!!!!");
             }
             AC = new ActionStatus(true,eventList.toString());
         }else{

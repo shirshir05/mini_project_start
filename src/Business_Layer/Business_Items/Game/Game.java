@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Observable;
 
+import Business_Layer.Business_Control.DataManagement;
 import Business_Layer.Business_Items.TeamManagement.Team;
 import Business_Layer.Business_Items.UserManagement.Referee;
 import Business_Layer.Business_Items.UserManagement.UnifiedSubscription;
@@ -143,6 +144,7 @@ public class Game extends Observable implements java.io.Serializable{
             setChanged();
             notifyObservers(new_event.eventToString());
             ac = new ActionStatus(true,"event added successfully");
+            DataManagement.updateEventGame(new_event,this.getGameId());
         }
         logger.log("Game: update_new_event, team: " + team_name + " ,player " + player_name + " ,event " + event+ " " + ac.getDescription());
         return ac;

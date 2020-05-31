@@ -250,8 +250,8 @@ public class JavaHTTPServer implements Runnable {
                 case "watchgameevent":
                     actionStatus = st.getGSc().printGameEvents(Integer.parseInt(headerSplit[4]));
                     if (actionStatus.isActionSuccessful()) {
-                        String[] linesInGameEvent = actionStatus.getDescription().split("\n");
-                        JSONArray jsonArray = buildJsonArray(linesInGameEvent);
+                        String[] linesInGameEvent = actionStatus.getDescription().split("!!!!");
+                        JSONArray jsonArray = buildJsonArrayAlert(linesInGameEvent);
                         sendJsonData(jsonArray);
                     } else {
                         out.println("HTTP/1.1 202 Accepted");
@@ -293,6 +293,7 @@ public class JavaHTTPServer implements Runnable {
                     }
                     break;
                 case "alertnew":
+                    actionStatus = st.getAc().hasAlertNew();
                     actionStatus = st.getAc().hasAlertNew();
                     if(actionStatus.isActionSuccessful()){
                         out.println("HTTP/1.1 200 OK");
@@ -532,8 +533,8 @@ public class JavaHTTPServer implements Runnable {
                     as = st.getGSc().refereeCreateNewEvent(Integer.parseInt(param9), param10, param11, param12);
                     break;
                 case "registertogamealert":
-                    String param1 = jsonObject.getString("gamenumber").replaceAll("%20"," ");
-                    as = st.getAc().fanRegisterToGameAlerts(Integer.parseInt(param1));
+                    int param1 = jsonObject.getInt("gamenumber");
+                    as = st.getAc().fanRegisterToGameAlerts(param1);
                     break;
                 case "registertopagealert":
                     String param2 = jsonObject.getString("usernametofollow").replaceAll("%20"," ");
