@@ -193,8 +193,9 @@ public class GameSettingsController {
         ActionStatus AC;
         Team team = DataManagement.findTeam(teamName);
         League league = DataManagement.findLeague(leagueName);
-        if (team == null || league == null){
-            AC = new ActionStatus(false,"Cannot find team or league");
+        Subscription cur = DataManagement.getCurrent();
+        if (team == null || league == null || cur == null){
+            AC = new ActionStatus(false,"Cannot find team or league (try again)");
         }
         else {
             Season season = league.getSeason(seasonName);
@@ -202,7 +203,7 @@ public class GameSettingsController {
                 AC = new ActionStatus(false, "Season does not exist in this league");
             } else {
                 //check permissions
-                if (DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.add_team_to_season)) {
+                if (cur.getPermissions().check_permissions(PermissionAction.add_team_to_season)) {
                     season.addTeam(team);
                     DataManagement.updateSeason(leagueName,season);
                     AC = new ActionStatus(true,"Team added successfully");
@@ -314,7 +315,7 @@ public class GameSettingsController {
         Subscription referee = DataManagement.containSubscription(referee_user_name);
         if (league != null && referee instanceof Referee) {
             Season season = league.getSeason(season_year);
-            if (season!=null && season.getReferee(referee_user_name)!= null){
+            if (season!=null && season.getReferee(referee_user_name)== null){
                 season.addReferee((Referee)referee);
                 DataManagement.updateSeason(league_name,season);
                 ac = new ActionStatus(true, "set successfully");

@@ -20,7 +20,7 @@ public class Team extends Observable implements Comparable, Serializable {
     private HashSet<UnifiedSubscription> list_Player;
     private HashSet<UnifiedSubscription> list_Coach;
     private HashSet<UnifiedSubscription> list_TeamManager;
-    private HashSet<UnifiedSubscription> list_TeamOwner;
+    public HashSet<UnifiedSubscription> list_TeamOwner;
     private HashSet<Object> list_assets;
     private TeamPersonalPage PersonalPage;
     private int status; // 0 - off 1 - on -1 - always close
@@ -35,7 +35,7 @@ public class Team extends Observable implements Comparable, Serializable {
     public Team(String arg_name, String arg_main_field ){
         this.Name =arg_name;
         list_Player = new HashSet<>();
-        budget = new TeamBudget(Name);
+        budget =  null;
         list_Coach = new HashSet<>() ;
         list_TeamManager = new HashSet<>();
         list_TeamOwner = new HashSet<>();

@@ -58,13 +58,16 @@ public class Referee extends Subscription implements Observer, java.io.Serializa
     }
 
     public void setGamesList(String list){
-        String[] splitOne = list.split(": ");
-        if(splitOne.length>1) {
-            String[] splitTwo = splitOne[1].split(", ");
-            for (String g : splitTwo) {
+
+        String[] splitTwo = list.split(", ");
+        for (String g : splitTwo) {
+            try{
                 referee_games.add(Integer.parseInt(g));
+            }catch (Exception e){
+
             }
         }
+
     }
 
     /**

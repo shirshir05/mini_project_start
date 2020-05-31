@@ -36,7 +36,7 @@ public class JavaHTTPServer implements Runnable {
     public static void main(String[] args) {
         try {
             // TODO - systemIsInitialized == false!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            systemIsInitialized = true;
+            systemIsInitialized = false;
             systemInternalError = false;
             ServerSocket serverConnect = new ServerSocket(PORT);
             System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
@@ -77,7 +77,7 @@ public class JavaHTTPServer implements Runnable {
             controllerMethod = headerSplit[3];
             username = headerSplit[2];
             if(!controllerMethod.equals("registration") && systemIsInitialized){
-                DataManagement.setCurrent(null);
+                //DataManagement.setCurrent(null);
                 DataManagement.setCurrent(DataManagement.containSubscription(username));
             }
             System.out.println("controllerMethod is: " + controllerMethod);
@@ -273,11 +273,14 @@ public class JavaHTTPServer implements Runnable {
                 case "watchgame":
                     actionStatus = st.getGSc().refereeWatchGames();
                     if(actionStatus.isActionSuccessful()){
+                        String[] lines = actionStatus.getDescription().split(", ");
+                        JSONArray jsonArray = buildJsonArrayAlert(lines);
+                        sendJsonData(jsonArray);
                         out.println("HTTP/1.1 200 OK");
                     }else{
                         out.println("HTTP/1.1 202 Accepted");
+                        sendStringData();
                     }
-                    sendStringData();
                     break;
                 case "readallalrets":
                     actionStatus = st.getAc().readAllAlerts();

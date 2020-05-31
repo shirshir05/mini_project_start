@@ -27,11 +27,11 @@ public class AlertController {
             for (String alert :alertList) {
                 ans.append(alert).append("!@#");
             }
-            if(alertList.size() > sub.getNumberAlerts()){
-                AC = new ActionStatus(true,ans.toString());
-                sub.setNumberAlerts(alertList.size());
-            }else{
+            if(ans.equals("")){
                 AC = new ActionStatus(false,ans.toString());
+
+            }else{
+                AC = new ActionStatus(true,ans.toString());
             }
         }
         return AC;

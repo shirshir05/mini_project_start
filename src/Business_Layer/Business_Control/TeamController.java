@@ -105,7 +105,7 @@ public class TeamController {
             new_team.addObserver((UnifiedSubscription)DataManagement.getCurrent());
             Subscription sub = DataManagement.getCurrent();
             sub.getPermissions().add_default_owner_permission();
-            new_team.EditTeamOwner((UnifiedSubscription) sub, 1);
+            new_team.list_TeamOwner.add((UnifiedSubscription) sub);
             DataManagement.addToListTeam((new_team));
             DataManagement.updateGeneralsOfSubscription(sub);
             //add the union representatives to the observers of the budget of the team:
@@ -428,8 +428,6 @@ public class TeamController {
         }
         else if (DataManagement.findTeam(name_team).getStatus() == -1) {
             AC = new ActionStatus(false,  "The team is permanently closed.");
-        } else if (DataManagement.findTeam(name_team).getStatus() == 2) {
-            AC = new ActionStatus(false,  "The team wait for approve.");
         }
         else if (status == 0){
             if (!(DataManagement.getCurrent().getPermissions().check_permissions(PermissionAction.Close_team))) {
