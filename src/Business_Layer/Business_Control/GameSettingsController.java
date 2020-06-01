@@ -248,8 +248,9 @@ public class GameSettingsController {
         else if(league1.getSeason(seasonYear).getScoreTable() == null){
             AC = new ActionStatus(false,"The score table doesn't exist yet.");
         }else{
-            DataManagement.getGame(gameId).endGame(league1.getSeason(seasonYear).getScoreTable(), hostGoals, guestGoals);
+            game.endGame(league1.getSeason(seasonYear).getScoreTable(), hostGoals, guestGoals);
             AC = new ActionStatus(false,"successfully end game.");
+            DataManagement.updateGame(game);
         }
         return AC;
     }
@@ -401,7 +402,7 @@ public class GameSettingsController {
                             currentEvent.setPlayer((UnifiedSubscription)player);
                             currentEvent.setTeam(team);
                             currentEvent.setEventType(eventType);
-                            int a = DataManagement.updateSingleEvent(currentEvent,game_id);
+                            int a = DataManagement.updateSingleEvent(currentEvent,game);
                             if(a==1) {
                                 AC = new ActionStatus(true, "The event was edited");
                             }else{
@@ -417,7 +418,7 @@ public class GameSettingsController {
                             currentEvent.setTeam(team);
                             currentEvent.setPlayer((UnifiedSubscription)player);
                             currentEvent.setEventType(eventType);
-                            int a = DataManagement.updateSingleEvent(currentEvent,game_id);
+                            int a = DataManagement.updateSingleEvent(currentEvent,game);
                             if(a==1) {
                                 AC = new ActionStatus(true, "The event was edited");
                             }else{

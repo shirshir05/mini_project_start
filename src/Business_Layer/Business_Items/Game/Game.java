@@ -4,10 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Observable;
+import java.util.Observer;
 
 import Business_Layer.Business_Control.DataManagement;
 import Business_Layer.Business_Items.TeamManagement.Team;
 import Business_Layer.Business_Items.UserManagement.Referee;
+import Business_Layer.Business_Items.UserManagement.Subscription;
 import Business_Layer.Business_Items.UserManagement.UnifiedSubscription;
 import Business_Layer.Enum.ActionStatus;
 import Business_Layer.Enum.Configurations;
@@ -29,6 +31,7 @@ public class Game extends Observable implements java.io.Serializable{
     private LocalDateTime endTime;
     private Pair<Integer,Integer> score; // Integer[0] = host , Integer[1] = guest
     private HashSet<Event> eventList;
+    private HashSet<String> usersOb;
     private String league;
     private String season;
 
@@ -40,6 +43,7 @@ public class Game extends Observable implements java.io.Serializable{
         this.host=h;
         this.guest=g;
         eventList = new HashSet<>();
+        usersOb = new HashSet<>();
     }
 
     /**
@@ -57,6 +61,7 @@ public class Game extends Observable implements java.io.Serializable{
         this.host=h;
         this.guest=g;
         eventList = new HashSet<>();
+        usersOb = new HashSet<>();
     }
 
     public void setGameStartTime(){
@@ -141,10 +146,16 @@ public class Game extends Observable implements java.io.Serializable{
             ac = new ActionStatus(false,"Parameter wrong!");
         }
         if(ac==null) {
+            HashSet<String> obs = this.usersOb;
+            HashSet<Subscription> obsSub = new HashSet<>();
+            for(String s : obs){
+                obsSub.add(DataManagement.containSubscription(s));
+            }
             setChanged();
             notifyObservers(new_event.eventToString());
             ac = new ActionStatus(true,"event added successfully");
             DataManagement.updateEventGame(this);
+
         }
         logger.log("Game: update_new_event, team: " + team_name + " ,player " + player_name + " ,event " + event+ " " + ac.getDescription());
         return ac;
@@ -288,5 +299,11 @@ public class Game extends Observable implements java.io.Serializable{
     public String getSeason() {
         return season;
     }
+
+    public HashSet<String> getObs(){return usersOb;}
+
+    public void setObs(HashSet<String> obs){usersOb = obs;}
+
+    public void addToObs(String user){usersOb.add(user);}
 }
 

@@ -75,9 +75,10 @@ public class AlertController {
             AC = new ActionStatus(false,"There is no such game in the system");
         }
         else{
-            game.addObserver((Fan) DataManagement.getCurrent());
-
-            //TODO MICHAL ADD UPDATE OBSERVER
+            Fan f = (Fan) DataManagement.getCurrent();
+            game.addObserver(f);
+            game.addToObs(f.getUserName());
+            DataManagement.updateGame(game);
             AC = new ActionStatus(true,"You were registered successfully to the game alerts");
         }
         return AC;

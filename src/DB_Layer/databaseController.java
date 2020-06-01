@@ -158,10 +158,22 @@ public class databaseController {
         return league;
     }
 
+    //init all Games data from DB
+    public Game loadGameInfo(int game_id) {
+        Game game = (Game)sqlConn.getBlob("Blobs","Game"+game_id);
+        for(String u:game.getObs()){
+            Fan f = (Fan)loadUserByName(u);
+            DataManagement.loadSub(f);
+            game.addObserver(f);
+        }
+        return game;
+    }
 
+    /*
     //init all Games data from DB
     public Game loadGameInfo(int game_id) {
         try {
+            Game g =
             //load game objects
             ResultSet rs = sqlConn.findByKey("Game", null);
             if (rs.next()) {
@@ -204,6 +216,7 @@ public class databaseController {
         }
         return null;
     }
+     */
 
 
     //get Complaint data from DB
