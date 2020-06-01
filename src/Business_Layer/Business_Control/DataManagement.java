@@ -162,14 +162,25 @@ public final class DataManagement {
             ,g.getGuest().getName(),g.getLeague(),g.getSeason(),g.getHeadReferee(),g.getLinesman1Referee(),g.getLinesman2Referee()});
     }
 
-    public static void updateEventGame(Event e, int gameid){
+    public static void updateEventGame(Game g){
         //save game to database
-            sql.insert("EventInGame",new Object[]{gameid,e.getEventTime().toLocalTime(),e.getPlayer(),e.getEventType()});
+        for(Event e :g.getEventList()){
+            if(!e.inDB) {
+                sql.insert("EventInGame", new Object[]{g.getGameId(), e.getEventTime().toLocalTime(), e.getPlayer(), e.getEventType()});
+                e.inDB = true;
+            }
+        }
     }
 
-    public static void updateObserverGame(Event e, int gameid){
-        //save game to database
-        sql.insert("EventInGame",new Object[]{gameid,e.getEventTime().toLocalTime(),e.getPlayer(),e.getEventType()});
+    public static int updateSingleEvent(Event e, int id){
+        //update single event to database
+        int a = sql.update("EventInGame",new String[]{id+"",e.getEventTime().toLocalTime()+""},"playerName",e.getPlayer());
+        int b = sql.update("EventInGame",new String[]{id+"",e.getEventTime().toLocalTime()+""},"eventType",e.getEventType());
+        // ([gameID],  [eventTime], [playerName],  [eventType])
+        if(a==1 && b==1){
+            return 1;
+        }
+        return 0;
     }
 
     /**

@@ -129,7 +129,7 @@ public class Game extends Observable implements java.io.Serializable{
            }else{
                ac = new ActionStatus(false,"Parameter wrong!");
            }
-         }else if(guest.getName().equals(team_name)) {
+        }else if(guest.getName().equals(team_name)) {
            p= guest.getPlayer(player_name);
             if(p != null) {
                 new_event = new Event(guest, event, p, LocalDateTime.now());
@@ -137,14 +137,14 @@ public class Game extends Observable implements java.io.Serializable{
             }else{
                 ac = new ActionStatus(false,"Parameter wrong!");
             }
-         } else{
+        } else{
             ac = new ActionStatus(false,"Parameter wrong!");
         }
         if(ac==null) {
             setChanged();
             notifyObservers(new_event.eventToString());
             ac = new ActionStatus(true,"event added successfully");
-            DataManagement.updateEventGame(new_event,this.getGameId());
+            DataManagement.updateEventGame(this);
         }
         logger.log("Game: update_new_event, team: " + team_name + " ,player " + player_name + " ,event " + event+ " " + ac.getDescription());
         return ac;

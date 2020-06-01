@@ -401,7 +401,12 @@ public class GameSettingsController {
                             currentEvent.setPlayer((UnifiedSubscription)player);
                             currentEvent.setTeam(team);
                             currentEvent.setEventType(eventType);
-                            AC = new ActionStatus(true, "The event was edited");
+                            int a = DataManagement.updateSingleEvent(currentEvent,game_id);
+                            if(a==1) {
+                                AC = new ActionStatus(true, "The event was edited");
+                            }else{
+                                AC = new ActionStatus(false, "change not made");
+                            }
                         }
                         else{
                             AC = new ActionStatus(false, "the player does not play in that team");
@@ -412,7 +417,12 @@ public class GameSettingsController {
                             currentEvent.setTeam(team);
                             currentEvent.setPlayer((UnifiedSubscription)player);
                             currentEvent.setEventType(eventType);
-                            AC = new ActionStatus(true, "The event was edited");
+                            int a = DataManagement.updateSingleEvent(currentEvent,game_id);
+                            if(a==1) {
+                                AC = new ActionStatus(true, "The event was edited");
+                            }else{
+                                AC = new ActionStatus(false, "change not made");
+                            }
                         }
                         else{
                             AC = new ActionStatus(false, "the player does not play in that team");

@@ -190,9 +190,10 @@ public class databaseController {
                     LocalDateTime eventTime = LocalDateTime.of(game.getStartTime().getYear(),game.getStartTime().getMonth(),
                             game.getStartTime().getDayOfMonth(), rs2.getTime("eventTime").toLocalTime().getHour(),
                             rs2.getTime("eventTime").toLocalTime().getMinute(), rs2.getTime("eventTime").toLocalTime().getSecond(),
-                            rs2.getTime("eventTime").toLocalTime().getNano());
+                            rs2.getTime("eventTime").toLocalTime().getNano()).withNano(0);
 
                     Event event = new Event(rs.getString("homeTeam"), EventType.valueOf(rs2.getString("eventType")),rs2.getString("playerName"),eventTime);
+                    event.inDB = true;
                     game.addEvent(event);
                 }
                 return game;

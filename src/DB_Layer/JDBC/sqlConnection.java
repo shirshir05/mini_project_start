@@ -7,6 +7,7 @@ import DB_Layer.logger;
 
 import java.io.*;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 public class sqlConnection implements interfaceDB {
@@ -395,6 +396,16 @@ public class sqlConnection implements interfaceDB {
         return ans;
     }
 
+
+    public static void main(String[] args) {
+        //sqlConnection sc = new sqlConnection();
+        LocalDateTime t = LocalDateTime.now();
+        System.out.println(t.toLocalTime());
+        LocalDateTime tt = t.withNano(0);
+        System.out.println(tt.toLocalTime());
+
+        //sc.insert("EventInGame",new Object[]{2,t,"player1","test"});
+    }
 
 }
 
