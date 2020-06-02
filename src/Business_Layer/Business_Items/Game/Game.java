@@ -15,6 +15,7 @@ import Business_Layer.Enum.ActionStatus;
 import Business_Layer.Enum.Configurations;
 import Business_Layer.Enum.EventType;
 import DB_Layer.logger;
+import Service_Layer.Spelling;
 import javafx.util.Pair;
 
 
@@ -44,6 +45,7 @@ public class Game extends Observable implements java.io.Serializable{
         this.guest=g;
         eventList = new HashSet<>();
         usersOb = new HashSet<>();
+        Spelling.updateDictionary("Game: " +id);
     }
 
     /**
