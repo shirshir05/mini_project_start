@@ -91,8 +91,8 @@ public class SearchLogger {
             File[] content = src.listFiles();
             if (content != null) {
                 for (int i = 0; i < content.length; i++) {
-                    File dest = new File("PtahDest" + "\\" + number_file+".txt");
-                    Files.copy(content[i].toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    File dest = new File(PtahDest + "\\" + number_file+".txt");
+                    Files.copy(content[i].toPath().toAbsolutePath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
                     number_file++;
                 }
             }

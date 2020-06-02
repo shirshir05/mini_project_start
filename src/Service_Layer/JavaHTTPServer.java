@@ -35,9 +35,7 @@ public class JavaHTTPServer implements Runnable {
 
     public static void main(String[] args) {
         try {
-            // TODO - systemIsInitialized == false!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            /// TODO ???????????? set time one!
-            systemIsInitialized = true;
+            systemIsInitialized = false;
             systemInternalError = false;
             ServerSocket serverConnect = new ServerSocket(PORT);
             System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
@@ -309,7 +307,6 @@ public class JavaHTTPServer implements Runnable {
             }
         } catch (Exception e) {
             actionStatus = new ActionStatus(false, e.getMessage());
-            //TODO -  MICHAL!!!!!  THIS LINE IN COMMENT
             DataManagement.saveError("class httpServer get function: "+e.getMessage());
             sendStringData();
         }   if(systemInternalError){

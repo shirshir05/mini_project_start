@@ -22,7 +22,7 @@ public final class DataManagement {
     private static final DataManagement instance = new DataManagement();
     // A list that keeps all the subscriptions that are currently subscribed to the system
     private static databaseController sql = new databaseController();
-    private static HashSet<Subscription>  Subscription = new HashSet<>();
+    private static HashSet<Subscription>  mySubscription = new HashSet<>();
 
     private static HashSet<Team> list_team = new HashSet<>();
 
@@ -75,7 +75,7 @@ public final class DataManagement {
      * function data clean all data set in system
      */
     public static void cleanAllData(){
-        Subscription = new HashSet<>();
+        mySubscription = new HashSet<>();
         list_team = new HashSet<>();
         list_game = new HashSet<>();
         list_league = new HashSet<>();
@@ -89,7 +89,16 @@ public final class DataManagement {
      * @return Subscription
      */
     public static Subscription containSubscription(String arg_user_name){
-        return sql.loadUserByName(arg_user_name);
+        Subscription sub = null;
+        for(Subscription s: mySubscription){
+            if(s.getUserName().equals(arg_user_name)){
+                sub = s;
+            }
+        }
+        if(sub ==null){
+            sub =sql.loadUserByName(arg_user_name);
+        }
+        return sub;
     }
 
     /**
@@ -151,8 +160,8 @@ public final class DataManagement {
      * @param g - game
      */
     public static void addGame(Game g){
-        //TODO- decide if to delete list or to save and delete at user logout ???
         list_game.add(g);
+        sql.insertBlob("Game"+g.getGameId(),g);
 
         //save game to database
         for(Event e :g.getEventList()){
@@ -162,14 +171,28 @@ public final class DataManagement {
             ,g.getGuest().getName(),g.getLeague(),g.getSeason(),g.getHeadReferee(),g.getLinesman1Referee(),g.getLinesman2Referee()});
     }
 
-    public static void updateEventGame(Event e, int gameid){
+    public static void updateEventGame(Game g){
         //save game to database
-            sql.insert("EventInGame",new Object[]{gameid,e.getEventTime().toLocalTime(),e.getPlayer(),e.getEventType()});
+        for(Event e :g.getEventList()){
+            if(!e.inDB) {
+                sql.insert("EventInGame", new Object[]{g.getGameId(), e.getEventTime().toLocalTime(), e.getPlayer(), e.getEventType()});
+                e.inDB = true;
+            }
+        }
+        sql.updateBlob("Blobs","Game"+g.getGameId(),g);
     }
 
-    public static void updateObserverGame(Event e, int gameid){
-        //save game to database
-        sql.insert("EventInGame",new Object[]{gameid,e.getEventTime().toLocalTime(),e.getPlayer(),e.getEventType()});
+    public static int updateSingleEvent(Event e, Game g){
+        //update single event to database
+        sql.updateBlob("Blobs","Game"+g.getGameId(),g);
+
+        int a = sql.update("EventInGame",new String[]{g.getGameId()+"",e.getEventTime().toLocalTime()+""},"playerName",e.getPlayer());
+        int b = sql.update("EventInGame",new String[]{g.getGameId()+"",e.getEventTime().toLocalTime()+""},"eventType",e.getEventType());
+        // ([gameID],  [eventTime], [playerName],  [eventType])
+        if(a==1 && b==1){
+            return 1;
+        }
+        return 0;
     }
 
     /**
@@ -178,7 +201,13 @@ public final class DataManagement {
      * @return Game
      */
     public static Game getGame(int game_id){
+
+
         return sql.loadGameInfo(game_id);
+    }
+
+    public static void updateGame(Game g){
+        sql.updateBlob("Blobs","Game"+g.getGameId(),g);
     }
 
     /**
@@ -202,7 +231,7 @@ public final class DataManagement {
 
 
     public static void setSubscription(Subscription sub){
-        Subscription.add(sub);
+        mySubscription.add(sub);
         sql.insert("Users",new Object[]{sub.getUserName(),sub.getPassword(),sub.getRole(),sub.getEmail(),sub.getNumberAlerts()});
         sql.insertBlob(sub.getUserName()+"Permissions",sub.getPermissions());
         sql.insertBlob(sub.getUserName()+"Alerts",sub.getAlerts());
@@ -380,4 +409,9 @@ public final class DataManagement {
         String savelog = dtf.format(now) +" : "+ trace;
         sql.insert("errors",new Object[]{savelog});
     }
+
+    public static void loadSub(Subscription sub) {
+        mySubscription.add(sub);
+    }
+
 }

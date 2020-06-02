@@ -158,10 +158,22 @@ public class databaseController {
         return league;
     }
 
+    //init all Games data from DB
+    public Game loadGameInfo(int game_id) {
+        Game game = (Game)sqlConn.getBlob("Blobs","Game"+game_id);
+        for(String u:game.getObs()){
+            Fan f = (Fan)loadUserByName(u);
+            DataManagement.loadSub(f);
+            game.addObserver(f);
+        }
+        return game;
+    }
 
+    /*
     //init all Games data from DB
     public Game loadGameInfo(int game_id) {
         try {
+            Game g =
             //load game objects
             ResultSet rs = sqlConn.findByKey("Game", null);
             if (rs.next()) {
@@ -190,9 +202,10 @@ public class databaseController {
                     LocalDateTime eventTime = LocalDateTime.of(game.getStartTime().getYear(),game.getStartTime().getMonth(),
                             game.getStartTime().getDayOfMonth(), rs2.getTime("eventTime").toLocalTime().getHour(),
                             rs2.getTime("eventTime").toLocalTime().getMinute(), rs2.getTime("eventTime").toLocalTime().getSecond(),
-                            rs2.getTime("eventTime").toLocalTime().getNano());
+                            rs2.getTime("eventTime").toLocalTime().getNano()).withNano(0);
 
                     Event event = new Event(rs.getString("homeTeam"), EventType.valueOf(rs2.getString("eventType")),rs2.getString("playerName"),eventTime);
+                    event.inDB = true;
                     game.addEvent(event);
                 }
                 return game;
@@ -203,6 +216,7 @@ public class databaseController {
         }
         return null;
     }
+     */
 
 
     //get Complaint data from DB

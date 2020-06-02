@@ -17,12 +17,14 @@ public class Event implements java.io.Serializable{
     private String player;
     private String team;
     private LocalDateTime eventTime;
+    public boolean inDB;
 
     /**
      * event constructor
      * time==null => set the current time
      */
     public Event(Team arg_team, EventType arg_event_type, UnifiedSubscription arg_player, LocalDateTime time){
+        inDB = false;
         team=arg_team.getName();
         eventType =arg_event_type;
         if (arg_team.getPlayer(arg_player.getUserName())!=null){
@@ -35,18 +37,19 @@ public class Event implements java.io.Serializable{
         }
         if (time==null) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-            eventTime = LocalDateTime.now();
+            eventTime = LocalDateTime.now().withNano(0);
         }
         else{
-            eventTime=time;
+            eventTime=time.withNano(0);
         }
     }
 
     public Event(String arg_team, EventType arg_event_type, String arg_player, LocalDateTime time) {
+        inDB = false;
         team = arg_team;
         eventType = arg_event_type;
         player = arg_player;
-        eventTime = time;
+        eventTime = time.withNano(0);
     }
 
     public ActionStatus editEvent(LocalDateTime endOfGameTime, Team arg_team, EventType arg_event_type, UnifiedSubscription arg_player, LocalDateTime time){
@@ -110,6 +113,6 @@ public class Event implements java.io.Serializable{
     }
 
     public LocalDateTime getEventTime() {
-        return eventTime;
+        return eventTime.withNano(0);
     }
 }
